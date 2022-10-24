@@ -1,7 +1,10 @@
 package com.ssafy.gaese.global.config;
 
-import com.ssafy.fullcourse.domain.user.repository.UserRepository;
-import com.ssafy.fullcourse.global.util.*;
+import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.global.util.JwtAccessDeniedHandler;
+import com.ssafy.gaese.global.util.JwtAuthenticationEntryPoint;
+import com.ssafy.gaese.global.util.JwtFilter;
+import com.ssafy.gaese.global.util.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

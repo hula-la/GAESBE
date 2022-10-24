@@ -1,6 +1,6 @@
 package com.ssafy.gaese.global.util;
 
-import com.ssafy.fullcourse.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.UserRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

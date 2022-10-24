@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class TokenProvider implements InitializingBean {
+public class TokenProvider {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
 
@@ -42,11 +42,11 @@ public class TokenProvider implements InitializingBean {
     }
 
     // 생성자에서 빈이 생성되고 주입을 받은 후에, secret 값을 Base64 Decode해서 key 변수에 할당한다
-    @Override
-    public void afterPropertiesSet() {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        this.key = Keys.hmacShaKeyFor(keyBytes);
-    }
+//    @Override
+//    public void afterPropertiesSet() {
+//        byte[] keyBytes = Decoders.BASE64.decode(secret);
+//        this.key = Keys.hmacShaKeyFor(keyBytes);
+//    }
 
     // Authentication 객체의 권한정보를 이용해 토큰을 생성하는 메서드
     public String createToken(Authentication authentication) {

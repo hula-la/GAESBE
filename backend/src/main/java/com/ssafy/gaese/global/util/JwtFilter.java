@@ -1,8 +1,8 @@
 package com.ssafy.gaese.global.util;
 
-import com.ssafy.fullcourse.domain.user.entity.User;
-import com.ssafy.fullcourse.domain.user.exception.UserNotFoundException;
-import com.ssafy.fullcourse.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
+import com.ssafy.gaese.domain.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,7 @@ public class JwtFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
 
-    public JwtFilter(TokenProvider tokenProvider,UserRepository userRepository) {
+    public JwtFilter(TokenProvider tokenProvider, UserRepository userRepository) {
         this.tokenProvider = tokenProvider;
         this.userRepository = userRepository;
     }
