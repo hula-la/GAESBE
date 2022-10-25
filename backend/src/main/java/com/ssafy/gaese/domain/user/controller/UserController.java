@@ -4,14 +4,12 @@ import com.ssafy.gaese.domain.user.application.KakaoUserService;
 import com.ssafy.gaese.domain.user.application.NaverUserService;
 import com.ssafy.gaese.domain.user.application.UserManageService;
 import com.ssafy.gaese.domain.user.dto.UserDto;
-import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 
@@ -26,7 +24,6 @@ public class UserController {
     private final NaverUserService naverUserService;
     private final UserManageService userManageService;
 
-    private final RedisUtil redisUtil;
 
     @PostMapping("/kakao")
     public HttpEntity<?> kakaoLogin(@RequestBody HashMap<String, String> param) {
@@ -43,9 +40,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponseBody> getInfo(@AuthenticationPrincipal String email) {
+    public ResponseEntity<UserDto> getInfo(@AuthenticationPrincipal String email) {
         UserDto userInfo = userManageService.getInfo(email);
-        return ResponseEntity.ok().body(BaseResponseBody.of(200, "success", userInfo));
+        return ResponseEntity.ok().body(userInfo);
     }
 //
 //    @PostMapping

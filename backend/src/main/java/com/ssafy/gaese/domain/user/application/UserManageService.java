@@ -1,9 +1,9 @@
 package com.ssafy.gaese.domain.user.application;
 
-import com.ssafy.fullcourse.domain.user.dto.UserDto;
-import com.ssafy.fullcourse.domain.user.entity.User;
-import com.ssafy.fullcourse.domain.user.repository.UserRepository;
-import com.ssafy.fullcourse.global.util.AwsS3Service;
+import com.ssafy.gaese.domain.user.dto.UserDto;
+import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.global.util.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
