@@ -7,10 +7,10 @@ const client = axios.create({
   },
 });
 
-// client.interceptors.request.use((config: AxiosRequestConfig) => {
-//   const accessToken = 'Bearer ' + sessionStorage.getItem('accessToken');
-//   config.headers['access-token'] = accessToken;
-//   return config;
-// });
+client.interceptors.request.use((config: AxiosRequestConfig) => {
+  const accessToken = 'Bearer ' + sessionStorage.getItem('accessToken');
+  config.headers!.Authorization = accessToken;
+  return config;
+});
 
 export default client;
