@@ -1,12 +1,16 @@
 import React from 'react';
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
+import IntroPage from './features/Intro/pages/IntroPage'
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div>
-      <p>f</p>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="" element={<IntroPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App;
