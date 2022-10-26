@@ -1,4 +1,4 @@
-package com.ssafy.gaese.domain.chat;
+package com.ssafy.gaese.domain.chat.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
-    private String name;
+    private String nickName;
+    private String content;
 
 }
