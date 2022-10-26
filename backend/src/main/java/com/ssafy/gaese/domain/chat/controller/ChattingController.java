@@ -15,6 +15,7 @@ public class ChattingController {
 
     @MessageMapping("/receive") // prefix 와 합쳐짐
     public void greetingTest(Message message) throws Exception{
+        System.out.println(message.getContent());
         simpMessagingTemplate.convertAndSend("/topic/chat",message);
     }
 
