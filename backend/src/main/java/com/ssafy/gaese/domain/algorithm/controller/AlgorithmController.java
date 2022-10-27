@@ -23,6 +23,12 @@ public class AlgorithmController {
 
     private final AlgoService algoService;
 
+//    @PostMapping("/room")
+//    @ApiOperation(value = "생성된 알고리즘 방 조회", notes = "알고리즘 게임 기록 등록")
+//    public ResponseEntity<String> roomList(){
+//
+//    }
+
     /* user email -> jwt 로 수정 */
     @PostMapping("/record/{email}")
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
