@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserDto {
 
     private String email;
-    private String socialId;
+    private Long socialId;
     private String nickname;
     private String imgUrl;
     private String loginType;

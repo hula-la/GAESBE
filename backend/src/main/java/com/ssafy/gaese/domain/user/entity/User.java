@@ -1,15 +1,13 @@
 package com.ssafy.gaese.domain.user.entity;
 
 import com.ssafy.gaese.domain.user.dto.UserDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,10 +22,13 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String socialId;
+    private Long socialId;
 
     @Column(nullable = false, unique = true)
     private String nickname;
+
+    @Column(nullable = false)
+    private RoleType roleType;
 
 //    @Enumerated(EnumType.STRING)
 //    @Column(nullable = false, length = 10)
@@ -43,9 +44,16 @@ public class User {
     @Column(nullable = false, length = 20)
     private LoginType loginType;
 
+    private String refreshToken;
+
     public User update(String nickname, String imgUrl) {
         this.nickname = nickname;
         this.imgUrl = imgUrl;
+        return this;
+    }
+
+    public User updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
         return this;
     }
 

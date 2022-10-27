@@ -31,14 +31,18 @@ public class TokenProvider {
 
     private final String secret;
     private final long tokenValidityInMilliseconds;
+    private final long refreshTokenValidityInMilliseconds;
 
     private Key key;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+            @Value("${jwt.access-token-validity-in-seconds}") long tokenValidityInSeconds,
+            @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds
+    ) {
         this.secret = secret;
-        this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+        this.tokenValidityInMilliseconds = tokenValidityInSeconds  * 1000;
+        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInSeconds * 1000;
     }
 
     // 생성자에서 빈이 생성되고 주입을 받은 후에, secret 값을 Base64 Decode해서 key 변수에 할당한다
@@ -49,22 +53,29 @@ public class TokenProvider {
 //    }
 
     // Authentication 객체의 권한정보를 이용해 토큰을 생성하는 메서드
-    public String createToken(Authentication authentication) {
-        // 권한들
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    public String createToken(Long userId) {
 
-        long now = (new Date()).getTime();
+        Date now = new Date();
         // 토큰 만료시간 설정
-        Date validity = new Date(now + this.tokenValidityInMilliseconds);
+        Date validity = new Date(now.getTime() + this.tokenValidityInMilliseconds);
 
         // JWT 토큰 생성 후 리턴
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(userId.toString())
+                .setClaims()
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512) // 해싱알고리즘과 시크릿키 설정
                 .setExpiration(validity)
+                .compact();
+    }
+
+    // jwt refresh 토큰 생성
+    public String createRefreshToken() {
+        Date now = new Date();
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 

@@ -3,14 +3,21 @@ package com.ssafy.gaese.domain.user.controller;
 import com.ssafy.gaese.domain.user.application.KakaoUserService;
 import com.ssafy.gaese.domain.user.application.NaverUserService;
 import com.ssafy.gaese.domain.user.application.UserManageService;
+import com.ssafy.gaese.domain.user.dto.TokenDto;
 import com.ssafy.gaese.domain.user.dto.UserDto;
+import com.ssafy.gaese.domain.user.dto.account.LoginResponseDto;
+import com.ssafy.gaese.domain.user.dto.account.SignupRequestDto;
+import com.ssafy.gaese.domain.user.dto.account.kakao.KakaoTokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -25,9 +32,50 @@ public class UserController {
     private final UserManageService userManageService;
 
 
+    @GetMapping("/login/kakao")
+    public ResponseEntity<LoginResponseDto> kakaoLogin(@RequestBody HashMap<String, String> param) {
+
+        String code = param.get("code");
+        System.out.println(code);
+        KakaoTokenDto kakaoTokenDto = kakaoUserService.getKakaoAccessToken(code);
+        System.out.println("kakaoTokenDto: " + kakaoTokenDto);
+        String kakaoAccessToken = kakaoTokenDto.getAccess_token();
+        System.out.println("kakaoAccessToken: " + kakaoAccessToken);
+
+        // 토큰 발급까지 authService.kakaologin 상에서 다 처리하자
+        LoginResponseDto loginResponseDto = kakaoUserService.kakaoLogin(kakaoAccessToken);
+
+        return ResponseEntity.ok(loginResponseDto);
+    }
+    @PostMapping("/signup")
+    public ResponseEntity<String> kakaoSignup(@RequestBody SignupRequestDto requestDto) {
+
+        // requestDto 로 데이터 받아와서 accountId 반환
+        Long userId = kakaoUserService.kakaoSignUp(requestDto);
+
+        // 최초 가입자에게는 RefreshToken, AccessToken 모두 발급
+        TokenDto tokenDto = securityService.signup(userId);
+
+        // AccessToken 은 header 에 세팅하고, refreshToken 은 httpOnly 쿠키로 세팅
+//        SignupResponseDto signUpResponseDto = new SignupResponseDto();
+        HttpHeaders headers = new HttpHeaders();
+        ResponseCookie cookie = ResponseCookie.from("RefreshToken", tokenDto.getRefreshToken())
+                .maxAge(60*60*24*7) // 쿠키 유효기간 7일로 설정했음
+                .path("/")
+                .secure(true)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        headers.add("Set-Cookie", cookie.toString());
+        headers.add("Authorization", tokenDto.getAccessToken());
+
+        signUpResponseDto.setResult("가입이 완료되었습니다.");
+        return ResponseEntity.ok().headers(headers).body(signUpResponseDto);
+    }
+
     @PostMapping("/kakao")
     public HttpEntity<?> kakaoLogin(@RequestBody HashMap<String, String> param) {
-        kakaoUserService.getUserInfoByAccessToken(param.get("access_token"));
+        kakaoUserService.getUserInfoByAccessToken(param.get("Authorization"));
         UserDto userDto = kakaoUserService.getUserInfoByAccessToken(param.get("access_token"));
         return kakaoUserService.login(userDto);
     }
