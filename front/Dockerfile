@@ -1,4 +1,3 @@
-// ver2 도커파일로 nginx 설정
 cd frontend
 docker build -t frontend .
 docker ps -q --filter "name=frontend" | grep -q . && docker stop frontend && docker rm frontend | true
