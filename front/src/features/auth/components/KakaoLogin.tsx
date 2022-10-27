@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -31,23 +30,11 @@ const Wrapper = styled.div`
 `;
 
 const KakaoLogin = () => {
-  const location = useLocation();
-
-  const {Kakao} = (window as any);
+  const redirectURI = 'http://localhost:3000/login/kakao';
+  const KAKAO_AUTH_URL = `http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${redirectURI}`;
   const loginWithKakao = () => {
-    Kakao.Auth.authorize({
-      redirectUri: 'http://localhost:3000/login'
-    })
-  }
-  const getKakaoToken = () => {
-    if (!location.search) return 
-    const token:string = location.search.split('=')[1]
-    
-  }
-
-  useEffect(() => {
-    getKakaoToken()
-  }, [])
+    window.location.href = KAKAO_AUTH_URL;
+  };
 
   return (
     <Wrapper>

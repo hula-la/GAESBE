@@ -12,10 +12,17 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginKakaoStart(state, action) {},
-    loginKakaoSuccess(state, action: PayloadAction<UserInfo[]>) {
-      state.userInfo = action.payload;
+    loginKakaoSuccess(state, action: PayloadAction<String>) {
+      console.log(action);
     },
     loginKakaoError(state, action) {
+      state.error = action.payload;
+    },
+    loginNaverStart(state, action) {},
+    loginNaverSuccess(state, action: PayloadAction<String>) {
+      console.log(action);
+    },
+    loginNaverError(state, action) {
       state.error = action.payload;
     },
   },
