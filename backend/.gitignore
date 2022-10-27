@@ -8,6 +8,8 @@ build/
 ##### 민감 정보 ###
 env.properties
 
+*.p12
+
 ### STS ###
 .apt_generated
 .classpath
