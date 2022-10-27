@@ -1,5 +1,14 @@
-cd frontend
-docker build -t frontend .
-docker ps -q --filter "name=frontend" | grep -q . && docker stop frontend && docker rm frontend | true
-docker run -d -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt/ -v /home/ubuntu/certbot/www:/var/www/certbot --name frontend frontend
-docker rmi -f $(docker images -f "dangling=true" -q) || true
+# build stage
+FROM node:lts-alpine as build-stage
+WORKDIR /app
+COPY package*.json ./
+RUN yarn install
+COPY . .
+RUN npm run build
+ 
+# production stage
+FROM nginx:stable-alpine as production-stage
+COPY ./default.conf /etc/nginx/conf.d
+COPY --from=build-stage /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
