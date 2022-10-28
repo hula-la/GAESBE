@@ -8,10 +8,12 @@ import createSagaMiddleware from 'redux-saga';
 import rootSaga from './rootSaga';
 // 관리하는 슬라이스들
 import authReducer from '../features/auth/authSlice';
+import unityReducer from '../features/unity/unitySlice';
 
 // rootReducers by using combineReducers
 const rootReducers = combineReducers({
   auth: authReducer,
+  unity: unityReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
