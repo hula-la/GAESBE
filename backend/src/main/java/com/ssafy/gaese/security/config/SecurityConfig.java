@@ -1,7 +1,7 @@
 package com.ssafy.gaese.security.config;
 
-import com.ssafy.gaese.security.filter.JwtAuthenticationFilter;
 import com.ssafy.gaese.security.application.CustomOAuth2UserService;
+import com.ssafy.gaese.security.filter.JwtAuthenticationFilter;
 import com.ssafy.gaese.security.util.CookieAuthorizationRequestRepository;
 import com.ssafy.gaese.security.util.handler.JwtAccessDeniedHandler;
 import com.ssafy.gaese.security.util.handler.JwtAuthenticationEntryPoint;
@@ -41,9 +41,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        final String[] PERMIT_URL_ARRAY = {
+                /* swagger v2 */
+                "/v2/api-docs",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**",
+                /* swagger v3 */
+                "/v3/api-docs/**",
+                "/swagger-ui/**"
+        };
+
         http.authorizeRequests()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/oauth2/**", "/auth/**").permitAll()
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 

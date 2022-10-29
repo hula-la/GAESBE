@@ -1,12 +1,12 @@
 package com.ssafy.gaese.security.application;
 
-import com.ssafy.gaese.security.error.OAuthProcessingException;
-import com.ssafy.gaese.security.model.CustomUserDetails;
-import com.ssafy.gaese.security.model.account.OAuth2UserInfo;
 import com.ssafy.gaese.domain.user.entity.AuthProvider;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.entity.UserRole;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.security.error.OAuthProcessingException;
+import com.ssafy.gaese.security.model.CustomUserDetails;
+import com.ssafy.gaese.security.model.account.OAuth2UserInfo;
 import com.ssafy.gaese.security.util.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
