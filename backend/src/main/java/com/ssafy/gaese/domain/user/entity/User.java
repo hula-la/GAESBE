@@ -1,6 +1,5 @@
 package com.ssafy.gaese.domain.user.entity;
 
-import com.ssafy.gaese.domain.user.dto.UserDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,44 +10,35 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "User", indexes = {
-        @Index(name = "idx__email", columnList = "email")
-})
+@Table(name = "User")
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private Long socialId;
 
     @Column(nullable = false, unique = true)
     private String nickname;
 
+
+    private String img;
+
     @Column(nullable = false)
-    private RoleType roleType;
-
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false, length = 10)
-//    private Gender gender;
-
-//    @Column(nullable = false)
-//    private String ageRange;
-
-    @Column(length = 100)
-    private String imgUrl;
+    private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private LoginType loginType;
+    private AuthProvider authProvider;
+
+//    private String githubUrl;
 
     private String refreshToken;
 
     public User update(String nickname, String imgUrl) {
         this.nickname = nickname;
-        this.imgUrl = imgUrl;
+        this.img = imgUrl;
         return this;
     }
 
@@ -57,13 +47,13 @@ public class User {
         return this;
     }
 
-    public UserDto toDto() {
-        return UserDto.builder()
-                .email(this.email)
-                .nickname(this.nickname)
-                .imgUrl(this.imgUrl)
-                .loginType(this.loginType.toString())
-                .build();
-    }
+//    public UserDto toDto() {
+//        return UserDto.builder()
+//                .email(this.email)
+//                .nickname(this.nickname)
+//                .img(this.img)
+//                .loginType(this.authProvider.name())
+//                .build();
+//    }
 
 }
