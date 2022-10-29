@@ -21,8 +21,12 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
     }
     @Override
     public String getEmail() {
-        return (String) kakaoAccount.get("email");
+        return "email";
     }
+//    @Override
+//    public String getEmail() {
+//        return (String) kakaoAccount.get("email");
+//    }
     @Override
     public String getImageUrl() {
         return (String) kakaoProfile.get("profile_image_url");
