@@ -2,6 +2,7 @@ package com.ssafy.gaese.global.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +56,6 @@ public class AwsS3Service {
     public void delete(String url){
         String fileName = url.substring( url.lastIndexOf('/')+1, url.length() );
         log.info(fileName+" 삭제");
-        amazonS3.deleteObject(bucket,fileName);
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket,fileName));
     }
 }
