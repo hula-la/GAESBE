@@ -1,5 +1,7 @@
 package com.ssafy.gaese.security.model.account;
 
+import com.ssafy.gaese.domain.user.entity.AuthProvider;
+
 import java.util.Map;
 
 public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
@@ -16,9 +18,14 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo {
     public String getName() {
         return (String) attributes.get("name");
     }
+//    @Override
+//    public String getEmail() {
+//        return (String) attributes.get("email");
+//    }
+
     @Override
-    public String getEmail() {
-        return (String) attributes.get("email");
+    public AuthProvider getAuthProvider() {
+        return AuthProvider.GOOGLE;
     }
     @Override
     public String getImageUrl() {

@@ -1,5 +1,6 @@
 package com.ssafy.gaese.security.model.account;
 
+import com.ssafy.gaese.domain.user.entity.AuthProvider;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,9 +23,10 @@ public abstract class OAuth2UserInfo {
 
     public abstract String getId();
 
+    public abstract AuthProvider getAuthProvider();
     public abstract String getName();
 
-    public abstract String getEmail();
+//    public abstract String getEmail();
 
     public abstract String getImageUrl();
 }

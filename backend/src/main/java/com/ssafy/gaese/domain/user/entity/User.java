@@ -17,10 +17,10 @@ public class User {
     private Long id;
 
 //    @Column(unique = true, nullable = false)
-    private String email;
+    private String socialId;
 
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String nickname;
 
 
