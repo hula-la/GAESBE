@@ -1,6 +1,8 @@
 package com.ssafy.gaese.domain.user.repository;
 
+import com.ssafy.gaese.domain.user.entity.AuthProvider;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
+    Optional<User> findBySocialIdAndAuthProvider(String socialId, AuthProvider authProvider);
     Optional<User> findByNickname(String nickname);
 
-    boolean existsByEmail(String email);
 
     @Query("SELECT u.refreshToken FROM User u WHERE u.id=:id")
     String getRefreshTokenById(@Param("id") Long id);

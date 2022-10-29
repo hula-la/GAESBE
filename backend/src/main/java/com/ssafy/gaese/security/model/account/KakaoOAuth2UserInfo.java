@@ -1,5 +1,7 @@
 package com.ssafy.gaese.security.model.account;
 
+import com.ssafy.gaese.domain.user.entity.AuthProvider;
+
 import java.util.Map;
 
 public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
@@ -13,20 +15,25 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getId() {
-        return "kakao";
+        return (String) attributes.get("id");
     }
     @Override
     public String getName() {
         return (String) kakaoProfile.get("nickname");
     }
-    @Override
-    public String getEmail() {
-        return "email";
-    }
+//    @Override
+//    public String getEmail() {
+//        return "email";
+//    }
 //    @Override
 //    public String getEmail() {
 //        return (String) kakaoAccount.get("email");
 //    }
+
+    @Override
+    public AuthProvider getAuthProvider() {
+        return AuthProvider.KAKAO;
+    }
     @Override
     public String getImageUrl() {
         return (String) kakaoProfile.get("profile_image_url");

@@ -43,10 +43,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         AuthProvider authProvider = AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(authProvider, oAuth2User.getAttributes());
 
-        if (userInfo.getEmail().isEmpty()) {
+        System.out.println("**********");
+        System.out.println(userInfo);
+        System.out.println("**********");
+
+        if (userInfo.getId().isEmpty()) {
             throw new OAuthProcessingException("Email not found from OAuth2 provider");
         }
-        Optional<User> userOptional = userRepository.findByEmail(userInfo.getEmail());
+        Optional<User> userOptional = userRepository.findBySocialIdAndAuthProvider(userInfo.getId(), userInfo.getAuthProvider());
         User user;
 
         if (userOptional.isPresent()) {		// 이미 가입된 경우
@@ -63,7 +67,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User createUser(OAuth2UserInfo userInfo, AuthProvider authProvider) {
         User user = User.builder()
-                .email(userInfo.getEmail())
+                .socialId(userInfo.getId())
                 .img(userInfo.getImageUrl())
                 .userRole(UserRole.USER)
                 .authProvider(authProvider)

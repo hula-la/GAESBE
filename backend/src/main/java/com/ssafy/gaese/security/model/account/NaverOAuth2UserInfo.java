@@ -1,5 +1,7 @@
 package com.ssafy.gaese.security.model.account;
 
+import com.ssafy.gaese.domain.user.entity.AuthProvider;
+
 import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo {
@@ -11,15 +13,20 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getId() {
-        return "id";
+        return (String)attributes.get("id");
     }
     @Override
     public String getName() {
         return (String) response.get("name");
     }
+//    @Override
+//    public String getEmail() {
+//        return (String) response.get("email");
+//    }
+
     @Override
-    public String getEmail() {
-        return (String) response.get("email");
+    public AuthProvider getAuthProvider() {
+        return AuthProvider.NAVER;
     }
     @Override
     public String getImageUrl() {
