@@ -1,5 +1,7 @@
 package com.ssafy.gaese.security.filter;
 
+import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.security.model.CustomUserDetails;
 import com.ssafy.gaese.security.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +23,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,6 +34,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug(authentication.getName() + "의 인증정보 저장");
+
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Long userId = userDetails.getId();
+
+
+//            if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
+//                String requestURI = request.getRequestURI();
+//
+//                response.sendRedirect("/login?redirectURL=" + requestURI);
+//                return;
+//            }
         } else {
             log.debug("유효한 JWT 토큰이 없습니다.");
         }
