@@ -3,9 +3,9 @@ import React from 'react';
 const IntroPage = () => {
   return (
     <div>
-      <p>eee</p>
+      <img src="/img/Intro1.jpg" alt="Intro" />
     </div>
-  )
-}
+  );
+};
 
 export default IntroPage;
