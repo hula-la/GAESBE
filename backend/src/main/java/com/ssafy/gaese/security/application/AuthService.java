@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -25,7 +26,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider tokenProvider;
 
-    public String refreshToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // 1. Validation Refresh Token
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("no Refresh Token Cookie"));
@@ -35,7 +36,7 @@ public class AuthService {
         }
 
         // 2. 유저정보 얻기
-        Authentication authentication = tokenProvider.getAuthentication(oldAccessToken);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         Long id = Long.valueOf(user.getName());

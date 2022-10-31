@@ -1,6 +1,8 @@
 package com.ssafy.gaese.domain.user.entity;
 
+import com.ssafy.gaese.domain.cs.dto.UserDto;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -32,13 +34,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
-//    private String githubUrl;
-
     private String refreshToken;
 
-    public User update(String nickname, String imgUrl) {
+    @ColumnDefault("0")
+    private int profileChar;
+
+    public User update(String nickname, int profileChar) {
         this.nickname = nickname;
-        this.img = imgUrl;
+        this.profileChar = profileChar;
         return this;
     }
 
@@ -47,13 +50,12 @@ public class User {
         return this;
     }
 
-//    public UserDto toDto() {
-//        return UserDto.builder()
-//                .email(this.email)
-//                .nickname(this.nickname)
-//                .img(this.img)
-//                .loginType(this.authProvider.name())
-//                .build();
-//    }
+    public UserDto toDto() {
+        return UserDto.builder()
+                .nickname(this.nickname)
+                .id(this.id)
+                .profileChar(this.profileChar)
+                .build();
+    }
 
 }
