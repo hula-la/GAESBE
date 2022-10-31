@@ -39,12 +39,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long userId = userDetails.getId();
 
 
-//            if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
-//                String requestURI = request.getRequestURI();
-//
-//                response.sendRedirect("/login?redirectURL=" + requestURI);
-//                return;
-//            }
+            if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
+                String requestURI = request.getRequestURI();
+
+                response.sendRedirect("/login?redirectURL=" + requestURI);
+                return;
+            }
         } else {
             log.debug("유효한 JWT 토큰이 없습니다.");
         }
