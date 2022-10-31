@@ -1,27 +1,23 @@
 package com.ssafy.gaese;
 
-import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.*;
-import org.springframework.data.redis.hash.HashMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import static com.ssafy.gaese.global.util.SocketUtil.roomCodeMaker;
 
 @SpringBootTest
 class GaeseApplicationTests {
 
-/*
-
-"algo" : ["1","2","3","4"]
-"algo1" : ["i","f","e"]
-
- */
 	@Autowired
 	private RedisTemplate<String,String> roomTemplate;
 	@Autowired
 	private RedisTemplate<String, Object> roomUserTemplate;
+	@Autowired
+	private RedisTemplate<String,String> stringTemplate;
 	@Test
 	void testRoomInfo(){
 
@@ -65,12 +61,91 @@ class GaeseApplicationTests {
 	방 제한 시간 :
 	방 풀 문제 티어 :
 	현재 인원 :
-참가자 :
-	{socketId : userNickName}
-	{socketId : userNickName}
-	{socketId : userNickName}
+방 고유 번호user :
+	{userNickName : socketId}
+	{userNickName : socketId}
+	{userNickName : socketId}
 
  */
+	String roomCode = "re3VbvAU";
+	@Test
+	void checkCode(){
+
+		while(true){
+			String code = roomCodeMaker();
+			ListOperations<String,String> list = stringTemplate.opsForList();
+
+			List<String> codeList  = list.range("codes",0,-1);
+			System.out.println(codeList.toString());
+			if(codeList.contains(code)) continue;
+			list.rightPush("codes",code);
+			list.rightPush("algoCodes",code);
+			break;
+		}
+	}
+
+	@Test
+	void deleteCode(){
+		ListOperations<String,String > listOperations = stringTemplate.opsForList();
+
+		System.out.println(listOperations.remove("algoCodes",1,roomCode)); // return 1 : success
+		System.out.println(listOperations.remove("codes",1,roomCode)); // return 1 : success
+
+	}
+	@Test
+	void createRoom(){
+
+		HashOperations<String, Object, String > hashOperations = stringTemplate.opsForHash();
+
+		hashOperations.put(roomCode,"code",roomCode);
+		hashOperations.put(roomCode,"time","1:30");
+		hashOperations.put(roomCode,"tier","11");
+		hashOperations.put(roomCode,"num","0");
+
+		Map<Object, String> roomInfo =  hashOperations.entries(roomCode);
+		System.out.println(roomInfo); //return
+	}
+
+	@Test
+	void getRooms(){
+		ListOperations<String,String> list = stringTemplate.opsForList();
+		List<String> roomList  = list.range("algoCodes",0,-1);
+		Map<String, Object> map = new HashMap<>();
+		for(String roomCode : roomList){
+			HashOperations<String,String,String > hashOperations = stringTemplate.opsForHash();
+			map.put(roomCode,hashOperations.entries(roomCode));
+		}
+		System.out.println(map.toString());
+
+	}
+	@Test
+	void enterRoom(){
+		HashOperations<String ,Object,String > hashOperations = stringTemplate.opsForHash();
+		hashOperations.put(roomCode+"user","user3","session3");
+		hashOperations.increment(roomCode,"num",1);
+		hashOperations.put(roomCode+"user","user4","session4");
+		hashOperations.increment(roomCode,"num",1);
+
+		Map<Object,String> list = hashOperations.entries(roomCode+"user");
+		System.out.println(list.toString()); // return 방에 있는 사람 list
+	}
+
+	@Test
+	void leaveRoom(){
+		HashOperations<String ,Object,String > hashOperations = stringTemplate.opsForHash();
+
+		hashOperations.delete(roomCode+"user","user3");
+		hashOperations.increment(roomCode,"num",-1);
+
+		Map<Object,String> list = hashOperations.entries(roomCode+"user");
+		System.out.println(list.toString()); // return 방에 있는 사람 list
+	}
+	@Test
+	void deleteRoom(){
+		stringTemplate.delete(roomCode);
+		stringTemplate.delete(roomCode+"user"); // return 1 : success
+	}
+
 	@Test
 	void testSet(){
 		HashOperations<String, Object, String> hashOperations = roomTemplate.opsForHash();
