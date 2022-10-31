@@ -41,6 +41,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             return;
         }
         clearAuthenticationAttributes(request, response);
+        System.out.println("***랄라********************");
+        System.out.println(request.getRequestURI());
+        System.out.println(targetUrl);
+        System.out.println("***랄라@********************");
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
