@@ -1,60 +1,60 @@
 package com.ssafy.gaese.domain.user.entity;
 
-import com.ssafy.gaese.domain.user.dto.UserDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.ssafy.gaese.domain.cs.dto.UserDto;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "User", indexes = {
-        @Index(name = "idx__email", columnList = "email")
-})
+@Table(name = "User")
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String email;
-
-    @Column(nullable = false)
+//    @Column(unique = true, nullable = false)
     private String socialId;
 
-    @Column(nullable = false, unique = true)
+
+    @Column(nullable = true, unique = true)
     private String nickname;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false, length = 10)
-//    private Gender gender;
 
-//    @Column(nullable = false)
-//    private String ageRange;
+    private String img;
 
-    @Column(length = 100)
-    private String imgUrl;
+    @Column(nullable = false)
+    private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private LoginType loginType;
+    private AuthProvider authProvider;
 
-    public User update(String nickname, String imgUrl) {
+    private String refreshToken;
+
+    @ColumnDefault("0")
+    private int profileChar;
+
+    public User update(String nickname, int profileChar) {
         this.nickname = nickname;
-        this.imgUrl = imgUrl;
+        this.profileChar = profileChar;
+        return this;
+    }
+
+    public User updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
         return this;
     }
 
     public UserDto toDto() {
         return UserDto.builder()
-                .email(this.email)
                 .nickname(this.nickname)
-                .imgUrl(this.imgUrl)
-                .loginType(this.loginType.toString())
+                .id(this.id)
+                .profileChar(this.profileChar)
                 .build();
     }
 
