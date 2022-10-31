@@ -1,8 +1,11 @@
 package com.ssafy.gaese.domain.user.entity;
 
+import com.ssafy.gaese.domain.cs.entity.CsWrongProblem;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,6 +38,9 @@ public class User {
 //    private String githubUrl;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<CsWrongProblem> csWrongProblemList = new ArrayList<>();
 
     public User update(String nickname, String imgUrl) {
         this.nickname = nickname;
