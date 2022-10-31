@@ -1,19 +1,19 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import AlgoRooms from './AlgoRooms';
-import AlgoNav from '../components/AlgoNav';
-import Algo1 from './Algo1';
-import Algo2 from './Algo2';
-
+import { useNavigate } from "react-router-dom"
 function AlgoMainPage() {
+  const navigate = useNavigate()
+
+  const handleMakeRoom = () => {
+    navigate("make")
+  }
+
+  const handleRoomList = () => {
+    navigate("list")
+  }
+
   return <>
-    <h1>알고 배틀 메인페이지</h1>
-    <AlgoNav />
-    <Routes>
-      <Route path="" element={<AlgoRooms />} />
-      <Route path="/1" element={<Algo1 />} />
-      <Route path="/2" element={<Algo2 />} />
-    </Routes>
+    <h1>알고 배틀 메인 페이지</h1>
+    <button onClick={handleMakeRoom}>방만들기</button>
+    <button onClick={handleRoomList}>방 목록 확인하기</button>
   </>
 }
-
 export default AlgoMainPage
