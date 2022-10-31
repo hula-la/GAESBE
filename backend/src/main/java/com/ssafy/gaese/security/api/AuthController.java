@@ -1,8 +1,11 @@
 package com.ssafy.gaese.security.api;
 
 import com.ssafy.gaese.security.application.AuthService;
+import com.ssafy.gaese.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/refresh")
-    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response, @RequestBody String accessToken) {
-        return ResponseEntity.ok().body(authService.refreshToken(request, response, accessToken));
+    public ResponseEntity refreshToken(HttpServletRequest request,
+                                       HttpServletResponse response) {
+        return ResponseEntity.ok().body(authService.refreshToken(request, response));
     }
 }
