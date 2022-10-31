@@ -77,7 +77,7 @@ public class JwtTokenProvider {
         ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Lax")
+                .sameSite("None")
                 .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
                 .path("/")
                 .build();
