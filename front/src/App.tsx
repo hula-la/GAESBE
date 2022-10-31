@@ -5,7 +5,6 @@ import IntroPage from './features/Intro/pages/IntroPage';
 import LoginPage from './features/auth/pages/LoginPage';
 import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import CombinePage from './features/unity/pages/CombinePage';
-import AlgoPage from './features/algorithm/AlgoPage';
 
 const App = () => {
   return (
@@ -13,9 +12,8 @@ const App = () => {
       <Routes>
         <Route path="" element={<IntroPage />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="/algo/*" element={<AlgoPage />} />
         <Route path="nickname" element={<SetNicknamePage />} />
-        <Route path="meta" element={<CombinePage />} />
+        <Route path="meta/*" element={<CombinePage />} />
       </Routes>
     </BrowserRouter>
   );

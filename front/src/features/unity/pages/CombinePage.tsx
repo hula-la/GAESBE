@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import SideBar from '../../../components/Layout/SideBar';
 import CoinFlipPage from '../../coinflip/CoinFlipPage';
 import UnityPage from './UnityPage';
+import AlgoPage from '../../algorithm/AlgoPage';
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,6 +18,7 @@ const CombinePage = () => {
     <Wrapper>
       <SideBar />
       {pageNum === 0 && <UnityPage />}
+      {pageNum === 3 && <AlgoPage />}
       {pageNum === 4 && <CoinFlipPage />}
     </Wrapper>
   );
