@@ -16,6 +16,6 @@ public class AlgoSocketController {
     @MessageMapping("/algo")
     public void greetingTest(AlgoRoomDto algoRoomDto) throws Exception{
         System.out.println(algoRoomDto.toString());
-        simpMessagingTemplate.convertAndSend("/algo/room/"+algoRoomDto.getRoomNo(),algoRoomDto);
+        simpMessagingTemplate.convertAndSend("/algo/room/"+algoRoomDto.getCode(),algoRoomDto);
     }
 }

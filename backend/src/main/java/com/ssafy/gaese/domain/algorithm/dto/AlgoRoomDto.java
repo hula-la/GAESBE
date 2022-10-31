@@ -19,6 +19,6 @@ public class AlgoRoomDto {
     private String code;
     private String time;
     private String tier;
-    private int num;
+    private String num;
 
 }

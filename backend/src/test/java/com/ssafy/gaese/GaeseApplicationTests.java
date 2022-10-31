@@ -1,5 +1,7 @@
 package com.ssafy.gaese;
 
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
+import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,12 +14,31 @@ import static com.ssafy.gaese.global.util.SocketUtil.roomCodeMaker;
 @SpringBootTest
 class GaeseApplicationTests {
 
+	/*
+
+    방 고유 번호 :
+        방 제한 시간 :
+        방 풀 문제 티어 :
+        현재 인원 :
+    참가자 :
+        {socketId : userNickName}
+        {socketId : userNickName}
+        {socketId : userNickName}
+
+     */
+
 	@Autowired
 	private RedisTemplate<String,String> roomTemplate;
 	@Autowired
 	private RedisTemplate<String, Object> roomUserTemplate;
+
+
 	@Autowired
 	private RedisTemplate<String,String> stringTemplate;
+	@Autowired
+	private RedisTemplate<String, AlgoRoomDto>	algoRoomDtoRedisTemplate;
+
+	String roomCode="setV11kc";
 	@Test
 	void testRoomInfo(){
 
@@ -55,19 +76,8 @@ class GaeseApplicationTests {
 		System.out.println(roomUserTemplate.opsForList().range("algo"+room, 0, -1));
 
 	}
-/*
 
-방 고유 번호 :
-	방 제한 시간 :
-	방 풀 문제 티어 :
-	현재 인원 :
-방 고유 번호user :
-	{userNickName : socketId}
-	{userNickName : socketId}
-	{userNickName : socketId}
 
- */
-	String roomCode = "re3VbvAU";
 	@Test
 	void checkCode(){
 
@@ -95,39 +105,67 @@ class GaeseApplicationTests {
 	@Test
 	void createRoom(){
 
-		HashOperations<String, Object, String > hashOperations = stringTemplate.opsForHash();
-
+		HashOperations<String, String, String > hashOperations = stringTemplate.opsForHash();
+//		ValueOperations<String,AlgoRoomDto> valueOperations = algoRoomDtoRedisTemplate.opsForValue();
+//		AlgoRoomDto algoRoomDto = new AlgoRoomDto(roomCode, "1:30","11",0);
+//		valueOperations.set(roomCode,algoRoomDto);
 		hashOperations.put(roomCode,"code",roomCode);
 		hashOperations.put(roomCode,"time","1:30");
 		hashOperations.put(roomCode,"tier","11");
 		hashOperations.put(roomCode,"num","0");
 
-		Map<Object, String> roomInfo =  hashOperations.entries(roomCode);
-		System.out.println(roomInfo); //return
+		Map<String, String> map = hashOperations.entries(roomCode);
+		AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
+										,map.get("tier"), map.get("num"));
+		System.out.println(algoRoomDto.toString()); //return
 	}
 
 	@Test
 	void getRooms(){
 		ListOperations<String,String> list = stringTemplate.opsForList();
-		List<String> roomList  = list.range("algoCodes",0,-1);
-		Map<String, Object> map = new HashMap<>();
-		for(String roomCode : roomList){
+		List<String> roomCodeList  = list.range("algoCodes",0,-1);
+		List<AlgoRoomDto> roomList = new ArrayList<>();
+		for(String roomCode : roomCodeList){
 			HashOperations<String,String,String > hashOperations = stringTemplate.opsForHash();
-			map.put(roomCode,hashOperations.entries(roomCode));
+			Map<String, String> map = hashOperations.entries(roomCode);
+			AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
+					,map.get("tier"), map.get("num"));
+			roomList.add(algoRoomDto);
 		}
-		System.out.println(map.toString());
+		System.out.println(roomList.toString());
+
+	}
+	@Test
+	void getRooms1(){
+		ListOperations<String, AlgoRoomDto> roomList = algoRoomDtoRedisTemplate.opsForList();
+		ListOperations<String, String> codeList  = stringTemplate.opsForList();
+		List<String> codes  = codeList.range("algoCodes",0,-1);
+		Map<String, Object> map = new HashMap<>();
+		List<AlgoRoomDto> roomDtoList = new ArrayList<>();
+
+		for(String roomCode : codes){
+			HashOperations<String,String,AlgoRoomDto > hashOperations = algoRoomDtoRedisTemplate.opsForHash();
+			AlgoRoomDto algoRoomDto = hashOperations.entries(roomCode).get(codes);
+			System.out.println(hashOperations.entries(roomCode).get(codes));
+			roomDtoList.add(algoRoomDto);
+		}
 
 	}
 	@Test
 	void enterRoom(){
-		HashOperations<String ,Object,String > hashOperations = stringTemplate.opsForHash();
+		HashOperations<String ,String,String > hashOperations = stringTemplate.opsForHash();
 		hashOperations.put(roomCode+"user","user3","session3");
 		hashOperations.increment(roomCode,"num",1);
 		hashOperations.put(roomCode+"user","user4","session4");
 		hashOperations.increment(roomCode,"num",1);
 
-		Map<Object,String> list = hashOperations.entries(roomCode+"user");
-		System.out.println(list.toString()); // return 방에 있는 사람 list
+		Map<String,String> list = hashOperations.entries(roomCode+"user");
+		List<String> users = new ArrayList<>();
+
+		for (String key : list.keySet()) {
+			users.add(key);
+		}
+		System.out.println(users.toString()); // return 방에 있는 사람 list
 	}
 
 	@Test
@@ -140,6 +178,7 @@ class GaeseApplicationTests {
 		Map<Object,String> list = hashOperations.entries(roomCode+"user");
 		System.out.println(list.toString()); // return 방에 있는 사람 list
 	}
+
 	@Test
 	void deleteRoom(){
 		stringTemplate.delete(roomCode);
