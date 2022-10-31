@@ -25,7 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    @Value("${app.oauth2.authorizedRedirectUri}")
+//    @Value("${app.oauth2.authorizedRedirectUri}")
     private String redirectUri;
     private final JwtTokenProvider tokenProvider;
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
@@ -52,9 +52,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
-        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new BadRequestException("redirect URIs are not matched");
-        }
+//        if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
+//            throw new BadRequestException("redirect URIs are not matched");
+//        }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         // JWT 생성
@@ -71,14 +71,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
-    private boolean isAuthorizedRedirectUri(String uri) {
-        URI clientRedirectUri = URI.create(uri);
-        URI authorizedUri = URI.create(redirectUri);
-
-        if (authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
-                && authorizedUri.getPort() == clientRedirectUri.getPort()) {
-            return true;
-        }
-        return false;
-    }
+//    private boolean isAuthorizedRedirectUri(String uri) {
+//        URI clientRedirectUri = URI.create(uri);
+//        URI authorizedUri = URI.create(redirectUri);
+//
+//        if (authorizedUri.getHost().equalsIgnoreCase(clientRedirectUri.getHost())
+//                && authorizedUri.getPort() == clientRedirectUri.getPort()) {
+//            return true;
+//        }
+//        return false;
+//    }
 }
