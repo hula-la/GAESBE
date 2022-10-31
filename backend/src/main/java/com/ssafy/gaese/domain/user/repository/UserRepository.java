@@ -18,9 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u.nickname FROM User u WHERE u.id=:id")
     String getNickNameById(@Param("id") Long id);
 
-    @Query("SELECT u.nickname FROM User u WHERE u.id=:id")
-    String getNickNameById(@Param("id") Long id);
-
     @Query("SELECT u.refreshToken FROM User u WHERE u.id=:id")
     String getRefreshTokenById(@Param("id") Long id);
 
