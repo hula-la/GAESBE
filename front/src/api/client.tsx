@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 const client = axios.create({
-  baseURL: 'http://127.0.0.1:8080',
-  // baseURL: 'https://k7e104.p.ssafy.io:8081',
+  // baseURL: 'http://127.0.0.1:8080',
+  baseURL: 'https://k7e104.p.ssafy.io:8081',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -28,9 +28,12 @@ client.interceptors.response.use(
     const originalRequest = error.config;
     console.log(errorResponse);
     if (errorResponse.status === 420) {
-      const data = await axios.post('http://127.0.0.1:8080/api/auth/refresh', {
-        withCredentials: true,
-      });
+      const data = await axios.post(
+        'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
+        {
+          withCredentials: true,
+        },
+      );
       console.log(data);
     } else {
       // 그냥 다시 로그인 해라!@
