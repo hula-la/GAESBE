@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findBySocialIdAndAuthProvider(String socialId, AuthProvider authProvider);
     Optional<User> findByNickname(String nickname);
 
+    @Query("SELECT u.nickname FROM User u WHERE u.id=:id")
+    String getNickNameById(@Param("id") Long id);
 
     @Query("SELECT u.refreshToken FROM User u WHERE u.id=:id")
     String getRefreshTokenById(@Param("id") Long id);
