@@ -1,6 +1,7 @@
 package com.ssafy.gaese.security.filter;
 
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.security.error.NoNickNameException;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import com.ssafy.gaese.security.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
                 String requestURI = request.getRequestURI();
 
-                response.sendRedirect("/login?redirectURL=" + requestURI);
-                return;
+                request.setAttribute("exception", "NoNickName");
+
+
+                throw new NoNickNameException("닉네임 없음");
+//                return;
             }
         } else {
             log.debug("유효한 JWT 토큰이 없습니다.");
