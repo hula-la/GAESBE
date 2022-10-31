@@ -1,6 +1,7 @@
 package com.ssafy.gaese.security.filter;
 
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.security.error.ErrorCode;
 import com.ssafy.gaese.security.error.NoNickNameException;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import com.ssafy.gaese.security.util.JwtTokenProvider;
@@ -31,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = parseBearerToken(request);
 
         // Validation Access Token
-        if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+        if (StringUtils.hasText(token) && tokenProvider.validateToken(token, request)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.debug(authentication.getName() + "의 인증정보 저장");
@@ -43,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
                 String requestURI = request.getRequestURI();
 
-                request.setAttribute("exception", "NoNickName");
+                request.setAttribute("exception", ErrorCode.NONICKNAME_TOKEN.getCode());
 
 
                 throw new NoNickNameException("닉네임 없음");

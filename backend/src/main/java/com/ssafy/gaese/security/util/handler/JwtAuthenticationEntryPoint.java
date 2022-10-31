@@ -1,5 +1,6 @@
 package com.ssafy.gaese.security.util.handler;
 
+import com.ssafy.gaese.security.error.ErrorCode;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -15,9 +16,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        String exception = (String)request.getAttribute("exception");
-        if (exception =="NoNickName"){
-            response.sendError(513,"닉네임 없음");
+        String exception = (String) request.getAttribute("exception");
+        if (exception.equals(ErrorCode.NONICKNAME_TOKEN.getCode())) {
+            response.sendError(ErrorCode.NONICKNAME_TOKEN.getCode(), ErrorCode.NONICKNAME_TOKEN.getMessage());
+        } else if (exception.equals(ErrorCode.EXPIRED_TOKEN.getCode())) {
+            response.sendError(ErrorCode.EXPIRED_TOKEN.getCode(), ErrorCode.EXPIRED_TOKEN.getMessage());
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
         }

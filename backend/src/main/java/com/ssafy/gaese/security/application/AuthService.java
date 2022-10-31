@@ -31,7 +31,7 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("no Refresh Token Cookie"));
 
-        if (!tokenProvider.validateToken(oldRefreshToken)) {
+        if (!tokenProvider.validateToken(oldRefreshToken, request)) {
             throw new RuntimeException("Not Validated Refresh Token");
         }
 

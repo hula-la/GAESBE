@@ -1,6 +1,7 @@
 package com.ssafy.gaese.security.util;
 
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.security.error.ErrorCode;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Base64;
@@ -103,11 +105,12 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public Boolean validateToken(String token) {
+    public Boolean validateToken(String token, HttpServletRequest request) {
         try {
             Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
+            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
             log.info("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
             log.info("지원되지 않는 JWT 토큰입니다.");
