@@ -123,8 +123,7 @@ public class JwtTokenProvider {
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
     private Claims parseClaims(String accessToken) {
         try {
-            String key = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
-            return Jwts.parser().setSigningKey(key).parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().setSigningKey(this.SECRET_KEY).parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
