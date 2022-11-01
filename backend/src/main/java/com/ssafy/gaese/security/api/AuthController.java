@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request,
                                        HttpServletResponse response,
-                                       @RequestBody String oldAccessToken) {
-        return ResponseEntity.ok().body(authService.refreshToken(request, response,oldAccessToken));
+                                       @RequestBody Map<String, Object> body) {
+        return ResponseEntity.ok().body(authService.refreshToken(request, response, (String) body.get("oldAccessToken")));
     }
 }
