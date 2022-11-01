@@ -45,7 +45,7 @@ client.interceptors.response.use(
       localStorage.setItem('accessToken', data!.data);
       const accessToken = 'Bearer ' + data!.data;
       originalRequest.headers!.Authorization = accessToken;
-      console.log(originalRequest);
+      console.log(originalRequest.headers.Authorization);
 
       return axios(originalRequest);
     } else {
