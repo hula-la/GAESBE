@@ -24,11 +24,12 @@ client.interceptors.response.use(
     return response;
   },
   async function (error) {
-    const { response: errorResponse } = error;
+    const { response } = error;
+    console.log(response);
     const originalRequest = error.config;
     console.log(originalRequest);
     const token = localStorage.getItem('accessToken');
-    if (errorResponse.status === 420) {
+    if (response.status === 420) {
       const data = await client
         .post(
           'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
@@ -44,10 +45,10 @@ client.interceptors.response.use(
       console.log(data);
       localStorage.setItem('accessToken', data!.data);
       const accessToken = 'Bearer ' + data!.data;
-      originalRequest.headers!.Authorization = accessToken;
+      client.defaults.headers.Authorization = accessToken;
       console.log(originalRequest.headers.Authorization);
 
-      return axios(originalRequest);
+      return client(originalRequest);
     } else {
       console.log('420에러 아닌데 에러임');
     }
