@@ -32,7 +32,7 @@ client.interceptors.response.use(
       const data = await client.post(
         'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
         // 'http://127.0.0.1:8080/api/auth/refresh',
-        token,
+        JSON.stringify({ oldAccessToken: token }),
         {
           withCredentials: true,
         },
