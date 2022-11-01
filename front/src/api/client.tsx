@@ -26,8 +26,8 @@ client.interceptors.response.use(
   async function (error) {
     const { response: errorResponse } = error;
     const originalRequest = error.config;
+    console.log(originalRequest);
     const token = localStorage.getItem('accessToken');
-    console.log(token);
     if (errorResponse.status === 420) {
       const data = await client
         .post(
@@ -44,6 +44,8 @@ client.interceptors.response.use(
       localStorage.setItem('accessToken', data!.data);
       const accessToken = 'Bearer ' + data!.data;
       originalRequest.headers!.Authorization = accessToken;
+      console.log(originalRequest);
+
       return axios(originalRequest);
     } else {
       console.log('420에러 아닌데 에러임');
