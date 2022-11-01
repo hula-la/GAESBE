@@ -30,9 +30,10 @@ const Wrapper = styled.div`
 `;
 
 const KakaoLogin = () => {
+  // const redirectURI = 'http://localhost:3000//oauth2/redirect';
   const redirectURI = 'https://k7e104.p.ssafy.io/oauth2/redirect';
-  const KAKAO_AUTH_URL = `https://k7e104.p.ssafy.io:8081/api/oauth2/authorize/kakao?redirect_uri=${redirectURI}`;
   // const KAKAO_AUTH_URL = `http://localhost:8080/api/oauth2/authorize/kakao?redirect_uri=${redirectURI}`;
+  const KAKAO_AUTH_URL = `https://k7e104.p.ssafy.io/api/oauth2/authorize/kakao?redirect_uri=${redirectURI}`;
   const loginWithKakao = () => {
     window.location.href = KAKAO_AUTH_URL;
   };

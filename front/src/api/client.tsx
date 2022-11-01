@@ -28,8 +28,9 @@ client.interceptors.response.use(
     const originalRequest = error.config;
     console.log(errorResponse);
     if (errorResponse.status === 420) {
-      const data = await axios.post(
+      const data = await client.post(
         'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
+        // 'http://127.0.0.1:8080/api/auth/refresh',
         {},
         {
           withCredentials: true,
