@@ -29,17 +29,24 @@ client.interceptors.response.use(
     const token = localStorage.getItem('accessToken');
     console.log(token);
     if (errorResponse.status === 420) {
-      const data = await client.post(
-        'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
-        // 'http://127.0.0.1:8080/api/auth/refresh',
-        JSON.stringify({ oldAccessToken: token }),
-        {
-          withCredentials: true,
-        },
-      );
-      console.log(data);
+      const data = await client
+        .post(
+          'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
+          // 'http://127.0.0.1:8080/api/auth/refresh',
+          JSON.stringify({ oldAccessToken: token }),
+          {
+            withCredentials: true,
+          },
+        )
+        .catch((e) => {
+          window.location.replace('/login');
+        });
+      localStorage.setItem('accessToken', data!.data);
+      const accessToken = 'Bearer ' + data!.data;
+      originalRequest.headers!.Authorization = accessToken;
+      return axios(originalRequest);
     } else {
-      // 그냥 다시 로그인 해라!@
+      console.log('420에러 아닌데 에러임');
     }
   },
 );

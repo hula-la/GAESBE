@@ -23,7 +23,7 @@ const RedirectPage = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (error === 600) {
+    if (error === 499) {
       navigate('/nickname');
     }
   }, [error, navigate]);
