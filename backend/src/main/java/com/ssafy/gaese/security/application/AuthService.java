@@ -37,6 +37,7 @@ public class AuthService {
 
         // 2. 유저정보 얻기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication이 왔엉ㅅ "+authentication);
         CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
 
         Long id = Long.valueOf(user.getName());

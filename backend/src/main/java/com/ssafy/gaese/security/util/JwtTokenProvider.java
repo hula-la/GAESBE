@@ -28,7 +28,7 @@ public class JwtTokenProvider {
 
     private final String SECRET_KEY;
     private final String COOKIE_REFRESH_TOKEN_KEY;
-    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;		// 1hour
+    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 2000L;		// 1hour
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;	// 1week
     private final String AUTHORITIES_KEY = "role";
 
@@ -77,7 +77,7 @@ public class JwtTokenProvider {
         ResponseCookie cookie = ResponseCookie.from(COOKIE_REFRESH_TOKEN_KEY, refreshToken)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Lax")
+                .sameSite("None")
                 .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
                 .path("/")
                 .build();

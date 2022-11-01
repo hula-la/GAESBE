@@ -16,10 +16,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        int exception = (int) request.getAttribute("exception");
-        if (exception==ErrorCode.NONICKNAME_TOKEN.getCode()) {
+        Object exception = request.getAttribute("exception");
+        if(exception == null) response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
+        else if ((int)exception==ErrorCode.NONICKNAME_TOKEN.getCode()) {
             response.sendError(ErrorCode.NONICKNAME_TOKEN.getCode(), ErrorCode.NONICKNAME_TOKEN.getMessage());
-        } else if (exception==ErrorCode.EXPIRED_TOKEN.getCode()) {
+        } else if ((int)exception==ErrorCode.EXPIRED_TOKEN.getCode()) {
             response.sendError(ErrorCode.EXPIRED_TOKEN.getCode(), ErrorCode.EXPIRED_TOKEN.getMessage());
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getLocalizedMessage());
