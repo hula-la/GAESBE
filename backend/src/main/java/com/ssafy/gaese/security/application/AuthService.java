@@ -31,6 +31,12 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("no Refresh Token Cookie"));
 
+        // 리프레쉬 토큰이 없을 때
+        if (oldRefreshToken==null) {
+            throw new RuntimeException("No Refresh Token");
+        }
+
+        // 리프레쉬 토큰이 유효하지 않을 때
         if (!tokenProvider.validateToken(oldRefreshToken, request)) {
             throw new RuntimeException("Not Validated Refresh Token");
         }
@@ -43,6 +49,7 @@ public class AuthService {
         // 3. Match Refresh Token
         String savedToken = userRepository.getRefreshTokenById(userId);
 
+        // 리프레쉬 토큰이 저장된 refresh랑 다를 때
         if (!savedToken.equals(oldRefreshToken)) {
             throw new RuntimeException("Not Matched Refresh Token");
         }
