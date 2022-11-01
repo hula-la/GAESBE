@@ -11,3 +11,8 @@ export const loginNaver = async (data: string) => {
   const res = await client.post('api/user/naver', data);
   return res;
 };
+
+export const getUserInfo = async () => {
+  const res = await client.get('api/user/me');
+  return res;
+};
