@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -40,4 +42,8 @@ public class CsProblem {
 
     @Column(nullable = false)
     private String answer;
+
+
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.REMOVE)
+    private List<CsWrongProblem> csWrongProblemList = new ArrayList<>();
 }

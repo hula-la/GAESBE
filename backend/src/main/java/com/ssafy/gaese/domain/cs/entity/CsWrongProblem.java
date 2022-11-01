@@ -15,12 +15,22 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "CsWrongProblem")
+@NoArgsConstructor
+@AllArgsConstructor
 public class CsWrongProblem {
-    @EmbeddedId
-    private CsWrongId id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "problem_id")
+    private CsProblem problem;
 
 
     @DateTimeFormat(pattern = "yyyy-MM-DD")
@@ -31,3 +41,5 @@ public class CsWrongProblem {
 
 
 }
+
+

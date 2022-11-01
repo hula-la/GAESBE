@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.user.entity;
 
+import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsWrongProblem;
 import lombok.*;
 
@@ -41,6 +42,10 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<CsWrongProblem> csWrongProblemList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<CsRecord> csRecordList = new ArrayList<>();
+
 
     public User update(String nickname, String imgUrl) {
         this.nickname = nickname;
