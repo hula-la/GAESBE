@@ -23,7 +23,8 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request,
-                                       HttpServletResponse response) {
-        return ResponseEntity.ok().body(authService.refreshToken(request, response));
+                                       HttpServletResponse response,
+                                       @RequestBody String oldAccessToken) {
+        return ResponseEntity.ok().body(authService.refreshToken(request, response,oldAccessToken));
     }
 }

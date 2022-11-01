@@ -26,7 +26,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtTokenProvider tokenProvider;
 
-    public String refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public String refreshToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
         // 1. Validation Refresh Token
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("no Refresh Token Cookie"));
@@ -36,14 +36,12 @@ public class AuthService {
         }
 
         // 2. 유저정보 얻기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("authentication이 왔엉ㅅ "+authentication);
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
-
-        Long id = Long.valueOf(user.getName());
+        Authentication authentication = tokenProvider.getAuthentication(oldAccessToken);
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getId();
 
         // 3. Match Refresh Token
-        String savedToken = userRepository.getRefreshTokenById(id);
+        String savedToken = userRepository.getRefreshTokenById(userId);
 
         if (!savedToken.equals(oldRefreshToken)) {
             throw new RuntimeException("Not Matched Refresh Token");
