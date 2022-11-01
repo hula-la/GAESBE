@@ -28,7 +28,7 @@ public class JwtTokenProvider {
 
     private final String SECRET_KEY;
     private final String COOKIE_REFRESH_TOKEN_KEY;
-    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 2000L;		// 1hour
+    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L*60;		// 1hour
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;	// 1week
     private final String AUTHORITIES_KEY = "role";
 
@@ -123,7 +123,8 @@ public class JwtTokenProvider {
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
     private Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody();
+            String key = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
+            return Jwts.parser().setSigningKey(key).parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
