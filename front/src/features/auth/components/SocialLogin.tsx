@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  .kakao {
+  .social {
     padding: 0.6em 1em;
     border-radius: 0.25em;
     border: none;
@@ -18,34 +18,42 @@ const Wrapper = styled.div`
     @media only screen and (min-device-width: 375px) and (max-device-width: 479px) {
       box-shadow: 2px 2px 2px #4646466b;
     }
-    background-color: #fee500;
-    color: #000000 85%;
+    color: #ffffff;
     margin: 0 auto;
     cursor: pointer;
   }
-  .kakaologo {
+  .sociallogo {
     height: 2.5rem;
     width: auto;
   }
 `;
 
-const KakaoLogin = () => {
+interface socialProps {
+  social: string;
+  style: object;
+}
+
+const SocialLogin = ({ social, style }: socialProps) => {
   // const redirectURI = 'http://localhost:3000//oauth2/redirect';
   const redirectURI = 'https://k7e104.p.ssafy.io/oauth2/redirect';
-  // const KAKAO_AUTH_URL = `http://localhost:8080/api/oauth2/authorize/kakao?redirect_uri=${redirectURI}`;
-  const KAKAO_AUTH_URL = `https://k7e104.p.ssafy.io:8081/api/oauth2/authorize/kakao?redirect_uri=${redirectURI}`;
-  const loginWithKakao = () => {
-    window.location.href = KAKAO_AUTH_URL;
+  // const AUTH_URL = `http://localhost:8080/api/oauth2/authorize/${social.socialName}?redirect_uri=${redirectURI}`;
+  const AUTH_URL = `https://k7e104.p.ssafy.io:8081/api/oauth2/authorize/${social}?redirect_uri=${redirectURI}`;
+  const loginWithSocial = () => {
+    window.location.href = AUTH_URL;
   };
 
   return (
     <Wrapper>
-      <button onClick={loginWithKakao} className="kakao">
-        <img src="/img/login/kakao.png" alt="kakao" className="kakaologo" />
-        Login with Kakao
+      <button onClick={loginWithSocial} className="social" style={style}>
+        <img
+          src={`/img/login/${social}.png`}
+          alt={social}
+          className="sociallogo"
+        />
+        Login with {social}
       </button>
     </Wrapper>
   );
 };
 
-export default KakaoLogin;
+export default SocialLogin;

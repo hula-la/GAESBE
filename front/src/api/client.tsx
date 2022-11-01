@@ -50,7 +50,7 @@ client.interceptors.response.use(
 
       return client(originalRequest);
     } else {
-      console.log('420에러 아닌데 에러임');
+      window.location.replace('/login');
     }
   },
 );
