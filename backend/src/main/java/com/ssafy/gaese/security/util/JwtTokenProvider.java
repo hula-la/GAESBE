@@ -52,7 +52,7 @@ public class JwtTokenProvider {
                 .collect(Collectors.joining(","));
 
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY.getBytes())
                 .setSubject(userId)
                 .claim(AUTHORITIES_KEY, role)
                 .setIssuer("debrains")
@@ -66,7 +66,7 @@ public class JwtTokenProvider {
         Date validity = new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_LENGTH);
 
         String refreshToken = Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY.getBytes())
                 .setIssuer("debrains")
                 .setIssuedAt(now)
                 .setExpiration(validity)
@@ -107,7 +107,7 @@ public class JwtTokenProvider {
 
     public Boolean validateToken(String token, HttpServletRequest request) {
         try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
@@ -123,7 +123,7 @@ public class JwtTokenProvider {
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
     private Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parser().setSigningKey(this.SECRET_KEY).parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().setSigningKey(SECRET_KEY.getBytes()).parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
