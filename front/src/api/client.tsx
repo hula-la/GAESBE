@@ -26,12 +26,13 @@ client.interceptors.response.use(
   async function (error) {
     const { response: errorResponse } = error;
     const originalRequest = error.config;
-    console.log(errorResponse);
+    const token = localStorage.getItem('accessToken');
+    console.log(token);
     if (errorResponse.status === 420) {
       const data = await client.post(
         'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
         // 'http://127.0.0.1:8080/api/auth/refresh',
-        {},
+        token,
         {
           withCredentials: true,
         },
