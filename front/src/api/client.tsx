@@ -41,6 +41,7 @@ client.interceptors.response.use(
         .catch((e) => {
           window.location.replace('/login');
         });
+      console.log(data);
       localStorage.setItem('accessToken', data!.data);
       const accessToken = 'Bearer ' + data!.data;
       originalRequest.headers!.Authorization = accessToken;
