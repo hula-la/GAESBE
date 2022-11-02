@@ -6,6 +6,7 @@ import SideBar from '../../../components/Layout/SideBar';
 import CoinFlipPage from '../../coinflip/CoinFlipPage';
 import TypingPage from '../../typing/pages/TypingPage';
 import UnityPage from './UnityPage';
+import AlgoPage from '../../algorithm/AlgoPage';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
 
@@ -26,6 +27,7 @@ const CombinePage = () => {
       <SideBar />
       {pageNum === 0 && <UnityPage />}
       {pageNum === 2 && <TypingPage />}
+      {pageNum === 3 && <AlgoPage />}
       {pageNum === 4 && <CoinFlipPage />}
     </Wrapper>
   );

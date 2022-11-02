@@ -11,7 +11,7 @@ function AlgoRoomMake() {
   const [form, setForm] = useState<Form>({title: ''})
 
   const handleGoMain = () => {
-    navigate('/algo')
+    navigate('/meta')
   }
 
   const handeOnChange = (e: React.FormEvent<HTMLInputElement>) => {

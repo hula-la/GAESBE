@@ -1,18 +1,17 @@
 import client from './client';
 
-export const loginKakao = async (data: string) => {
-  console.log(data);
-  const res = await client.post('api/user/kakao', { access_token: data });
+export const fetchUserInfoApi = async () => {
+  const res = await client.get('user/me');
+  return res;
+};
+
+export const createUserInfoApi = async (userInfo: any) => {
+  const res = await client.post('user/modify', userInfo);
+  return res;
+};
+
+export const checkNicknameApi = async (nickname: string) => {
+  const res = await client.get(`user/modify/check/${nickname}`);
   console.log(res);
-  return res;
-};
-
-export const loginNaver = async (data: string) => {
-  const res = await client.post('api/user/naver', data);
-  return res;
-};
-
-export const getUserInfo = async () => {
-  const res = await client.get('api/user/me');
   return res;
 };
