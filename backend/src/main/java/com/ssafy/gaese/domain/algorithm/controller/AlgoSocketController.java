@@ -1,11 +1,8 @@
 package com.ssafy.gaese.domain.algorithm.controller;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.chat.dto.Message;
-import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.cs.dto.UserDto;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -37,7 +34,8 @@ public class AlgoSocketController {
             res.put("msg",algoSocketDto.getUserId()+"님이 나가셨습니다.");
         }
 
-        List<User> users = userRepository.findUsersByIds(userIds.stream().map(id->Long.parseLong(id)).collect(Collectors.toList()));
+        List<UserDto> users = userRepository.findUsersByIds(userIds.stream().map(id->Long.parseLong(id)).collect(Collectors.toList())).stream().map(
+                user -> user.toDto()).collect(Collectors.toList());
         res.put("users",users);
         simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
     }
