@@ -24,9 +24,9 @@ const CombinePage = () => {
   return (
     <Wrapper>
       <SideBar />
-      {pageNum === 0 && <UnityPage />}
-      {pageNum === 3 && <AlgoPage />}
-      {pageNum === 4 && <CoinFlipPage />}
+        {pageNum === 0 && <UnityPage />}
+        {pageNum === 3 && <AlgoPage />}
+        {pageNum === 4 && <CoinFlipPage />}
     </Wrapper>
   );
 };

@@ -8,9 +8,9 @@ function AlgoPage() {
   return <>
     <Routes>
       <Route path="" element={<AlgoMainPage />} />
-      <Route path="algo/make" element={<AlgoRoomMake />} />
-      <Route path="algo/list" element={<AlgoRoomList />} />
-      <Route path="algo/battle/*" element={<AlgoInBattle />} />
+      <Route path="/algo/make" element={<AlgoRoomMake />} />
+      <Route path="/algo/list" element={<AlgoRoomList />} />
+      <Route path="/algo/battle/*" element={<AlgoInBattle />} />
     </Routes>
   </>
 }
