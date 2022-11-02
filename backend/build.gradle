@@ -70,7 +70,8 @@ dependencies {
 	implementation 'org.seleniumhq.selenium:selenium-server:3.5.3'
 
 	// firebase
-	implementation 'com.goole.firebase:firebase-admin:8.1.0'
+	implementation 'com.google.firebase:firebase-admin:9.1.0'
+
 
 
 

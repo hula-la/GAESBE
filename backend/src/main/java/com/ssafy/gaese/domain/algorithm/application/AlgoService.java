@@ -4,6 +4,7 @@ import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
+import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
 import com.ssafy.gaese.domain.user.entity.User;
@@ -26,6 +27,7 @@ public class AlgoService {
     private final AlgoRepository algoRepository;
     private final UserRepository userRepository;
     private final AlgoRedisRepositoryCustom algoRedisRepositoryCustom;
+    private final AlgoRedisRepository algoRedisRepository;
 
     public AlgoRecordDto createAlgoRecord(AlgoRecordDto algoRecordDto, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());

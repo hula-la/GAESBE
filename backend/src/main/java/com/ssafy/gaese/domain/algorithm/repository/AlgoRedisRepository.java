@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface AlgoRedisRepository extends CrudRepository<AlgoRoomDto,String> {
-    public AlgoRoomDto findByCode(String code);
+    AlgoRoomDto findByCode(String code);
+
 
 }
