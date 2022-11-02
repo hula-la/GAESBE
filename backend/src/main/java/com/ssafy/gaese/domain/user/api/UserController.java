@@ -29,9 +29,9 @@ public class UserController {
         return ResponseEntity.ok().body(userDto);
     }
 
-    @PostMapping
+    @PostMapping("/modify")
     public ResponseEntity<UserDto> modify(
-            @RequestPart(value = "userDto", required = false) UserDto userDto,
+            @RequestBody UserDto userDto,
             @AuthenticationPrincipal CustomUserDetails user) {
         UserDto modifyUser = userService.modify(userDto, user.getId());
         return ResponseEntity.ok().body(modifyUser);

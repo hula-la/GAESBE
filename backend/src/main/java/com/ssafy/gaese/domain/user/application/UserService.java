@@ -19,6 +19,9 @@ public class UserService {
     @Modifying
     public UserDto modify(UserDto userDto, long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("not found user"));
+
+        System.out.println("user입니다 "+user);
+        System.out.println("userDto입니다 "+userDto.toString());
         return user.update(userDto.getNickname(), userDto.getProfileChar()).toDto();
 
     }

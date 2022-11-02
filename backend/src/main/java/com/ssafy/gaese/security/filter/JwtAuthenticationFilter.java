@@ -41,7 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long userId = userDetails.getId();
 
 
-            if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
+            System.out.println(request.getRequestURI());
+            if (request.getRequestURI().equals("/api/user/modify")){
+                System.out.println("여기로 들어옴");
+                log.debug("수정함");
+            }else if (userRepository.getNickNameById(userId)==""||userRepository.getNickNameById(userId)==null){
+                System.out.println("ㅌxxxxxxxxxxxxx");
                 String requestURI = request.getRequestURI();
 
                 request.setAttribute("exception", ErrorCode.NONICKNAME_TOKEN.getCode());
