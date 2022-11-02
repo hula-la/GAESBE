@@ -8,7 +8,7 @@ const RedirectPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error } = useSelector((state: any) => state.auth);
+  const { error, userInfo } = useSelector((state: any) => state.auth);
 
   const getToken = () => {
     if (!location.search) return;
@@ -19,18 +19,21 @@ const RedirectPage = () => {
   useEffect(() => {
     getToken();
     dispatch(authActions.fetchUserInfoStart());
-    navigate('/');
   }, [dispatch]);
 
   useEffect(() => {
     if (error === 499) {
+      dispatch(authActions.setError());
       navigate('/nickname');
     }
-  }, [error, navigate]);
+    if (userInfo) {
+      navigate('/');
+    }
+  }, [userInfo, error, navigate]);
 
   return (
     <div>
-      <p>리다이렉트 페이지</p>
+      <p></p>
     </div>
   );
 };

@@ -34,9 +34,9 @@ interface socialProps {
 }
 
 const SocialLogin = ({ social, style }: socialProps) => {
-  // const redirectURI = 'http://localhost:3000//oauth2/redirect';
-  const redirectURI = 'https://k7e104.p.ssafy.io/oauth2/redirect';
-  // const AUTH_URL = `http://localhost:8080/api/oauth2/authorize/${social.socialName}?redirect_uri=${redirectURI}`;
+  const redirectURI = 'http://localhost:3000//oauth2/redirect';
+  // const redirectURI = 'https://k7e104.p.ssafy.io/oauth2/redirect';
+  // const AUTH_URL = `http://localhost:8080/api/oauth2/authorize/${social}?redirect_uri=${redirectURI}`;
   const AUTH_URL = `https://k7e104.p.ssafy.io:8081/api/oauth2/authorize/${social}?redirect_uri=${redirectURI}`;
   const loginWithSocial = () => {
     window.location.href = AUTH_URL;

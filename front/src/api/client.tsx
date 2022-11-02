@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 
 const client = axios.create({
   // baseURL: 'http://127.0.0.1:8080',
-  baseURL: 'https://k7e104.p.ssafy.io:8081',
+  baseURL: 'https://k7e104.p.ssafy.io:8081/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -25,9 +25,7 @@ client.interceptors.response.use(
   },
   async function (error) {
     const { response } = error;
-    console.log(response);
     const originalRequest = error.config;
-    console.log(originalRequest);
     const token = localStorage.getItem('accessToken');
     if (response.status === 420) {
       const data = await client
@@ -40,18 +38,16 @@ client.interceptors.response.use(
           },
         )
         .catch((e) => {
-          window.location.replace('/login');
+          // window.location.replace('/login');
         });
-      console.log(data);
       localStorage.setItem('accessToken', data!.data);
       const accessToken = 'Bearer ' + data!.data;
       client.defaults.headers.Authorization = accessToken;
-      console.log(originalRequest.headers.Authorization);
-
       return client(originalRequest);
-    } else {
-      window.location.replace('/login');
+    } else if (response.status === 401) {
+      // window.location.replace('/login');
     }
+    return Promise.reject(error);
   },
 );
 
