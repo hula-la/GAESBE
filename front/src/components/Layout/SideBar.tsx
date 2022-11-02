@@ -38,34 +38,34 @@ const SideBar = () => {
   const dispatch = useDispatch();
   return (
     <Side>
-      <img src="img/Logo.png" alt="Logo" className="logo" />
+      <img src="/img/Logo.png" alt="Logo" className="logo" />
       <div className="menubar">
         <div
           onClick={() => dispatch(unityActions.changePageNum(0))}
           className="folder"
         >
-          <img src="img/FolderBlock.png" alt="menu" className="menu" />
+          <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">MyHome</p>
         </div>
         <div
           onClick={() => dispatch(unityActions.changePageNum(2))}
           className="folder"
         >
-          <img src="img/FolderBlock.png" alt="menu" className="menu" />
+          <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">Keyboard</p>
         </div>
         <div
           onClick={() => dispatch(unityActions.changePageNum(3))}
           className="folder"
         >
-          <img src="img/FolderBlock.png" alt="menu" className="menu" />
+          <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">Algorithm</p>
         </div>
         <div
           onClick={() => dispatch(unityActions.changePageNum(4))}
           className="folder"
         >
-          <img src="img/FolderBlock.png" alt="menu" className="menu" />
+          <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">casino</p>
         </div>
       </div>
