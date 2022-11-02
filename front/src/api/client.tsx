@@ -24,23 +24,30 @@ client.interceptors.response.use(
     return response;
   },
   async function (error) {
-    const { response: errorResponse } = error;
+    const { response } = error;
     const originalRequest = error.config;
     const token = localStorage.getItem('accessToken');
-    console.log(token);
-    if (errorResponse.status === 420) {
-      const data = await client.post(
-        'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
-        // 'http://127.0.0.1:8080/api/auth/refresh',
-        token,
-        {
-          withCredentials: true,
-        },
-      );
-      console.log(data);
-    } else {
-      // 그냥 다시 로그인 해라!@
+    if (response.status === 420) {
+      const data = await client
+        .post(
+          'https://k7e104.p.ssafy.io:8081/api/auth/refresh',
+          // 'http://127.0.0.1:8080/api/auth/refresh',
+          JSON.stringify({ oldAccessToken: token }),
+          {
+            withCredentials: true,
+          },
+        )
+        .catch((e) => {
+          // window.location.replace('/login');
+        });
+      localStorage.setItem('accessToken', data!.data);
+      const accessToken = 'Bearer ' + data!.data;
+      client.defaults.headers.Authorization = accessToken;
+      return client(originalRequest);
+    } else if (response.status === 401) {
+      // window.location.replace('/login');
     }
+    return Promise.reject(error);
   },
 );
 

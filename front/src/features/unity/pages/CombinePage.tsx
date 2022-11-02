@@ -4,6 +4,7 @@ import { RootState } from '../../../app/store';
 import styled from 'styled-components';
 import SideBar from '../../../components/Layout/SideBar';
 import CoinFlipPage from '../../coinflip/CoinFlipPage';
+import TypingPage from '../../typing/pages/TypingPage';
 import UnityPage from './UnityPage';
 import AlgoPage from '../../algorithm/AlgoPage';
 import { useDispatch } from 'react-redux';
@@ -24,9 +25,10 @@ const CombinePage = () => {
   return (
     <Wrapper>
       <SideBar />
-        {pageNum === 0 && <UnityPage />}
-        {pageNum === 3 && <AlgoPage />}
-        {pageNum === 4 && <CoinFlipPage />}
+      {pageNum === 0 && <UnityPage />}
+      {pageNum === 2 && <TypingPage />}
+      {pageNum === 3 && <AlgoPage />}
+      {pageNum === 4 && <CoinFlipPage />}
     </Wrapper>
   );
 };

@@ -1,10 +1,11 @@
 export interface UserInfo {
   nicknamge: string;
-  imgUrl: string
+  imgUrl: string;
 }
 
 export interface User {
   isLoading: boolean;
-  userInfo: UserInfo[];
+  isDuplicate: boolean | null;
+  userInfo: UserInfo[] | null;
   error: string | null;
 }
