@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static com.ssafy.gaese.global.util.SocketUtil.roomCodeMaker;
 
@@ -24,6 +25,7 @@ public class AlgoRedisRepositoryCustom {
 
     //  Room Code 생성
     public String createCode(){
+
         String code = "";
         while(true){
             code = roomCodeMaker();
@@ -36,6 +38,9 @@ public class AlgoRedisRepositoryCustom {
             list.rightPush("algoCodes",code);
             break;
         }
+        stringRedisTemplate.expire("codes",1, TimeUnit.DAYS);
+        stringRedisTemplate.expire("algoCodes",1, TimeUnit.DAYS);
+
         return code;
     }
 
@@ -74,6 +79,8 @@ public class AlgoRedisRepositoryCustom {
         hashOperations.put(code,"tier",algoRoomDto.getTier());
         hashOperations.put(code,"num",algoRoomDto.getNum());
 
+        stringRedisTemplate.expire(code,1, TimeUnit.DAYS);
+
         Map<String, String> save = hashOperations.entries(code);
         AlgoRoomDto saved = new AlgoRoomDto(save.get("code"),save.get("time")
                 ,save.get("tier"), save.get("num"));
@@ -85,7 +92,7 @@ public class AlgoRedisRepositoryCustom {
     public List<String> enterRoom(AlgoSocketDto algoSocketDto){
         HashOperations<String ,String,String > hashOperations = stringRedisTemplate.opsForHash();
         hashOperations.put(algoSocketDto.getRoomCode()+"user",algoSocketDto.getUserId(),algoSocketDto.getSessionId());
-
+        stringRedisTemplate.expire(algoSocketDto.getRoomCode()+"user",1,TimeUnit.DAYS);
         return getUserInRoom(algoSocketDto.getRoomCode());
     }
 
