@@ -2,6 +2,7 @@ package com.ssafy.gaese.domain.algorithm.application;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
@@ -52,12 +53,12 @@ public class AlgoService {
         return algoRedisRepositoryCustom.createRoom(code, algoRoomDto);
     }
 
-    public List<String> enterRoom(String code, String userId, String sessionId){
-        return algoRedisRepositoryCustom.enterRoom(code, userId, sessionId);
+    public List<String> enterRoom(AlgoSocketDto algoSocketDto){
+        return algoRedisRepositoryCustom.enterRoom(algoSocketDto);
     }
 
-    public List<String> leaveRoom(String code, String  userId){
-        return algoRedisRepositoryCustom.leaveRoom(code, userId);
+    public List<String> leaveRoom(AlgoSocketDto algoSocketDto){
+        return algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
     }
 
     public Long deleteRoom(String code){
