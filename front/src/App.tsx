@@ -7,7 +7,6 @@ import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import CombinePage from './features/unity/pages/CombinePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import AlgoPage from './features/algorithm/AlgoPage';
-
 const App = () => {
   return (
     <BrowserRouter>
