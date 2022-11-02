@@ -16,7 +16,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    @Modifying
+    @Transactional
     public UserDto modify(UserDto userDto, long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("not found user"));
 
@@ -32,6 +32,12 @@ public class UserService {
         if(!user.isPresent()) return false;
         User findUser = user.get();
         userRepository.delete(findUser);
+        return true;
+    }
+
+    public boolean isDuplicated(String nickname) {
+        Optional<User> user = userRepository.findByNickname(nickname);
+        if(!user.isPresent()) return false;
         return true;
     }
 }

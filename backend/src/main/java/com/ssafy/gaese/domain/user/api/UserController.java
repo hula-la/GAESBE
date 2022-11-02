@@ -37,11 +37,20 @@ public class UserController {
         return ResponseEntity.ok().body(modifyUser);
     }
 
+
     @DeleteMapping
     public ResponseEntity<Boolean> delete(
             @AuthenticationPrincipal CustomUserDetails user) {
         boolean isDeleted = userService.delete(user.getId());
 
         return ResponseEntity.ok().body(isDeleted);
+    }
+
+    @GetMapping("/modify/check/{nickname}")
+    public ResponseEntity<Boolean> checkDuplicated(
+            @PathVariable String nickname) {
+        boolean isDuplicated = userService.isDuplicated(nickname);
+
+        return ResponseEntity.ok().body(isDuplicated);
     }
 }
