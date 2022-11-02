@@ -62,7 +62,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// selenium-java
-	implementation 'org.seleniumhq.selenium:selenium-java:4.5.0'
+	implementation 'org.seleniumhq.selenium:selenium-java:3.5.3'
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
+	implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.5.3'
+
+	// selenium-server
+	implementation 'org.seleniumhq.selenium:selenium-server:3.5.3'
+
+	// firebase
+	implementation 'com.goole.firebase:firebase-admin:8.1.0'
+
 
 
 }

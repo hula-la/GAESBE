@@ -16,7 +16,7 @@ import org.springframework.data.redis.core.RedisHash;
 public class AlgoRoomDto {
 
     @Id
-    private String code;
+    private String roomCode;
     private String time;
     private String tier;
     private String num;

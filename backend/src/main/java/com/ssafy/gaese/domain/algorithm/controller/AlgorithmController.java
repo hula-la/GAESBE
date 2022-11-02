@@ -63,4 +63,12 @@ public class AlgorithmController {
         return ResponseEntity.ok().body(algoService.recordList(pageable, userDetails.getId()));
     }
 
+    @GetMapping("/confirm/{roomCode}")
+    @ApiOperation(value="입장 가능 여부 판단", notes = "입장 가능 여부 판단")
+    public ResponseEntity<Boolean> confirmEnter(@PathVariable String roomCode){
+
+        return ResponseEntity.ok().body(algoService.confirmRoomEnter(roomCode));
+    }
+
+
 }

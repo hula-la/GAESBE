@@ -100,7 +100,7 @@ public class AlgoRedisRepositoryCustom {
     public List<String> leaveRoom(AlgoSocketDto algoSocketDto){
         HashOperations<String ,String, String > hashOperations = stringRedisTemplate.opsForHash();
 
-        hashOperations.delete(algoSocketDto.getRoomCode()+"user",algoSocketDto.getUserId());
+        hashOperations.delete(algoSocketDto.getRoomCode()+"user", algoSocketDto.getUserId());
         hashOperations.increment(algoSocketDto.getRoomCode(),"num",-1);
 
         return getUserInRoom(algoSocketDto.getRoomCode());
@@ -122,6 +122,11 @@ public class AlgoRedisRepositoryCustom {
             users.add(key);
         }
         return users;
+    }
+
+    public int getRoomNum(String roomCode){
+        HashOperations<String ,String,String > hashOperations = stringRedisTemplate.opsForHash();
+        return Integer.parseInt(hashOperations.get(roomCode,"num"));
     }
 
 }

@@ -65,5 +65,10 @@ public class AlgoService {
         return algoRedisRepositoryCustom.deleteRoom(code);
     }
 
+    public Boolean confirmRoomEnter(String roomCode){
+        System.out.println(algoRedisRepositoryCustom.getRoomNum(roomCode));
+        if(algoRedisRepositoryCustom.getRoomNum(roomCode) == 5) return false;
+        return true;
+    }
 
 }
