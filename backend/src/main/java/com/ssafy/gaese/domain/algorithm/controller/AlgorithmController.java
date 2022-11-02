@@ -47,7 +47,7 @@ public class AlgorithmController {
     }
 
     /* user email -> jwt 로 수정 */
-    @PostMapping("/record/{email}")
+    @PostMapping("/record")
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
     public ResponseEntity<String> createRecord(@RequestBody AlgoRecordDto algoRecordDto,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
@@ -56,7 +56,7 @@ public class AlgorithmController {
         return ResponseEntity.ok().body("success");
     }
 
-    @GetMapping("/record/{email}")
+    @GetMapping("/record")
     @ApiOperation(value = "알고리즘 게임 기록 조회", notes = "사용자별 알고리즘 게임 기록 조회")
     public ResponseEntity<Page<AlgoRecordDto>> recordList(Pageable pageable,
                                                           @AuthenticationPrincipal CustomUserDetails userDetails){
