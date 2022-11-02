@@ -3,11 +3,11 @@ function AlgoMainPage() {
   const navigate = useNavigate()
 
   const handleMakeRoom = () => {
-    navigate("make")
+    navigate("algo/make")
   }
 
   const handleRoomList = () => {
-    navigate("list")
+    navigate("algo/list")
   }
 
   return <>
