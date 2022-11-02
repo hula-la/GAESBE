@@ -220,7 +220,7 @@ const TypingGame = () => {
                             </This>
                           ) : statesentence === idx && stateindex > index ? (
                             <This color={'black'}>{char}</This>
-                          ) : statesentence !== idx ? (
+                          ) : statesentence > idx ? (
                             <This color={'black'}>{char}</This>
                           ) : (
                             <This color={'gray'}>{char}</This>
