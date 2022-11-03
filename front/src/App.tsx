@@ -9,11 +9,10 @@ import RedirectPage from './features/auth/pages/RedirectPage';
 import CSgamePage from './features/cs/pages/CSgamePage';
 
 import Background from './components/Layout/Background';
-import MyOfficePage from './features/game/pages/MyOfficePage'
+import MyOfficePage from './features/game/pages/MyOfficePage';
 import CoinFlipPage from './features/coinflip/CoinFlipPage';
 import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
-
 
 const App = () => {
   return (
@@ -27,7 +26,7 @@ const App = () => {
         </Route>
         <Route path="game/*" element={<CombinePage />}>
           <Route path="home" element={<MyOfficePage />} />
-          <Route path="typing" element={<TypingPage />} />
+          <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
           <Route path="casino" element={<CoinFlipPage />} />
           <Route path="CS" element={<CSgamePage />} />

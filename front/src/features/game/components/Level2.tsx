@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 const Unity = styled.div`
   display: flex;
@@ -60,6 +61,10 @@ const Level2 = () => {
   const handleAlert = () => {
     alert('마이페이지로');
   };
+  const navigate = useNavigate();
+  const handleCoin = () => {
+    navigate('/game/casino');
+  };
   return (
     <Unity>
       <MyComputer
@@ -67,7 +72,7 @@ const Level2 = () => {
         src="/img/MyOffice/level2computer.png"
         alt="내 컴퓨터"
       />
-      <Coin src="/img/coin/coin.png" />
+      <Coin onClick={handleCoin} src="/img/coin/coin.png" />
       <Note src="/img/MyOffice/note.png" />
       <Calender src="/img/MyOffice/calender.png" />
     </Unity>
