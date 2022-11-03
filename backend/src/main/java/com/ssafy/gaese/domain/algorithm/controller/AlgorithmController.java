@@ -1,11 +1,12 @@
 package com.ssafy.gaese.domain.algorithm.controller;
 
+import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
+import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Api(value="Algorithm", tags={"Algorithm"})
 @RestController
@@ -25,6 +27,7 @@ import java.util.List;
 public class AlgorithmController {
 
     private final AlgoService algoService;
+    private final AlgoProblemService algoProblemService;
 
     @GetMapping("/room")
     @ApiOperation(value = "생성된 알고리즘 방 조회", notes = "생성된 알고리즘 방 조회")
@@ -62,5 +65,33 @@ public class AlgorithmController {
                                                           @AuthenticationPrincipal CustomUserDetails userDetails){
         return ResponseEntity.ok().body(algoService.recordList(pageable, userDetails.getId()));
     }
+
+    @GetMapping("/confirm/{roomCode}")
+    @ApiOperation(value="입장 가능 여부 판단", notes = "입장 가능 여부 판단")
+    public ResponseEntity<Boolean> confirmEnter(@PathVariable String roomCode){
+
+        return ResponseEntity.ok().body(algoService.confirmRoomEnter(roomCode));
+    }
+
+    @GetMapping("/problem/{roomCode}/{userBjId}")
+    @ApiOperation(value="사용자 푼 문제 크롤링")
+    public ResponseEntity<String> getUserProblems(@PathVariable String userBjId, @PathVariable String roomCode){
+        algoProblemService.getSolvedProblem(roomCode, userBjId);
+        return ResponseEntity.ok().body("success");
+    }
+
+    @PostMapping("/problem/{roomCode}")
+    @ApiOperation(value="추천 문제 리스트")
+    public ResponseEntity<List<AlgoProblemDto>> getCommonProblems(@PathVariable String roomCode,
+                                                                  @RequestBody AlgoProblemReq algoProblemReq
+                                                                  ) throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok().body(algoProblemService.getCommonProblems(roomCode, algoProblemReq));
+    }
+    @GetMapping("/test/{roomCode}")
+    public ResponseEntity<Integer> getTest(@PathVariable String roomCode){
+        return ResponseEntity.ok().body(algoService.getRoomNo(roomCode));
+    }
+
+
 
 }

@@ -1,10 +1,7 @@
 package com.ssafy.gaese.domain.algorithm.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -12,13 +9,20 @@ import org.springframework.data.redis.core.RedisHash;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("code")
+@Builder
 public class AlgoRoomDto {
 
-    @Id
-    private String code;
+    private String roomCode;
     private String time;
     private String tier;
     private String num;
+    private String no;
+
+    public AlgoRoomRedisDto toRedisDto(String roomCode){
+        return AlgoRoomRedisDto.builder()
+                .algoRoomDto(this)
+                .roomCode(roomCode)
+                .build();
+    }
 
 }

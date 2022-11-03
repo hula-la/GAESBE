@@ -1,11 +1,11 @@
 package com.ssafy.gaese.domain.algorithm.repository;
 
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomRedisDto;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public interface AlgoRedisRepository extends CrudRepository<AlgoRoomRedisDto,String> {
 
-public interface AlgoRedisRepository extends CrudRepository<AlgoRoomDto,String> {
-    public AlgoRoomDto findByCode(String code);
 
 }
