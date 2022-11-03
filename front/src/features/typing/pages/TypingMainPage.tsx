@@ -43,7 +43,7 @@ function TypingMainPage() {
   return (
     <TypingMain>
       <div className="title">
-        <img src="img/gametitle/gametitle2.png" alt="title" />
+        <img src="/img/gametitle/gametitle2.png" alt="title" />
       </div>
       <h1>언어를 선택해주세요</h1>
       <SelectLanguage>
