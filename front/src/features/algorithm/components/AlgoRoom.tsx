@@ -1,3 +1,7 @@
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { algoActions } from '../algorithmSlice'
 
 interface Props {
   roomInfo: {
@@ -9,10 +13,19 @@ interface Props {
 }
 
 function AlgoRoom({roomInfo}: Props) {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { roomCode } = useSelector((state: any) => state.algo)
 
   const handleEnterRoom = () => {
-    console.log(roomInfo.code)
+    dispatch(algoActions.enterAlgoBattleRoom(roomInfo.code))
   }
+
+  useEffect(() => {
+    if (roomCode) {
+      navigate('')
+    }
+  }, [roomCode])
 
   return <>
     <h2>문제 난이도 : <img src={`/img/tier/${roomInfo.tier}.svg`} alt={`난이도${roomInfo.tier}`} /></h2>

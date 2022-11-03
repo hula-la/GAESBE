@@ -25,7 +25,9 @@ function AlgoInBattle() {
 
   //   })
   // })
-
+  window.onbeforeunload = function() {
+    return "게임에서 자동으로 기권처리 됩니다";
+  }
   // 메세
   // client.send('/algo', {}, JSON.stringify({userName: userName, content: mes, roomCode:roomCode}))
 
