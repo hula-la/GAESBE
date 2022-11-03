@@ -1,5 +1,5 @@
 package com.ssafy.gaese.domain.cs.entity;
 
-public enum ProblemType {
+public enum ProblemCategory {
     ALGORITHM, DB, OS
 }

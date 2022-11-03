@@ -1,8 +1,7 @@
 package com.ssafy.gaese.domain.user.api;
 
-import com.ssafy.gaese.domain.cs.dto.UserDto;
+import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.application.UserService;
-import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Log4j2
 @RestController

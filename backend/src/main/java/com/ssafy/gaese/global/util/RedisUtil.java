@@ -1,10 +1,7 @@
 package com.ssafy.gaese.global.util;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -22,6 +19,22 @@ public class RedisUtil {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);
     }
+
+    public Set<String> getSetData(String key){
+        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
+        return setOperations.members(key);
+    }
+
+    public Long addSetData(String key, String value){
+        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
+        return setOperations.add(key,value);
+    }
+
+    public Long removeSetData(String key, String value){
+        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
+        return setOperations.remove(key,value);
+    }
+
 
     public void setHashData(Long key, HashMap<Long, Float> map){
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();

@@ -18,27 +18,21 @@ import static javax.persistence.FetchType.LAZY;
 @Table(name = "CsWrongProblem")
 @NoArgsConstructor
 @AllArgsConstructor
-public class CsWrongProblem {
+public class CsRecordProblem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "cs_record_id")
+    private CsRecord csRecord;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "problem_id")
-    private CsProblem problem;
+    @JoinColumn(name = "cs_problem_id")
+    private CsProblem csProblem;
 
-
-    @DateTimeFormat(pattern = "yyyy-MM-DD")
-    @Column(nullable = false)
-    private Date date;
-
-    private String selectedAns;
-
+    private boolean isCorrect;
 
 }
 
