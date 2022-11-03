@@ -1,7 +1,9 @@
 package com.ssafy.gaese.domain.algorithm.repository;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -11,17 +13,21 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import static com.ssafy.gaese.global.util.SocketUtil.roomCodeMaker;
 
 @Repository
+@RequiredArgsConstructor
 public class AlgoRedisRepositoryCustom {
 
 //    @Autowired
 //    private RedisTemplate<String,AlgoRoomDto> redisAlgoTemplate;
     @Autowired
     private RedisTemplate<String,String> stringRedisTemplate;
+
+    private final AlgoRedisRepository algoRedisRepository;
 
     //  Room Code 생성
     public String createCode(){
@@ -58,41 +64,45 @@ public class AlgoRedisRepositoryCustom {
 
         List<String> roomCodeList = stringRedisTemplate.opsForList().range("algoCodes",0,-1);
         List<AlgoRoomDto> roomList = new ArrayList<>();
-
-        for(String roomCode : roomCodeList){
-            HashOperations<String,String,String > hashOperations = stringRedisTemplate.opsForHash();
-            Map<String, String> map = hashOperations.entries(roomCode);
-            AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
-                    ,map.get("tier"), map.get("num"));
-            roomList.add(algoRoomDto);
+        Iterable<AlgoRoomRedisDto> algoRoomRedisDtos = algoRedisRepository.findAll();
+        for(AlgoRoomRedisDto algoRoomRedisDto : algoRoomRedisDtos) {
+            System.out.println(algoRoomRedisDto.toString());
+            roomList.add(algoRoomRedisDto.toDto());
         }
+//        for(String roomCode : roomCodeList){
+//            HashOperations<String,String,String > hashOperations = stringRedisTemplate.opsForHash();
+//            Map<String, String> map = hashOperations.entries(roomCode);
+//            AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
+//                    ,map.get("tier"), map.get("num"), map.get("no"));
+//            roomList.add(algoRoomDto);
+//        }
         return roomList;
 
     }
 
     // 방 생성
-    public AlgoRoomDto createRoom(String code, AlgoRoomDto algoRoomDto){
-        HashOperations<String, String, String > hashOperations = stringRedisTemplate.opsForHash();
+    public AlgoRoomDto createRoom(AlgoRoomRedisDto algoRoomRedisDto){
 
-        hashOperations.put(code,"code",code);
-        hashOperations.put(code,"time", algoRoomDto.getTime());
-        hashOperations.put(code,"tier",algoRoomDto.getTier());
-        hashOperations.put(code,"num",algoRoomDto.getNum());
+        algoRedisRepository.save(algoRoomRedisDto);
+//        hashOperations.put(code,"code",code);
+//        hashOperations.put(code,"time", algoRoomDto.getTime());
+//        hashOperations.put(code,"tier",algoRoomDto.getTier());
+//        hashOperations.put(code,"num",algoRoomDto.getNum());
+//
+//        stringRedisTemplate.expire(code,1, TimeUnit.DAYS);
 
-        stringRedisTemplate.expire(code,1, TimeUnit.DAYS);
-
-        Map<String, String> save = hashOperations.entries(code);
-        AlgoRoomDto saved = new AlgoRoomDto(save.get("code"),save.get("time")
-                ,save.get("tier"), save.get("num"));
-        return saved;
+        AlgoRoomRedisDto saved = algoRedisRepository.findById(algoRoomRedisDto.getRoomCode())
+                .orElseThrow(()->new NoSuchElementException());
+        System.out.println(saved.toString());
+        return saved.toDto();
 
     }
 
     //  방 입장
     public List<String> enterRoom(AlgoSocketDto algoSocketDto){
+        stringRedisTemplate.expire(algoSocketDto.getRoomCode()+"user",1,TimeUnit.DAYS);
         HashOperations<String ,String,String > hashOperations = stringRedisTemplate.opsForHash();
         hashOperations.put(algoSocketDto.getRoomCode()+"user",algoSocketDto.getUserId(),algoSocketDto.getSessionId());
-        stringRedisTemplate.expire(algoSocketDto.getRoomCode()+"user",1,TimeUnit.DAYS);
         return getUserInRoom(algoSocketDto.getRoomCode());
     }
 
@@ -125,8 +135,12 @@ public class AlgoRedisRepositoryCustom {
     }
 
     public int getRoomNum(String roomCode){
-        HashOperations<String ,String,String > hashOperations = stringRedisTemplate.opsForHash();
-        return Integer.parseInt(hashOperations.get(roomCode,"num"));
+        String num = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException()).getAlgoRoomDto().getNum();
+        return Integer.parseInt(num);
     }
 
+    public int getRoomNo(String roomCode){
+        String no = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException()).getAlgoRoomDto().getNo();
+        return Integer.parseInt(no);
+    }
 }

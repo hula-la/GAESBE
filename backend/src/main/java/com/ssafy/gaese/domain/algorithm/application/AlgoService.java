@@ -2,11 +2,13 @@ package com.ssafy.gaese.domain.algorithm.application;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
+import com.ssafy.gaese.domain.cs.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -52,7 +54,7 @@ public class AlgoService {
 
     public AlgoRoomDto createRoom(AlgoRoomDto algoRoomDto){
         String code = algoRedisRepositoryCustom.createCode();
-        return algoRedisRepositoryCustom.createRoom(code, algoRoomDto);
+        return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
     }
 
     public List<String> enterRoom(AlgoSocketDto algoSocketDto){
@@ -71,6 +73,15 @@ public class AlgoService {
         System.out.println(algoRedisRepositoryCustom.getRoomNum(roomCode));
         if(algoRedisRepositoryCustom.getRoomNum(roomCode) == 5) return false;
         return true;
+    }
+
+    public List<UserDto> getUsers(List<String> userIds){
+        return userRepository.findUsersByIds(userIds.stream().map(id->Long.parseLong(id)).collect(Collectors.toList())).stream().map(
+                user -> user.toDto()).collect(Collectors.toList());
+    }
+
+    public int getRoomNo(String roomCode){
+        return algoRedisRepositoryCustom.getRoomNo(roomCode);
     }
 
 }

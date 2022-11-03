@@ -116,7 +116,7 @@ class GaeseApplicationTests {
 
 		Map<String, String> map = hashOperations.entries(roomCode);
 		AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
-										,map.get("tier"), map.get("num"));
+										,map.get("tier"), map.get("num"), map.get("num"));
 		System.out.println(algoRoomDto.toString()); //return
 	}
 
@@ -129,7 +129,7 @@ class GaeseApplicationTests {
 			HashOperations<String,String,String > hashOperations = stringTemplate.opsForHash();
 			Map<String, String> map = hashOperations.entries(roomCode);
 			AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
-					,map.get("tier"), map.get("num"));
+					,map.get("tier"), map.get("num"), map.get("no"));
 			roomList.add(algoRoomDto);
 		}
 		System.out.println(roomList.toString());
