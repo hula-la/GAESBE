@@ -14,8 +14,12 @@ function AlgoRoomList() {
 
   const [roomList, setRoomList] = useState<AlgoRoomInterface[]>([])
   const fetchRooms = async () => {
-    const res = await fetchAlgoRoomList()
-    setRoomList(res.data)
+    try {
+      const res = await fetchAlgoRoomList()
+      setRoomList(res.data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
