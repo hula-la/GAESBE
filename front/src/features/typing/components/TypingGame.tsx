@@ -75,7 +75,19 @@ const TypingGame = () => {
         setCharState(changedState);
         console.log(index, '맞다');
       } else if (example[sentence][index] !== event.key) {
-        event.preventDefault();
+        if (charState.type === 1) {
+          console.log(index, '처음 틀림');
+          const changedState = JSON.parse(
+            JSON.stringify({ index: index, sentence: sentence, type: 2 }),
+          );
+          setCharState(changedState);
+          // 틀린거 또 틀렸다.
+          // 그럼 이제 안보낸다.
+          // 왜? 한번 보냈으니까
+        } else if (charState.type === 2) {
+          console.log('여러번 틀림');
+        }
+        // event.preventDefault();
       }
     } else if (event.key === 'Enter') {
       if (index === example[sentence].length) {
@@ -220,7 +232,7 @@ const TypingGame = () => {
                             </This>
                           ) : statesentence === idx && stateindex > index ? (
                             <This color={'black'}>{char}</This>
-                          ) : statesentence !== idx ? (
+                          ) : statesentence > idx ? (
                             <This color={'black'}>{char}</This>
                           ) : (
                             <This color={'gray'}>{char}</This>

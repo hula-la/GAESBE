@@ -1,26 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
+import Level1 from '../components/Level1';
+import Level2 from '../components/Level2';
+import Level3 from '../components/Level3';
 
-
-const Unity = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 82%;
-  // background-color: white;
+const Friend = styled.div`
+  width: 21.75%;
   background-color: #232323;
-  color: aqua;
+  border: 2px solid red;
+  color: white;
 `;
-const MyRoomImg = styled.img`
-  height: 100%;
-`
 const UnityPage = () => {
-  const myLevel: number = 3
-  // const myLevel: number = 1
   return (
-    <Unity>
-      <MyRoomImg src={`/img/MyOffice/level${myLevel}.png`} alt="내 방" />
-    </Unity>
+    <>
+      {/* <Level1 /> */}
+      {/* <Level2 /> */}
+      <Level3 />
+      <Friend>
+        <div>친구든 뭐든 있는 부분</div>
+      </Friend>
+    </>
   );
 };
 
