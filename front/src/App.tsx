@@ -4,9 +4,14 @@ import './App.css';
 import IntroPage from './features/Intro/pages/IntroPage';
 import LoginPage from './features/auth/pages/LoginPage';
 import SetNicknamePage from './features/auth/pages/SetNicknamePage';
-import CombinePage from './features/unity/pages/CombinePage';
+import CombinePage from './features/game/pages/CombinePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import Background from './components/Layout/Background';
+import MyOfficePage from './features/game/pages/MyOfficePage'
+import CoinFlipPage from './features/coinflip/CoinFlipPage';
+import AlgoPage from './features/algorithm/AlgoPage';
+import TypingPage from './features/typing/pages/TypingPage';
+
 
 const App = () => {
   return (
@@ -18,7 +23,12 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="nickname" element={<SetNicknamePage />} />
         </Route>
-        <Route path="meta/*" element={<CombinePage />} />
+        <Route path="game/*" element={<CombinePage />}>
+          <Route path="home" element={<MyOfficePage />} />
+          <Route path="typing" element={<TypingPage />} />
+          <Route path="algo/*" element={<AlgoPage />} />
+          <Route path="casino" element={<CoinFlipPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

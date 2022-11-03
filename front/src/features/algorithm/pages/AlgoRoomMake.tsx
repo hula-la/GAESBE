@@ -1,25 +1,19 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { makeAlgoRoom } from '../../../api/algoApi'
-
-interface Form {
-  roomCode: string
-  time: string
-  tier: string
-  num: string
-}
+import { AlgoRoomInterface } from '../../../models/algo'
 
 function AlgoRoomMake() {
   const navigate = useNavigate()
   
-  const [form, setForm] = useState<Form>({roomCode: '', time: '30', tier: '1', num: '0'})
+  const [form, setForm] = useState<AlgoRoomInterface>({roomCode: '', time: '30', tier: '1', num: '0'})
   const tierList: {value: string, alt:string}[] = []
   for (let i = 1; i < 31; i++) {
     tierList.push({value: `${i}`, alt:`티어이미지${i}`})
   }
 
   const handleGoMain = () => {
-    navigate('/meta')
+    navigate('/game/algo')
   }
 
   const handeOnChange = (e: React.FormEvent<HTMLInputElement>) => {

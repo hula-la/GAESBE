@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 
-const Unity = styled.div`
+const Home = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,14 +14,14 @@ const Unity = styled.div`
 const MyRoomImg = styled.img`
   height: 100%;
 `
-const UnityPage = () => {
+const MyOfficePage = () => {
   const myLevel: number = 3
   // const myLevel: number = 1
   return (
-    <Unity>
+    <Home>
       <MyRoomImg src={`/img/MyOffice/level${myLevel}.png`} alt="내 방" />
-    </Unity>
+    </Home>
   );
 };
 
-export default UnityPage;
+export default MyOfficePage;

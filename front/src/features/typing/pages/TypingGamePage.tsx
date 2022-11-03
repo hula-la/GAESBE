@@ -15,7 +15,7 @@ function TypingGamePage() {
   return (
     <TypingGameMain>
       <div className="title">
-        <img src="img/gametitle/gametitle2.png" alt="title" />
+        <img src="/img/gametitle/gametitle2.png" alt="title" />
       </div>
       <TypingGame />
     </TypingGameMain>

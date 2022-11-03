@@ -1,17 +1,17 @@
 import {all, takeEvery, takeLatest, put, call, take, fork, delay} from 'redux-saga/effects'
 import { AxiosResponse } from 'axios'
-import { action } from '../../models/action'
+import { Action } from '../../models/algo'
 import { algoActions } from './algorithmSlice'
 import { confirmAlgoRoom } from '../../api/algoApi'
 
 
 
-function* enterAlgoBattleRoomSaga(action: action<string>) {
+function* enterAlgoRoomSaga(action: Action<string>) {
   try {
     const ok: AxiosResponse = yield call(confirmAlgoRoom, action.payload)
     if (ok.data === true) {
-      const { enterAlgoBattleRoomSuccess } = algoActions
-      yield put(enterAlgoBattleRoomSuccess(action.payload))
+      const { enterAlgoRoomSuccess } = algoActions
+      yield put(enterAlgoRoomSuccess(action.payload))
     } else {
       alert('방이 가득 찬 것 같아요.\n목록을 새로고침 해주세요')
     }
@@ -22,8 +22,8 @@ function* enterAlgoBattleRoomSaga(action: action<string>) {
 }
 
 function* algoSaga() {
-  const { enterAlgoBattleRoom } = algoActions
-  yield takeLatest(enterAlgoBattleRoom, enterAlgoBattleRoomSaga)
+  const { enterAlgoRoom } = algoActions
+  yield takeLatest(enterAlgoRoom, enterAlgoRoomSaga)
 }
 
 export const algoSagas = [

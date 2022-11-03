@@ -1,6 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { unityActions } from '../../features/unity/unitySlice';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Side = styled.div`
@@ -35,34 +34,38 @@ const Side = styled.div`
 `;
 
 const SideBar = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  
+  const handleOnClick = (path: string) => {
+    navigate(path)
+  }
   return (
     <Side>
       <img src="/img/Logo.png" alt="Logo" className="logo" />
       <div className="menubar">
         <div
-          onClick={() => dispatch(unityActions.changePageNum(0))}
+          onClick={() => handleOnClick('home')}
           className="folder"
         >
           <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">MyHome</p>
         </div>
         <div
-          onClick={() => dispatch(unityActions.changePageNum(2))}
+          onClick={() => handleOnClick('typing')}
           className="folder"
         >
           <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">Keyboard</p>
         </div>
         <div
-          onClick={() => dispatch(unityActions.changePageNum(3))}
+          onClick={() => handleOnClick('algo')}
           className="folder"
         >
           <img src="/img/FolderBlock.png" alt="menu" className="menu" />
           <p className="foldername">Algorithm</p>
         </div>
         <div
-          onClick={() => dispatch(unityActions.changePageNum(4))}
+          onClick={() => handleOnClick('casino')}
           className="folder"
         >
           <img src="/img/FolderBlock.png" alt="menu" className="menu" />
