@@ -6,6 +6,8 @@ import LoginPage from './features/auth/pages/LoginPage';
 import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import CombinePage from './features/unity/pages/CombinePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
+import CSgamePage from './features/cs/pages/CSgamePage';
+
 import Background from './components/Layout/Background';
 
 const App = () => {
@@ -18,7 +20,9 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="nickname" element={<SetNicknamePage />} />
         </Route>
-        <Route path="meta/*" element={<CombinePage />} />
+        <Route path="game" element={<CombinePage />}>
+          <Route path="CS" element={<CSgamePage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
