@@ -6,6 +6,8 @@ import LoginPage from './features/auth/pages/LoginPage';
 import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import CombinePage from './features/game/pages/CombinePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
+import CSgamePage from './features/cs/pages/CSgamePage';
+
 import Background from './components/Layout/Background';
 import MyOfficePage from './features/game/pages/MyOfficePage'
 import CoinFlipPage from './features/coinflip/CoinFlipPage';
@@ -28,6 +30,7 @@ const App = () => {
           <Route path="typing" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
           <Route path="casino" element={<CoinFlipPage />} />
+          <Route path="CS" element={<CSgamePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
