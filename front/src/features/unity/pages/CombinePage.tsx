@@ -9,6 +9,7 @@ import UnityPage from './UnityPage';
 import AlgoPage from '../../algorithm/AlgoPage';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
+import { Outlet } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,10 +26,7 @@ const CombinePage = () => {
   return (
     <Wrapper>
       <SideBar />
-      {pageNum === 0 && <UnityPage />}
-      {pageNum === 2 && <TypingPage />}
-      {pageNum === 3 && <AlgoPage />}
-      {pageNum === 4 && <CoinFlipPage />}
+      <Outlet />
     </Wrapper>
   );
 };
