@@ -80,7 +80,21 @@ const Wrapper = styled.div`
             bottom: 0;
             z-index: 20;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(-40px);
+            transition: opacity 0.5s, transform 0.5s;
+            .img {
+              transition: transform 0.5s ease;
+            }
+          }
+          .imgOffice2 {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            opacity: 0;
+            transform: translateY(-40px);
             transition: opacity 0.5s, transform 0.5s;
             .img {
               transition: transform 0.5s ease;
@@ -93,7 +107,13 @@ const Wrapper = styled.div`
           .imgOffice {
             opacity: 1;
             transform: translateY(0px);
-            transition-delay: 0.5s;
+            transition-delay: 0.3s;
+            .active {
+              opacity: 0;
+            }
+          }
+          .imgOffice2.active {
+            opacity: 1;
           }
         }
       }
@@ -104,22 +124,14 @@ const Wrapper = styled.div`
       content: '';
     }
   }
-  .noCsspositionsticky {
-    .fix_motion {
-      .fix_wrap {
-        .imgFix {
-          position: relative;
-          top: 600px;
-        }
-      }
-    }
-  }
 `;
 
 const IntroPage = () => {
   const IntroImgRef = useRef<HTMLDivElement>(null);
   const fixMotionRef = useRef<HTMLDivElement>(null);
   const imgBoxRef = useRef<HTMLDivElement>(null);
+  const officeImgRef = useRef<HTMLImageElement>(null);
+  const officeImg2Ref = useRef<HTMLImageElement>(null);
   const txt01ref = useRef<HTMLDivElement>(null);
   const txt02ref = useRef<HTMLDivElement>(null);
   const txt03ref = useRef<HTMLDivElement>(null);
@@ -217,8 +229,12 @@ const IntroPage = () => {
   const contentIn = () => {
     if (percent >= 0 && percent < 31) {
       txt01ref.current?.classList.add('active');
+      officeImgRef.current?.classList.remove('active');
+      officeImg2Ref.current?.classList.remove('active');
     } else if (percent >= 31 && percent < 63) {
       txt02ref.current?.classList.add('active');
+      officeImgRef.current?.classList.add('active');
+      officeImg2Ref.current?.classList.add('active');
     } else if (percent >= 63 && percent < 88) {
       txt03ref.current?.classList.add('active');
     } else if (percent >= 88) {
@@ -270,8 +286,26 @@ const IntroPage = () => {
           <div ref={imgBoxRef} className="imgFix">
             <div className="officeImg">
               <figure className="imgOffice">
-                <img src="/img/MyOffice/level3.png" />
+                <img ref={officeImgRef} src="/img/MyOffice/level2.png" />
               </figure>
+              <div ref={officeImg2Ref} className="imgOffice2">
+                <figure>
+                  <img src="/img/MyOffice/level3.png" />
+                </figure>
+                <div className="object_wrap">
+                  <div className="object">
+                    <figure>
+                      <img src="" alt="" />
+                    </figure>
+                    <figure>
+                      <img src="" alt="" />
+                    </figure>
+                    <figure>
+                      <img src="" alt="" />
+                    </figure>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </article>
