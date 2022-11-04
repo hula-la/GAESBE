@@ -1,14 +1,15 @@
 package com.ssafy.gaese.domain.algorithm.application;
 
 
-import com.google.api.core.ApiFuture;
+
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +34,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AlgoProblemService {
 
+    @Value("${firebase-sdk-path}")
+    private String firebaseSdkPath;
+    @Value("${chrome-driver-path}")
+    private String ChromePath;
     private final RedisTemplate<String, String> redisTemplate;
 
     public void getSolvedProblem(String roomCode, String userBjId){
@@ -38,7 +46,7 @@ public class AlgoProblemService {
         List<String> problems = new LinkedList<>();
         // 크롤링 설정
         try{
-            System.setProperty("webdriver.chrome.driver","C:\\final\\backend\\S07P31E104\\backend\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver",ChromePath);
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
@@ -50,7 +58,7 @@ public class AlgoProblemService {
         }catch (Exception e){
             /** 크롤링 에러처리 */
         }
-        if(problems.size()==0) setOperations.add(key,null);
+        if(problems.size()==0) setOperations.add(key,"0");
         //레디스 저장
         for(String problem : problems){
             setOperations.add(key,problem);
@@ -58,7 +66,39 @@ public class AlgoProblemService {
         redisTemplate.expire(key,60*60*24, TimeUnit.SECONDS);
     }
 
-    public List<AlgoProblemDto> getTierProblems(String tier) throws ExecutionException, InterruptedException {
+    public List<AlgoProblemDto> getTierProblems(String tier) throws ExecutionException, InterruptedException, IOException {
+
+        FirebaseApp firebaseApp = null;
+        List<FirebaseApp> firebaseApps = FirebaseApp.getApps();
+
+        if(firebaseApps != null && !firebaseApps.isEmpty()){
+
+            for(FirebaseApp app : firebaseApps) {
+                if (app.getName().equals(FirebaseApp.DEFAULT_APP_NAME)) {
+                    firebaseApp = app;
+                }
+            }
+
+        }else{
+            FileInputStream serviceAccount =
+                    new FileInputStream(firebaseSdkPath);
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://주소.firebaseio.com")
+                    .build();
+            firebaseApp = FirebaseApp.initializeApp(options);
+        }
+
+//        FileInputStream serviceAccount =
+//                new FileInputStream(firebaseSdkPath);
+//
+//        FirebaseOptions options = FirebaseOptions.builder()
+//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
+//                .build();
+//
+//        FirebaseApp.initializeApp(options);
+
         Firestore db = FirestoreClient.getFirestore();
         List<AlgoProblemDto> list = new ArrayList<>();
         Query query =
@@ -77,11 +117,10 @@ public class AlgoProblemService {
                 list.add(algoProblemDto);
             }
         }
-
         return list;
     }
 
-    public List<AlgoProblemDto> getCommonProblems(String roomCode, AlgoProblemReq algoProblemReq) throws ExecutionException, InterruptedException {
+    public List<AlgoProblemDto> getCommonProblems(String roomCode, AlgoProblemReq algoProblemReq) throws ExecutionException, InterruptedException, IOException {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
 
         List<AlgoProblemDto> algoProblemDtoList = getTierProblems(algoProblemReq.getTier()); // 티어 전체 문제
