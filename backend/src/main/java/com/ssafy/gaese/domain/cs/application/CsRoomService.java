@@ -72,8 +72,8 @@ public class CsRoomService {
 
 
         roomResByUser.put("room",roomDto.getCode());
-//        simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),res);
-        simpMessagingTemplate.convertAndSend("/cs/1",roomResByUser);
+        simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),roomResByUser);
+//        simpMessagingTemplate.convertAndSend("/cs/"+,roomResByUser);
 
         Thread.sleep(5*1000);
 
