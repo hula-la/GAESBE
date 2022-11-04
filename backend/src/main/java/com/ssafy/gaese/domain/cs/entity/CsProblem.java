@@ -51,6 +51,7 @@ public class CsProblem {
     @Column(nullable = false)
     private int answer;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "csRecord", cascade = CascadeType.REMOVE)
     private List<CsRecordProblem> csRecordProblemList;
 

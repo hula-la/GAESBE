@@ -15,6 +15,11 @@ import java.util.Set;
 public class RedisUtil {
     private final RedisTemplate redisTemplate;
     // key를 통해 value 리턴
+
+    public boolean isExists(String key){
+        return redisTemplate.hasKey(key);
+    }
+
     public String getData(String key){
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(key);

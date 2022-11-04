@@ -1,12 +1,7 @@
 package com.ssafy.gaese.domain.cs.controller;
 
-import com.ssafy.gaese.domain.algorithm.application.AlgoService;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
-import com.ssafy.gaese.domain.cs.application.CsRedisService;
 import com.ssafy.gaese.domain.cs.application.CsService;
 import com.ssafy.gaese.domain.cs.dto.CsRecordDto;
-import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,9 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(value="Algorithm", tags={"Algorithm"})
 @RestController
