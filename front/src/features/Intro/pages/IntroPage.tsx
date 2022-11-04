@@ -79,6 +79,21 @@ const Wrapper = styled.div`
             right: 0;
             bottom: 0;
             z-index: 20;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+            .img {
+              transition: transform 0.5s ease;
+            }
+          }
+        }
+      }
+      .active {
+        .officeImg {
+          .imgOffice {
+            opacity: 1;
+            transform: translateY(0px);
+            transition-delay: 0.5s;
           }
         }
       }
@@ -102,18 +117,24 @@ const Wrapper = styled.div`
 `;
 
 const IntroPage = () => {
+  const IntroImgRef = useRef<HTMLDivElement>(null);
   const fixMotionRef = useRef<HTMLDivElement>(null);
+  const imgBoxRef = useRef<HTMLDivElement>(null);
   const txt01ref = useRef<HTMLDivElement>(null);
   const txt02ref = useRef<HTMLDivElement>(null);
   const txt03ref = useRef<HTMLDivElement>(null);
   const txt04ref = useRef<HTMLDivElement>(null);
   let scrollHeight: any;
-  let winScrollTop;
+  let winScrollTop: any;
   let sectionOffsetTop: any;
   let sectionScrollTop;
   let scrollRealHeight;
   let scrollPercent;
   let percent: any;
+
+  let sectionMainTop: any;
+  let sectionMainBottom: any;
+  let sectionIsMoving = false;
 
   const setProperty = () => {
     if (fixMotionRef) {
@@ -128,6 +149,69 @@ const IntroPage = () => {
     scrollRealHeight = scrollHeight - window.innerHeight;
     scrollPercent = sectionScrollTop / scrollRealHeight;
     percent = scrollPercent * 100;
+
+    if (IntroImgRef.current?.getBoundingClientRect().top) {
+      sectionMainTop =
+        IntroImgRef.current?.getBoundingClientRect().top + winScrollTop;
+    }
+    sectionMainBottom = sectionMainTop + IntroImgRef.current?.offsetHeight;
+  };
+
+  const moveSection = () => {
+    if (winScrollTop > sectionMainTop && winScrollTop < sectionMainBottom) {
+      if (!sectionIsMoving) {
+        sectionIsMoving = true;
+        moveStartRender();
+      }
+    }
+
+    if (winScrollTop >= sectionMainTop) {
+      activeCheck();
+    }
+  };
+
+  const activeCheck = () => {
+    // imgBoxRef.current?.classList.add('active');
+  };
+
+  const moveStartRender = () => {
+    if (!IntroImgRef.current?.classList.contains('active')) {
+      IntroImgRef.current?.classList.add('active');
+      imgBoxRef.current?.classList.add('active');
+      scrollMove(sectionMainBottom + 1);
+    } else {
+      IntroImgRef.current?.classList.remove('active');
+      imgBoxRef.current?.classList.remove('active');
+      scrollMove(sectionMainTop);
+    }
+  };
+
+  const scrollMove = (moveY: any) => {
+    const speed = 3;
+    let vy = 0;
+    let scrollY = 0;
+
+    const loop = setInterval(() => {
+      let dir = moveY > window.pageYOffset ? 1 : -1;
+      vy += speed * dir;
+
+      if (dir > 0) {
+        scrollY = Math.min(moveY, window.pageYOffset + vy);
+      } else {
+        scrollY = Math.max(moveY, window.pageYOffset + vy);
+      }
+
+      window.scrollTo(0, scrollY);
+
+      if (scrollY >= moveY && dir > 0) {
+        sectionIsMoving = false;
+        clearInterval(loop);
+      } else if (scrollY <= moveY && dir < 0) {
+        //업클리어
+        sectionIsMoving = false;
+        clearInterval(loop);
+      }
+    }, 10);
   };
 
   const contentIn = () => {
@@ -150,6 +234,7 @@ const IntroPage = () => {
   const scrollFunc = () => {
     setProperty();
     contentIn();
+    moveSection();
   };
 
   useEffect(() => {
@@ -163,33 +248,29 @@ const IntroPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(percent);
-  }, [percent]);
-
   return (
     <Wrapper>
-      <div>
+      <div ref={IntroImgRef}>
         <img src="/img/Intro/Intro1.jpg" alt="Intro" className="introImg" />
       </div>
       <div ref={fixMotionRef} className="fix_motion">
         <article className="fix_wrap inner">
           <div className="textBox">
-            <p ref={txt01ref}>뭔데 이건</p>
+            <p ref={txt01ref}>오하민!</p>
             <p ref={txt02ref} className="txt02">
-              이것
+              서상균!
             </p>
             <p ref={txt03ref} className="txt03">
-              저것
+              박정현!
             </p>
             <p ref={txt04ref} className="txt04">
-              일단 씀
+              홍성목!
             </p>
           </div>
-          <div className="imgFix">
+          <div ref={imgBoxRef} className="imgFix">
             <div className="officeImg">
               <figure className="imgOffice">
-                <img src="/img/MyOffice/level2.png" alt="" />
+                <img src="/img/MyOffice/level3.png" />
               </figure>
             </div>
           </div>
