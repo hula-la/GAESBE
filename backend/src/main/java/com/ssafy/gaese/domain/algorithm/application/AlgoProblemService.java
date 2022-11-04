@@ -23,6 +23,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -81,10 +82,10 @@ public class AlgoProblemService {
             }
 
         }else{
-//            FileInputStream serviceAccount =
-//                    new FileInputStream(firebaseSdkPath);
+            FileInputStream serviceAccount =
+                    new FileInputStream(ResourceUtils.getFile("classpath:firebaseKey.json"));
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("/firebaseKey.json").getInputStream()))
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
                     .build();
             firebaseApp = FirebaseApp.initializeApp(options);
