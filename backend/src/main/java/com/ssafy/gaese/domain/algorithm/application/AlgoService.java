@@ -2,21 +2,18 @@ package com.ssafy.gaese.domain.algorithm.application;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
-import com.ssafy.gaese.domain.cs.dto.UserDto;
+import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
-import com.ssafy.gaese.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

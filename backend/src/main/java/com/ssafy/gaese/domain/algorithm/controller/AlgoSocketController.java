@@ -2,7 +2,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.cs.dto.UserDto;
+import com.ssafy.gaese.domain.user.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

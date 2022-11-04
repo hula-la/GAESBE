@@ -1,13 +1,10 @@
 package com.ssafy.gaese.domain.algorithm.dto;
 
 
-import com.ssafy.gaese.domain.cs.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-
-import java.util.List;
 
 @Getter
 @Builder
