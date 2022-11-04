@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { authActions } from './features/auth/authSlice';
 import './App.css';
 import IntroPage from './features/Intro/pages/IntroPage';
 import LoginPage from './features/auth/pages/LoginPage';
@@ -13,8 +14,14 @@ import MyOfficePage from './features/game/pages/MyOfficePage';
 import CoinFlipPage from './features/coinflip/CoinFlipPage';
 import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
+import CSIngamePage from './features/cs/pages/CSIngamePage';
+import { useDispatch } from 'react-redux';
 
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(authActions.fetchUserInfoStart());
+  });
   return (
     <BrowserRouter>
       <Routes>
@@ -25,11 +32,12 @@ const App = () => {
           <Route path="nickname" element={<SetNicknamePage />} />
         </Route>
         <Route path="game/*" element={<CombinePage />}>
-          <Route path="home" element={<MyOfficePage />} />
+          <Route path="" element={<MyOfficePage />} />
           <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
           <Route path="casino" element={<CoinFlipPage />} />
           <Route path="CS" element={<CSgamePage />} />
+          <Route path="CS/room" element={<CSIngamePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -87,4 +87,4 @@ function AlgoInBattle() {
     {progress === 'after' && <AlgoAfterStart handleLeaveRoom={handleLeaveRoom}/>}
   </>
 }
-export default AlgoInBattle
+export default AlgoInBattle;
