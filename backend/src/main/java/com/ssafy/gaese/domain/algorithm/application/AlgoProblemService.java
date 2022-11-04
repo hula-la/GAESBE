@@ -1,7 +1,6 @@
 package com.ssafy.gaese.domain.algorithm.application;
 
 
-
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
@@ -23,10 +22,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -58,7 +54,8 @@ public class AlgoProblemService {
         }catch (Exception e){
             /** 크롤링 에러처리 */
         }
-        if(problems.size()==0) setOperations.add(key,"0");
+
+        if(problems.size()==0) return;
         //레디스 저장
         for(String problem : problems){
             setOperations.add(key,problem);
@@ -88,15 +85,7 @@ public class AlgoProblemService {
                     .build();
             firebaseApp = FirebaseApp.initializeApp(options);
         }
-//        FileInputStream serviceAccount =
-//                new FileInputStream(firebaseSdkPath);
-//
-//        FirebaseOptions options = FirebaseOptions.builder()
-//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
-//                .build();
-//
-//        FirebaseApp.initializeApp(options);
+
 
         Firestore db = FirestoreClient.getFirestore();
         List<AlgoProblemDto> list = new ArrayList<>();
@@ -123,12 +112,20 @@ public class AlgoProblemService {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
 
         List<AlgoProblemDto> algoProblemDtoList = getTierProblems(algoProblemReq.getTier()); // 티어 전체 문제
+
         Set<String> problemsSet = new HashSet<>();
 
-        for(String user : algoProblemReq.getUsers()){
-            problemsSet.addAll(setOperations.members(roomCode+"-"+user));
 
+        for(String user : algoProblemReq.getUsers()){
+            String key = roomCode+"-"+user;
+            if(redisTemplate.hasKey(key)){ // 저장된 문제가 있으면 확인
+                problemsSet.addAll(setOperations.members(roomCode+"-"+user));
+            }
         }
+        System.out.println(
+
+        );
+        // 푼 문제들 제외
         for (int i = algoProblemDtoList.size() - 1; i >= 0; i--) {
             if (problemsSet.contains(algoProblemDtoList.get(i).getProblemId()))
                 algoProblemDtoList.remove(algoProblemDtoList.get(i));

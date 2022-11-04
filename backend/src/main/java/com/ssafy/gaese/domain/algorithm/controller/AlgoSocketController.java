@@ -1,8 +1,10 @@
 package com.ssafy.gaese.domain.algorithm.controller;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.cs.dto.UserDto;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -36,7 +38,13 @@ public class AlgoSocketController {
         List<UserDto> users = algoService.getUsers(userIds);
         res.put("users",users);
         simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
-
+    }
+    @MessageMapping("/algo/pass")
+    public void algoPass(AlgoPassDto algoPassDto) throws Exception{
+        System.out.println(algoPassDto.getRoomCode()+", "+algoPassDto.getNo());
+        HashMap<String, Integer> res = new HashMap<>();
+        res.put("no",algoPassDto.getNo()+1);
+        simpMessagingTemplate.convertAndSend("/algo/pass/"+algoPassDto.getRoomCode(),res);
     }
 
 }
