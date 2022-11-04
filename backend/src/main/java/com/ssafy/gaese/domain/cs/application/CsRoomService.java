@@ -47,8 +47,17 @@ public class CsRoomService {
 
         // 방 입장
         if(csSocketDto.getType() == CsSocketDto.Type.ENTER){
-            if (csSocketDto.getRoomCode()!=null) roomDto = enterRandomRoom(csSocketDto);
-            else roomDto = enterRandomRoom(csSocketDto);
+//            if (csSocketDto.getRoomCode()!=null) roomDto = enterRandomRoom(csSocketDto);
+//            else roomDto = enterRoom(csSocketDto);
+
+            if (csSocketDto.getRoomType()!= CsSocketDto.RoomType.FRIEND) roomDto = enterRandomRoom(csSocketDto);
+            else {
+                if (csSocketDto.getRoomCode()!=null){
+                    roomDto = enterMyRoom(csSocketDto);
+                } else{
+                    roomDto = enterRoom(csSocketDto);
+                }
+            }
 
             log.debug(csSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에 입장하였습니다.");
             res.put("msg",csSocketDto.getUserId()+"님이 접속하셨습니다.");
@@ -153,6 +162,16 @@ public class CsRoomService {
         return csRoomDto;
     }
 
+    // 친선전 방 만들기
+    public CsRoomDto enterMyRoom(CsSocketDto csSocketDto) {
+        // 들어갈 곳이 없으면 새로운 방 생성
+        String newRoomCode = createRoom().getCode();
+
+        csSocketDto.setRoomCode(newRoomCode);
+
+        CsRoomDto csRoomDto = enterRoom(csSocketDto);
+        return csRoomDto;
+    }
     // 친선전 방 입장
     public synchronized CsRoomDto enterRoom(CsSocketDto csSocketDto){
         System.out.println(csSocketDto.toString());

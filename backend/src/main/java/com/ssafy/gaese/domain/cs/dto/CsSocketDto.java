@@ -13,8 +13,13 @@ public class CsSocketDto {
         ENTER, LEAVE
     }
 
+    public enum RoomType {
+        RANDOM, FRIEND
+    }
+
     private Type type;
     private String sessionId;
     private Long userId;
     private String roomCode;
+    private RoomType roomType;
 }
