@@ -6,36 +6,38 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase-sdk-path}")
-    private String firebaseSdkPath;
-
     @PostConstruct
     public void initialize() throws IOException {
-        try{
-            FileInputStream serviceAccount =
-                    new FileInputStream(firebaseSdkPath);
+        FirebaseApp firebaseApp = null;
+        List<FirebaseApp> firebaseApps = FirebaseApp.getApps();
 
-            FirebaseOptions options = FirebaseOptions.builder()
+        if(firebaseApps != null && !firebaseApps.isEmpty()){
+
+            for(FirebaseApp app : firebaseApps) {
+                if (app.getName().equals(FirebaseApp.DEFAULT_APP_NAME)) {
+                    firebaseApp = app;
+                }
+            }
+
+        }else{
+            FileInputStream serviceAccount =
+                    new FileInputStream(ResourceUtils.getFile("classpath:firebaseKey.json"));
+            FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
                     .build();
-
-            FirebaseApp.initializeApp(options);
-
-        }catch(FileNotFoundException e){
-            System.out.println(e.getMessage());
-
-        } catch (IOException e){
-            System.out.println(e.getMessage());
+            firebaseApp = FirebaseApp.initializeApp(options);
         }
 
     }

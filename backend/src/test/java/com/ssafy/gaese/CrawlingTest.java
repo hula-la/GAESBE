@@ -67,7 +67,7 @@ public class CrawlingTest {
 
         driver.quit();
     }
-    @Value("${firebase-sdk-path}")
+//    @Value("${firebase-sdk-path}")
     private String firebaseSdkPath;
 
     public List<AlgoProblemDto> get_tier_problems(String tier) throws ExecutionException, InterruptedException, IOException {
