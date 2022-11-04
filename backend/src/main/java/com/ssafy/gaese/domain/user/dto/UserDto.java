@@ -1,4 +1,4 @@
-package com.ssafy.gaese.domain.cs.dto;
+package com.ssafy.gaese.domain.user.dto;
 
 import lombok.Builder;
 import lombok.Data;

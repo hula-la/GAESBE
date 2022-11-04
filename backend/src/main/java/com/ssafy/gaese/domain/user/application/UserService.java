@@ -1,11 +1,9 @@
 package com.ssafy.gaese.domain.user.application;
 
-import com.ssafy.gaese.domain.cs.dto.UserDto;
+import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
-import com.ssafy.gaese.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

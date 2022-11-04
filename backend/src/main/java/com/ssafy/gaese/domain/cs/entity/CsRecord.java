@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.cs.entity;
 
+import com.ssafy.gaese.domain.cs.dto.CsRecordDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -32,13 +35,21 @@ public class CsRecord {
     @Column(nullable = false)
     private Date date;
 
-    @Column(nullable = false)
-    private String gameType;
 
-    private String correctCnt;
 
-    private ProblemType rank;
+    @OneToMany(mappedBy = "csRecord", cascade = CascadeType.REMOVE)
+    private List<CsRecordProblem> csRecordProblemList = new ArrayList<>();
 
-    private String isWin;
+
+    private int rank;
+
+    public CsRecordDto toDto(){
+        return CsRecordDto.builder()
+                .csRecordId(this.id)
+                .date(this.date)
+                .rank(this.rank)
+                .build();
+    }
+
 
 }
