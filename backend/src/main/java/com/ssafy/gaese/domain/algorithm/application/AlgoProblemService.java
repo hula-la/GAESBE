@@ -19,6 +19,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
@@ -80,11 +81,11 @@ public class AlgoProblemService {
             }
 
         }else{
-            FileInputStream serviceAccount =
-                    new FileInputStream(firebaseSdkPath);
+//            FileInputStream serviceAccount =
+//                    new FileInputStream(firebaseSdkPath);
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl("https://주소.firebaseio.com")
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("/firebaseKey.json").getInputStream()))
+                    .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
                     .build();
             firebaseApp = FirebaseApp.initializeApp(options);
         }
