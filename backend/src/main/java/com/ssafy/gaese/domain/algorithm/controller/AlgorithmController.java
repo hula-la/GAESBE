@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -84,7 +85,7 @@ public class AlgorithmController {
     @ApiOperation(value="추천 문제 리스트")
     public ResponseEntity<List<AlgoProblemDto>> getCommonProblems(@PathVariable String roomCode,
                                                                   @RequestBody AlgoProblemReq algoProblemReq
-                                                                  ) throws ExecutionException, InterruptedException {
+                                                                  ) throws ExecutionException, InterruptedException, IOException {
         return ResponseEntity.ok().body(algoProblemService.getCommonProblems(roomCode, algoProblemReq));
     }
     @GetMapping("/test/{roomCode}")
