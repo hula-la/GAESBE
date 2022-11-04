@@ -44,7 +44,7 @@ const SideBar = () => {
       <img src="/img/Logo.png" alt="Logo" className="logo" />
       <div className="menubar">
         <div
-          onClick={() => handleOnClick('home')}
+          onClick={() => handleOnClick('')}
           className="folder"
         >
           <img src="/img/FolderBlock.png" alt="menu" className="menu" />

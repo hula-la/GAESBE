@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { algoActions } from '../algorithmSlice' 
-import { makeAlgoRoom } from '../../../api/algoApi'
 import { AlgoRoomInterface } from '../../../models/algo'
 
 function AlgoRoomMake() {
@@ -10,7 +9,9 @@ function AlgoRoomMake() {
   const dispatch = useDispatch()
 
   const { roomCode } = useSelector((state:any) => state.algo)
-  const [form, setForm] = useState<AlgoRoomInterface>({roomCode: '', time: '30', tier: '1', num: '0'})
+  const { userInfo } = useSelector((state:any) => state.auth)
+
+  const [form, setForm] = useState<AlgoRoomInterface>({roomCode: '', time: '30', tier: '1', num: '0', master: userInfo.id})
   const tierList: {value: string, alt:string}[] = []
   for (let i = 1; i < 31; i++) {
     tierList.push({value: `${i}`, alt:`티어이미지${i}`})

@@ -8,4 +8,5 @@ export interface AlgoRoomInterface {
   time: string
   tier: string
   num: string
+  master?: string
 }
