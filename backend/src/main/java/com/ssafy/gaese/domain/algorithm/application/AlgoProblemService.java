@@ -36,8 +36,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AlgoProblemService {
 
-    @Value("${firebase-sdk-path}")
-    private String firebaseSdkPath;
     @Value("${chrome-driver-path}")
     private String ChromePath;
     private final RedisTemplate<String, String> redisTemplate;

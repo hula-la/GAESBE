@@ -71,7 +71,7 @@ public class AlgoService {
 
     public Boolean confirmRoomEnter(String roomCode){
         System.out.println(algoRedisRepositoryCustom.getRoomNum(roomCode));
-        if(algoRedisRepositoryCustom.getRoomNum(roomCode) == 5) return false;
+        if(algoRedisRepositoryCustom.getRoomNum(roomCode) == 4) return false;
         return true;
     }
 
