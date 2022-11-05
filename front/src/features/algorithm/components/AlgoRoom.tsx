@@ -19,7 +19,7 @@ function AlgoRoom({roomInfo}: Props) {
 
   useEffect(() => {
     if (roomCode) {
-      navigate('')
+      navigate('/game/algo/battle')
     }
   }, [roomCode])
 

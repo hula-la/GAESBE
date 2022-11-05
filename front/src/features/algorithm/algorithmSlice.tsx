@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Action } from '../../models/algo';
+import { Action } from '../../models/algo'
+import { AlgoRoomInterface } from '../../models/algo'
 
 type AlgoGame = {
   isLoading: boolean;
@@ -22,6 +23,12 @@ const algoSlice = createSlice({
     resetError(state) {
       state.error = null;
     },
+    creatAlgoRoom(state, action: Action<AlgoRoomInterface>) {
+      state.isLoading = true
+    },
+    creatAlgoRoomSuccess(state) {
+      state.isLoading = false
+    },
     enterAlgoRoom(state, action: Action<string>) {
       state.isLoading = true;
     },
@@ -29,9 +36,11 @@ const algoSlice = createSlice({
       state.isLoading = false;
       state.roomCode = action.payload;
     },
-    // creatAlgoRoom(state, action: action<>)
-  },
-});
+    exitAlgoRoom(state) {
+      state.roomCode = null
+    }
+  }
+})
 
 export const algoActions = algoSlice.actions;
 

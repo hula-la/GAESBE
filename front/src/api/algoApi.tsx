@@ -14,7 +14,11 @@ export const makeAlgoRoom = async (body: {
   return res
 }
 
-export const confirmAlgoRoom =async (params: string) => {
+export const confirmAlgoRoom = async (params: string) => {
   const res = await client.get(`algo/confirm/${params}`)
   return res
+}
+
+export const bojUserIdRequest = async (roomCode: string, userBjId: string) => {
+  const res = await client.get(`/algo/problem/${roomCode}/${userBjId}`)
 }

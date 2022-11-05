@@ -1,17 +1,9 @@
-import {
-  all,
-  takeEvery,
-  takeLatest,
-  put,
-  call,
-  take,
-  fork,
-  delay,
-} from 'redux-saga/effects';
-import { AxiosResponse } from 'axios';
-import { Action } from '../../models/algo';
-import { algoActions } from './algorithmSlice';
-import { confirmAlgoRoom } from '../../api/algoApi';
+import {all, takeEvery, takeLatest, put, call, take, fork, delay} from 'redux-saga/effects'
+import { AxiosResponse } from 'axios'
+import { Action, AlgoRoomInterface } from '../../models/algo'
+import { algoActions } from './algorithmSlice'
+import { confirmAlgoRoom, makeAlgoRoom } from '../../api/algoApi'
+
 
 function* enterAlgoRoomSaga(action: Action<string>) {
   try {
@@ -28,9 +20,21 @@ function* enterAlgoRoomSaga(action: Action<string>) {
   }
 }
 
+function* creatAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
+  try {
+    const res: AxiosResponse = yield call(makeAlgoRoom, action.payload)
+    if (res.status === 200) {
+      yield put(algoActions.enterAlgoRoom(res.data.roomCode))
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function* algoSaga() {
-  const { enterAlgoRoom } = algoActions;
-  yield takeLatest(enterAlgoRoom, enterAlgoRoomSaga);
+  const { enterAlgoRoom, creatAlgoRoom } = algoActions
+  yield takeLatest(enterAlgoRoom, enterAlgoRoomSaga)
+  yield takeLatest(creatAlgoRoom, creatAlgoRoomSaga)
 }
 
 export const algoSagas = [fork(algoSaga)];
