@@ -1,5 +1,10 @@
 import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { typingActions } from '../typingSlice';
 import { useNavigate } from 'react-router-dom';
+import { TypingRoomInterface } from '../../../models/typing';
+
 const TypingMain = styled.div`
   width: 82%;
   background-color: #232323;
@@ -36,9 +41,25 @@ const SelectTypeBox = styled.div`
   border: 2px solid violet;
 `;
 function TypingMainPage() {
+  const [isLoding, setIsLoding] = useState<Boolean>(false);
+  const [form, setForm] = useState<TypingRoomInterface>({
+    lang: 'python',
+    id: '4',
+    nickName: '배준식',
+    socketId: '1',
+    roomCode: 'asdfasdfa',
+    isCreat: true,
+  });
   const navigate = useNavigate();
-  const handleRandomGame = () => {
+  const dispatch = useDispatch();
+  const handleEnterGame = () => {
     navigate('game');
+    // e.preventDefault();
+    // dispatch(typingActions.createTypingRoom(form));
+    // console.log('클릭');
+  };
+  const handleRandomGame = () => {
+    navigate('enter');
   };
   return (
     <TypingMain>
@@ -55,7 +76,7 @@ function TypingMainPage() {
           <button onClick={handleRandomGame}>랜덤매칭</button>
         </SelectTypeBox>
         <SelectTypeBox>
-          <button>친선매칭</button>
+          <button onClick={handleEnterGame}>친선매칭</button>
         </SelectTypeBox>
       </SelectGameType>
     </TypingMain>

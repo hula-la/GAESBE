@@ -7,7 +7,7 @@ function TypingPage() {
       <Routes>
         {/* <Route path="" element={<TypingGamePage />} /> */}
         <Route path="" element={<TypingMainPage />} />
-        <Route path="/game" element={<TypingGamePage />} />
+        <Route path="/enter" element={<TypingGamePage />} />
       </Routes>
     </>
   );

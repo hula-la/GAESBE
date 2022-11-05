@@ -7,16 +7,16 @@ import { confirmAlgoRoom, makeAlgoRoom } from '../../api/algoApi'
 
 function* enterAlgoRoomSaga(action: Action<string>) {
   try {
-    const ok: AxiosResponse = yield call(confirmAlgoRoom, action.payload)
+    const ok: AxiosResponse = yield call(confirmAlgoRoom, action.payload);
     if (ok.data === true) {
-      const { enterAlgoRoomSuccess } = algoActions
-      yield put(enterAlgoRoomSuccess(action.payload))
+      const { enterAlgoRoomSuccess } = algoActions;
+      yield put(enterAlgoRoomSuccess(action.payload));
     } else {
-      alert('방이 가득 찬 것 같아요.\n목록을 새로고침 해주세요')
+      alert('방이 가득 찬 것 같아요.\n목록을 새로고침 해주세요');
     }
   } catch (error) {
-    console.log(error)
-    alert('방이 사라진 것 같아요.\n목록을 새로고침 해주세요')
+    console.log(error);
+    alert('방이 사라진 것 같아요.\n목록을 새로고침 해주세요');
   }
 }
 
@@ -37,6 +37,4 @@ function* algoSaga() {
   yield takeLatest(creatAlgoRoom, creatAlgoRoomSaga)
 }
 
-export const algoSagas = [
-  fork(algoSaga)
-]
+export const algoSagas = [fork(algoSaga)];
