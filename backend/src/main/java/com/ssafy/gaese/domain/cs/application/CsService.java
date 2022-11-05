@@ -75,13 +75,20 @@ public class CsService {
             res.put("result","정답입니다.");
 
             HashMap<Long, Boolean[]> isCorrectedList = roomDto.getIsCorrectedList();
-            if (isCorrectedList==null) isCorrectedList = new HashMap<Long, Boolean[]>();
+            if (isCorrectedList==null) {
+                isCorrectedList = new HashMap<Long, Boolean[]>();
+                HashMap<Long, Boolean[]> finalIsCorrectedList = isCorrectedList;
+                roomDto.getPlayers().values().stream().forEach(player->{
+                    finalIsCorrectedList.put(player,new Boolean[numProblem]);
+                });
+
+            };
 
             // 해당 idx에 true 넣음
 
-            if (!isCorrectedList.containsKey(userId)) {
-                isCorrectedList.put(userId,new Boolean[numProblem]);
-            }
+//            if (!isCorrectedList.containsKey(userId)) {
+//                isCorrectedList.put(userId,new Boolean[numProblem]);
+//            }
 
             // 제일 처음 idx면 배열 만들고
             isCorrectedList.get(userId)[round] = true;
@@ -168,7 +175,11 @@ public class CsService {
 
     public void gameEnd(CsRoomDto roomDto,List<CsProblem> randomProblem){
         HashMap<Long, Boolean[]> isCorrectedList = roomDto.getIsCorrectedList();
+        if (isCorrectedList==null) isCorrectedList = new HashMap<Long, Boolean[]>();
+
         HashMap<Long, Long> score = roomDto.getScore();
+        if (score==null) score = new HashMap<Long, Long>();
+
         HashMap<Long, Integer> rankByPlayer = new HashMap<>();
 
         List<Map.Entry<Long, Long>> entryList = new LinkedList<>(score.entrySet());
@@ -184,7 +195,7 @@ public class CsService {
             CsRecord csRecord = CsRecord.builder()
                     .user(userRepository.findById(k).orElseThrow(() -> new UserNotFoundException()))
                     .date(new Date())
-                    .rank(rankByPlayer.get(k))
+                    .ranks(rankByPlayer.get(k))
                     .build();
             CsRecord saved = csRecordRepository.save(csRecord);
             for (int i = 0; i < numProblem; i++) {

@@ -16,6 +16,6 @@ public class CsRecordDto {
 
     private String correctCnt;
 
-    private int rank;
+    private int ranks;
 
 }

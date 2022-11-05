@@ -74,11 +74,12 @@ public class CsRoomService {
         roomResByUser.put("room",roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),roomResByUser);
 //        simpMessagingTemplate.convertAndSend("/cs/"+,roomResByUser);
-
-        Thread.sleep(5*1000);
-
         res.put("players",getUserInRoom(roomDto.getCode()));
         simpMessagingTemplate.convertAndSend("/cs/room/"+csSocketDto.getRoomCode(),res);
+
+
+        Thread.sleep(10*1000);
+
 
         // 플레이어가 꽉 차면 게임 시작
         boolean isStart = isReadyToStart(roomDto);

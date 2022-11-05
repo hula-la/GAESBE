@@ -41,13 +41,13 @@ public class CsRecord {
     private List<CsRecordProblem> csRecordProblemList = new ArrayList<>();
 
 
-    private int rank;
+    private int ranks;
 
     public CsRecordDto toDto(){
         return CsRecordDto.builder()
                 .csRecordId(this.id)
                 .date(this.date)
-                .rank(this.rank)
+                .ranks(this.ranks)
                 .build();
     }
 
