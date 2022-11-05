@@ -15,7 +15,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @Builder
-@Table(name = "CsWrongProblem")
+@Table(name = "CsRecordProblem")
 @NoArgsConstructor
 @AllArgsConstructor
 public class CsRecordProblem {

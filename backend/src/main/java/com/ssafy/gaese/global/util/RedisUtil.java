@@ -41,16 +41,16 @@ public class RedisUtil {
     }
 
 
-    public void setHashData(Long key, HashMap<Long, Float> map){
+    public void setHashData(String key, Map<String, String[]> map){
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
-        hashOperations.putAll(String.valueOf(key),map);
+        hashOperations.putAll(key,map);
     }
     public Float getHashData(Long key1, Long key2){
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         return (Float) hashOperations.get(String.valueOf(key1),String.valueOf(key2));
     }
-    public Map<Object, Object> getHashEntry(Long key1){
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+    public Map<String, String[]> getHashEntry(String key1){
+        HashOperations<String, String, String[]> hashOperations = redisTemplate.opsForHash();
         return hashOperations.entries(String.valueOf(key1));
     }
 

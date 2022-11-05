@@ -10,6 +10,7 @@ import com.ssafy.gaese.domain.cs.repository.CsProblemRepository;
 import com.ssafy.gaese.domain.cs.repository.CsRoomRedisRepository;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -26,17 +27,19 @@ import java.util.stream.Collectors;
 @Log4j2
 public class CsRoomService {
 
+    private final RedisUtil redisUtil;
     private final CsRoomRedisRepository csRoomRedisRepository;
     private final UserRepository userRepository;
-    private final CsService csService;
-    private final RedisUtil redisUtil;
-    
     private final CsProblemRepository csProblemRepository;
+
+    private final CsService csService;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    private final int maxPlayer=1;
-    private final int numProblem=10;
+    private final SocketInfo socketInfo;
+
+    private final int maxPlayer=2;
+    private final int numProblem=3;
 
     private final String waitRoomKey="WaitRoom";
 
@@ -47,17 +50,27 @@ public class CsRoomService {
 
         // 방 입장
         if(csSocketDto.getType() == CsSocketDto.Type.ENTER){
-//            if (csSocketDto.getRoomCode()!=null) roomDto = enterRandomRoom(csSocketDto);
-//            else roomDto = enterRoom(csSocketDto);
 
+
+            // 랜덤방 들어가기
             if (csSocketDto.getRoomType()!= CsSocketDto.RoomType.FRIEND) roomDto = enterRandomRoom(csSocketDto);
+            // 친선전 들어가기
             else {
-                if (csSocketDto.getRoomCode()!=null){
+                // 방만들기
+                if (csSocketDto.getRoomCode()==null){
                     roomDto = enterMyRoom(csSocketDto);
-                } else{
+                }
+                // 만들어져있는 방 들어가기기
+               else{
                     roomDto = enterRoom(csSocketDto);
                 }
             }
+
+            socketInfo.setSocketInfo(csSocketDto.getSessionId(),
+                    csSocketDto.getUserId(),
+                    csSocketDto.getRoomCode(),
+                    "Cs",
+                    null);
 
             log.debug(csSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에 입장하였습니다.");
             res.put("msg",csSocketDto.getUserId()+"님이 접속하셨습니다.");
@@ -71,10 +84,12 @@ public class CsRoomService {
         }
 
 
+        // 방 코드를 개인에게 전달
         roomResByUser.put("room",roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),roomResByUser);
-//        simpMessagingTemplate.convertAndSend("/cs/"+,roomResByUser);
         Thread.sleep(2*1000);
+
+        // 플레이어 리스트를 방 전원에게 전달
         res.put("players",getUserInRoom(roomDto.getCode()));
         simpMessagingTemplate.convertAndSend("/cs/room/"+csSocketDto.getRoomCode(),res);
 
@@ -93,19 +108,13 @@ public class CsRoomService {
 
         if (isStart){
             System.out.println("게임 시작");
-
+//              게임 시작
             CsRoomDto saved = csService.gameStart(roomDto, randomProblem);
+//            게임 끝
             csService.gameEnd(saved,randomProblem);
-
-            res.clear();
-            res.put("result", saved);
-            simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
-
 
             // 방 삭제
             deleteRoom(saved.getCode());
-            res.put("msg", "end");
-            simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
         }
 
     }
