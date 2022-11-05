@@ -1,38 +1,38 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Action } from '../../models/algo'
+import { Action } from '../../models/algo';
 
 type AlgoGame = {
-  isLoading: boolean
-  error: string | null
-  roomCode: string | null
-  needReload: boolean
-}
+  isLoading: boolean;
+  error: string | null;
+  roomCode: string | null;
+  needReload: boolean;
+};
 
 const initialState: AlgoGame = {
   isLoading: false,
   error: null,
   roomCode: null,
   needReload: false,
-}
+};
 
 const algoSlice = createSlice({
   name: 'algo',
   initialState,
   reducers: {
     resetError(state) {
-      state.error = null
+      state.error = null;
     },
     enterAlgoRoom(state, action: Action<string>) {
-      state.isLoading = true
+      state.isLoading = true;
     },
     enterAlgoRoomSuccess(state, action: Action<string>) {
-      state.isLoading = false
-      state.roomCode = action.payload
+      state.isLoading = false;
+      state.roomCode = action.payload;
     },
     // creatAlgoRoom(state, action: action<>)
-  }
-})
+  },
+});
 
-export const algoActions = algoSlice.actions
+export const algoActions = algoSlice.actions;
 
-export default algoSlice.reducer
+export default algoSlice.reducer;

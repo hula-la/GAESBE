@@ -1,6 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { client } from 'stompjs';
 import styled from 'styled-components';
+import { fetchUserInfoApi } from '../../../api/authApi';
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
 import './style.css';
+interface CustomWebSocket extends WebSocket {
+  _transport?: any;
+}
 interface CharStateType {
   index: number;
   sentence: number;
@@ -49,6 +56,30 @@ const This = styled.div`
   color: ${(props) => props.color};
 `;
 const TypingGame = () => {
+  // const socket: CustomWebSocket = new SockJS(
+  //   'https://k7e104.p.ssafy.io:8081/api/ws',
+  // );
+  // const client = Stomp.over(socket);
+  // client.connect({}, (frame) => {
+  //   client.send(
+  //     '/typing/enter',
+  //     {},
+  //     JSON.stringify({
+  //       lang: 'python',
+  //       id: '4',
+  //       nickName: '배준식',
+  //       socketId: socket._transport.url.slice(-18, -10),
+  //       roomCode: '',
+  //       isCreat: false,
+  //     }),
+  //   );
+  //   client.subscribe('/topic/typing/4/enter', (res) => {
+  //     // client.subscribe(`/typing/${userInfo.userId}/enter`, (res) => {
+  //     console.log('메세지 옴 ');
+  //     console.log('asdfasdfas', JSON.parse(res.body));
+  //   });
+  // });
+
   const example = ['forˇiˇinˇrange(1,10):', 'ˇˇˇˇprint(i)'];
   // const example = ["for\uFE40i\uFE40in\uFE40range(1,10):", "\uFE40\uFE40\uFE40\uFE40print(i)"];
 
@@ -145,6 +176,15 @@ const TypingGame = () => {
         } else {
           console.log(index, '맞다');
           // 보내
+          // client.send(
+          //   '/typing/check',
+          //   {},
+          //   JSON.stringify({
+          //     nickName: '배준식',
+          //     roomNo: '1',
+          //     check: true,
+          //   }),
+          // );
           setIndex(index + 1);
           const changedState = JSON.parse(
             JSON.stringify({ index: index, sentence: sentence, type: 1 }),
