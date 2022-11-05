@@ -179,14 +179,14 @@ public class CsService {
             roomDto.setCurrentIdx(currentCsProblem.getId());
             roomDto.setRound(i);
 
-            roomDto = csRoomRedisRepository.save(roomDto);
+            csRoomRedisRepository.save(roomDto);
 
             //            게임 시작하고 60초 타이머
             Thread.sleep(4*1000);
 
         }
 
-        return roomDto;
+        return csRoomRedisRepository.findById(roomId).orElseThrow(()->new RoomNotFoundException());
 
 
 
