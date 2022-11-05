@@ -67,7 +67,7 @@ public class CsRoomService {
             }
 
             socketInfo.setSocketInfo(csSocketDto.getSessionId(),
-                    csSocketDto.getUserId(),
+                    csSocketDto.getUserId().toString(),
                     csSocketDto.getRoomCode(),
                     "Cs",
                     null);
