@@ -85,6 +85,7 @@ public class CsService {
             // 점수 주기
             HashMap<Long, Long> score = roomDto.getScore();
             score.put(userId,score.get(userId)+(1000-penaltyScore*numCorrectByRound.get(round)));
+            roomDto.setScore(score);
 
             // 한명 맞췄으니 numCorrectByRound 카운팅
             numCorrectByRound.put(round,numCorrectByRound.get(round)+1);
@@ -143,7 +144,6 @@ public class CsService {
 //        점수 0점으로 초기화
         // 맞춘 문제 리스트 초기화
         HashMap<Long, Long> score = new HashMap<>();
-        HashMap<String, String[]> isCorrectList = new HashMap<>();
 
         String roomId = roomDto.getCode();
 
