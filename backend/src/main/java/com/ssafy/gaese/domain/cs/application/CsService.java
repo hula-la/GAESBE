@@ -60,6 +60,8 @@ public class CsService {
                 .findById(csSubmitDto.getRoomCode())
                 .orElseThrow(()->new RoomNotFoundException());
 
+        System.out.println("제출하고 나서"+roomDto);
+
 
         // 사용자의 문제와 서버의 문제가 다르면 시간초과 에러 발생
         if(roomDto.getCurrentIdx()!=csSubmitDto.getProblemId()) throw new ExceedTimeException();
@@ -84,6 +86,7 @@ public class CsService {
 
             // 점수 주기
             HashMap<Long, Long> score = roomDto.getScore();
+            System.out.println("점수 주기 전"+score.toString());
             score.put(userId,score.get(userId)+(1000-penaltyScore*numCorrectByRound.get(round)));
             roomDto.setScore(score);
 
@@ -102,6 +105,7 @@ public class CsService {
         // 업데이트된 점수를 방 전원에게 전달
         res.clear();
         res.put("score",roomDto.getScore());
+        System.out.println("score****"+roomDto.getScore().toString());
         simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
 
@@ -147,6 +151,8 @@ public class CsService {
 
         String roomId = roomDto.getCode();
 
+        System.out.println("초기화");
+
 
         roomDto.getPlayers().values().forEach(v->{
             score.put(v,0L);
@@ -168,6 +174,8 @@ public class CsService {
 
             // 현재 문제 번호 redis에 저장
             simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,res);
+
+            roomDto = csRoomRedisRepository.findById(roomId).orElseThrow(()->new RoomNotFoundException());
             roomDto.setCurrentIdx(currentCsProblem.getId());
             roomDto.setRound(i);
 
