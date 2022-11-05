@@ -30,7 +30,6 @@ public class CsRoomDto {
     private int round;
     private RoomStatus roomStatus;
 
-    private HashMap<Long, Boolean[]> isCorrectedList;
     private HashMap<Integer, Integer> numCorrectByRound;
     private HashMap<Long, Long> score;
 
@@ -42,7 +41,6 @@ public class CsRoomDto {
         csRoomDto.currentIdx = -1L;
         csRoomDto.round = 0;
         csRoomDto.roomStatus = RoomStatus.WAIT;
-        csRoomDto.isCorrectedList = new HashMap<>();
         csRoomDto.numCorrectByRound = new HashMap<>();
         return csRoomDto;
     }

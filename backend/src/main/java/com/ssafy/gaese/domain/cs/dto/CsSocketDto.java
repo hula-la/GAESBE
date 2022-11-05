@@ -8,6 +8,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CsSocketDto {
     public enum Type {
         ENTER, LEAVE

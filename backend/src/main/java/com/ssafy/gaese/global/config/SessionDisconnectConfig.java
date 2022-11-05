@@ -1,17 +1,22 @@
 package com.ssafy.gaese.global.config;
 
+import com.ssafy.gaese.domain.cs.application.CsRoomService;
+import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.global.redis.SocketInfo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Configuration
+@RequiredArgsConstructor
 public class SessionDisconnectConfig {
 
 
-    @Autowired
-    SocketInfo socketInfo;
+    private final SocketInfo socketInfo;
+
+    private final CsRoomService csRoomService;
 
     @EventListener
     public void onDisconnectEvent(SessionDisconnectEvent event) throws Exception
@@ -28,8 +33,20 @@ public class SessionDisconnectConfig {
             case "Typing":
 
                 break;
+            case "Cs":
+                CsSocketDto csSocketDto = CsSocketDto.builder()
+                        .type(CsSocketDto.Type.LEAVE)
+                        .userId(Long.parseLong(info[0]))
+                        .roomCode(info[1])
+                        .sessionId(sessionId)
+                        .build();
+
+                csRoomService.enterOrLeave(csSocketDto);
+                break;
 
             default: break;
         }
+
+        socketInfo.delSocketInfo(sessionId);
     }
 }

@@ -32,7 +32,7 @@ public class SocketInfo {
 
     }
 
-    public void setSocketInfo(String socketId,String id, String roomCode, String gameType, String nickName)
+    public void setSocketInfo(String socketId,Long id, String roomCode, String gameType, String nickName)
     {
         HashOperations<String, String, String> HashOperations =
                 redisTemplate.opsForHash();
