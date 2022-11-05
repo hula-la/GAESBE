@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.user.entity;
 
+import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsWrongProblem;
 import com.ssafy.gaese.domain.cs.dto.UserDto;
@@ -31,6 +32,8 @@ public class User {
 
 
     private String img;
+
+    private String bjId;
 
     @Column(nullable = false)
     private UserRole userRole;
@@ -65,6 +68,14 @@ public class User {
         return UserDto.builder()
                 .nickname(this.nickname)
                 .id(this.id)
+                .profileChar(this.profileChar)
+                .build();
+    }
+    public AlgoUserDto toAlgoDto(){
+        return AlgoUserDto.builder()
+                .id(this.id)
+                .bjId(this.bjId)
+                .nickname(this.nickname)
                 .profileChar(this.profileChar)
                 .build();
     }

@@ -1,13 +1,12 @@
-package com.ssafy.gaese.domain.algorithm.dto;
+package com.ssafy.gaese.domain.algorithm.dto.redis;
 
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 

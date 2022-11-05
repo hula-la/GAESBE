@@ -1,9 +1,8 @@
 package com.ssafy.gaese.domain.algorithm.dto;
 
 
+import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.util.ArrayList;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 public class AlgoRoomDto {
 
     private String roomCode;
-    private String time;
+    private Long time;
     private String tier;
     private String num;
     private String no;

@@ -1,10 +1,9 @@
 package com.ssafy.gaese.domain.algorithm.repository;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomRedisDto;
+import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,9 +20,6 @@ import static com.ssafy.gaese.global.util.SocketUtil.roomCodeMaker;
 @Repository
 @RequiredArgsConstructor
 public class AlgoRedisRepositoryCustom {
-
-//    @Autowired
-//    private RedisTemplate<String,AlgoRoomDto> redisAlgoTemplate;
 
     private final  RedisTemplate<String,String> stringRedisTemplate;
     private final AlgoRedisRepository algoRedisRepository;
@@ -99,26 +95,26 @@ public class AlgoRedisRepositoryCustom {
     }
 
     //  방 입장
-    public List<String> enterRoom(AlgoSocketDto algoSocketDto){
+    public void enterRoom(AlgoSocketDto algoSocketDto){
 
         HashOperations<String,String ,String> hashOperations = stringRedisTemplate.opsForHash();
-
+        String user = hashOperations.get(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId());
+        System.out.println("====user====");
+        System.out.println(user);
         hashOperations.put(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId(),algoSocketDto.getUserId());
         hashOperations.increment("algoRoom:"+algoSocketDto.getRoomCode(),"algoRoomDto.num",1);
 
         stringRedisTemplate.expire(algoSocketDto.getRoomCode()+"-user",1,TimeUnit.DAYS);
 
-        return getUserInRoom(algoSocketDto.getRoomCode());
     }
 
     // 방 나가기
-    public List<String> leaveRoom(AlgoSocketDto algoSocketDto){
+    public void leaveRoom(AlgoSocketDto algoSocketDto){
         HashOperations<String ,String, String > hashOperations = stringRedisTemplate.opsForHash();
 
         hashOperations.delete(algoSocketDto.getRoomCode()+"-user", algoSocketDto.getSessionId());
         hashOperations.increment("algoRoom:"+algoSocketDto.getRoomCode(),"algoRoomDto.num",-1);
 
-        return getUserInRoom(algoSocketDto.getRoomCode());
     }
 
     // 방 삭제
@@ -130,12 +126,16 @@ public class AlgoRedisRepositoryCustom {
 
     public List<String> getUserInRoom(String code){
         HashOperations<String ,String,String > hashOperations = stringRedisTemplate.opsForHash();
-        Map<String,String> list = hashOperations.entries(code+"user");
+        Map<String,String> list = hashOperations.entries(code+"-user");
+        System.out.println(list.toString());
         List<String> users = new ArrayList<>();
 
         for (String key : list.keySet()) {
             users.add(list.get(key));
         }
+        System.out.println("getUserInRoom");
+        System.out.println(users.toString());
+
         return users;
     }
 

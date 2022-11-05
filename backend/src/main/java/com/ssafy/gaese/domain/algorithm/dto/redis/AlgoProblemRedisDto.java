@@ -1,6 +1,7 @@
-package com.ssafy.gaese.domain.algorithm.dto;
+package com.ssafy.gaese.domain.algorithm.dto.redis;
 
 
+import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;

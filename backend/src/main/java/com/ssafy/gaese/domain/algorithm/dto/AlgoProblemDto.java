@@ -2,8 +2,6 @@ package com.ssafy.gaese.domain.algorithm.dto;
 
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
 @Builder
 @AllArgsConstructor

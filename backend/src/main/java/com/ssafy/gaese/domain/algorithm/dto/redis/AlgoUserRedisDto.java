@@ -1,4 +1,4 @@
-package com.ssafy.gaese.domain.algorithm.dto;
+package com.ssafy.gaese.domain.algorithm.dto.redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

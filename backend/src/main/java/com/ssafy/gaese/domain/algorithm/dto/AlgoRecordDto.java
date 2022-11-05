@@ -3,7 +3,6 @@ package com.ssafy.gaese.domain.algorithm.dto;
 
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.user.entity.User;
-import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
