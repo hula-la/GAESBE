@@ -1,7 +1,6 @@
 package com.ssafy.gaese.domain.algorithm.application;
 
 
-
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
@@ -12,6 +11,10 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoSolveReq;
+import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
+import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
+import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,14 +23,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +45,8 @@ public class AlgoProblemService {
     @Value("${chrome-driver-path}")
     private String ChromePath;
     private final RedisTemplate<String, String> redisTemplate;
+    private final AlgoRankRedisRepository algoRankRedisRepository;
+    private final UserRepository userRepository;
 
     public void getSolvedProblem(String roomCode, String userBjId){
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
@@ -58,7 +66,8 @@ public class AlgoProblemService {
         }catch (Exception e){
             /** 크롤링 에러처리 */
         }
-        if(problems.size()==0) setOperations.add(key,"0");
+
+        if(problems.size()==0) return;
         //레디스 저장
         for(String problem : problems){
             setOperations.add(key,problem);
@@ -88,15 +97,7 @@ public class AlgoProblemService {
                     .build();
             firebaseApp = FirebaseApp.initializeApp(options);
         }
-//        FileInputStream serviceAccount =
-//                new FileInputStream(firebaseSdkPath);
-//
-//        FirebaseOptions options = FirebaseOptions.builder()
-//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-//                .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
-//                .build();
-//
-//        FirebaseApp.initializeApp(options);
+
 
         Firestore db = FirestoreClient.getFirestore();
         List<AlgoProblemDto> list = new ArrayList<>();
@@ -119,16 +120,24 @@ public class AlgoProblemService {
         return list;
     }
 
-    public List<AlgoProblemDto> getCommonProblems(String roomCode, AlgoProblemReq algoProblemReq) throws ExecutionException, InterruptedException, IOException {
+    public List<AlgoProblemDto> getCommonProblems(AlgoProblemReq algoProblemReq) throws ExecutionException, InterruptedException, IOException {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
 
         List<AlgoProblemDto> algoProblemDtoList = getTierProblems(algoProblemReq.getTier()); // 티어 전체 문제
+
         Set<String> problemsSet = new HashSet<>();
 
-        for(String user : algoProblemReq.getUsers()){
-            problemsSet.addAll(setOperations.members(roomCode+"-"+user));
 
+        for(String user : algoProblemReq.getUsers()){
+            String key = algoProblemReq.getRoomCode()+"-"+user;
+            if(redisTemplate.hasKey(key)){ // 저장된 문제가 있으면 확인
+                problemsSet.addAll(setOperations.members(key));
+            }
         }
+        System.out.println(
+
+        );
+        // 푼 문제들 제외
         for (int i = algoProblemDtoList.size() - 1; i >= 0; i--) {
             if (problemsSet.contains(algoProblemDtoList.get(i).getProblemId()))
                 algoProblemDtoList.remove(algoProblemDtoList.get(i));
@@ -138,5 +147,53 @@ public class AlgoProblemService {
         Collections.shuffle(algoProblemDtoList);
         return algoProblemDtoList.subList(0, 10);
     }
+
+    public int confirmSolve(AlgoSolveReq algoSolveReq){
+        try{
+            System.setProperty("webdriver.chrome.driver",ChromePath);
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("headless"); // 창 없이 크롤링
+            WebDriver driver = new ChromeDriver(options);
+            // 크롤링
+            driver.get("https://www.acmicpc.net/status?problem_id="+algoSolveReq.getProblemId()
+                    +"&user_id="+algoSolveReq.getUserBjId()
+                    +"&language_id="+algoSolveReq.getLanId());
+            WebElement element = driver.findElement(By.className("result-text"));
+            String result = element.getText();
+            return  result.equals("맞았습니다!!")? 1 : 0; //
+
+        }catch (NoSuchElementException e){
+            System.out.println(e.toString());
+        }
+        return -1;
+
+    }
+
+    public void saveStartTime(String roomCode){
+        HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
+        LocalTime now = LocalTime.now();
+        DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("HH:mm:ss");
+        hashOperations.put(roomCode,"startTime",now.format(formatter));
+    }
+
+    public void saveUserTime(String roomCode, Long userId) throws ParseException {
+
+        HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
+        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+
+        Date startTime = new SimpleDateFormat("HH:mm:ss").parse(LocalTime.now().toString());
+        Date finTime = new SimpleDateFormat("HH:mm:ss").parse(hashOperations.get(roomCode, "startTime"));
+        System.out.println(startTime);
+        System.out.println(finTime);
+        double minDiff = (startTime.getTime() - finTime.getTime()) / 60000;
+
+        System.out.println(minDiff+"분");
+
+        AlgoRankDto algoRankDto = AlgoRankDto.builder()
+                .min(minDiff).nickName(userRepository.getNickNameById(userId)+"").build();
+        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), algoRankDto.getMin());
+        algoRankRedisRepository.save(algoRankDto);
+    }
+
 
 }

@@ -1,6 +1,6 @@
 package com.ssafy.gaese.domain.algorithm.repository;
 
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomRedisDto;
+import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
