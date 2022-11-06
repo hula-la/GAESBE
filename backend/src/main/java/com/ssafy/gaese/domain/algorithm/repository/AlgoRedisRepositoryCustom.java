@@ -57,7 +57,6 @@ public class AlgoRedisRepositoryCustom {
     //  생성된 방 list
     public List<AlgoRoomDto> getRooms(){
 
-        List<String> roomCodeList = stringRedisTemplate.opsForList().range("algoCodes",0,-1);
         List<AlgoRoomDto> roomList = new ArrayList<>();
         Iterable<AlgoRoomRedisDto> algoRoomRedisDtos = algoRedisRepository.findAll();
         for(AlgoRoomRedisDto algoRoomRedisDto : algoRoomRedisDtos) {
@@ -65,13 +64,6 @@ public class AlgoRedisRepositoryCustom {
             System.out.println(algoRoomRedisDto.toString());
             roomList.add(algoRoomRedisDto.toDto());
         }
-//        for(String roomCode : roomCodeList){
-//            HashOperations<String,String,String > hashOperations = stringRedisTemplate.opsForHash();
-//            Map<String, String> map = hashOperations.entries(roomCode);
-//            AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
-//                    ,map.get("tier"), map.get("num"), map.get("no"));
-//            roomList.add(algoRoomDto);
-//        }
         return roomList;
 
     }

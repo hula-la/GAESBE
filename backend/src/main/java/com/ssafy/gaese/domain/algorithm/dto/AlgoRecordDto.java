@@ -17,6 +17,7 @@ public class AlgoRecordDto {
     private Long id;
     private Long userId;
     private Long problemId;
+    private String roomCode;
     private Date date;
     private Boolean isSolve;
     private String solveTime;
@@ -27,6 +28,7 @@ public class AlgoRecordDto {
     public AlgoRecord toEntity(User user){
         return AlgoRecord.builder()
                 .user(user)
+                .roomCode(this.getRoomCode())
                 .problemId(this.getProblemId())
                 .code(this.getCode())
                 .date(this.getDate())

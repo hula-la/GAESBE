@@ -3,6 +3,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordReq;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSolveReq;
 import com.ssafy.gaese.security.model.CustomUserDetails;
@@ -50,13 +51,11 @@ public class AlgorithmController {
         return ResponseEntity.status(400).body("방 삭제 실패");
     }
 
-    /* user email -> jwt 로 수정 */
     @PostMapping("/record")
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
-    public ResponseEntity<String> createRecord(@RequestBody AlgoRecordDto algoRecordDto,
+    public ResponseEntity<String> createRecord(@RequestBody AlgoRecordReq algoRecordReq,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
-        System.out.println(algoRecordDto.toString());
-        algoService.createAlgoRecord(algoRecordDto, userDetails.getId());
+        algoService.createAlgoRecord(algoRecordReq, userDetails.getId());
         return ResponseEntity.ok().body("success");
     }
 
@@ -86,7 +85,7 @@ public class AlgorithmController {
                                              @AuthenticationPrincipal CustomUserDetails userDetails,
                                              @RequestBody AlgoSolveReq algoSolveReq) throws ParseException {
         int result = algoProblemService.confirmSolve(algoSolveReq);
-
+        System.out.println(result);
         HashMap<String,Object> res = new HashMap<>();
         res.put("result",result);
         if( result == 1) {
