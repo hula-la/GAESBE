@@ -44,7 +44,7 @@ const Wrapper = styled.div`
 const CSgamePage = () => {
   const navigate = useNavigate();
   const onClickRandom = () => {
-    navigate('room', { state: { roomType: 'random' } });
+    navigate('room', { state: { roomType: 'RANDOM' } });
   };
   return (
     <Wrapper>
