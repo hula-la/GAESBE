@@ -4,9 +4,11 @@ import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
+import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRoomPassRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class AlgoSocketService {
 
     private final AlgoRoomPassRepository algoRoomPassRepository;
     private final AlgoRedisRepository algoRedisRepository;
+    private final AlgoRedisRepositoryCustom algoRedisRepositoryCustom;
     private final RedisTemplate redisTemplate;
 
     public AlgoRoomPassDto getRoomPass(String roomCode){
@@ -63,5 +66,6 @@ public class AlgoSocketService {
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException());
         return algoRoomRedisDto.getAlgoRoomDto().getTime();
     }
+
 
 }

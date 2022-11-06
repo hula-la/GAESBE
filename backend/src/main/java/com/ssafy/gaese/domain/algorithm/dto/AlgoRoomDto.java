@@ -27,5 +27,8 @@ public class AlgoRoomDto {
                 .users(new ArrayList<>())
                 .build();
     }
+    public void changeMaster(String master){
+        this.master = master;
+    }
 
 }

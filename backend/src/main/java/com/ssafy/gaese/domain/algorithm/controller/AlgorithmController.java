@@ -46,9 +46,8 @@ public class AlgorithmController {
     @DeleteMapping("/room/{code}")
     @ApiOperation(value = "알고리즘 방 삭제", notes = "방 삭제")
     public ResponseEntity<String> deleteRoom(@PathVariable String code){
-        if (algoService.deleteRoom(code)==1l)
-            return ResponseEntity.ok().body("방 삭제 성공");
-        return ResponseEntity.status(400).body("방 삭제 실패");
+        algoService.deleteRoom(code);
+        return ResponseEntity.ok().body("방 삭제 성공");
     }
 
     @PostMapping("/record")
@@ -68,7 +67,8 @@ public class AlgorithmController {
 
     @GetMapping("/confirm/{roomCode}")
     @ApiOperation(value="입장 가능 여부 판단", notes = "입장 가능 여부 판단")
-    public ResponseEntity<Boolean> confirmEnter(@PathVariable String roomCode){
+    public ResponseEntity<Boolean> confirmEnter(@PathVariable String roomCode,
+                                                @AuthenticationPrincipal CustomUserDetails userDetails){
 
         return ResponseEntity.ok().body(algoService.confirmRoomEnter(roomCode));
     }

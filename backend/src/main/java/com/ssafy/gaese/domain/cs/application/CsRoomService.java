@@ -87,12 +87,6 @@ public class CsRoomService {
         // 방 코드를 개인에게 전달
         roomResByUser.put("room",roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),roomResByUser);
-        Thread.sleep(2*1000);
-
-        // 플레이어 리스트를 방 전원에게 전달
-        res.put("players",getUserInRoom(roomDto.getCode()));
-        simpMessagingTemplate.convertAndSend("/cs/room/"+csSocketDto.getRoomCode(),res);
-
 
         Thread.sleep(10*1000);
 
@@ -107,6 +101,16 @@ public class CsRoomService {
         
 
         if (isStart){
+
+            // 방에 사람이 꽉차서 시작한다고 함
+            res.clear();
+            res.put("msg", "ready");
+            simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
+
+            Thread.sleep(6*1000);
+
+            // 게임 시작했다고 클라이언트에게 알리기
+
             System.out.println("게임 시작");
 //              게임 시작
             CsRoomDto saved = csService.gameStart(roomDto, randomProblem);
@@ -232,6 +236,12 @@ public class CsRoomService {
                     return userRepository.findById(id).orElseThrow(()->new UserNotFoundException()).toDto();
                 })
                 .collect(Collectors.toList());
+
+
+
+
+//        res.put("players",getUserInRoom(csRoom.getCode()));
+        simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,playerList);
         return playerList;
     }
 
@@ -243,6 +253,8 @@ public class CsRoomService {
         if (players.size()!=maxPlayer) return false;
         // 게임 시작하면 list에서 삭제
         redisUtil.removeSetData(waitRoomKey,csRoom.getCode());
+
+
         return true;
     }
 
