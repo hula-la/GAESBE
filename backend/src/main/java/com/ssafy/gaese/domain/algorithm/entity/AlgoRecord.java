@@ -27,6 +27,9 @@ public class AlgoRecord {
     private User user;
 
     @Column(nullable = false)
+    private String roomCode;
+
+    @Column(nullable = false)
     private Long problemId;
 
     @DateTimeFormat(pattern = "yyyy-MM-DD")
@@ -57,6 +60,7 @@ public class AlgoRecord {
                 .ranking(this.ranking)
                 .solveTime(this.solveTime)
                 .userId(this.user.getId())
+                .code(this.code)
                 .build();
     }
 

@@ -1,12 +1,11 @@
 package com.ssafy.gaese.domain.algorithm.application;
 
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
+import com.ssafy.gaese.domain.algorithm.dto.*;
+import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoUserRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
+import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
 
@@ -28,8 +27,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,17 +40,53 @@ public class AlgoService {
     private final AlgoRepository algoRepository;
     private final UserRepository userRepository;
     private final AlgoRedisRepositoryCustom algoRedisRepositoryCustom;
+    private final AlgoRankRedisRepository algoRankRedisRepository;
     private final RedisTemplate<String, String> redisTemplate;
 
-    public AlgoRecordDto createAlgoRecord(AlgoRecordDto algoRecordDto, Long userId){
+    public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
+        Date date = new Date();
+        AlgoRecordDto algoRecordDto;
+        // roomCode, min, nickName, userId
+        Optional<AlgoRankDto> opt = algoRankRedisRepository.findById(userId);
+        if(opt.isPresent()){
+            AlgoRankDto algoRankDto = opt.get();
+            algoRecordDto = AlgoRecordDto.builder()
+                    .isSolve(true)
+                    .roomCode(algoRecordReq.getRoomCode())
+                    .userId(userId)
+                    .date(date)
+                    .code(algoRecordReq.getCode())
+                    .isRetry(false)
+                    .problemId(algoRecordReq.getProblemId())
+                    .ranking(algoRecordReq.getRanking())
+                    .solveTime(algoRankDto.getMin())
+                    .build();
+
+
+
+        }else{
+            algoRecordDto = AlgoRecordDto.builder()
+                    .isSolve(false)
+                    .roomCode(algoRecordReq.getRoomCode())
+                    .userId(userId)
+                    .date(date)
+                    .code(algoRecordReq.getCode())
+                    .isRetry(false)
+                    .problemId(algoRecordReq.getProblemId())
+                    .ranking(algoRecordReq.getRanking())
+                    .solveTime("-")
+                    .build();
+        }
+
+
         algoRepository.save(algoRecordDto.toEntity(user));
         return algoRecordDto;
     }
 
     public Page<AlgoRecordDto> recordList(Pageable pageable, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
-        Page<AlgoRecord> algoRecords = algoRepository.findByUser(user,  pageable);
+        Page<AlgoRecord> algoRecords = algoRepository.findByUser(user, pageable);
         return algoRecords.map(algoRecord -> algoRecord.toDto());
     }
 

@@ -87,8 +87,8 @@ public class AlgoSocketController {
             res.put("no",algoSocketService.getRoomPass(roomCodeDto.getRoomCode()).getNowNo());
             simpMessagingTemplate.convertAndSend("/algo/pass/"+roomCodeDto.getRoomCode(),res);
         }else{
-
-            //시작 시간 저장
+            System.out.println("========= 문제 풀이 시작 ========= ");
+            //문제 풀이 시작 > 시작 시간 저장
             algoProblemService.saveStartTime(roomCodeDto.getRoomCode());
 
             HashMap<String, Object> res = new HashMap<>();
@@ -97,6 +97,7 @@ public class AlgoSocketController {
             simpMessagingTemplate.convertAndSend("/algo/problem/"+roomCodeDto.getRoomCode(),res);
 
             Long time = algoSocketService.getTime(roomCodeDto.getRoomCode());
+
             Thread.sleep(1000*60*time);
             res = new HashMap<>();
             res.put("type","FINISH");

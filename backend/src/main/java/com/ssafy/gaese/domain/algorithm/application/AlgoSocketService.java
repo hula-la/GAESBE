@@ -56,7 +56,7 @@ public class AlgoSocketService {
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(roomCode).orElseThrow(()-> new NoSuchElementException());
 
         Set<ZSetOperations.TypedTuple<String>> set =  zSetOperations.rangeByScoreWithScores(roomCode+"-rank",0,algoRoomRedisDto.getAlgoRoomDto().getTime());
-        return set.stream().map(tuple -> AlgoRankDto.builder().roomCode(roomCode).nickName(tuple.getValue()).min(tuple.getScore()).build()).collect(Collectors.toList());
+        return set.stream().map(tuple -> AlgoRankDto.builder().roomCode(roomCode).nickName(tuple.getValue()).min(tuple.getScore()+"").build()).collect(Collectors.toList());
     }
 
     public Long getTime(String roomCode){

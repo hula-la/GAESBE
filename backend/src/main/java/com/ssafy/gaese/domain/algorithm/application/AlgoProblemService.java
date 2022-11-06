@@ -54,14 +54,18 @@ public class AlgoProblemService {
         List<String> problems = new LinkedList<>();
         // 크롤링 설정
         try{
+            System.out.println("======크롤링 설정 시작 ========");
             System.setProperty("webdriver.chrome.driver",ChromePath);
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
             // 크롤링
+            System.out.println("======크롤링 시작 ========");
             driver.get("https://www.acmicpc.net/user/"+userBjId);
             WebElement element = driver.findElement(By.className("problem-list"));
             problems = List.of(element.getText().split(" "));
+            System.out.println("======크롤링 끝 ========");
+            System.out.println(problems.toString());
 
         }catch (Exception e){
             /** 크롤링 에러처리 */
@@ -173,26 +177,35 @@ public class AlgoProblemService {
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         LocalTime now = LocalTime.now();
         DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("HH:mm:ss");
+        System.out.println("==== 시간 ====="+now.format(formatter));
         hashOperations.put(roomCode,"startTime",now.format(formatter));
+        System.out.println(hashOperations.get(roomCode,"startTime"));
     }
 
     public void saveUserTime(String roomCode, Long userId) throws ParseException {
 
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
-
+        String start = hashOperations.get(roomCode, "startTime");
+        if(start == null ){
+            System.out.println("start time을 찾을 수 없습니다.");
+            throw new NullPointerException();
+        }
         Date startTime = new SimpleDateFormat("HH:mm:ss").parse(LocalTime.now().toString());
         Date finTime = new SimpleDateFormat("HH:mm:ss").parse(hashOperations.get(roomCode, "startTime"));
         System.out.println(startTime);
         System.out.println(finTime);
-        double minDiff = (startTime.getTime() - finTime.getTime()) / 60000;
+        int minDiff = (int)(startTime.getTime() - finTime.getTime()) / 60000;
 
         System.out.println(minDiff+"분");
 
+        //redis 저장 - 랭킹용
         AlgoRankDto algoRankDto = AlgoRankDto.builder()
-                .min(minDiff).nickName(userRepository.getNickNameById(userId)+"").build();
-        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), algoRankDto.getMin());
+                .min(minDiff+"").nickName(userRepository.getNickNameById(userId)+"").userId(userId).build();
+        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), Double.parseDouble(algoRankDto.getMin()));
+        //redis 저장 - 기록용
         algoRankRedisRepository.save(algoRankDto);
+
     }
 
 
