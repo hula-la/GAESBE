@@ -73,7 +73,7 @@ public class AlgorithmController {
         return ResponseEntity.ok().body(algoService.confirmRoomEnter(roomCode));
     }
 
-    @GetMapping("/problem/{roomCode}/{userBjId}")
+    @GetMapping("/user/problem/{roomCode}/{userBjId}")
     @ApiOperation(value="사용자 푼 문제 크롤링")
     public ResponseEntity<String> getUserProblems(@PathVariable String userBjId, @PathVariable String roomCode){
         algoProblemService.getSolvedProblem(roomCode, userBjId);
