@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.friends.entity;
 
+import com.ssafy.gaese.domain.friends.dto.FriendRequestDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,5 +33,13 @@ public class FriendRequest {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "targetUserId", referencedColumnName = "id")
     User targetUser;
+
+    public FriendRequestDto toDto(){
+        return FriendRequestDto.builder()
+                .friendReqId(this.id)
+                .requestUserId(this.requestUser.getId())
+                .targetUserId(this.targetUser.getId())
+                .build();
+    }
 
 }

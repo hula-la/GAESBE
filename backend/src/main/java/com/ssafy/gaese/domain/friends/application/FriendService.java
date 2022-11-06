@@ -1,12 +1,17 @@
 package com.ssafy.gaese.domain.friends.application;
 
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
+import com.ssafy.gaese.domain.friends.dto.FriendRequestDto;
+import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
+import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;
+import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import springfox.documentation.swagger2.mappers.ModelMapper;
@@ -16,16 +21,44 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class FriendService {
 
-    @Autowired
-    FriendRepository friendRepository;
-
-    @Autowired
-    UserRepository userRepository;
+    private final FriendRepository friendRepository;
+    private final FriendRequestRepository friendRequestRepository;
+    private final UserRepository userRepository;
 
 
+    public boolean requestFriend(Long userId, Long targetUserId) throws NullPointerException{
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException());
+        User targetUser = userRepository.findById(targetUserId).orElseThrow(()->new UserNotFoundException());
+
+
+        if( !(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser))){
+            FriendRequest friendRequest = FriendRequest.builder()
+                    .targetUser(targetUser)
+                    .requestUser(user)
+                    .createdDate(new Date())
+                    .build();
+            friendRequestRepository.save(friendRequest);
+        } else {
+            throw new AlreadyFriendRequestException();
+        }
+        return true;
+    }
+
+    public List<FriendRequestDto> getRequestFriend(Long userId) throws NullPointerException{
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException());
+        List<FriendRequestDto> friendRequestList = friendRequestRepository
+                .findByRequestUser(user).stream()
+                .map(FriendRequest::toDto)
+                .collect(Collectors.toList());
+
+        return friendRequestList;
+    }
 
     public void saveFriend(Long userId, Long friendId) throws NullPointerException{
         User user = userRepository.findById(userId)
@@ -76,6 +109,13 @@ public class FriendService {
                     .orElseThrow(()->new UserNotFoundException()));
         }
         return friendUsers.stream().map(User::toFriendDto).collect(Collectors.toList());
+
+    }
+
+    public List<FriendRequestDto> delRequest(Long userId, Long reqId){
+        friendRequestRepository.deleteById(reqId);
+
+        return getRequestFriend(userId);
 
     }
 
