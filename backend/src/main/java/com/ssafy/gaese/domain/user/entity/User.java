@@ -66,6 +66,7 @@ public class User {
                 .nickname(this.nickname)
                 .id(this.id)
                 .profileChar(this.profileChar)
+                .bjId(this.bjId)
                 .build();
     }
     public AlgoUserDto toAlgoDto(){
