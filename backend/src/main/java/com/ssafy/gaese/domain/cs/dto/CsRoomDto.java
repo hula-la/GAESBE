@@ -30,6 +30,9 @@ public class CsRoomDto {
     private int round;
     private RoomStatus roomStatus;
 
+    // 문제를 풀었는지
+    private HashMap<Long, Boolean> isSolvedByPlayer;
+
     private HashMap<Integer, Integer> numCorrectByRound;
     private HashMap<Long, Long> score;
 

@@ -27,5 +27,10 @@ public class CsSocketController {
         csService.submitAnswer(csSubmitDto);
     }
 
+    @MessageMapping("/memberInfo")
+    public void memberInfo(CsSubmitDto csSubmitDto) throws Exception{
+        csRoomService.getUserInRoom(csSubmitDto.getRoomCode());
+    }
+
 
 }
