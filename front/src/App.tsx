@@ -16,6 +16,7 @@ import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
 import CSIngamePage from './features/cs/pages/CSIngamePage';
 import { useDispatch } from 'react-redux';
+import CSResultPage from './features/cs/pages/CSResultPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="casino" element={<CoinFlipPage />} />
           <Route path="CS" element={<CSgamePage />} />
           <Route path="CS/room" element={<CSIngamePage />} />
+          <Route path="CS/result" element={<CSResultPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
