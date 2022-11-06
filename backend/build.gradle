@@ -24,6 +24,7 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -62,12 +63,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// selenium-java
-	implementation 'org.seleniumhq.selenium:selenium-java:3.5.3'
+//	implementation 'org.seleniumhq.selenium:selenium-java:3.5.3'
 	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver
 	implementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.5.3'
 
 	// selenium-server
-	implementation 'org.seleniumhq.selenium:selenium-server:3.5.3'
+//	implementation 'org.seleniumhq.selenium:selenium-server:3.5.3'
 
 	// firebase
 	implementation 'com.google.firebase:firebase-admin:9.1.0'
@@ -76,7 +77,6 @@ dependencies {
 
 
 }
-
 tasks.named('test') {
 	useJUnitPlatform()
 }

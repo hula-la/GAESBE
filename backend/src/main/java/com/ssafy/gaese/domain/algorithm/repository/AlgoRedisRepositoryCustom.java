@@ -3,6 +3,7 @@ package com.ssafy.gaese.domain.algorithm.repository;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
+import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -24,6 +25,7 @@ public class AlgoRedisRepositoryCustom {
     private final  RedisTemplate<String,String> stringRedisTemplate;
     private final AlgoRedisRepository algoRedisRepository;
 
+
     //  Room Code 생성
     public String createCode(){
 
@@ -35,24 +37,24 @@ public class AlgoRedisRepositoryCustom {
             List<String> codeList  = list.range("codes",0,-1);
             System.out.println(codeList.toString());
             if(codeList.contains(code)) continue;
-            list.rightPush("codes",code);
-            list.rightPush("algoCodes",code);
+//            list.rightPush("codes",code);
+//            list.rightPush("algoCodes",code);
             break;
         }
-        stringRedisTemplate.expire("codes",1, TimeUnit.DAYS);
-        stringRedisTemplate.expire("algoCodes",1, TimeUnit.DAYS);
+//        stringRedisTemplate.expire("codes",1, TimeUnit.DAYS);
+//        stringRedisTemplate.expire("algoCodes",1, TimeUnit.DAYS);
 
         return code;
     }
 
     //  Room Code 삭제
-    public Long deleteCode(String code){
-        ListOperations<String,String > listOperations = stringRedisTemplate.opsForList();
-        if(listOperations.remove("algoCodes",1,code) == 1 ){
-            return listOperations.remove("codes",1,code);
-        }
-        return -1l;
-    }
+//    public Long deleteCode(String code){
+//        ListOperations<String,String > listOperations = stringRedisTemplate.opsForList();
+//        if(listOperations.remove("algoCodes",1,code) == 1 ){
+//            return listOperations.remove("codes",1,code);
+//        }
+//        return -1l;
+//    }
 
     //  생성된 방 list
     public List<AlgoRoomDto> getRooms(){
@@ -86,13 +88,18 @@ public class AlgoRedisRepositoryCustom {
 
     }
 
+    // 방 삭제
+    public void deleteRoom(AlgoRoomRedisDto algoRoomRedisDto){
+        algoRedisRepository.delete(algoRoomRedisDto);
+        stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode()+"-user");
+
+    }
+
     //  방 입장
     public void enterRoom(AlgoSocketDto algoSocketDto){
 
         HashOperations<String,String ,String> hashOperations = stringRedisTemplate.opsForHash();
-        String user = hashOperations.get(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId());
-        System.out.println("====user====");
-        System.out.println(user);
+
         hashOperations.put(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId(),algoSocketDto.getUserId());
         hashOperations.increment("algoRoom:"+algoSocketDto.getRoomCode(),"algoRoomDto.num",1);
 
@@ -101,20 +108,14 @@ public class AlgoRedisRepositoryCustom {
     }
 
     // 방 나가기
-    public void leaveRoom(AlgoSocketDto algoSocketDto){
-        HashOperations<String ,String, String > hashOperations = stringRedisTemplate.opsForHash();
+    public void leaveRoom(AlgoSocketDto algoSocketDto) {
 
-        hashOperations.delete(algoSocketDto.getRoomCode()+"-user", algoSocketDto.getSessionId());
-        hashOperations.increment("algoRoom:"+algoSocketDto.getRoomCode(),"algoRoomDto.num",-1);
+        HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
+        hashOperations.delete(algoSocketDto.getRoomCode() + "-user", algoSocketDto.getSessionId());
+        hashOperations.increment("algoRoom:" + algoSocketDto.getRoomCode(), "algoRoomDto.num", -1);
 
     }
 
-    // 방 삭제
-    public Long deleteRoom(String code){
-        stringRedisTemplate.delete(code);
-        stringRedisTemplate.delete(code+"user");
-        return deleteCode(code);
-    }
 
     public List<String> getUserInRoom(String code){
         HashOperations<String ,String,String > hashOperations = stringRedisTemplate.opsForHash();
