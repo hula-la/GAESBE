@@ -27,15 +27,11 @@ public class CsService {
     private final CsRecordRepository csRecordRepository;
     private final CsProblemRepository csProblemRepository;
     private final UserRepository userRepository;
-    private final RedisUtil redisUtil;
-
 
     private final CsRoomRedisRepository csRoomRedisRepository;
     private final CsRecordRedisRepository csRecordRedisRepository;
     private final CsRecordProblemRepository csRecordProblemRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
-
-    private final String recordKeyPrefix = "CsRecord";
 
 
     private final int penaltyScore=60;
@@ -185,7 +181,7 @@ public class CsService {
             csRoomRedisRepository.save(roomDto);
 
             //            게임 시작하고 60초 타이머
-            Thread.sleep(4*1000);
+            Thread.sleep(10*1000);
 
 
             // **********문제는 끝
@@ -227,6 +223,9 @@ public class CsService {
             res.clear();
             res.put("ranking", rankList);
             simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,res);
+
+            //            게임 시작하고 60초 타이머
+            Thread.sleep(10*1000);
         }
 
         return csRoomRedisRepository.findById(roomId).orElseThrow(()->new RoomNotFoundException());
