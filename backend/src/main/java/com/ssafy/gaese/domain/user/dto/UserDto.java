@@ -12,4 +12,5 @@ public class UserDto {
     private Long id;
     private String nickname;
     private int profileChar;
+    private String bjId;
 }

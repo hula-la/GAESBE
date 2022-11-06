@@ -21,7 +21,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDto> getCurrentUser(@AuthenticationPrincipal CustomUserDetails user) {
         UserDto userDto = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalStateException("not found user")).toDto();
         return ResponseEntity.ok().body(userDto);
