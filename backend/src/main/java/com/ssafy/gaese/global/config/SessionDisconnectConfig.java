@@ -1,5 +1,7 @@
 package com.ssafy.gaese.global.config;
 
+import com.ssafy.gaese.domain.algorithm.application.AlgoService;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.global.redis.SocketInfo;
@@ -18,10 +20,13 @@ public class SessionDisconnectConfig {
 
     private final CsRoomService csRoomService;
 
+    private final AlgoService algoService;
+
     @EventListener
     public void onDisconnectEvent(SessionDisconnectEvent event) throws Exception
     {
         String sessionId=event.getSessionId();
+        System.out.println("나가는 세션 : "+ sessionId);
 
         //순서 : {id},{roomCode},{gameType},{nickName}
         String[] info = socketInfo.geSocketInfo(sessionId).split(",");
@@ -42,6 +47,14 @@ public class SessionDisconnectConfig {
                         .build();
 
                 csRoomService.enterOrLeave(csSocketDto);
+                break;
+            case "Algo" :
+                AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
+                        .sessionId(sessionId)
+                        .roomCode(info[1])
+                        .userId(info[0]).build();
+
+                algoService.leaveRoom(algoSocketDto);
                 break;
 
             default: break;

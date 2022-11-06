@@ -35,16 +35,19 @@ public class AlgoSocketController {
         List<String> userIds = new LinkedList<>();
         Map<String,Object> res = new HashMap<>();
 
+        System.out.println(algoSocketDto.getType());
         if(algoSocketDto.getType() == AlgoSocketDto.Type.ENTER){
-            algoService.enterRoom(algoSocketDto);
-            res.put("msg",algoSocketDto.getUserId()+"님이 접속하셨습니다.");
+            if(algoService.enterRoom(algoSocketDto)){
+                res.put("msg",algoSocketDto.getUserId()+" 님이 접속하셨습니다.");
+            }
         }else if(algoSocketDto.getType() == AlgoSocketDto.Type.LEAVE){
             algoService.leaveRoom(algoSocketDto);
-            res.put("msg",algoSocketDto.getUserId()+"님이 나가셨습니다.");
+            res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
         }
 
         List<AlgoUserDto> users = algoService.getUsers(algoService.getUserIds(algoSocketDto.getRoomCode()));
         res.put("users",users);
+        res.put("master", algoService.getMaster(algoSocketDto.getRoomCode()));
         simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
     }
     

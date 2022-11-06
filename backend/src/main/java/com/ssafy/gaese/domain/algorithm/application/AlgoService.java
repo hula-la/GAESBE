@@ -6,12 +6,14 @@ import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoUserRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
+import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
 
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -25,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,9 +42,11 @@ public class AlgoService {
 
     private final AlgoRepository algoRepository;
     private final UserRepository userRepository;
+    private final AlgoRedisRepository algoRedisRepository;
     private final AlgoRedisRepositoryCustom algoRedisRepositoryCustom;
     private final AlgoRankRedisRepository algoRankRedisRepository;
     private final RedisTemplate<String, String> redisTemplate;
+    private final SocketInfo socketInfo;
 
     public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
@@ -90,11 +95,6 @@ public class AlgoService {
         return algoRecords.map(algoRecord -> algoRecord.toDto());
     }
 
-
-    public Long deleteCode(String code){
-        return algoRedisRepositoryCustom.deleteCode(code);
-    }
-
     public List<AlgoRoomDto> getRooms(){
         return algoRedisRepositoryCustom.getRooms();
     }
@@ -110,21 +110,77 @@ public class AlgoService {
         return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
     }
 
-    public void enterRoom(AlgoSocketDto algoSocketDto){
-        algoRedisRepositoryCustom.enterRoom(algoSocketDto);
+    public boolean enterRoom(AlgoSocketDto algoSocketDto){
+
+        HashOperations<String,String ,String> hashOperations = redisTemplate.opsForHash();
+        String key = algoSocketDto.getRoomCode()+"-user";
+
+        String userId = hashOperations.get(key,algoSocketDto.getSessionId());
+
+        System.out.println("enterUser : " + userId);
+        if(userId != null && userId.equals(algoSocketDto.getUserId())){
+            return false;
+        }else{
+            algoRedisRepositoryCustom.enterRoom(algoSocketDto);
+            //session 정보 저장
+            socketInfo.setSocketInfo(algoSocketDto.getSessionId(),
+                    algoSocketDto.getUserId(),
+                    algoSocketDto.getRoomCode(),
+                    "Algo",
+                    null);
+            return true;
+         }
     }
 
     public void leaveRoom(AlgoSocketDto algoSocketDto){
+        System.out.println("나간다");
+        HashOperations<String ,String, String > hashOperations = redisTemplate.opsForHash();
+        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+
+        // 1. startTime 있는지 확인
+        String startTime = hashOperations.get(algoSocketDto.getRoomCode(), "startTime");
+        if(startTime != null ){
+            System.out.println("시작함");
+            //시작 후
+            AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
+            AlgoRankDto algoRankDto = AlgoRankDto.builder()
+                    .min("--").nickName(userRepository.getNickNameById(Long.parseLong(algoSocketDto.getUserId()))).userId(Long.parseLong(algoSocketDto.getUserId())).build();
+            zSetOperations.add(algoRankDto.getRoomCode()+"-rank", algoRankDto.getNickName(), algoRoomRedisDto.getAlgoRoomDto().getTime());
+            algoRankRedisRepository.save(algoRankDto);
+        }
+        AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
+        if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
+            changeMaster(algoSocketDto.getRoomCode());
+        }
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
+
     }
 
-    public Long deleteRoom(String code){
-        return algoRedisRepositoryCustom.deleteRoom(code);
+
+    public String getMaster(String roomCode){
+        AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException());
+        return algoRoomRedisDto.getAlgoRoomDto().getMaster();
+    }
+    public void changeMaster(String roomCode){
+        List<String> userIds = algoRedisRepositoryCustom.getUserInRoom(roomCode);
+        if(userIds.size()==0) {
+            deleteRoom(roomCode);
+            return;
+        }
+        AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException());
+        algoRoomRedisDto.getAlgoRoomDto().changeMaster(userIds.get(0));
+        System.out.println(algoRoomRedisDto.toDto());
+        algoRedisRepository.save(algoRoomRedisDto);
+    }
+
+    public void deleteRoom(String code){
+        AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(code).orElseThrow(()->new NoSuchElementException());
+        algoRedisRepositoryCustom.deleteRoom(algoRoomRedisDto);
     }
 
     public Boolean confirmRoomEnter(String roomCode){
         System.out.println(algoRedisRepositoryCustom.getRoomNum(roomCode));
-        if(algoRedisRepositoryCustom.getRoomNum(roomCode) == 4) return false;
+        if(algoRedisRepositoryCustom.getRoomNum(roomCode) >= 4) return false;
         return true;
     }
     public List<String> getUserIds(String roomCode){

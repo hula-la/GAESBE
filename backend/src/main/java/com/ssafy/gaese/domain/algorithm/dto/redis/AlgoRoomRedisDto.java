@@ -36,4 +36,5 @@ public class AlgoRoomRedisDto {
     public void addUser(AlgoUserRedisDto algoUserRedisDto){
         this.getUsers().add(algoUserRedisDto);
     }
+
 }
