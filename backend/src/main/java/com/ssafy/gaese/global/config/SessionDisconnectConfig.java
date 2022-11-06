@@ -4,6 +4,8 @@ import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
+import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ public class SessionDisconnectConfig {
     private final SocketInfo socketInfo;
 
     private final CsRoomService csRoomService;
+    private final FriendSocketService friendSocketService;
 
     private final AlgoService algoService;
 
@@ -55,6 +58,14 @@ public class SessionDisconnectConfig {
                         .userId(info[0]).build();
 
                 algoService.leaveRoom(algoSocketDto);
+                break;
+
+            case "Friend" :
+                FriendSocketDto friendSocketDto = FriendSocketDto.builder()
+                        .sessionId(sessionId)
+                        .userId(Long.parseLong(info[0])).build();
+
+                friendSocketService.userLeave(friendSocketDto);
                 break;
 
             default: break;
