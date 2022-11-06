@@ -21,8 +21,8 @@ function AlgoInBattle() {
   const dispatch = useDispatch()
 
   const { roomCode } = useSelector((state:any) => state.algo)
-  // const [roomCode, setRoomCode] = useState('uDYw1g1C')
   const [mes, setMes] = useState('')
+  const { userInfo } = useSelector((state: any) => state.auth)
   const [userName, setUserName] = useState('1')
   const [sessionId, setSesstionId] = useState('')
   const socket: CustomWebSocket = new SockJS('https://k7e104.p.ssafy.io:8081/api/ws')
@@ -33,7 +33,7 @@ function AlgoInBattle() {
     client.connect({}, frame => {
       // 뚫었으니 들어갔다고 알리기
       const enterRoom = () =>{
-        client.send('/api/algo', {}, JSON.stringify({type:"ENTER",sessionId: socket._transport.url.slice(-18,-10), userId: userName, roomCode:roomCode}))
+        client.send('/api/algo', {}, JSON.stringify({type:"ENTER",sessionId: socket._transport.url.slice(-18,-10), userId: userInfo.id, roomCode:roomCode}))
       }
       enterRoom()
       
