@@ -61,8 +61,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth2/**", "/auth/**").permitAll()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
 //               .antMatchers("*").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN");
-                // .anyRequest().authenticated();
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                 .anyRequest().authenticated()
+            .and()
+                .logout()
+                .logoutSuccessUrl("/");
 
         http.cors()                     // CORS on
                 .and()
