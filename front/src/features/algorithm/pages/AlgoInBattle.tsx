@@ -24,6 +24,7 @@ function AlgoInBattle() {
   
   const [inGameUsers, setInGameUsers] = useState<InGameUsersInterface[]>([])
   const [progress, setProgress] = useState<string>('before')
+  const [afterProgress, setAfterProgress] = useState<string>('select')
   const [problemList, setProblemList] = useState<ProblemInterface[]>([])
   const [problemIndex, setProblemIndex] = useState<number>(0)
 
@@ -42,7 +43,7 @@ function AlgoInBattle() {
         setInGameUsers(JSON.parse(res.body).users)
         const newGameInfo = JSON.parse(JSON.stringify(InGameInfo))
         newGameInfo.master = JSON.parse(res.body).master
-        algoActions.enterAlgoRoomSuccess(newGameInfo)
+        dispatch(algoActions.enterAlgoRoomSuccess(newGameInfo))
       })
       
       // 문제 선택 시작 메세지 받을 위치
@@ -57,19 +58,20 @@ function AlgoInBattle() {
       
       // 문제 패스 메세지 받기
       client.subscribe(`/algo/pass/${InGameInfo.roomCode}`, (res:any) => {
-        console.log("문제 패스했다는");
-        console.log(JSON.parse(res.body));
+        setProblemIndex(JSON.parse(res.body).no)
         if (InGameInfo.master == userInfo.id) {
           client.send(`/api/algo/timer`, {}, JSON.stringify({roomCode:InGameInfo.roomCode}))
         }
       })
-
+      
       // 문제 시작 메세지 받기
       client.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res:any) => {
+        setProblemIndex(JSON.parse(res.body).no)
+        setAfterProgress('solve')
         console.log("문제 시작한다는");
         console.log(JSON.parse(res.body));
       })
-      
+
       // 뚫었으니 들어갔다고 알리기
       client.send('/api/algo', {}, JSON.stringify({type:"ENTER",sessionId: socket._transport.url.slice(-18,-10), userId: userInfo.id, roomCode:InGameInfo.roomCode}))
     })
@@ -121,7 +123,6 @@ function AlgoInBattle() {
     const userBjIds = inGameUsers.map((user: InGameUsersInterface) => {
       return user.bjId
     })
-    setProgress('after')
     client.send(`/api/algo/start/pass`, {}, JSON.stringify({
       tier: InGameInfo.tier,
       roomCode: InGameInfo.roomCode,
@@ -135,7 +136,7 @@ function AlgoInBattle() {
     <button onClick={handleProgress}>before</button>
     <button onClick={handleProgress}>after</button>
     {progress === 'before' && <AlgoBeforeStart handleLeaveRoom={handleLeaveRoom} startGame={startGame} inGameUsers={inGameUsers} />}
-    {progress === 'after' && <AlgoAfterStart handleLeaveRoom={handleLeaveRoom} client={client} problemList={problemList} problemIndex={problemIndex} />}
+    {progress === 'after' && <AlgoAfterStart handleLeaveRoom={handleLeaveRoom} progress={afterProgress} client={client} problemList={problemList} problemIndex={problemIndex} />}
   </>
 }
 export default AlgoInBattle;

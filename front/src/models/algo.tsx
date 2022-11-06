@@ -34,8 +34,16 @@ export interface InGameUsersInterface {
   profileChar: number
 }
 
+/**
+ problemId : 문제 번호
+ correct: 정답 수
+ ratio: 정답률
+ submit: 제출 수
+ tag: 다국어?
+ title: 제목
+ */
 export interface ProblemInterface {
-  problemId : number
+  problemId : string
   correct: string
   ratio: string
   submit: string

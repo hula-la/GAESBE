@@ -20,5 +20,5 @@ export const confirmAlgoRoom = async (params: string) => {
 }
 
 export const bojUserIdRequest = async (roomCode: string, userBjId: string) => {
-  const res = await client.get(`/algo/problem/${roomCode}/${userBjId}`)
+  const res = await client.get(`/algo/user/problem/${roomCode}/${userBjId}`)
 }
