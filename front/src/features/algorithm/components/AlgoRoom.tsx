@@ -11,17 +11,17 @@ interface Props {
 function AlgoRoom({roomInfo}: Props) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { roomCode } = useSelector((state: any) => state.algo)
+  const { InGameInfo } = useSelector((state: any) => state.algo)
 
   const handleEnterRoom = () => {
-    dispatch(algoActions.enterAlgoRoom(roomInfo.roomCode))
+    dispatch(algoActions.enterAlgoRoom(roomInfo))
   }
 
   useEffect(() => {
-    if (roomCode) {
+    if (InGameInfo) {
       navigate('/game/algo/battle')
     }
-  }, [roomCode])
+  }, [InGameInfo])
 
   return <>
     <h2>문제 난이도 : <img src={`/img/tier/${roomInfo.tier}.svg`} alt={`난이도${roomInfo.tier}`} style={{ width: '1.2rem', height: '1.2rem'}} /></h2>

@@ -1,19 +1,31 @@
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+
 import { fetchAlgoRoomList } from '../../../api/algoApi'
+import { algoActions } from '../algorithmSlice'
 import { AlgoRoomInterface } from '../../../models/algo'
 
 import AlgoRoom from '../components/AlgoRoom'
 
 function AlgoRoomList() {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  
+  const { needReload } = useSelector((state: any) => state.algo)
+  const [roomList, setRoomList] = useState<AlgoRoomInterface[]>([])
 
+  useEffect(() => {
+    if (needReload) {
+      fetchRooms()
+      dispatch(algoActions.setNeedReload(false))
+    }
+  }, [needReload])
+  
   const handleGoMain= () => {
     navigate('/game/algo')
   }
-
-  const [roomList, setRoomList] = useState<AlgoRoomInterface[]>([])
+  
   const fetchRooms = async () => {
     try {
       const res = await fetchAlgoRoomList()
