@@ -3,6 +3,9 @@ package com.ssafy.gaese.domain.user.entity;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
+import com.ssafy.gaese.domain.friends.dto.FriendDto;
+import com.ssafy.gaese.domain.friends.entity.FriendRequest;
+import com.ssafy.gaese.domain.friends.entity.Friends;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -10,6 +13,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -50,14 +54,23 @@ public class User {
     @ColumnDefault("0")
     private int profileChar;
 
+    @OneToMany(mappedBy = "firstUser", cascade = CascadeType.REMOVE)
+    private Set<Friends> firstUser;
+
+    @OneToMany(mappedBy = "secondUser", cascade = CascadeType.REMOVE)
+    private Set<Friends> secondUser;
+
+    @OneToMany(mappedBy = "requestUser", cascade = CascadeType.REMOVE)
+    private Set<FriendRequest> requestUser;
+
+    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.REMOVE)
+    private Set<FriendRequest> targetUser;
+
+
+
     public User update(String nickname, int profileChar) {
         this.nickname = nickname;
         this.profileChar = profileChar;
-        return this;
-    }
-
-    public User updateRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
         return this;
     }
 
@@ -67,6 +80,14 @@ public class User {
                 .id(this.id)
                 .profileChar(this.profileChar)
                 .bjId(this.bjId)
+                .build();
+    }
+
+    public FriendDto toFriendDto() {
+        return FriendDto.builder()
+                .nickname(this.nickname)
+                .id(this.id)
+                .profileChar(this.profileChar)
                 .build();
     }
     public AlgoUserDto toAlgoDto(){

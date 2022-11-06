@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "CsProblem")
 public class CsProblem {
     public enum ProblemCategory {
-        ALGORITHM, DB, OS
+        ALGORITHM, DB, OS,NET
     }
 
     public enum ProblemType {
