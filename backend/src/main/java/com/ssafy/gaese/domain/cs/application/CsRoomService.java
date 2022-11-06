@@ -88,7 +88,7 @@ public class CsRoomService {
         roomResByUser.put("room",roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),roomResByUser);
 
-        Thread.sleep(10*1000);
+        Thread.sleep(1*1000);
 
 
         // 플레이어가 꽉 차면 게임 시작
