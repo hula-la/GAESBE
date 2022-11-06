@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/oauth2/**", "/auth/**").permitAll()
                 .antMatchers(PERMIT_URL_ARRAY).permitAll()
-               .antMatchers("*").permitAll()
+//               .antMatchers("*").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN");
                 // .anyRequest().authenticated();
 
