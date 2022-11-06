@@ -92,35 +92,38 @@ public class CsRoomService {
 
 
         // 플레이어가 꽉 차면 게임 시작
-        boolean isStart = isReadyToStart(roomDto);
+        boolean isLast = isReadyToStart(roomDto);
 
+        res.clear();
+        res.put("isLast", isLast);
+        simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),res);
+        
 
+    }
+
+    public void gameProcess(CsSocketDto csSocketDto) throws InterruptedException {
+        CsRoomDto roomDto = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
         // 문제 뽑아오기
         List<CsProblem> randomProblem = csProblemRepository.findRandomProblem(numProblem);
-        
-        
 
-        if (isStart){
+        Map<String,Object> res = new HashMap<>();
+        // 방에 사람이 꽉차서 시작한다고 함
+        res.clear();
+        res.put("msg", "ready");
+        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
-            // 방에 사람이 꽉차서 시작한다고 함
-            res.clear();
-            res.put("msg", "ready");
-            simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
+        Thread.sleep(6*1000);
 
-            Thread.sleep(6*1000);
+        // 게임 시작했다고 클라이언트에게 알리기
 
-            // 게임 시작했다고 클라이언트에게 알리기
-
-            System.out.println("게임 시작");
+        System.out.println("게임 시작");
 //              게임 시작
-            CsRoomDto saved = csService.gameStart(roomDto, randomProblem);
+        CsRoomDto saved = csService.gameStart(roomDto, randomProblem);
 //            게임 끝
-            csService.gameEnd(saved,randomProblem);
+        csService.gameEnd(saved,randomProblem);
 
-            // 방 삭제
-            deleteRoom(saved.getCode());
-        }
-
+        // 방 삭제
+        deleteRoom(saved.getCode());
     }
 
     // 방 생성

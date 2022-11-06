@@ -22,14 +22,19 @@ public class CsSocketController {
     }
 
     // 문제 제출
-    @MessageMapping("/submit")
+    @MessageMapping("/cs/submit")
     public void submitAnswer(CsSubmitDto csSubmitDto) throws Exception{
         csService.submitAnswer(csSubmitDto);
     }
 
-    @MessageMapping("/memberInfo")
+    @MessageMapping("/cs/memberInfo")
     public void memberInfo(CsSubmitDto csSubmitDto) throws Exception{
         csRoomService.getUserInRoom(csSubmitDto.getRoomCode());
+    }
+
+    @MessageMapping("/cs/start")
+    public void memberInfo(CsSocketDto csSocketDto) throws Exception{
+        csRoomService.gameProcess(csSocketDto);
     }
 
 
