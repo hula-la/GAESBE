@@ -92,7 +92,7 @@ public class AlgoRedisRepositoryCustom {
     public void deleteRoom(AlgoRoomRedisDto algoRoomRedisDto){
         algoRedisRepository.delete(algoRoomRedisDto);
         stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode()+"-user");
-
+        stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode());
     }
 
     //  방 입장
