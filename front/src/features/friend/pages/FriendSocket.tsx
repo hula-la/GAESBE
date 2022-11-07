@@ -24,8 +24,6 @@ function FriendSocket() {
     client.connect({}, frame => {
       // 친구목록 메세지 받을 위치
       client.subscribe(`/friend/${userInfo.id}`, (res) => {
-        console.log('친구목록 들어옴')
-        console.log(JSON.parse(res.body))
         dispatch(friendActions.setFriends(JSON.parse(res.body)))
       })
 

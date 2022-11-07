@@ -2,26 +2,22 @@ import { useSelector } from "react-redux"
 
 import { FriendInterface } from '../../../models/friend'
 
+import FriendListItem from "../components/FriendListItem"
+
 function FriendList() {
   const { friends } = useSelector((state:any) => state.friend)
   
   return <>
     {friends.online && <>
-      <h2>온라인 친구입니다</h2>
+      <h3>온라인 친구입니다</h3>
       {friends.online.map((onlineFriend: FriendInterface) => {
-        return <div key={onlineFriend.id}>
-          <p>{onlineFriend.nickname}</p>
-          <p>{onlineFriend.profileChar}</p>
-        </div>
+        return <FriendListItem key={onlineFriend.id} friend={onlineFriend} />
       })
     }</>}
     {friends.offline && <>
-      <h2>온라인 친구입니다</h2>
+      <h3>오프라인 친구입니다</h3>
       {friends.offline.map((offlineFriend: FriendInterface) => {
-        return <div key={offlineFriend.id}>
-          <p>{offlineFriend.nickname}</p>
-          <p>{offlineFriend.profileChar}</p>
-        </div>
+        return <FriendListItem key={offlineFriend.id} friend={offlineFriend} />
       })
     }</>}
   </>

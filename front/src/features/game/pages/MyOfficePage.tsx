@@ -7,7 +7,7 @@ import Level3 from '../components/Level3';
 import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
-import FriendMainPage from '../../friend/pages/FreindMainPage';
+import FriendMainPage from '../../friend/pages/FriendMainPage';
 
 const Friend = styled.div`
   width: 21.75%;
