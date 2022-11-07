@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -66,8 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return CustomUserDetails.create(user, oAuth2User.getAttributes());
     }
 
-    @Transactional
-    User createUser(OAuth2UserInfo userInfo, AuthProvider authProvider) {
+    private User createUser(OAuth2UserInfo userInfo, AuthProvider authProvider) {
         User user = User.builder()
                 .socialId(userInfo.getId())
                 .img(userInfo.getImageUrl())
