@@ -38,8 +38,8 @@ const WaitingBlock = styled.div`
   align-items: center;
   width: 100%;
   .waitingroom {
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
   }
   .subtitle {
     font-size: 30px;
@@ -47,6 +47,15 @@ const WaitingBlock = styled.div`
   }
   .waitingContent {
     display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  .imgBox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .waitingCharacters {
   }
 `;
 
@@ -56,15 +65,43 @@ const IngameBlock = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  .timeProgress {
-    height: 1rem;
-    width: 100%;
-    background-color: gray;
-    &-progress {
-      height: 100%;
-      background-color: blue;
+
+  --duration: 5;
+
+  .progressContainer .progress {
+    animation: roundtime calc(var(--duration) * 1s) linear forwards;
+    transform-origin: left center;
+  }
+
+  @keyframes roundtime {
+    to {
+      transform: scaleX(0);
     }
   }
+
+  .progress {
+    background: orange;
+    height: 100%;
+    /* width: 100%; */
+    text-align: right;
+    font: bold 12px arial;
+    border-right: 1px silver solid;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    line-height: 30px;
+    color: #444;
+    /* -webkit-transition: width 5s linear; For Safari 3.1 to 6.0 */
+    /* transition: width 5s linear; */
+  }
+  .progressContainer {
+    width: 90%;
+    margin: 0 auto;
+    height: 30px;
+    border: 1px silver solid;
+    border-radius: 4px;
+    background: white;
+  }
+
   .problemBox {
     width: 100%;
     height: 100%;
@@ -112,24 +149,101 @@ const CSIngamePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
-  const [isFull, setIsFull] = useState<Boolean>(false);
+  const [isLast, setIsLast] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
-  const [message, setMessage] = useState<string>('');
   const [problem, setProblem] = useState<any>(null);
-  const [isCorrect, setIsCorrect] = useState<string>('');
-  const [isCorrectLoading, setIsCorrectLoading] = useState<Boolean>(false);
-  const [score, setScore] = useState<any>(null);
+  const [isSolved, setIsSolved] = useState<Boolean | null>(null);
+  const [isCorrect, setIsCorrect] = useState<Boolean | null>(null);
+  const [isSubmit, setIsSubmit] = useState<Boolean>(false);
+  const [ranking, setRanking] = useState<any>(null);
   const [isEnd, setIsEnd] = useState<any>(null);
   const [result, setResult] = useState<any>(null);
+  const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
+
   const { roomType } = location.state;
 
   const initialTime = useRef<number>(5);
   const interval = useRef<any>(null);
   const [sec, setSec] = useState(5);
   let roomcode: string;
+  let playerList: Array<any>;
+
+  const characterLocationArr: any = [
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '18%',
+      top: '52%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '22%',
+      top: '48%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+    {
+      position: 'absolute',
+      width: '15%',
+      height: '15%',
+      left: '14%',
+      top: '56%',
+    },
+  ];
+  const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
@@ -137,16 +251,18 @@ const CSIngamePage = () => {
   const client = Stomp.over(socket);
   // client.debug = () => {};
 
+  const client2 = Stomp.over(socket);
+
   // 게임 시작 전 자동 시작 타이머
   useEffect(() => {
-    if (isFull) {
+    if (isLast) {
       interval.current = setInterval(() => {
         setSec(initialTime.current % 60);
         initialTime.current -= 1;
       }, 1000);
       return () => clearInterval(interval.current);
     }
-  }, [isFull]);
+  }, [isLast]);
 
   useEffect(() => {
     if (initialTime.current < 0) {
@@ -164,8 +280,30 @@ const CSIngamePage = () => {
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
             roomcode = data.room;
+          } else if (data.hasOwnProperty('msg')) {
+            if (data.msg === 'submit') {
+              setIsSubmit(true);
+            }
+          } else if (data.hasOwnProperty('isSolved')) {
+            setIsCorrect(data.isCorrect);
+            setIsSolved(data.isSolved);
+            setIsSubmit(false);
+            setProblem('a');
           } else {
             setIsCorrect(data.isCorrect);
+          }
+          if (data.hasOwnProperty('isLast')) {
+            if (data.isLast === true) {
+              setTimeout(() => {
+                client.send(
+                  '/api/cs/start',
+                  {},
+                  JSON.stringify({
+                    roomCode: roomcode,
+                  }),
+                );
+              }, 1000);
+            }
           }
         });
 
@@ -182,48 +320,87 @@ const CSIngamePage = () => {
           );
         };
         enterRoom();
+
+        const fetchMemberInfo = () => {
+          client.send(
+            '/api/cs/memberInfo',
+            {},
+            JSON.stringify({
+              roomCode: roomcode,
+            }),
+          );
+        };
         setTimeout(() => {
-          client.subscribe('/cs/room/' + roomcode, (res) => {
-            var data1 = JSON.parse(res.body);
-            if (data1.hasOwnProperty('msg')) {
-              setMessage(data1.msg);
-              if (data1.hasOwnProperty('players')) {
-                setPlayers(data1.players);
-                if (data1.players.length === 2) {
-                  setIsFull(true);
-                }
-              } else if (data1.hasOwnProperty('result')) {
-                setResult(data1.result);
-                setIsEnd(true);
-              }
-            } else if (data1.hasOwnProperty('score')) {
-              setScore(data1.score);
-            } else {
-              setProblem(data1.currentProblem);
-              setIsCorrectLoading(false);
-            }
-          });
+          fetchMemberInfo();
         }, 2000);
       });
     }
   }, [userInfo]);
 
   useEffect(() => {
-    if (message) {
-      setIsLoading(false);
+    if (roomCode) {
+      client2.connect({}, (frame) => {
+        client2.subscribe('/cs/room/' + roomCode, (res) => {
+          var data1 = JSON.parse(res.body);
+          if (data1.hasOwnProperty('msg')) {
+            if (data1.msg === 'ready') {
+              setIsLast(true);
+            } else if (data1.msg === 'end') {
+              setIsEnd(true);
+              setResult(data1.result);
+            } else {
+              setIsStart(true);
+            }
+          } else if (data1.hasOwnProperty('currentProblem')) {
+            setIsCorrect(null);
+            setIsSolved(null);
+            setProblem(data1.currentProblem);
+          } else if (data1.hasOwnProperty('ranking')) {
+            setRanking(data1.ranking);
+          } else {
+            if (!playerList) {
+              for (let i = 0; i < data1.length; i++) {
+                characterCountArr[i] = data1[i].id;
+              }
+              setCountArr(characterCountArr);
+            } else if (playerList.length > data1.length) {
+              const temp = playerList.filter((player: any) => {
+                return !data1.some(
+                  (dataItem: any) => player.id === dataItem.id,
+                );
+              });
+              characterCountArr[characterCountArr.indexOf(temp[0].id)] = 0;
+              setCountArr(characterCountArr);
+            } else if (playerList.length < data1.length) {
+              const temp = data1.filter((dataItem: any) => {
+                return !playerList.some(
+                  (player: any) => dataItem.id === player.id,
+                );
+              });
+              characterCountArr[characterCountArr.indexOf(0)] = temp[0].id;
+              setCountArr(characterCountArr);
+            }
+            setPlayers(data1);
+            playerList = data1;
+          }
+        });
+      });
     }
-    if (message === 'start' && !isStart) {
-      setIsStart(true);
+  }, [roomCode]);
+
+  useEffect(() => {
+    if (players) {
+      setIsLoading(false);
     }
     if (isEnd && result) {
       console.log('끝');
       navigate('/game/CS/result', { state: { result: result } });
     }
-  }, [message, result, isEnd]);
+  }, [players, result, isEnd]);
 
   const handleAnswerSend = () => {
     client.send(
-      '/api/submit',
+      '/api/cs/submit',
       {},
       JSON.stringify({
         answer: '3',
@@ -232,7 +409,6 @@ const CSIngamePage = () => {
         roomCode: roomCode,
       }),
     );
-    setIsCorrectLoading(true);
   };
 
   return (
@@ -249,9 +425,26 @@ const CSIngamePage = () => {
           <div className="subtitle">
             10명의 인원이 모이면 자동으로 게임이 시작합니다
           </div>
-          {isFull && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          {isLast && <p>{sec}초 후 게임이 시작됩니다!</p>}
           <div className="waitingContent">
-            <img src="/img/rank/waitingroom.png" className="waitingroom" />
+            <div className="imgBox">
+              <img src="/img/rank/waitingroom.png" className="waitingroom" />
+              <p>{countArr.indexOf(5)}</p>
+              <div className="waitingCharacters">
+                {players &&
+                  players.map((player: any, idx: number) => {
+                    return (
+                      <img
+                        key={idx}
+                        src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/0.png"
+                        style={
+                          characterLocationArr[countArr.indexOf(player.id)]
+                        }
+                      />
+                    );
+                  })}
+              </div>
+            </div>
             {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
@@ -268,14 +461,11 @@ const CSIngamePage = () => {
               <p className="loadingText">문제를 불러오고 있습니다</p>
             </div>
           )}
-          {problem && !isCorrectLoading && (
+          {problem && !isSubmit && isCorrect === null && (
             <div className="problemBox">
               <div className="problem">
-                <div className="timeProgress">
-                  <div
-                    className="timeProgress-progress"
-                    style={{ width: 30 + '%' }}
-                  ></div>
+                <div className="progressContainer">
+                  <div className="progress"></div>
                 </div>
                 <div className="question">{problem.question}</div>
                 <div>{problem.example}</div>
@@ -328,8 +518,17 @@ const CSIngamePage = () => {
               </div>
             </div>
           )}
-          {isCorrectLoading &&
-            (isCorrect ? <div>정답입니다</div> : <div>틀렸습니다</div>)}
+          {isSubmit && (
+            <div>
+              <img src="/img/loadingspinner.gif" />
+              <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
+            </div>
+          )}
+          {isCorrect !== null && isSolved !== null && problem === 'a' && (
+            <div>
+              <p>중간결과 페이지</p>
+            </div>
+          )}
         </IngameBlock>
       )}
     </Container>
