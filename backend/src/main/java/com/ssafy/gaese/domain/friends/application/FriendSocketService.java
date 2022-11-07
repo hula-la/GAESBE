@@ -116,7 +116,7 @@ public class FriendSocketService {
     public void userLeave(FriendSocketDto friendSocketDto){
         Long userId = friendSocketDto.getUserId();
 
-        userRepository.deleteById(friendSocketDto.getUserId());
+        onlineUserRedisRepository.deleteById(friendSocketDto.getUserId());
 
         // 나갔다는 것을 알림
         refreshFriend(userId);
