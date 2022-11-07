@@ -46,7 +46,9 @@ public class FriendController {
     public ResponseEntity<Boolean> requestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @RequestParam("nickname")String nickname) {
         boolean isSuccess = friendService.requestFriend(userDetails.getId(),nickname);
-        return ResponseEntity.ok().body(isSuccess);
+        if (isSuccess) return ResponseEntity.ok().body(isSuccess);
+        // 자기자신한테 요청을 보내면 450
+        else return ResponseEntity.status(450).body(isSuccess);
     }
 
     @GetMapping("/request/list")

@@ -10,6 +10,7 @@ import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
+import com.ssafy.gaese.domain.user.exception.UserSameException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
 
+        if (targetNickname.equals(user)) return false;
 
         if( !(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser))){
             FriendRequest friendRequest = FriendRequest.builder()
