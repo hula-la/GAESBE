@@ -4,14 +4,10 @@ import Level0 from '../components/Level0';
 import Level1 from '../components/Level1';
 import Level2 from '../components/Level2';
 import Level3 from '../components/Level3';
-<<<<<<< HEAD
 import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
-=======
 import FriendMainPage from '../../friend/pages/FreindMainPage';
-
->>>>>>> 1b9d75ef290782d24f630adb2561c05c36ae16e5
 
 const Friend = styled.div`
   width: 21.75%;

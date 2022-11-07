@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"
 import Stomp from 'stompjs'
 import SockJS from 'sockjs-client'
 
-import { FriendActions } from '../friendSlice'
+import { friendActions } from '../friendSlice'
 
 
 interface CustomWebSocket extends WebSocket {
@@ -26,7 +26,7 @@ function FriendSocket() {
       client.subscribe(`/friend/${userInfo.id}`, (res) => {
         console.log('친구목록 들어옴')
         console.log(JSON.parse(res.body))
-        dispatch(FriendActions.setFriends(JSON.parse(res.body)))
+        dispatch(friendActions.setFriends(JSON.parse(res.body)))
       })
 
       // 뚫었으니 들어갔다고 알리기
