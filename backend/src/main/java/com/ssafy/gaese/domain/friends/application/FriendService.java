@@ -4,6 +4,7 @@ import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.dto.FriendRequestDto;
 import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
+import com.ssafy.gaese.domain.friends.exception.AlreadyFriendException;
 import com.ssafy.gaese.domain.friends.exception.AlreadyFriendReqToMeException;
 import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;
@@ -46,9 +47,26 @@ public class FriendService {
 
         if (targetNickname.equals(user)) new ReqToMeException();
 
+        // 친구 상태인지 확인
+        User firstuser = null;
+        User seconduser = null;
+
+        if(userId > targetUser.getId()){
+            firstuser = user;
+            seconduser = targetUser;
+        } else {
+            firstuser = targetUser;
+            seconduser = user;
+        }
+
+        if(friendRepository.existsByFirstUserAndSecondUser(firstuser,seconduser)) throw new AlreadyFriendException();
+
+        // 이미 요청을 했으면
         if(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser)){
             throw new AlreadyFriendRequestException();
-        } else if(friendRequestRepository.existsByRequestUserAndTargetUser(targetUser,user)) {
+        }
+        // 이미 상대가 요청을 했으면
+        else if(friendRequestRepository.existsByRequestUserAndTargetUser(targetUser,user)) {
             throw new AlreadyFriendReqToMeException();
         } else{
             FriendRequest friendRequest = FriendRequest.builder()
@@ -104,5 +122,6 @@ public class FriendService {
         return getRequestFriend(userId);
 
     }
+
 
 }

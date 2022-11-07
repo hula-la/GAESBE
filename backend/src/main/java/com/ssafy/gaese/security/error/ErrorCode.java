@@ -11,7 +11,9 @@ public enum ErrorCode {
     NOUSER_TOKEN(480, "해당 유저 없음."),
     ALREADYREQ_TOKEN(486, "이미 보낸 친구 요청"),
     REQTOME_TOKEN(450, "이미 보낸 친구 요청"),
-    ALREADYREQTOME_TOKEN(487, "친구가 이미 요청 보냄");
+    ALREADYREQTOME_TOKEN(487, "친구가 이미 요청 보냄"),
+    NOTFRIEND_TOKEN(440, "친구가 아님"),
+    ALREADYFRIEND_TOKEN(445, "이미 친구임");
 
     private final int code;
     private final String message;
