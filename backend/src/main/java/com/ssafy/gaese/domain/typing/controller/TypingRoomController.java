@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
+//@RequestMapping("/typing")
 @RequiredArgsConstructor
 public class TypingRoomController {
 
@@ -69,9 +70,12 @@ public class TypingRoomController {
             //이거 http 정해야함
 //            return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
             sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
+            return;
         }
 
-
+        isPlay.isPlaySet(param.getNickName());
+        System.out.println("(isPlay.isPlayCheck(param.getNickName())");
+        System.out.println((isPlay.isPlayCheck(param.getNickName())));
         resultDto.setPlay(true);
         resultDto.setRoomCodeCheck(true);
         resultDto.setUsers(new ArrayList<EnterUserDto>());
@@ -105,6 +109,7 @@ public class TypingRoomController {
                 resultDto.setRoomCodeCheck(false);
 //                return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
                 sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
+                return;
             }
 
             typingRoomApp.enterUser(typingUser,resultDto.getRoomCode(),param.getLang());

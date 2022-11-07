@@ -22,6 +22,9 @@ public class TypingRoomAppImpl implements TypingRoomApp{
     @Autowired
     TypingUserApp typingUserApp;
 
+    @Autowired
+    IsPlay isPlay;
+
     final static String key ="TypingRoom";
 
 
@@ -74,8 +77,8 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         String users=SSSHashOperations.get(key+roomNo,"users");
        if(users==null)
            SSSHashOperations.put(key+roomNo,"users",nickName);
-
-        SSSHashOperations.put(key+roomNo,"users",users+","+nickName);
+        else
+            SSSHashOperations.put(key+roomNo,"users",users+","+nickName);
     }
 //    @Override
 //    public List<String> getUserList(String roomNo)
@@ -245,6 +248,10 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         //user 리스트에 추가
 
         tmpKey = key+roomNo;
+        System.out.println("유저 리스트에 추가하기 전임");
+        System.out.println("user.getNickName() : "+ user.getNickName());
+        System.out.println("user.getNickName() : "+ user.getNickName());
+        System.out.println("user.getNickName() : "+ user.getNickName());
         addUsers(roomNo,user.getNickName());
 
         //어느방에 들어갔는지 매칭 저장
@@ -278,7 +285,7 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         roomNo = getRoomNoToNickName(nickName);
         tmpKey = key+roomNo;
 
-
+        isPlay.isPlayDel(nickName);
 
 //        List<String> users = SSLHashOperations.get(tmpKey,"users");
 //        users.remove(nickName);
