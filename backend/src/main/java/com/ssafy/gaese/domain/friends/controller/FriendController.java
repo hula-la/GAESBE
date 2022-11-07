@@ -42,18 +42,18 @@ public class FriendController {
 
     @GetMapping("/request")
     public ResponseEntity<Boolean> requestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                         @RequestParam("friendId")Long friendId) {
-        boolean isSuccess = friendService.requestFriend(userDetails.getId(),friendId);
+                                                         @RequestParam("nickname")String nickname) {
+        boolean isSuccess = friendService.requestFriend(userDetails.getId(),nickname);
         return ResponseEntity.ok().body(isSuccess);
     }
 
     @GetMapping("/request/list")
-    public ResponseEntity<List<FriendRequestDto>> requestFriend(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<List<FriendRequestDto>> requestFriendList(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<FriendRequestDto> friendRequestDtoList = friendService.getRequestFriend(userDetails.getId());
         return ResponseEntity.ok().body(friendRequestDtoList);
     }
     @DeleteMapping("/request")
-    public ResponseEntity<List<FriendRequestDto>> delrequestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<List<FriendRequestDto>> delRequestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                    @RequestParam("reqId")Long reqId) {
         List<FriendRequestDto> friendRequestDtoList = friendService.delRequest(userDetails.getId(),reqId);
         return ResponseEntity.ok().body(friendRequestDtoList);
