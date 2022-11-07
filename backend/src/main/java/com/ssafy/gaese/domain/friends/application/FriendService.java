@@ -30,10 +30,12 @@ public class FriendService {
     private final UserRepository userRepository;
 
 
-    public boolean requestFriend(Long userId, Long targetUserId) throws NullPointerException{
+    public boolean requestFriend(Long userId, String targetNickname) throws NullPointerException{
+
+        User targetUser = userRepository.findByNickname(targetNickname).orElseThrow(()->new UserNotFoundException());
+
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
-        User targetUser = userRepository.findById(targetUserId).orElseThrow(()->new UserNotFoundException());
 
 
         if( !(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser))){
@@ -53,7 +55,7 @@ public class FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
         List<FriendRequestDto> friendRequestList = friendRequestRepository
-                .findByRequestUser(user).stream()
+                .findByTargetUser(user).stream()
                 .map(FriendRequest::toDto)
                 .collect(Collectors.toList());
 
