@@ -17,8 +17,8 @@ RUN ./gradlew bootJar
 #RUN apt-get -y install ./google-chrome-stable_current_amd64.deb
 #RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/` curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip
 #RUN mkdir chrome
-#RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/src/chrome
-COPY /usr/src /usr/src
+#RUN unzip /tmp/chromedriver.zip chromedriver -d /chrome
+COPY chrome chrome
 
 FROM openjdk:11-jdk-slim
 COPY --from=builder build/libs/*.jar app.jar
