@@ -66,7 +66,8 @@ const Level0 = () => {
     navigate('/game/casino');
   };
   const handleAlert = () => {
-    alert('마이페이지로');
+    navigate('/game/mypage');
+    // alert('마이페이지로');
   };
   return (
     <Unity>

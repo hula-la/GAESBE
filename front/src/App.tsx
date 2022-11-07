@@ -17,6 +17,7 @@ import TypingPage from './features/typing/pages/TypingPage';
 import CSIngamePage from './features/cs/pages/CSIngamePage';
 import { useDispatch } from 'react-redux';
 import CSResultPage from './features/cs/pages/CSResultPage';
+import MyPage from './features/game/pages/MyPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="nickname" element={<SetNicknamePage />} />
         </Route>
         <Route path="game/*" element={<CombinePage />}>
+          <Route path="mypage" element={<MyPage />} />
           <Route path="" element={<MyOfficePage />} />
           <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
