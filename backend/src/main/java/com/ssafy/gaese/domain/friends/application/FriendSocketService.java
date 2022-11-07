@@ -3,6 +3,8 @@ package com.ssafy.gaese.domain.friends.application;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.domain.friends.dto.OnlineUserDto;
+import com.ssafy.gaese.domain.friends.entity.FriendRequest;
+import com.ssafy.gaese.domain.friends.entity.Friends;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;
 import com.ssafy.gaese.domain.friends.repository.OnlineUserRedisRepository;
 import com.ssafy.gaese.domain.user.entity.User;
@@ -13,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +25,7 @@ public class FriendSocketService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final FriendService friendService;
     private final UserRepository userRepository;
+    private final FriendRepository friendRepository;
     private final SocketInfo socketInfo;
 
     public void findFriendList(Long userId){
@@ -50,18 +50,14 @@ public class FriendSocketService {
         simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
     }
 
-    public void newFriend(Long userId){
+    public void refreshFriend(Long userId){
 
         List<FriendDto> friends = friendService.getFriends(userId);
-        HashMap<String, Object> res = new HashMap<>();
 
 
         // 친구들에게 친구목록 리프레쉬하라는 메시지 보냄
         friends.forEach(friend ->{
-
-            res.put("newFriend", true);
-
-            simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
+            findFriendList(friend.getId());
         });
     }
     public void userEnter(FriendSocketDto friendSocketDto){
@@ -82,7 +78,39 @@ public class FriendSocketService {
                 null);
 
         // 들어왔다는 것을 알림
-        newFriend(userId);
+        refreshFriend(userId);
+    }
+
+    public void saveFriend(Long userId, Long friendId) throws NullPointerException{
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException());
+        User friend = userRepository.findById(friendId).orElseThrow(()->new UserNotFoundException());
+
+        User firstuser = null;
+        User seconduser = null;
+
+        if(userId > friendId){
+            firstuser = user;
+            seconduser = friend;
+        } else {
+            firstuser = friend;
+            seconduser = user;
+        }
+
+
+        if( !(friendRepository.existsByFirstUserAndSecondUser(firstuser,seconduser))){
+            Friends friendShip = Friends.builder()
+                    .createdDate(new Date())
+                    .firstUser(firstuser)
+                    .secondUser(seconduser)
+                    .build();
+            friendRepository.save(friendShip);
+        }
+
+        // 친구 추가 한 후에 온라인/오프라인 리스트 리프레쉬
+        findFriendList(userId);
+        findFriendList(friendId);
+
     }
 
     public void userLeave(FriendSocketDto friendSocketDto){
@@ -91,7 +119,7 @@ public class FriendSocketService {
         userRepository.deleteById(friendSocketDto.getUserId());
 
         // 나갔다는 것을 알림
-        newFriend(userId);
+        refreshFriend(userId);
     }
 
 }
