@@ -47,6 +47,10 @@ public class User {
 
     private String refreshToken;
 
+    @OneToOne
+    @JoinColumn(name = "abilityId")
+    private Ability ability;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<CsRecord> csRecordList = new ArrayList<>();
 
