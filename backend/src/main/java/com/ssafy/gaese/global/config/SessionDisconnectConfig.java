@@ -17,6 +17,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class SessionDisconnectConfig {
 
+    private final TypingRoomApp typingRoomApp;
 
     private final SocketInfo socketInfo;
 
@@ -39,7 +40,8 @@ public class SessionDisconnectConfig {
         {
             //ex
             case "Typing":
-
+                typingRoomApp.exitUser(info[3]);
+                socketInfo.delSocketInfo(sessionId);
                 break;
             case "Cs":
                 CsSocketDto csSocketDto = CsSocketDto.builder()

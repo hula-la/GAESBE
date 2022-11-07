@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -31,13 +32,58 @@ public class TypingRoomAppImpl implements TypingRoomApp{
                 = redisTemplate.opsForHash();
         return HashOperations.get(key+roomNo,varName);
     }
+
     @Override
-    public List<String> getUserList(String roomNo)
+    //남은 유저가 없으면 false로 반환 방을 삭제해야 하는경우임
+    public boolean removeUsers(String roomNo, String nickName)
     {
-        HashOperations<String, String, List<String>> SSLHashOperations
+        HashOperations<String, String, String> SSSHashOperations
                 = redisTemplate.opsForHash();
-        return SSLHashOperations.get(key+roomNo,"users");
+        String[] userArr = SSSHashOperations.get(key+roomNo,"users").split(",");
+
+        StringBuilder sb = new StringBuilder();
+
+        for (String u : userArr)
+        {
+           if(u.equals(nickName))
+           {
+
+           }
+           else
+           {
+               sb.append(u).append(",");
+
+           }
+        }
+        if(sb.length()!=0)
+        {
+
+            sb.delete(sb.length()-1,sb.length());
+            SSSHashOperations.put(key+roomNo,"users",sb.toString());
+            return true;
+        }
+        return false;
+
+
     }
+    @Override
+    public void addUsers(String roomNo, String nickName)
+    {
+        HashOperations<String, String, String> SSSHashOperations
+                = redisTemplate.opsForHash();
+        String users=SSSHashOperations.get(key+roomNo,"users");
+       if(users==null)
+           SSSHashOperations.put(key+roomNo,"users",nickName);
+
+        SSSHashOperations.put(key+roomNo,"users",users+","+nickName);
+    }
+//    @Override
+//    public List<String> getUserList(String roomNo)
+//    {
+//        HashOperations<String, String, List<String>> SSLHashOperations
+//                = redisTemplate.opsForHash();
+//        return SSLHashOperations.get(key+roomNo,"users");
+//    }
     @Override
     public void setVar(String roomNo, String varName, String var)
     {
@@ -49,25 +95,29 @@ public class TypingRoomAppImpl implements TypingRoomApp{
     }
     @Override
     public void makeRoom(TypingRoom room) {
-        HashOperations<String, String, List<String >> SSLHashOperations
-                = redisTemplate.opsForHash();
+//        HashOperations<String, String, List<String >> SSLHashOperations
+//                = redisTemplate.opsForHash();
         HashOperations<String, String, String> SSSHashOperations
                 = redisTemplate.opsForHash();
 
         String tmpKey = key+room.getRoomNo();
 
-        SSSHashOperations.put(tmpKey,"content",room.getContent());
+        //나중에 db에서 끌고 오도록 만들어야함
+        SSSHashOperations.put(tmpKey,"content","test \n   test2");
         SSSHashOperations.put(tmpKey,"lang",room.getLang());
         SSSHashOperations.put(tmpKey,"roomNo",room.getRoomNo());
-        SSSHashOperations.put(tmpKey,"startTime",room.getStartTime().toString());
-        SSSHashOperations.put(tmpKey,"content",room.getContent());
+//        SSSHashOperations.put(tmpKey,"startTime",room.getStartTime().toString());
 
-        List<String> users = SSLHashOperations.get(tmpKey,"users");
-        if(users==null)
-        {
-            users = new ArrayList<>();
-            SSLHashOperations.put(tmpKey,"users",users);
-        }
+
+//        List<String> users = new ArrayList<>();
+//        SSLHashOperations.put(tmpKey,"users",users);
+
+//        List<String> users = SSLHashOperations.get(tmpKey,"users");
+//        if(users==null)
+//        {
+//            users = new ArrayList<>();
+//            SSLHashOperations.put(tmpKey,"users",users);
+//        }
 
         if(room.getRoomCode()==null)//랜덤매칭
         {
@@ -81,19 +131,19 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         }
     }
     @Override
-    public void delRoom(TypingRoom room) {
-        HashOperations<String, String, List<String >> SSLHashOperations
-                = redisTemplate.opsForHash();
+    public void delRoom(String roomNo) {
+//        HashOperations<String, String, List<String >> SSLHashOperations
+//                = redisTemplate.opsForHash();
         HashOperations<String, String, String> SSSHashOperations
                 = redisTemplate.opsForHash();
 
-        String tmpKey = key+room.getRoomNo();
+        String tmpKey = key+roomNo;
 
         SSSHashOperations.delete(tmpKey,"content");
         SSSHashOperations.delete(tmpKey,"lang");
         SSSHashOperations.delete(tmpKey,"roomNo");
         SSSHashOperations.delete(tmpKey,"startTime");
-        SSLHashOperations.delete(tmpKey,"users");
+        SSSHashOperations.delete(tmpKey,"users");
         SSSHashOperations.delete(tmpKey,"roomCode");
 
 
@@ -156,10 +206,10 @@ public class TypingRoomAppImpl implements TypingRoomApp{
     //key, userListRoomNo,
     //true면 방장인 경우, flas면 입장인 경우
     @Override
-    public boolean enterUser(TypingUser user, String roomCode)
+    public boolean enterUser(TypingUser user, String roomCode, String lang)
     {
-        HashOperations<String, String, List<String >> SSLHashOperations
-                = redisTemplate.opsForHash();
+//        HashOperations<String, String, List<String >> SSLHashOperations
+//                = redisTemplate.opsForHash();
         HashOperations<String, String, String> SSSHashOperations
                 = redisTemplate.opsForHash();
 
@@ -168,11 +218,22 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         //랜덤방에 추가
         if(roomCode==null)
         {
-            roomNo = randRoomEnter(user.getSocketId());
+            roomNo = randRoomEnter(user.getSocketId(),lang);
 
+            System.out.println("랜덤방 추가 roomNo :");
+            System.out.println(roomNo);
+//            setNickNameToRoomNo(user.getNickName(), roomNo);
             //새로 방이 만들어진 경우
             if(roomNo.equals(user.getSocketId()))
             {
+                TypingRoom room = new TypingRoom();
+//                room.getLang());
+//                SSSHashOperations.put(tmpKey,"roomNo",room.getRoomNo());
+                room.setRoomNo(roomNo);
+                room.setLang(lang);
+                System.out.println("랜덤방 새로 생성되는 경우");
+                System.out.println(roomNo);
+                makeRoom(room);
                 typingUserApp.setVar(user.getNickName(),"isHead","true");
             }
         }
@@ -184,18 +245,16 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         //user 리스트에 추가
 
         tmpKey = key+roomNo;
-        List<String> users = SSLHashOperations.get(tmpKey,"users");
-        users.add(user.getNickName());
-        SSLHashOperations.put(tmpKey,"users",users);
+        addUsers(roomNo,user.getNickName());
 
         //어느방에 들어갔는지 매칭 저장
         setNickNameToRoomNo(user.getNickName(),roomNo);
 
-        //방장인 경우
-        if(users.size()==1)
-        {
-            return true;
-        }
+//        //방장인 경우
+//        if(users.size()==1)
+//        {
+//            return true;
+//        }
         return false;
 
         //딴곳에서 하는게 맞을듯?
@@ -204,10 +263,10 @@ public class TypingRoomAppImpl implements TypingRoomApp{
     }
     //flase 면 방 까지 삭제 해야함
     @Override
-    public boolean exitUser(TypingUser user)
+    public boolean exitUser(String nickName)
     {
-        HashOperations<String, String, List<String >> SSLHashOperations
-                = redisTemplate.opsForHash();
+//        HashOperations<String, String, List<String >> SSLHashOperations
+//                = redisTemplate.opsForHash();
         HashOperations<String, String, String> SSSHashOperations
                 = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations
@@ -216,36 +275,52 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         String roomNo;
 
         boolean answer = true;
-        roomNo = getRoomNoToNickName(user.getNickName());
+        roomNo = getRoomNoToNickName(nickName);
         tmpKey = key+roomNo;
 
 
-        List<String> users = SSLHashOperations.get(tmpKey,"users");
-        users.remove(user.getNickName());
 
-        if(users.size()==0)//방 삭제 해야함
+//        List<String> users = SSLHashOperations.get(tmpKey,"users");
+//        users.remove(nickName);
+
+        //removeUsers 유저 삭제시 남는 유저가 없다면 false 를 반환함, 방을 삭제해야하는 경우임
+        if(!removeUsers(roomNo,nickName))//방 삭제 해야함
         {
             //없는거 삭제 요청 보낼 수도 있음
             delRoomCodeToRoomNo(roomNo);
+            delRoom(roomNo);
+            removeRandRoom(roomNo);
             answer = false;
         }
-
-        if(user.getIsHead())//방장 분배 해줘야함
+        //삭제된 유저가 방장이면 방장 분배 해줘야함
+        else if(Boolean.parseBoolean(typingUserApp.getVar(nickName,"isHead")))
         {
-            String tmpNick= users.get(0);
+            String[] userArr = SSSHashOperations.get(key+roomNo,"users").split(",");
+            String tmpNick= userArr[0];
             //방장 분배
             typingUserApp.setVar(tmpNick,"isHead","true");
         }
 
-        //유저 삭제하고
-        SSLHashOperations.put(tmpKey,"users",users);
 
         //roomNo 매칭 삭제
-        dleNickNameToRoomNo(user.getNickName());
+        dleNickNameToRoomNo(nickName);
 
+        //랜매인지 아닌지 판단 해서 해야함
+//        String tmp getRoomCodeToRoomNo(roo)
+//        sdfsdfewf
         //랜덤 매칭 방 숫자 줄이기
-        zSetOperations.incrementScore(tmpKey,roomNo,-1);
-
+        String tmp =  getVar(roomNo,"roomCode");
+        System.out.println(roomNo);
+        System.out.println(" getVar(roomNo, roomCode) : " + tmp);
+        if(tmp!=null)
+        {
+            zSetOperations.incrementScore(tmpKey,roomNo,-1);
+        }
+//        Double d =
+        System.out.println("zSetOperations.incrementScore(tmpKey,roomNo,-1)");
+        System.out.println("zSetOperations.incrementScore(tmpKey,roomNo,-1)");
+        System.out.println("zSetOperations.incrementScore(tmpKey,roomNo,-1)");
+//        System.out.println(d);
         //users는 컨트롤러에서제거
 
         return answer;
@@ -255,7 +330,8 @@ public class TypingRoomAppImpl implements TypingRoomApp{
     public Long removeRandRoom(String roomNo)
     {
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
-        String tmpKey = key+"Rand";
+        String lang = getVar(roomNo,"lang");
+        String tmpKey = key+"Rand"+lang;
 
         return zSetOperations.remove(tmpKey,roomNo);
 
@@ -264,30 +340,36 @@ public class TypingRoomAppImpl implements TypingRoomApp{
     //pre+key, Set<String> , int
     //랜덤룸에 들어가고 인원 수 증가까지 제어 후 roomNo return
     @Override
-    public String randRoomEnter(String socketId)
-    {
-        if(socketId==null)
+    public String randRoomEnter(String socketId, String lang) {
+        if (socketId == null)
             return socketId;
 
 
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
-        String tmpKey = key+"Rand";
+        String tmpKey = key + "Rand" + lang;
         String answer;
-        Set<String> scoreRange =zSetOperations.rangeByScore(tmpKey, 0, 3);
-        if(scoreRange.size()>0)
-        {
-            answer = scoreRange.iterator().toString();
+        Set<String> scoreRange = zSetOperations.rangeByScore(tmpKey, 0, 3);
+        List<String> tmpList = new ArrayList<>(scoreRange);
+        if (tmpList.size() > 0) {
+            System.out.println("randRoomEnter");
+            System.out.println("기존 랜덤 룸에 들어감");
+            answer = tmpList.get(0);
+            System.out.println("answer : " + answer);
             //이렇게 하면 사람 적은 방 부터 들어가게됨
-        }
-        else//없으면 만듬
+        } else//없으면 만듬
         {
-            zSetOperations.addIfAbsent(tmpKey,socketId,0);
+            System.out.println("randRoomEnter");
+            System.out.println("없어서 만듬");
+            System.out.println("socketId : " + socketId);
+            zSetOperations.addIfAbsent(tmpKey, socketId, 0);
             answer = socketId;
         }
 
-        zSetOperations.incrementScore(tmpKey,answer,1);
+            zSetOperations.incrementScore(tmpKey, answer, 1);
+            System.out.println(zSetOperations.score(tmpKey, answer));
+//        zSetOperations.score(tmpKey,answer);
+            return answer;
+        }
 
-        return answer;
-    }
 
 }
