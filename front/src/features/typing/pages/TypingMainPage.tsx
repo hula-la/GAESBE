@@ -33,6 +33,9 @@ const SelectLanguageBox = styled.div`
   width: 10rem;
   align-items: center;
   border: 2px solid blue;
+  /* :active {
+    background-color: white;
+  } */
 `;
 const SelectGameType = styled.div`
   border: 2px solid white;
@@ -41,26 +44,23 @@ const SelectTypeBox = styled.div`
   border: 2px solid violet;
 `;
 function TypingMainPage() {
-  const [isLoding, setIsLoding] = useState<Boolean>(false);
-  const [form, setForm] = useState<TypingRoomInterface>({
-    lang: 'python',
-    id: '4',
-    nickName: '배준식',
-    socketId: '1',
-    roomCode: 'asdfasdfa',
-    isCreat: true,
-  });
+  const [gameType, setGameType] = useState<String>('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const handleEnterGame = () => {
     navigate('game');
-    // e.preventDefault();
-    // dispatch(typingActions.createTypingRoom(form));
-    // console.log('클릭');
   };
   const handleRandomGame = () => {
-    navigate('enter');
+    navigate('enter', { state: { lang: gameType } });
   };
+  const handleChoicePython = () => {
+    setGameType('Python');
+    console.log('파이썬 선택');
+  };
+  const handleChoiceJava = () => {
+    setGameType('Java');
+    console.log('자바 선택');
+  };
+  console.log(gameType);
   return (
     <TypingMain>
       <div className="title">
@@ -68,8 +68,10 @@ function TypingMainPage() {
       </div>
       <h1>언어를 선택해주세요</h1>
       <SelectLanguage>
-        <SelectLanguageBox>파이썬</SelectLanguageBox>
-        <SelectLanguageBox>자바</SelectLanguageBox>
+        <SelectLanguageBox onClick={handleChoicePython}>
+          파이썬
+        </SelectLanguageBox>
+        <SelectLanguageBox onClick={handleChoiceJava}>자바</SelectLanguageBox>
       </SelectLanguage>
       <SelectGameType>
         <SelectTypeBox>

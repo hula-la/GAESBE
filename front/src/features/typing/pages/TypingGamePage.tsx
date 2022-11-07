@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import TypingGame from '../components/TypingGame';
 import styled from 'styled-components';
@@ -24,6 +25,8 @@ const TypingGameMain = styled.div`
   }
 `;
 function TypingGamePage() {
+  const location = useLocation();
+  const { lang } = location.state;
   const [isLoding, setIsLoding] = useState<Boolean>(true);
   const [roomInfo, setRoomInfo] = useState<any>();
   const { userInfo } = useSelector((state: any) => state.auth);
@@ -35,12 +38,12 @@ function TypingGamePage() {
   // // 소켓 뚫고
   client.connect({}, (frame) => {
     client.send(
-      '/typing/enter',
+      '/api/typing/enter',
       {},
       JSON.stringify({
-        lang: 'python',
-        id: '4',
-        nickName: '배준식',
+        lang: lang,
+        id: userInfo.id,
+        nickName: userInfo.nickname,
         socketId: socket._transport.url.slice(-18, -10),
         roomCode: '',
         isCreat: false,
