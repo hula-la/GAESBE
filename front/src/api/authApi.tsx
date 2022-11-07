@@ -15,3 +15,8 @@ export const checkNicknameApi = async (nickname: string) => {
   console.log(res);
   return res;
 };
+
+export const deleteUserInfoApi: any = async () => {
+  const res = await client.delete('user');
+  return res;
+};

@@ -22,6 +22,8 @@ const Container = styled.div`
 `;
 const LoadingBlock = styled.div`
   display: flex;
+  /* border: 2px solid red; */
+  height: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -63,7 +65,7 @@ function TypingGamePage() {
             id: userInfo.id,
             nickName: userInfo.nickname,
             socketId: socket._transport.url.slice(-18, -10),
-            roomCode: '',
+            roomCode: null,
             isCreat: false,
           }),
         );

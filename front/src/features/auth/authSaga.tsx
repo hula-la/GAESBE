@@ -13,6 +13,7 @@ import {
   fetchUserInfoApi,
   createUserInfoApi,
   checkNicknameApi,
+  deleteUserInfoApi,
 } from '../../api/authApi';
 import { AxiosResponse } from 'axios';
 
@@ -70,8 +71,21 @@ function* onCheckNickname() {
   yield takeLatest(checkNicknameStart, checkNicknameSaga);
 }
 
+function* deleteUserInfoSaga() {
+  try {
+    const response: AxiosResponse = yield call(deleteUserInfoApi);
+    if (response.status === 200) {
+      // 로그아웃시키자
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const authSagas = [
   fork(onFetchUserInfo),
   fork(onCreateUserInfo),
   fork(onCheckNickname),
+  fork(onCheckNickname),
+  fork(deleteUserInfoSaga),
 ];
