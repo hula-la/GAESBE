@@ -6,7 +6,6 @@ import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemRedisDto;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -17,6 +16,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
@@ -43,6 +45,9 @@ public class CrawlingTest {
     void get_solved_problem(){
         SetOperations<String,String> setOperations = redisTemplate.opsForSet();
 //    setOperations.add("sd","sd");
+
+
+
 
 
         System.setProperty("webdriver.chrome.driver","C:\\final\\backend\\S07P31E104\\backend\\chromedriver.exe");
@@ -103,51 +108,17 @@ public class CrawlingTest {
         return list;
     }
 
+    @Autowired
+    ResourceLoader resourceLoader;
     @Test
-    void get_common_problems() throws IOException, ExecutionException, InterruptedException {
-        List<AlgoProblemDto> algoProblemDtoList = get_tier_problems("2");
-        SetOperations setOperations = redisTemplate.opsForSet();
+    void getFilePath() throws IOException {
+        ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver.exe");
+        System.out.println(classPathResource.getPath());
 
-        List<String> users = new ArrayList<>();
-        users.add("dusdml1502");
-        users.add("wnstlr0394");
-        String code = "z1dZqaW1";
-
-        // 공통 문제 리스트=
-        Set<String> problemsSet = new HashSet<>();
-
-        for(String user : users){
-            problemsSet.addAll(setOperations.members(code+"-"+user));
-
-        }
-
-        System.out.println("common");
-        System.out.println(problemsSet.toString());
-
-        for(int i = algoProblemDtoList.size()-1 ; i >= 0; i-- ){
-            if(problemsSet.contains(algoProblemDtoList.get(i).getProblemId()))
-                algoProblemDtoList.remove(algoProblemDtoList.get(i));
-        }
-        Collections.shuffle(algoProblemDtoList);
-        List<AlgoProblemDto> result = algoProblemDtoList.subList(0,10);
-        System.out.println(result.toString());
-//        algoRedisRepository.save(result.get(0));
-
-        AlgoProblemRedisDto algoProblemRedisDto = new AlgoProblemRedisDto();
-        algoProblemRedisDto.setProblemDtoList(algoProblemDtoList);
-        algoProblemRedisDto.setRoomCode("z1dZqaW1");
-        algoRedisRepository.save(algoProblemRedisDto);
+        System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless"); // 창 없이 크롤링
+        WebDriver driver = new ChromeDriver(options);
 
     }
-
-    @Test
-    void get_problems(){
-        Iterable<AlgoProblemRedisDto> algoProblemRedisDtos = algoRedisRepository.findAllById(Collections.singleton("z1dZqaW1"));
-        for(AlgoProblemRedisDto algoProblemDto : algoProblemRedisDtos){
-            System.out.println(algoProblemDto);
-        }
-        ListOperations listOperations = redisTemplate.opsForList();
-
-    }
-
 }
