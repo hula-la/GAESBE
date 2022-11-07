@@ -17,7 +17,7 @@ import TypingPage from './features/typing/pages/TypingPage';
 import CSIngamePage from './features/cs/pages/CSIngamePage';
 import { useDispatch } from 'react-redux';
 import CSResultPage from './features/cs/pages/CSResultPage';
-import FriendSocket from './features/friend/pages/FriendSocket'
+
 import { useSelector } from 'react-redux';
 
 const App = () => {
@@ -28,7 +28,6 @@ const App = () => {
   const {userInfo} = useSelector((state:any) => state.auth)
   return (
     <BrowserRouter>
-    {userInfo && <FriendSocket />}
       <Routes>
         <Route path="" element={<IntroPage />} />
         <Route path="oauth2/redirect" element={<RedirectPage />} />
