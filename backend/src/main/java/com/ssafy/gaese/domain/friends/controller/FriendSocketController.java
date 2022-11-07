@@ -15,11 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class FriendSocketController {
     private final FriendSocketService friendSocketService;
 
-    @MessageMapping("/friend/list")
-    public void memberInfo(FriendSocketDto friendSocketDto) throws Exception{
-        friendSocketService.findFriendList(friendSocketDto.getUserId());
-    }
-
     @MessageMapping("/friend/connect")
     public void newFriend(FriendSocketDto friendSocketDto) throws Exception{
         friendSocketService.userEnter(friendSocketDto);
