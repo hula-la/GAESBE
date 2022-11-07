@@ -29,6 +29,7 @@ public class FriendSocketService {
     private final SocketInfo socketInfo;
 
     public void findFriendList(Long userId){
+        System.out.println("친구 찾으러 감");
         List<FriendDto> friends = friendService.getFriends(userId);
         HashMap<String, Object> res = new HashMap<>();
 
@@ -37,6 +38,7 @@ public class FriendSocketService {
         List<FriendDto> offlineList = new ArrayList<>();
 
         friends.forEach(friend ->{
+            System.out.println("친구들"+friend);
             Optional<OnlineUserDto> onlineFriendOpt = onlineUserRedisRepository.findById(friend.getId());
 
             // 온라인인 친구면

@@ -28,11 +28,11 @@ public class FirebaseConfig {
         }else{
 //            FileInputStream serviceAccount =
 //                    new FileInputStream(ResourceUtils.getFile("classpath:firebaseKey.json"));
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("firebaseKey.json").getInputStream()))
-                    .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
-                    .build();
-            firebaseApp = FirebaseApp.initializeApp(options);
+//            FirebaseOptions options = new FirebaseOptions.Builder()
+//                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("firebaseKey.json").getInputStream()))
+//                    .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
+//                    .build();
+//            firebaseApp = FirebaseApp.initializeApp(options);
         }
 
     }
