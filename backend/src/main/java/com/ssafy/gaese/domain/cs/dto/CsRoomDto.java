@@ -13,7 +13,7 @@ import java.util.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("CsRoom")
+@RedisHash(value = "CsRoom", timeToLive = 3600)
 public class CsRoomDto {
     public enum RoomStatus {
         START, WAIT;
