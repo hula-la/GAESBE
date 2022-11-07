@@ -66,6 +66,8 @@ public class FriendSocketService {
         Long userId = friendSocketDto.getUserId();
 
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
+        
+        // 온라인 redis에 저장
         onlineUserRedisRepository.save(OnlineUserDto.builder()
                 .nickname(user.getNickname())
                 .profileChar(user.getProfileChar())
@@ -73,12 +75,15 @@ public class FriendSocketService {
                 .id(user.getId())
                 .build());
 
+        // 강제종료때를 위해서 socket 저장해 둠
         socketInfo.setSocketInfo(friendSocketDto.getSessionId(),
                 friendSocketDto.getUserId().toString(),
                 null,
                 "Friend",
                 null);
 
+        // 자기한테 전달
+        findFriendList(userId);
         // 들어왔다는 것을 알림
         refreshFriend(userId);
     }
