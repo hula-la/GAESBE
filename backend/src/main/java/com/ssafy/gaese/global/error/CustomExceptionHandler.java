@@ -1,5 +1,6 @@
 package com.ssafy.gaese.global.error;
 
+import com.ssafy.gaese.domain.friends.exception.AlreadyFriendReqToMeException;
 import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.user.exception.ReqToMeException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
@@ -30,6 +31,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(value = {ReqToMeException.class})
     public ResponseEntity<Object> handleReqToMeException(ServerError ex){
         ErrorCode ec = ErrorCode.REQTOME_TOKEN;
+        return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
+    }
+    @ExceptionHandler(value = {AlreadyFriendReqToMeException.class})
+    public ResponseEntity<Object> handleAlreadyFriendReqToMeException(ServerError ex){
+        ErrorCode ec = ErrorCode.ALREADYREQTOME_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
 

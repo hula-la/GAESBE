@@ -4,6 +4,7 @@ import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.dto.FriendRequestDto;
 import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
+import com.ssafy.gaese.domain.friends.exception.AlreadyFriendReqToMeException;
 import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;
 import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
@@ -45,15 +46,17 @@ public class FriendService {
 
         if (targetNickname.equals(user)) new ReqToMeException();
 
-        if( !(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser))){
+        if(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser)){
+            throw new AlreadyFriendRequestException();
+        } else if(friendRequestRepository.existsByRequestUserAndTargetUser(targetUser,user)) {
+            throw new AlreadyFriendReqToMeException();
+        } else{
             FriendRequest friendRequest = FriendRequest.builder()
                     .targetUser(targetUser)
                     .requestUser(user)
                     .createdDate(new Date())
                     .build();
             friendRequestRepository.save(friendRequest);
-        } else {
-            throw new AlreadyFriendRequestException();
         }
         return true;
     }
