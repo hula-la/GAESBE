@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import CSResultPage from './features/cs/pages/CSResultPage';
 import FriendSocket from './features/friend/pages/FriendSocket';
 
-
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {

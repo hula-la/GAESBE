@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit"; 
 
-import { FriendsInterface, Action } from "../../models/friend";
+import { createSlice } from "@reduxjs/toolkit"
+
+import { Action, FriendsInterface } from '../../models/friend'
 
 interface FriendStateInterface {
   friends: FriendsInterface | null
@@ -8,18 +9,18 @@ interface FriendStateInterface {
 
 const initialState: FriendStateInterface = {
   friends: null
-};
+}
 
-const FriendSlice = createSlice({
+const friendSlice = createSlice({
   name: 'friend',
   initialState,
   reducers: {
-    setFriends(state, action: Action<FriendsInterface>) {
+    setFriend(state, action: Action<FriendsInterface>) {
       state.friends = action.payload
     }
-  },
-});
+  }
+})
 
-export const FriendActions = FriendSlice.actions;
+export const friendActions = friendSlice.actions;
 
-export default FriendSlice.reducer;
+export default friendSlice.reducer;
