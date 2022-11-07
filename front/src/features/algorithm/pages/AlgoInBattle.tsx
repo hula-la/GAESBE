@@ -38,6 +38,7 @@ function AlgoInBattle() {
   useEffect(() => {
     // 입장할때 소켓 뚫기
     client.connect({}, frame => {
+      console.log(frame)
       // 입장, 퇴장 관련 메세지 받을 위치
       client.subscribe(`/algo/room/${InGameInfo.roomCode}`, (res) => {
         setInGameUsers(JSON.parse(res.body).users)
