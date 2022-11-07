@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.friends.dto;
 
+import com.ssafy.gaese.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -9,6 +10,5 @@ import lombok.ToString;
 @ToString
 public class FriendRequestDto {
     private Long friendReqId;
-    private Long requestUserId;
-    private Long targetUserId;
+    private FriendDto requestUser;
 }
