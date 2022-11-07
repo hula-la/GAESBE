@@ -9,6 +9,7 @@ import com.ssafy.gaese.domain.friends.repository.FriendRepository;
 import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.exception.ReqToMeException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.exception.UserSameException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -42,7 +43,7 @@ public class FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
 
-        if (targetNickname.equals(user)) return false;
+        if (targetNickname.equals(user)) new ReqToMeException();
 
         if( !(friendRequestRepository.existsByRequestUserAndTargetUser(user,targetUser))){
             FriendRequest friendRequest = FriendRequest.builder()
