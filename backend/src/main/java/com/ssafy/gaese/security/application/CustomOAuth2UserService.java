@@ -1,8 +1,10 @@
 package com.ssafy.gaese.security.application;
 
+import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.AuthProvider;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.entity.UserRole;
+import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.security.error.OAuthProcessingException;
 import com.ssafy.gaese.security.model.CustomUserDetails;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final AbilityRepository abilityRepository;
 
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
     @Override
@@ -72,6 +75,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .userRole(UserRole.USER)
                 .authProvider(authProvider)
                 .build();
+
+        Ability ability = Ability.builder()
+                .user(user)
+                .build();
+
+        abilityRepository.save(ability);
         return userRepository.save(user);
     }
 }
