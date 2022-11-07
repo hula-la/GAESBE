@@ -27,11 +27,11 @@ public class FriendRequest {
     private Date createdDate;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "requestUserId", referencedColumnName = "id")
     User requestUser;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "targetUserId", referencedColumnName = "id")
     User targetUser;
 
