@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class AlgoProblemService {
 
-    @Value("${chrome-driver-path}")
+//    @Value("${chrome-driver-path}")
     private String ChromePath;
     private final RedisTemplate<String, String> redisTemplate;
     private final AlgoRankRedisRepository algoRankRedisRepository;
