@@ -25,11 +25,11 @@ public class Friends {
     private Date createdDate;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "firstUserId", referencedColumnName = "id")
     User firstUser;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "secondUserId", referencedColumnName = "id")
     User secondUser;
 
