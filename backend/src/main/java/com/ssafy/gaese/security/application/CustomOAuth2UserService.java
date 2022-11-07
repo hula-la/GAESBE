@@ -76,11 +76,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .authProvider(authProvider)
                 .build();
 
-        Ability ability = Ability.builder()
-                .user(user)
-                .build();
-
-        abilityRepository.save(ability);
+//        Ability ability = Ability.builder()
+//                .user(user)
+//                .build();
+//
+//        abilityRepository.save(ability);
         return userRepository.save(user);
     }
 }
