@@ -30,11 +30,19 @@ public class FriendController {
     private final FriendSocketService friendSocketService;
 
     @GetMapping("/add")
-    public ResponseEntity<?> addUser(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<?> addFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
                                      @RequestParam("friendId")Long friendId) throws NullPointerException{
         friendSocketService.saveFriend(userDetails.getId(),friendId);
         return ResponseEntity.ok("Friend added successfully");
     }
+
+    @DeleteMapping()
+    public ResponseEntity<?> delFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                     @RequestParam("friendId")Long friendId) throws NullPointerException{
+        friendSocketService.delFriend(userDetails.getId(),friendId);
+        return ResponseEntity.ok("Friend delete successfully");
+    }
+
 
     @GetMapping("/list")
     public ResponseEntity<List<FriendDto>> getFriends(@AuthenticationPrincipal CustomUserDetails userDetails) {

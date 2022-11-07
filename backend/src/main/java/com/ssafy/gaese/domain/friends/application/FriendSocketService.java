@@ -5,7 +5,9 @@ import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.domain.friends.dto.OnlineUserDto;
 import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
+import com.ssafy.gaese.domain.friends.exception.NotFriendException;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;
+import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
 import com.ssafy.gaese.domain.friends.repository.OnlineUserRedisRepository;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
@@ -27,6 +29,8 @@ public class FriendSocketService {
     private final UserRepository userRepository;
     private final FriendRepository friendRepository;
     private final SocketInfo socketInfo;
+    private final FriendRequestRepository friendRequestRepository;
+
 
     public void findFriendList(Long userId){
         System.out.println("친구 찾으러 감");
@@ -112,6 +116,39 @@ public class FriendSocketService {
                     .secondUser(seconduser)
                     .build();
             friendRepository.save(friendShip);
+        }
+
+        // 친구 신청 목록에서 삭제
+        friendRequestRepository.deleteByRequestUserAndTargetUser(friend,user);
+
+
+        // 친구 추가 한 후에 온라인/오프라인 리스트 리프레쉬
+        findFriendList(userId);
+        findFriendList(friendId);
+
+    }
+    public void delFriend(Long userId, Long friendId) throws NullPointerException{
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException());
+        User friend = userRepository.findById(friendId).orElseThrow(()->new UserNotFoundException());
+
+        User firstuser = null;
+        User seconduser = null;
+
+        if(userId > friendId){
+            firstuser = user;
+            seconduser = friend;
+        } else {
+            firstuser = friend;
+            seconduser = user;
+        }
+
+
+        if(friendRepository.existsByFirstUserAndSecondUser(firstuser,seconduser)){
+            Friends friendShip = friendRepository.findByFirstUserAndSecondUser(firstuser,seconduser);
+            friendRepository.delete(friendShip);
+        } else {
+            throw new NotFriendException();
         }
 
         // 친구 추가 한 후에 온라인/오프라인 리스트 리프레쉬
