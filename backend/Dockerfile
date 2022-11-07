@@ -9,6 +9,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
 
 WORKDIR /chrome
+RUN apt-get -y update
 RUN apt-get -y install wget
 RUN apt-get -y install unzip
 RUN apt-get -y install curl
