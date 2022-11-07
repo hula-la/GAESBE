@@ -102,39 +102,7 @@ class GaeseApplicationTests {
 		System.out.println(listOperations.remove("codes",1,roomCode)); // return 1 : success
 
 	}
-	@Test
-	void createRoom(){
 
-		HashOperations<String, String, String > hashOperations = stringTemplate.opsForHash();
-//		ValueOperations<String,AlgoRoomDto> valueOperations = algoRoomDtoRedisTemplate.opsForValue();
-//		AlgoRoomDto algoRoomDto = new AlgoRoomDto(roomCode, "1:30","11",0);
-//		valueOperations.set(roomCode,algoRoomDto);
-		hashOperations.put(roomCode,"code",roomCode);
-		hashOperations.put(roomCode,"time","1:30");
-		hashOperations.put(roomCode,"tier","11");
-		hashOperations.put(roomCode,"num","0");
-
-		Map<String, String> map = hashOperations.entries(roomCode);
-		AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
-										,map.get("tier"), map.get("num"), map.get("num"));
-		System.out.println(algoRoomDto.toString()); //return
-	}
-
-	@Test
-	void getRooms(){
-		ListOperations<String,String> list = stringTemplate.opsForList();
-		List<String> roomCodeList  = list.range("algoCodes",0,-1);
-		List<AlgoRoomDto> roomList = new ArrayList<>();
-		for(String roomCode : roomCodeList){
-			HashOperations<String,String,String > hashOperations = stringTemplate.opsForHash();
-			Map<String, String> map = hashOperations.entries(roomCode);
-			AlgoRoomDto algoRoomDto = new AlgoRoomDto(map.get("code"),map.get("time")
-					,map.get("tier"), map.get("num"), map.get("no"));
-			roomList.add(algoRoomDto);
-		}
-		System.out.println(roomList.toString());
-
-	}
 	@Test
 	void getRooms1(){
 		ListOperations<String, AlgoRoomDto> roomList = algoRoomDtoRedisTemplate.opsForList();
