@@ -58,6 +58,8 @@ public class AlgoProblemService {
 //            ClassPathResource classPathResource = new ClassPathResource("./chromedriver");
 //            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
             System.setProperty("webdriver.chrome.driver","chrome/chromedriver");
+
+
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
@@ -160,6 +162,8 @@ public class AlgoProblemService {
 //            System.out.println(classPathResource.getPath());
 //            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
             System.setProperty("webdriver.chrome.driver",ChromePath);
+            String getProp = System.getProperty("webdriver.chrome.driver");
+            System.out.println(">>>>>"+getProp);
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);

@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlgoService {
 
-    @Value("${chrome-driver-path}")
-    private String ChromePath;
+//    @Value("${chrome-driver-path}")
+//    private String ChromePath;
 
     private final AlgoRepository algoRepository;
     private final UserRepository userRepository;
@@ -231,7 +231,7 @@ public class AlgoService {
         String code = hashOperations.get("bjCodes",userId+"");
         Boolean res = false;
         try{
-            System.setProperty("webdriver.chrome.driver",ChromePath);
+//            System.setProperty("webdriver.chrome.driver",ChromePath);
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
