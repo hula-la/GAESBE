@@ -7,7 +7,7 @@ COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
-
+    
 WORKDIR /usr/src
 RUN apt-get -y update
 RUN apt-get -y install wget

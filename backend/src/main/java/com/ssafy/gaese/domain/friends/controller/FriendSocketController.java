@@ -17,6 +17,7 @@ public class FriendSocketController {
 
     @MessageMapping("/friend/connect")
     public void newFriend(FriendSocketDto friendSocketDto) throws Exception{
+        System.out.println("/friend/connect 들어옴");
         friendSocketService.userEnter(friendSocketDto);
     }
 

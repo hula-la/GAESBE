@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlgoService {
 
-    @Value("${chrome-driver-path}")
+//    @Value("${chrome-driver-path}")
     private String ChromePath;
 
     private final AlgoRepository algoRepository;
