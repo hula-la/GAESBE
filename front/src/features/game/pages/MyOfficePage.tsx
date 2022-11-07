@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Level1 from '../components/Level1';
 import Level2 from '../components/Level2';
 import Level3 from '../components/Level3';
+import FriendMainPage from '../../friend/pages/FreindMainPage';
+
 
 const Friend = styled.div`
   width: 21.75%;
@@ -11,13 +13,14 @@ const Friend = styled.div`
   color: white;
 `;
 const MyOfficePage = () => {
+
   return (
     <>
       {/* <Level1 /> */}
       {/* <Level2 /> */}
       <Level3 />
       <Friend>
-        <div>친구든 뭐든 있는 부분</div>
+        <FriendMainPage/>
       </Friend>
     </>
   );
