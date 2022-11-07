@@ -6,12 +6,14 @@ import authReducer from '../features/auth/authSlice';
 import unityReducer from '../features/game/unitySlice';
 import algoReducer from '../features/algorithm/algorithmSlice';
 import typingReducer from '../features/typing/typingSlice';
+import friendReducer from '../features/friend/friendSlice'
 // rootReducers by using combineReducers
 const rootReducers = combineReducers({
   auth: authReducer,
   unity: unityReducer,
   algo: algoReducer,
   typing: typingReducer,
+  friend: friendReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();

@@ -13,7 +13,7 @@ function AlgoRoomMake() {
 
   const [form, setForm] = useState<AlgoRoomInterface>({roomCode: '', time: '30', tier: '1', num: '0', no: '0', master: userInfo.id})
   const tierList: {value: string, alt:string}[] = []
-  for (let i = 1; i < 31; i++) {
+  for (let i = 1; i < 21; i++) {
     tierList.push({value: `${i}`, alt:`티어이미지${i}`})
   }
 
