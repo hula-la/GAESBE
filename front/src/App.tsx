@@ -18,6 +18,7 @@ import CSIngamePage from './features/cs/pages/CSIngamePage';
 import { useDispatch } from 'react-redux';
 import CSResultPage from './features/cs/pages/CSResultPage';
 import MyPage from './features/game/pages/MyPage';
+import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const App = () => {
         </Route>
         <Route path="game/*" element={<CombinePage />}>
           <Route path="mypage" element={<MyPage />} />
+          <Route path="mypage/change" element={<ChangeUserInfoPage />} />
           <Route path="" element={<MyOfficePage />} />
           <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />

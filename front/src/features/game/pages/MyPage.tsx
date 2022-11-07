@@ -38,13 +38,18 @@ const MyPage = () => {
     var deleteConfirm = window.confirm('정말 삭제할거?');
     if (deleteConfirm) {
       navigate('/login');
+      localStorage.removeItem('accessToken')
       dispatch(deleteUserInfoApi);
+      console.log('지금 유저 인포', userInfo)
       // 유저 인포 널로 바꾸고
       // 엑세스 토큰 지우고
     } else {
       alert('삭제 안함');
     }
   };
+  const handleChange = () => {
+    navigate('change')
+  }
   return (
     <MyPageContainer>
       <MyCharacter>
@@ -53,7 +58,7 @@ const MyPage = () => {
           src={`/img/rank/character${userInfo.profileChar + 1}.png`}
           alt="asdf"
         />
-        {/* <button onClick={handleModal}>정보 수정</button> */}
+        <button onClick={handleChange}>정보 수정</button>
         <button onClick={handleDelete}>회원 탈퇴</button>
         <button>기록 보기</button>
       </MyCharacter>
