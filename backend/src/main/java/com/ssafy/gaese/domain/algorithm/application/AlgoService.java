@@ -28,6 +28,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -47,6 +48,8 @@ public class AlgoService {
     private final AlgoRankRedisRepository algoRankRedisRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final SocketInfo socketInfo;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
 
     public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
@@ -118,6 +121,7 @@ public class AlgoService {
         String userId = hashOperations.get(key,algoSocketDto.getSessionId());
 
         System.out.println("enterUser : " + userId);
+        System.out.println("saved "+algoSocketDto.getUserId());
         if(userId != null && userId.equals(algoSocketDto.getUserId())){
             return false;
         }else{
@@ -133,7 +137,7 @@ public class AlgoService {
     }
 
     public void leaveRoom(AlgoSocketDto algoSocketDto){
-        System.out.println("나간다");
+        System.out.println(algoSocketDto.getSessionId() + "나간다");
         HashOperations<String ,String, String > hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
 
@@ -148,11 +152,25 @@ public class AlgoService {
             zSetOperations.add(algoRankDto.getRoomCode()+"-rank", algoRankDto.getNickName(), algoRoomRedisDto.getAlgoRoomDto().getTime());
             algoRankRedisRepository.save(algoRankDto);
         }
+        System.out.println("떠날꺼임");
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
-        if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
-            changeMaster(algoSocketDto.getRoomCode());
-        }
+
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
+        if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
+            
+            changeMaster(algoSocketDto.getRoomCode());
+            System.out.println("마스터 변경");
+        }
+
+
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
+
+        List<AlgoUserDto> users = getUsers(getUserIds(algoSocketDto.getRoomCode()));
+        res.put("users",users);
+        res.put("master", getMaster(algoSocketDto.getRoomCode()));
+        simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
+
 
     }
 

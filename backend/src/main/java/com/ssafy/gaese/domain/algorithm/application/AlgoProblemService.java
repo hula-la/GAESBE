@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class AlgoProblemService {
 
 //    @Value("${chrome-driver-path}")
-    private String ChromePath;
+//    private String ChromePath;
     private final RedisTemplate<String, String> redisTemplate;
     private final AlgoRankRedisRepository algoRankRedisRepository;
     private final UserRepository userRepository;
@@ -54,8 +54,10 @@ public class AlgoProblemService {
         List<String> problems = new LinkedList<>();
         // 크롤링 설정
         try{
-            System.out.println("======크롤링 설정 시작 ========");
-            System.setProperty("webdriver.chrome.driver",ChromePath);
+//            System.out.println("======크롤링 설정 시작 ========");
+//            ClassPathResource classPathResource = new ClassPathResource("./chromedriver");
+//            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
+            System.setProperty("webdriver.chrome.driver","chrome/chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
@@ -154,7 +156,10 @@ public class AlgoProblemService {
 
     public int confirmSolve(AlgoSolveReq algoSolveReq){
         try{
-            System.setProperty("webdriver.chrome.driver",ChromePath);
+//            ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver");
+//            System.out.println(classPathResource.getPath());
+//            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
+            System.setProperty("webdriver.chrome.driver","chrome/chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);

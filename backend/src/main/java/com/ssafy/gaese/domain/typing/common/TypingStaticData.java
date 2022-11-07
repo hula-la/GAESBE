@@ -1,6 +1,5 @@
 package com.ssafy.gaese.domain.typing.common;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.HashSet;

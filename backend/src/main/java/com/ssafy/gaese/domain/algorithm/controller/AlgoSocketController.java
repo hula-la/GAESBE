@@ -34,7 +34,7 @@ public class AlgoSocketController {
     public void algoRoom(AlgoSocketDto algoSocketDto) throws Exception{
         List<String> userIds = new LinkedList<>();
         Map<String,Object> res = new HashMap<>();
-
+        System.out.println("===== 들어옴==== ");
         System.out.println(algoSocketDto.getType());
         if(algoSocketDto.getType() == AlgoSocketDto.Type.ENTER){
             if(algoService.enterRoom(algoSocketDto)){
