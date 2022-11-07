@@ -2,7 +2,6 @@ package com.ssafy.gaese.domain.typing.common;
 
 
 import com.ssafy.gaese.domain.typing.dto.TypingUser;
-import com.ssafy.gaese.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

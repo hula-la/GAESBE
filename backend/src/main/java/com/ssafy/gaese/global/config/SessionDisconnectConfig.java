@@ -6,6 +6,7 @@ import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
+import com.ssafy.gaese.domain.typing.application.TypingRoomApp;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class SessionDisconnectConfig {
 
+    private final TypingRoomApp typingRoomApp;
 
     private final SocketInfo socketInfo;
 
@@ -39,7 +41,8 @@ public class SessionDisconnectConfig {
         {
             //ex
             case "Typing":
-
+                typingRoomApp.exitUser(info[3]);
+                socketInfo.delSocketInfo(sessionId);
                 break;
             case "Cs":
                 CsSocketDto csSocketDto = CsSocketDto.builder()

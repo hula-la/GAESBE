@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.friends.controller;
 
 import com.ssafy.gaese.domain.friends.application.FriendService;
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.dto.FriendRequestDto;
 import com.ssafy.gaese.domain.user.dto.UserDto;
@@ -26,11 +27,12 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+    private final FriendSocketService friendSocketService;
 
     @GetMapping("/add")
     public ResponseEntity<?> addUser(@AuthenticationPrincipal CustomUserDetails userDetails,
                                      @RequestParam("friendId")Long friendId) throws NullPointerException{
-        friendService.saveFriend(userDetails.getId(),friendId);
+        friendSocketService.saveFriend(userDetails.getId(),friendId);
         return ResponseEntity.ok("Friend added successfully");
     }
 
@@ -42,18 +44,18 @@ public class FriendController {
 
     @GetMapping("/request")
     public ResponseEntity<Boolean> requestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                                         @RequestParam("friendId")Long friendId) {
-        boolean isSuccess = friendService.requestFriend(userDetails.getId(),friendId);
+                                                         @RequestParam("nickname")String nickname) {
+        boolean isSuccess = friendService.requestFriend(userDetails.getId(),nickname);
         return ResponseEntity.ok().body(isSuccess);
     }
 
     @GetMapping("/request/list")
-    public ResponseEntity<List<FriendRequestDto>> requestFriend(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<List<FriendRequestDto>> requestFriendList(@AuthenticationPrincipal CustomUserDetails userDetails) {
         List<FriendRequestDto> friendRequestDtoList = friendService.getRequestFriend(userDetails.getId());
         return ResponseEntity.ok().body(friendRequestDtoList);
     }
     @DeleteMapping("/request")
-    public ResponseEntity<List<FriendRequestDto>> delrequestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<List<FriendRequestDto>> delRequestFriend(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                                    @RequestParam("reqId")Long reqId) {
         List<FriendRequestDto> friendRequestDtoList = friendService.delRequest(userDetails.getId(),reqId);
         return ResponseEntity.ok().body(friendRequestDtoList);

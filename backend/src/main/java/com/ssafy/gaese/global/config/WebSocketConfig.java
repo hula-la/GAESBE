@@ -15,7 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
    @Override
     // 클라이언트가 메시지를 구독할 endpoint를 정의합니다.
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic","/algo","/cs");
+        config.enableSimpleBroker("/topic","/algo","/cs","/friend");
         config.setApplicationDestinationPrefixes("/api");
     }
 
@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // connection을 맺을때 CORS 허용합니다.
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws","/taja","/tmp")//소켓 연결용 uri
-            .setAllowedOriginPatterns("http://localhost"+"*","https://k7e104.p.ssafy.io"+"*","wss://k7e104.p.ssafy.io"+"*")//cros 허용 url
+            .setAllowedOriginPatterns("*")//cros 허용 url
             .withSockJS();
     }
 }

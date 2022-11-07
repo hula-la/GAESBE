@@ -1,15 +1,13 @@
 package com.ssafy.gaese.domain.typing.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class EnterParamDto {
         Long id;
         String lang;

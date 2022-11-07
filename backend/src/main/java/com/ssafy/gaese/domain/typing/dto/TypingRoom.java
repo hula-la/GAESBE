@@ -1,6 +1,5 @@
 package com.ssafy.gaese.domain.typing.dto;
 
-import com.ssafy.gaese.domain.typing.common.TypingUserData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

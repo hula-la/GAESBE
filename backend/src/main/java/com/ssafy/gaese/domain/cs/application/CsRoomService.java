@@ -73,16 +73,18 @@ public class CsRoomService {
                     null);
 
             log.debug(csSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에 입장하였습니다.");
-            res.put("msg",csSocketDto.getUserId()+"님이 접속하셨습니다.");
+            res.put("enter",csSocketDto.getUserId());
         }
         // 방 나가기
         else if(csSocketDto.getType() == CsSocketDto.Type.LEAVE){
             roomDto = leaveRoom(csSocketDto);
             log.debug(csSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에서 나갔습니다.");
-            res.put("msg",csSocketDto.getUserId()+"님이 나가셨습니다.");
+            res.put("exit",csSocketDto.getUserId());
 
         }
 
+        // enter exit 정보를 방 전원에게 보내줌
+//        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
         // 방 코드를 개인에게 전달
         roomResByUser.put("room",roomDto.getCode());
@@ -219,12 +221,14 @@ public class CsRoomService {
         // 바뀐 방 정보로 저장
         CsRoomDto saved = csRoomRedisRepository.save(csRoom);
 
+        getUserInRoom(saved.getCode());
         return saved;
     }
 
     // 방 삭제 (게임 끝나면 방 삭제)
     public boolean deleteRoom(String roomId){
         csRoomRedisRepository.deleteById(roomId);
+
         return true;
     }
 

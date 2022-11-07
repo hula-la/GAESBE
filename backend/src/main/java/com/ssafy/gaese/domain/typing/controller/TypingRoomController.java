@@ -9,6 +9,7 @@ import com.ssafy.gaese.domain.typing.dto.*;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -30,13 +31,14 @@ public class TypingRoomController {
     @Autowired
     TypingRoomApp typingRoomApp;
 
-
     //나중에 요청해서 service에 기능 만들어서 쓰는게 좋을듯함
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     IsPlay isPlay;
+    @Autowired
+    SocketInfo socketInfo;
 
     private final SimpMessageSendingOperations sendingOperations;
 
@@ -46,6 +48,11 @@ public class TypingRoomController {
 
     @MessageMapping("/typing/enter")
     public void enter(EnterParamDto param) throws InterruptedException {
+
+        //세션 id , 와 각종 정보들 매칭
+        socketInfo.setSocketInfo( param.getSocketId(), param.getId().toString(),param.getRoomCode(),"Typing",param.getNickName());
+        System.out.println("\n  @MessageMapping ");
+        System.out.println(param);
         EnterResultDto resultDto = new EnterResultDto();
         //방 만드는 경우 사용할 예정
         TypingRoom typingRoom = new TypingRoom();
@@ -54,6 +61,8 @@ public class TypingRoomController {
 
         //이미 플레이 중인지 체크
         //true 면 플레이 중인거임
+        System.out.println("플레이 중인지 체크");
+        System.out.println(isPlay.isPlayCheck(param.getNickName()));
         if(isPlay.isPlayCheck(param.getNickName()))
         {
             resultDto.setPlay(false);
@@ -61,9 +70,12 @@ public class TypingRoomController {
             //이거 http 정해야함
 //            return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
             sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
+            return;
         }
 
-
+        isPlay.isPlaySet(param.getNickName());
+        System.out.println("(isPlay.isPlayCheck(param.getNickName())");
+        System.out.println((isPlay.isPlayCheck(param.getNickName())));
         resultDto.setPlay(true);
         resultDto.setRoomCodeCheck(true);
         resultDto.setUsers(new ArrayList<EnterUserDto>());
@@ -73,14 +85,22 @@ public class TypingRoomController {
         User userE = userRepository.findById(param.getId())
                 .orElseThrow((()->new UserNotFoundException()));
 
+        System.out.println("db에서 가져온정보");
+        System.out.println(userE);
+
+
         typingUser.setImgUrl(userE.getImg());
         typingUser.setNickName(param.getNickName());
         typingUser.setSocketId(param.getSocketId());
         typingUserApp.setUser(typingUser);
 
         //친선전 참가하는 경우, null이 아니면 친선전참가
-        if(param.getRoomCode()!=null)
+
+        System.out.println("getRoomcode");
+        System.out.println(param.getRoomCode());
+        if(param.getRoomCode()!=null && param.getRoomCode()!="")
         {
+            System.out.println("param.getRoomCode()!=null\n\n");
             resultDto.setRoomNo(typingRoomApp.getRoomCodeToRoomNo(param.getRoomCode()));
             resultDto.setRoomCode(param.getRoomCode());
             //roomCode가 잘못된 코드인 경우
@@ -89,9 +109,10 @@ public class TypingRoomController {
                 resultDto.setRoomCodeCheck(false);
 //                return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
                 sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
+                return;
             }
 
-            typingRoomApp.enterUser(typingUser,resultDto.getRoomCode());
+            typingRoomApp.enterUser(typingUser,resultDto.getRoomCode(),param.getLang());
 
 
 
@@ -100,6 +121,7 @@ public class TypingRoomController {
         //친선전 만드는 경우 true 면 방생성
         else if(param.isCreat())
         {
+
             //중복코드 생성 될 수도있음 나중에 처리 해줘야함
             //룸코드 생성
             typingRoom.setRoomCode(TypingStaticData.roomCodeMaker());
@@ -115,22 +137,23 @@ public class TypingRoomController {
 
             //방 만든 다음 유저 넣어야 유저 리스트에 추가됨
             typingRoomApp.makeRoom(typingRoom);
-            typingRoomApp.enterUser(typingUser, resultDto.getRoomCode());
+            typingRoomApp.enterUser(typingUser, resultDto.getRoomCode(),param.getLang());
         }
         //랜덤매칭 하는 경우
         else
         {
-
-            typingRoomApp.enterUser(typingUser, null);
-
+            System.out.println("\n\n\n\n랜매 하는 경우로 들어왔음 \n\n\n\n");
+            typingRoomApp.enterUser(typingUser, null,param.getLang());
+            resultDto.setRoomNo(typingRoomApp.getRoomNoToNickName(param.getNickName()));
         }
 
         typingUserApp.setUser(typingUser);
 
-        List<String> nickList = typingRoomApp.getUserList(resultDto.getRoomNo());
+        List<String> nickList = Arrays.asList(typingRoomApp.getVar(resultDto.getRoomNo(),"users" ).split(","));
 
         for (String nick: nickList)
         {
+            System.out.println("nick : "+nick);
             EnterUserDto eud = new EnterUserDto();
             eud.setImgUrl(typingUserApp.getVar(nick,"imgUrl"));
             eud.setNickName(typingUserApp.getVar(nick,nick));
@@ -164,7 +187,7 @@ public class TypingRoomController {
 
 
     @MessageMapping("/typing/check")
-    public void ready(CheckParamDto paramDto) throws Exception {
+    public void typingCheck(CheckParamDto paramDto) throws Exception {
 
 
         ScoreResultDto resultDto = new ScoreResultDto();
@@ -176,7 +199,7 @@ public class TypingRoomController {
         String[] contents = content.split("\n");
         int contentLen = content.length()-(contents.length-1)*2;
         int startTime =Integer.parseInt(typingRoomApp.getVar(paramDto.getRoomNo(),"startTime"));
-        List<String> nickList = typingRoomApp.getUserList(paramDto.getRoomNo());
+        List<String> nickList = Arrays.asList(typingRoomApp.getVar(paramDto.getRoomNo(),"users" ).split(","));
 
         boolean endCheck =false;
         int maxProgress =0;

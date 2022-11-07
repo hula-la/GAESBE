@@ -11,10 +11,16 @@ import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ReactiveRedisOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,12 +45,16 @@ public class TypingEnterController {
 	@Autowired
 	IsPlay isPlay;
 
+	@Autowired
+	StringRedisTemplate redisTemplate;
+
 	private final SimpMessageSendingOperations sendingOperations;
 
 
 
 
 
+/*
 	@PostMapping("/enter")
 	public ResponseEntity<EnterResultDto> enter(@RequestBody EnterParamDto param)
 	{
@@ -80,7 +90,7 @@ public class TypingEnterController {
 		typingUserApp.setUser(typingUser);
 
 		//친선전 참가하는 경우, null이 아니면 친선전참가
-		if(param.getRoomCode()!=null)
+		if(param.getRoomCode()!=null &&param.getRoomCode()!="")
 		{
 			resultDto.setRoomNo(typingRoomApp.getRoomCodeToRoomNo(param.getRoomCode()));
 			resultDto.setRoomCode(param.getRoomCode());
@@ -91,7 +101,7 @@ public class TypingEnterController {
 				return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
 			}
 
-			typingRoomApp.enterUser(typingUser,resultDto.getRoomCode());
+			typingRoomApp.enterUser(typingUser,resultDto.getRoomCode(),param.getLang());
 
 
 
@@ -111,21 +121,22 @@ public class TypingEnterController {
 			resultDto.setRoomNo(param.getSocketId());
 			typingRoom.setRoomNo(param.getSocketId());
 			typingRoom.setLang(param.getLang());
-			typingRoom.setStartTime(TypingStaticData.timeMaker());
+			//굳이 여기서 넣을 이유가 없음
+//			typingRoom.setStartTime(TypingStaticData.timeMaker());
 
 			//방 만든 다음 유저 넣어야 유저 리스트에 추가됨
 			typingRoomApp.makeRoom(typingRoom);
-			typingRoomApp.enterUser(typingUser, resultDto.getRoomCode());
+			typingRoomApp.enterUser(typingUser, resultDto.getRoomCode(),param.getLang());
 		}
 		//랜덤매칭 하는 경우
 		else
 		{
 
-			typingRoomApp.enterUser(typingUser, null);
+			typingRoomApp.enterUser(typingUser, null,param.getLang());
 
 		}
 
-		typingUserApp.setUser(typingUser);
+//		typingUserApp.setUser(typingUser);
 
 		List<String> nickList = typingRoomApp.getUserList(resultDto.getRoomNo());
 
@@ -151,60 +162,61 @@ public class TypingEnterController {
 	}
 
 
+*/
 
 
 
-//	@PostMapping("/test")
-//	public ResponseEntity<String> test()
-//	{
-//
-////		TypingUser resultDto = new TypingUser();
-////		final ListOperations<String, String> stringStringListOperations = redisTemplate.opsForList();
-//		SetOperations<String, ListOperations<String, String>> SetOperations = redisTemplate.opsForSet();
-////		redisTemplate.opsForList();
-//		HashOperations<String, String, List<String >> hashOperations
-//				= redisTemplate.opsForHash();
-//
-//		String hashKey ="typing";
-//
-//		List<TypingUser> users = new ArrayList<>();
-//		List<String> strL = new ArrayList<>();
-//		strL.add("test");
-//		strL.add("ge");
-//		TypingUser tu = new TypingUser();
-//		tu.setNickName("a111a");
-//		users.add(tu);
-//		String pre = "UserList";
-//		typingUserApp.userDel("tmp");
-//		hashOperations.put("typing", hashKey,strL);
-//		hashOperations.put("typing", hashKey,strL);
-//		return new ResponseEntity<String>("goot", HttpStatus.OK);
-//	}
-//
-//	@PostMapping("/test2")
-//	public ResponseEntity<String> test2()
-//	{
-//		HashOperations<String, String, List<String >> SSLhashOperations
-//				= redisTemplate.opsForHash();
-//
-//
-//		List<String> hello = SSLhashOperations.get("typing", "typing");
-//
-//		System.out.println(hello);
-//
-//		return new ResponseEntity<String>(hello.toString(), HttpStatus.OK);
-//	}
-//	@PostMapping("/test3")
-//	public ResponseEntity<String> test3()
-//	{
-//		isPlay.isPlaySet("test");
-//		return new ResponseEntity<String>("test", HttpStatus.OK);
-//	}
-//	@PostMapping("/test4")
-//	public ResponseEntity<String> test4()
-//	{
-//		Boolean b =isPlay.isPlayCheck("test");
-//		return new ResponseEntity<String>(b.toString(), HttpStatus.OK);
-//	}
+	@PostMapping("/test")
+	public ResponseEntity<String> test()
+	{
+
+//		TypingUser resultDto = new TypingUser();
+//		final ListOperations<String, String> stringStringListOperations = redisTemplate.opsForList();
+//		redisTemplate.opsForList();
+		HashOperations<String, String, List<String >> SSLhashOperations
+				= redisTemplate.opsForHash();
+
+		String hashKey ="typing";
+
+		List<String> strL = new ArrayList<>();
+		strL.add("test");
+		strL.add("ge");
+		typingUserApp.userDel("tmp");
+		SSLhashOperations.put("typing", hashKey,strL);
+		return new ResponseEntity<String>("goot", HttpStatus.OK);
+	}
+
+	@PostMapping("/test2")
+	public ResponseEntity<String> test2()
+	{
+		HashOperations<String, String, List<String >> SSLhashOperations
+				= redisTemplate.opsForHash();
+
+		String hashKey ="typing";
+		List<String> hello = SSLhashOperations.get("typing", hashKey);
+
+		System.out.println(hello);
+		hello.add("test2");
+		SSLhashOperations.put("typing", hashKey,hello);
+		return new ResponseEntity<String>(hello.toString(), HttpStatus.OK);
+	}
+	@PostMapping("/test3")
+	public ResponseEntity<String> test3()
+	{
+		System.out.println("test3");
+		System.out.println("test3");
+		System.out.println("test3");
+		System.out.println("test3");
+		System.out.println("test3");
+
+		isPlay.isPlaySet("test");
+		return new ResponseEntity<String>("test", HttpStatus.OK);
+	}
+	@PostMapping("/test4")
+	public ResponseEntity<String> test4()
+	{
+		Boolean b =isPlay.isPlayCheck("test");
+		return new ResponseEntity<String>(b.toString(), HttpStatus.OK);
+	}
 }
 
