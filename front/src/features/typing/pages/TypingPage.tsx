@@ -5,7 +5,6 @@ function TypingPage() {
   return (
     <>
       <Routes>
-        {/* <Route path="" element={<TypingGamePage />} /> */}
         <Route path="" element={<TypingMainPage />} />
         <Route path="/enter" element={<TypingGamePage />} />
       </Routes>
