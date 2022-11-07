@@ -54,10 +54,10 @@ public class AlgoProblemService {
         List<String> problems = new LinkedList<>();
         // 크롤링 설정
         try{
-            System.out.println("======크롤링 설정 시작 ========");
-            ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver");
-            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
-            System.out.println(classPathResource.getPath());
+//            System.out.println("======크롤링 설정 시작 ========");
+//            ClassPathResource classPathResource = new ClassPathResource("./chromedriver");
+//            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
+            System.setProperty("webdriver.chrome.driver","./chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
@@ -156,10 +156,10 @@ public class AlgoProblemService {
 
     public int confirmSolve(AlgoSolveReq algoSolveReq){
         try{
-            ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver");
-            System.out.println(classPathResource.getPath());
-            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
-//            System.setProperty("webdriver.chrome.driver",ChromePath);
+//            ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver");
+//            System.out.println(classPathResource.getPath());
+//            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
+            System.setProperty("webdriver.chrome.driver","./chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);

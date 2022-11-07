@@ -121,6 +121,7 @@ public class AlgoService {
         String userId = hashOperations.get(key,algoSocketDto.getSessionId());
 
         System.out.println("enterUser : " + userId);
+        System.out.println("saved "+algoSocketDto.getUserId());
         if(userId != null && userId.equals(algoSocketDto.getUserId())){
             return false;
         }else{
