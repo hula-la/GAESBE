@@ -84,7 +84,7 @@ public class CsRoomService {
         }
 
         // enter exit 정보를 방 전원에게 보내줌
-        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
+//        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
         // 방 코드를 개인에게 전달
         roomResByUser.put("room",roomDto.getCode());
@@ -221,12 +221,14 @@ public class CsRoomService {
         // 바뀐 방 정보로 저장
         CsRoomDto saved = csRoomRedisRepository.save(csRoom);
 
+        getUserInRoom(saved.getCode());
         return saved;
     }
 
     // 방 삭제 (게임 끝나면 방 삭제)
     public boolean deleteRoom(String roomId){
         csRoomRedisRepository.deleteById(roomId);
+
         return true;
     }
 
