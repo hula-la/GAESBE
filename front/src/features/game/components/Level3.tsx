@@ -34,11 +34,11 @@ const Coin = styled.img`
   }
 `;
 const Note = styled.img`
-  width: 5%;
-  height: 7%;
+  width: 3%;
+  height: 5%;
   position: absolute;
-  bottom: 20vh;
-  left: 40vw;
+  bottom: 47vh;
+  left: 39vw;
   :hover {
     transform: scale(1.3);
     transition: 0.4s ease-in-out;

@@ -9,9 +9,9 @@ const Unity = styled.div`
   background-color: #232323;
   background-image: url(/img/MyOffice/level4.png);
   background-repeat: no-repeat;
-  background-size: 90%;
+  background-size: 100%;
   /* background-size: 70%; */
-  background-position-y: 50%;
+  background-position-y: 40%;
 `;
 const MyComputer = styled.img`
   position: absolute;

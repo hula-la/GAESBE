@@ -11,6 +11,7 @@ const Unity = styled.div`
   background-repeat: no-repeat;
   background-size: 90%;
   /* background-size: 70%; */
+  background-position-x: 50%;
   background-position-y: 50%;
 `;
 const MyComputer = styled.img`
@@ -18,7 +19,7 @@ const MyComputer = styled.img`
   height: 15%;
   position: absolute;
   bottom: 39vh;
-  right: 36vw;
+  right: 33vw;
   :hover {
     transform: scale(1.3);
     transition: 0.4s ease-in-out;
@@ -39,7 +40,7 @@ const Note = styled.img`
   width: 5%;
   height: 7%;
   position: absolute;
-  bottom: 20vh;
+  bottom: 44vh;
   left: 43vw;
   :hover {
     transform: scale(1.3);
@@ -51,7 +52,7 @@ const Calender = styled.img`
   height: 12%;
   position: absolute;
   bottom: 43vh;
-  right: 41vw;
+  right: 38vw;
   :hover {
     transform: scale(1.3);
     transition: 0.4s ease-in-out;

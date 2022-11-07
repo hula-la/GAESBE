@@ -11,14 +11,15 @@ const Unity = styled.div`
   background-repeat: no-repeat;
   background-size: 90%;
   /* background-size: 70%; */
+  background-position-x: 50%;
   background-position-y: 50%;
 `;
 const MyComputer = styled.img`
   /* width: 7%;
   height: 15%; */
   position: absolute;
-  bottom: 25vh;
-  left: 35vw;
+  bottom: 34vh;
+  left: 37vw;
   :hover {
     transform: scale(1.3);
     transition: 0.4s ease-in-out;
@@ -29,29 +30,29 @@ const Coin = styled.img`
   height: 10%;
   position: absolute;
   bottom: 42vh;
-  left: 43vw;
+  left: 45vw;
   :hover {
     transform: scale(1.3);
     transition: 0.4s ease-in-out;
   }
 `;
 const Note = styled.img`
-  width: 3%;
-  height: 5%;
+  width: 4%;
+  height: 8%;
   position: absolute;
-  bottom: 23vh;
-  /* left: 25vw; */
+  bottom: 35vh;
+  right: 36vw;
   :hover {
     transform: scale(1.3);
     transition: 0.4s ease-in-out;
   }
 `;
 const Calender = styled.img`
-  width: 5%;
-  height: 12%;
+  /* width: 5%;
+  height: 12%; */
   position: absolute;
-  bottom: 47vh;
-  left: 37vw;
+  bottom: 45vh;
+  right: 35vw;
   /* bottom: 24vh;
   right: 31vw; */
   :hover {

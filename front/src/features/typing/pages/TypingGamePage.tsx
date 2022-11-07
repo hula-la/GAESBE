@@ -45,14 +45,13 @@ function TypingGamePage() {
         id: userInfo.id,
         nickName: userInfo.nickname,
         socketId: socket._transport.url.slice(-18, -10),
-        roomCode: '',
+        roomCode: null,
         isCreat: false,
       }),
     );
     console.log('보냄?');
-    client.subscribe('/topic/typing/4/enter', (res) => {
-      // client.subscribe(`/typing/${userInfo.userId}/enter`, (res) => {
-      console.log('메세지 옴 ');
+    // client.subscribe('/topic/typing/4/enter', (res) => {
+    client.subscribe(`/topic/typing/${userInfo.id}/enter`, (res) => {
       console.log('asdfasdfas', JSON.parse(res.body));
     });
     // console.log(client);
