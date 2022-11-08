@@ -7,10 +7,10 @@ import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
-import com.ssafy.gaese.domain.typing.application.TypingRoomApp;
+import com.ssafy.gaese.domain.typing2.application.Typing2RoomService;
+import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
@@ -24,6 +24,7 @@ public class SessionDisconnectConfig {
     private final SocketInfo socketInfo;
 
     private final CsRoomService csRoomService;
+    private final Typing2RoomService typingRoomService2;
     private final FriendSocketService friendSocketService;
 
     private final AlgoService algoService;
@@ -55,6 +56,16 @@ public class SessionDisconnectConfig {
 
                 csRoomService.enterOrLeave(csSocketDto);
                 csRoomService.deleteRecord(info[1],Long.parseLong(info[0]));
+                break;
+            case "Typing2":
+                TypingSocketDto typingSocketDto = TypingSocketDto.builder()
+                        .type(TypingSocketDto.Type.LEAVE)
+                        .userId(Long.parseLong(info[0]))
+                        .roomCode(info[1])
+                        .sessionId(sessionId)
+                        .build();
+
+                typingRoomService2.enterOrLeave(typingSocketDto);
                 break;
             case "Algo" :
                 AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
