@@ -205,9 +205,9 @@ public class CsService {
             for (int j = 0; j < rankEntryList.size(); j++) {
                 Long userId = rankEntryList.get(j).getKey();
                 User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
-                rankList[i][0] = userId;
-                rankList[i][1] = user.getNickname();
-                rankList[i][2] = rankEntryList.get(j).getValue();
+                rankList[j][0] = userId;
+                rankList[j][1] = user.getNickname();
+                rankList[j][2] = rankEntryList.get(j).getValue();
             }
 
 
