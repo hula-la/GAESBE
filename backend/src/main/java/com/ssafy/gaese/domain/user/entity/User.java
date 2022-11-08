@@ -58,6 +58,9 @@ public class User {
     @ColumnDefault("0")
     private int profileChar;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Attendance> attendanceList;
+
     @OneToMany(mappedBy = "firstUser", cascade = CascadeType.REMOVE)
     private Set<Friends> firstUser;
 

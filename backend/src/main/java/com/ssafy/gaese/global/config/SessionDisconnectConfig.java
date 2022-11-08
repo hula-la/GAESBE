@@ -54,6 +54,7 @@ public class SessionDisconnectConfig {
                         .build();
 
                 csRoomService.enterOrLeave(csSocketDto);
+                csRoomService.deleteRecord(info[1],Long.parseLong(info[0]));
                 break;
             case "Algo" :
                 AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
