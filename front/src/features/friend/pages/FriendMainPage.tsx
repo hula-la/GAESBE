@@ -10,17 +10,13 @@ function FriendMainPage() {
   const { friends } = useSelector((state:any) => state.friend)
   const { modal } = useSelector((state:any) => state.friend)
 
-  const handleModal = (e:string) => {
-    dispatch(friendActions.handleModal(e))
-  }
-  const handleCloseModal = () => {
-    dispatch(friendActions.handleModal(null))
+  const handleModal = () => {
+    dispatch(friendActions.handleModal())
   }
   return <>
     <h2>친구목록</h2>
-    <button onClick={() => handleModal('toYou')}>친구신청하기</button>
-    <button onClick={() => handleModal('toMe')}>요청목록</button>
-    {modal && <FriendModal handleCloseModal={handleCloseModal} />}
+    <button onClick={handleModal}>친구 관리하기</button>
+    {modal && <FriendModal handleModal={handleModal} />}
     {friends ? <FriendList /> :
     <div>친구창이 조용합니다...</div>}
   </>

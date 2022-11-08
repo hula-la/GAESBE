@@ -6,7 +6,6 @@ function RequestToMeItem({requestListItem, fetchRequestToMe}: any) {
   const requestDelete = async () => {
     try {
       const res = await requestToMeDelete(requestListItem.friendReqId)
-      console.log(res)
       if (res.status === 200) {
         fetchRequestToMe()
       }
@@ -17,8 +16,7 @@ function RequestToMeItem({requestListItem, fetchRequestToMe}: any) {
 
   const requestAccept = async () => {
     try {
-      const res = await requestToMeAccept(requestListItem.requestUser.friendId)
-      console.log(res)
+      const res = await requestToMeAccept(requestListItem.requestUser.id)
       if (res.status === 200) {
         fetchRequestToMe()
       }

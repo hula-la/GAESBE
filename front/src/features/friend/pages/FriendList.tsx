@@ -11,13 +11,13 @@ function FriendList() {
     {friends.online && <>
       <h3>온라인 친구입니다</h3>
       {friends.online.map((onlineFriend: FriendInterface) => {
-        return <FriendListItem key={onlineFriend.id} friend={onlineFriend} />
+        return <FriendListItem key={onlineFriend.id} type='online' friend={onlineFriend} />
       })
     }</>}
     {friends.offline && <>
       <h3>오프라인 친구입니다</h3>
       {friends.offline.map((offlineFriend: FriendInterface) => {
-        return <FriendListItem key={offlineFriend.id} friend={offlineFriend} />
+        return <FriendListItem key={offlineFriend.id} type='offline' friend={offlineFriend} />
       })
     }</>}
   </>

@@ -11,18 +11,20 @@ function* requestFriendSaga(action: Action<string>) {
     if (res.status === 200) {
       yield put(friendActions.requestFriendFinish())
       yield alert(`${action.payload}님에게 친구신청을 하였습니다`)
-      yield put(friendActions.handleModal(null))
-    } else if (res.status === 480) {
-      yield alert(`${action.payload}님은 존재하지 않습니다`)
-    } else if (res.status === 450) {
-      yield alert('나 자신은 이미 나의 평생 친구입니다')
-    } else if (res.status === 486) {
-      yield alert('이미 친구 신청을 보낸 상대입니다')
-    } else if (res.status === 487) {
-      yield alert('이미 친구 신청을 보낸 상대입니다')
+      yield put(friendActions.setIsSuccess(true))
     }
-  } catch (error) {
-    console.log(error)
+  } catch (error:any) {
+    if (error.response.status === 480) {
+      yield alert(`${action.payload}님은 존재하지 않습니다`)
+    } else if (error.response.status === 450) {
+      yield alert('나 자신은 이미 나의 평생 친구입니다')
+    } else if (error.response.status === 486) {
+      yield alert('이미 친구 신청을 보낸 상대입니다')
+    } else if (error.response.status === 487) {
+      yield alert('당신에게 요청을 보낸 상대입니다')
+    } else if (error.response.status === 445) {
+      yield alert('이미 친구입니다')
+    }
   }
 }
 
