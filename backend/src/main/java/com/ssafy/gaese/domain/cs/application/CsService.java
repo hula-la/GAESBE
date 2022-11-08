@@ -14,12 +14,13 @@ import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -283,8 +284,8 @@ public class CsService {
         roomDto.getPlayers().forEach((k,v)->{
             CsRecord csRecord = CsRecord.builder()
                     .user(userRepository.findById(Long.valueOf(v)).orElseThrow(() -> new UserNotFoundException()))
-                    .date(LocalDate.now())
                     .ranks(rankByPlayer.get(v))
+                    .date(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                     .build();
             CsRecord saved = csRecordRepository.save(csRecord);
 

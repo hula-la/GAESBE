@@ -5,6 +5,7 @@ import com.ssafy.gaese.domain.friends.exception.AlreadyFriendReqToMeException;
 import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.friends.exception.NotFriendException;
 import com.ssafy.gaese.domain.friends.exception.ReqToMeException;
+import com.ssafy.gaese.domain.user.exception.AlreadyCheckException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.security.error.ErrorCode;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(value = {AlreadyFriendException.class})
     public ResponseEntity<Object> handleAlreadyFriendException(){
         ErrorCode ec = ErrorCode.ALREADYFRIEND_TOKEN;
+        return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
+    }
+    @ExceptionHandler(value = {AlreadyCheckException.class})
+    public ResponseEntity<Object> handleAlreadyCheckException(){
+        ErrorCode ec = ErrorCode.ALREADYCHECK_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
 

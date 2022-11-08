@@ -13,7 +13,7 @@ public class CsRecordDto {
 
     private Long csRecordId;
 
-    private LocalDate date;
+    private String date;
 
     private String correctCnt;
 
