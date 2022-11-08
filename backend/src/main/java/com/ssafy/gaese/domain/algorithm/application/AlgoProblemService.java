@@ -173,11 +173,11 @@ public class AlgoProblemService {
 //            String getProp = System.getProperty("webdriver.chrome.driver");
 //            System.out.println(">>>>>"+getProp);
             WebDriverManager.chromedriver().setup();
-//            WebDriverManager.chromedriver().browserInDocker().create();
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.addArguments("--no-sandbox");
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
+            chromeOptions.addArguments("--disable-dev-shm-usage");
             ChromeDriver driver = new ChromeDriver(chromeOptions);
 //            ChromeOptions options = new ChromeOptions();
 //            options.addArguments("headless"); // 창 없이 크롤링
