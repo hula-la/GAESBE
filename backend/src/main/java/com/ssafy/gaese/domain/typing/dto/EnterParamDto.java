@@ -4,7 +4,7 @@ package com.ssafy.gaese.domain.typing.dto;
 import lombok.*;
 
 @Getter
-@Setter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

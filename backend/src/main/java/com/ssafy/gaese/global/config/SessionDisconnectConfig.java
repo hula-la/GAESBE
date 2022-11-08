@@ -1,6 +1,7 @@
 package com.ssafy.gaese.global.config;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
+import com.ssafy.gaese.domain.typing.service.TypingRoomService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
@@ -41,7 +42,7 @@ public class SessionDisconnectConfig {
         {
             //ex
             case "Typing":
-                typingRoomApp.exitUser(info[3]);
+                typingRoomService.exitRoom(info[3]);
                 socketInfo.delSocketInfo(sessionId);
                 break;
             case "Cs":

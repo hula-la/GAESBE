@@ -2,17 +2,25 @@ package com.ssafy.gaese.domain.typing.dto;
 
 
 import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
+
+import javax.persistence.Id;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@RedisHash("TypingUser")
 public class TypingUser {
+
+
+    @Id
+    String nickName;
+
 
     Long id;
 
-    String nickName;
     String imgUrl;
     String socketId;
 

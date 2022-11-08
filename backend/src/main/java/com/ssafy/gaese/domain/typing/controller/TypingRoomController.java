@@ -6,6 +6,9 @@ import com.ssafy.gaese.domain.typing.application.TypingRoomApp;
 import com.ssafy.gaese.domain.typing.application.TypingUserApp;
 import com.ssafy.gaese.domain.typing.common.TypingStaticData;
 import com.ssafy.gaese.domain.typing.dto.*;
+import com.ssafy.gaese.domain.typing.repository.TypingRoomRepository;
+import com.ssafy.gaese.domain.typing.service.TypingRoomService;
+import com.ssafy.gaese.domain.typing.service.TypingUserService;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -25,15 +28,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TypingRoomController {
 
-    @Autowired
-    TypingUserApp typingUserApp;
-
-    @Autowired
-    TypingRoomApp typingRoomApp;
-
     //나중에 요청해서 service에 기능 만들어서 쓰는게 좋을듯함
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TypingRoomService typingRoomService;
+    @Autowired
+    TypingUserService typingUserService;
 
     @Autowired
     IsPlay isPlay;
@@ -49,9 +50,13 @@ public class TypingRoomController {
     @MessageMapping("/typing/enter")
     public void enter(EnterParamDto param) throws InterruptedException {
 
+
+
         //세션 id , 와 각종 정보들 매칭
         socketInfo.setSocketInfo( param.getSocketId(), param.getId().toString(),param.getRoomCode(),"Typing",param.getNickName());
-        System.out.println("\n  @MessageMapping ");
+
+
+        System.out.println("\n  @MessageMapping /typing/enter   param 확인");
         System.out.println(param);
         EnterResultDto resultDto = new EnterResultDto();
         //방 만드는 경우 사용할 예정
@@ -59,6 +64,7 @@ public class TypingRoomController {
 
         TypingUser typingUser = new TypingUser();
 
+        String roomNo="";
         //이미 플레이 중인지 체크
         //true 면 플레이 중인거임
         System.out.println("플레이 중인지 체크");
@@ -76,10 +82,11 @@ public class TypingRoomController {
         isPlay.isPlaySet(param.getNickName());
         System.out.println("(isPlay.isPlayCheck(param.getNickName())");
         System.out.println((isPlay.isPlayCheck(param.getNickName())));
+
         resultDto.setPlay(true);
         resultDto.setRoomCodeCheck(true);
         resultDto.setUsers(new ArrayList<EnterUserDto>());
-
+        List<TypingUser> userList;
 
 
         User userE = userRepository.findById(param.getId())
@@ -88,35 +95,37 @@ public class TypingRoomController {
         System.out.println("db에서 가져온정보");
         System.out.println(userE);
 
-
+        typingUser.setId(param.getId());
         typingUser.setImgUrl(userE.getImg());
         typingUser.setNickName(param.getNickName());
         typingUser.setSocketId(param.getSocketId());
-        typingUserApp.setUser(typingUser);
 
-        //친선전 참가하는 경우, null이 아니면 친선전참가
+
 
         System.out.println("getRoomcode");
         System.out.println(param.getRoomCode());
+        //친선전 참가하는 경우
         if(param.getRoomCode()!=null && param.getRoomCode()!="")
         {
+
             System.out.println("param.getRoomCode()!=null\n\n");
-            resultDto.setRoomNo(typingRoomApp.getRoomCodeToRoomNo(param.getRoomCode()));
+            resultDto.setRoomNo(typingRoomService.getRoomNoToRoomCode(param.getRoomCode()));
             resultDto.setRoomCode(param.getRoomCode());
-            //roomCode가 잘못된 코드인 경우
-            if(resultDto.getRoomCode()==null)
+
+            //null 이면 참가 가능한 방을 못찾은경우
+            //여기서 방에 들어감
+            roomNo=typingRoomService.enterRoom(typingUser,resultDto.getRoomCode(),param.getLang());
+            //roomCode가 자체가 없는 코드인 경우
+
+            if(resultDto.getRoomCode()==null ||resultDto.getRoomCode().equals("")
+            || roomNo==null)
             {
                 resultDto.setRoomCodeCheck(false);
-//                return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
                 sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
                 return;
             }
+            userList =typingRoomService.getRoom(param.getRoomCode()).get().getUsers();
 
-            typingRoomApp.enterUser(typingUser,resultDto.getRoomCode(),param.getLang());
-
-
-
-//			return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
         }
         //친선전 만드는 경우 true 면 방생성
         else if(param.isCreat())
@@ -127,53 +136,56 @@ public class TypingRoomController {
             typingRoom.setRoomCode(TypingStaticData.roomCodeMaker());
             resultDto.setRoomCode(typingRoom.getRoomCode());
 
-            //나중에 db에서 가져와서 넣는 로직 만들어 줘야함
-            typingRoom.setContent("test");
-
-            resultDto.setRoomNo(param.getSocketId());
             typingRoom.setRoomNo(param.getSocketId());
+            resultDto.setRoomNo(param.getSocketId());
+
             typingRoom.setLang(param.getLang());
             typingRoom.setStartTime(TypingStaticData.timeMaker());
 
+            typingUser.setIsHead(true);
             //방 만든 다음 유저 넣어야 유저 리스트에 추가됨
-            typingRoomApp.makeRoom(typingRoom);
-            typingRoomApp.enterUser(typingUser, resultDto.getRoomCode(),param.getLang());
+            typingRoomService.roomMaker(typingRoom);
+            typingRoomService.enterRoom(typingUser, resultDto.getRoomCode(),param.getLang());
+            userList = new ArrayList<>();
+            userList.add(typingUser);
+
+
         }
         //랜덤매칭 하는 경우
         else
         {
             System.out.println("\n\n\n\n랜매 하는 경우로 들어왔음 \n\n\n\n");
-            typingRoomApp.enterUser(typingUser, null,param.getLang());
-            resultDto.setRoomNo(typingRoomApp.getRoomNoToNickName(param.getNickName()));
+            roomNo = typingRoomService.enterRoom(typingUser,null,param.getLang());
+            userList =typingRoomService.getRoom(roomNo).get().getUsers();
+            resultDto.setRoomNo(roomNo);
         }
 
-        typingUserApp.setUser(typingUser);
 
-        List<String> nickList = Arrays.asList(typingRoomApp.getVar(resultDto.getRoomNo(),"users" ).split(","));
 
-        for (String nick: nickList)
+
+        for (TypingUser user: userList)
         {
-            System.out.println("nick : "+nick);
+            System.out.println("nick : "+user);
             EnterUserDto eud = new EnterUserDto();
-            eud.setImgUrl(typingUserApp.getVar(nick,"imgUrl"));
-            eud.setNickName(typingUserApp.getVar(nick,nick));
-            eud.setHead(Boolean.parseBoolean(typingUserApp.getVar(nick,"isHead")));
+            eud.setImgUrl(user.getImgUrl());
+            eud.setNickName(user.getNickName());
+            eud.setHead(user.getIsHead());
             resultDto.getUsers().add(eud);
         }
-        sendingOperations.convertAndSend("/topic/typing/"+resultDto.getRoomNo()+"/userList", resultDto.getUsers());
 
         //나중에 타이머 걸어서 구현 하고 일단은 바로 시작하게 만듬
         int maxSize=4;
         if(resultDto.getUsers().size()==maxSize)
         {
             StartResultDto contentDto = new StartResultDto();
-            String[] contens =typingRoomApp.getVar(resultDto.getRoomNo(), "content").split("\n");
+            String con=typingRoomService.startRoom(param.getRoomCode());
+
+            String[] contens =con.split("\n");
             contentDto.setContent(Arrays.asList(contens));
 
 
             sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
             Thread.sleep(100);
-            typingRoomApp.setVar(resultDto.getRoomNo(),"startTime",TypingStaticData.timeMaker()+"");
             sendingOperations.convertAndSend("/topic/typing/"+resultDto.getRoomNo()+"/start", resultDto.getUsers());
         }
         else
@@ -193,21 +205,25 @@ public class TypingRoomController {
         ScoreResultDto resultDto = new ScoreResultDto();
         resultDto.setUsers(new ArrayList<>());
 
-
+        TypingRoom typingRoom =typingRoomService.getRoom(paramDto.getRoomNo()).get();
+        
+        System.out.println("/typing/check 에서 불러온  typingRoom 값");
+        System.out.println(typingRoom);
+        
 //        String RoomNo = typingRoomApp.getRoomNoToNickName(paramDto.getNickName());
-        String content =typingRoomApp.getVar(paramDto.getRoomNo(),"content");
+        String content = typingRoom.getContent();
         String[] contents = content.split("\n");
         int contentLen = content.length()-(contents.length-1)*2;
-        int startTime =Integer.parseInt(typingRoomApp.getVar(paramDto.getRoomNo(),"startTime"));
-        List<String> nickList = Arrays.asList(typingRoomApp.getVar(paramDto.getRoomNo(),"users" ).split(","));
+        int startTime =typingRoom.getStartTime();
 
+        //게임 맞,틀 증가 후 다시 저장해줘야함
         boolean endCheck =false;
         int maxProgress =0;
-        for (String nick: nickList)
+        for (TypingUser typingUser: typingRoom.getUsers())
         {
             ScoreUserDto scoreUserDto = new ScoreUserDto();
-            int trues =Integer.parseInt(typingUserApp.getVar(nick,"trues"));
-            int errors =Integer.parseInt(typingUserApp.getVar(nick,"errors"));
+            int trues =typingUser.getTrues();
+            int errors =typingUser.getErrors();
 
             if(paramDto.isCheck())
                 trues++;
@@ -222,7 +238,7 @@ public class TypingRoomController {
 
             scoreUserDto.setProgress(((trues+errors)*100)/contentLen);
             scoreUserDto.setErrors(errors);
-            scoreUserDto.setNickName(nick);
+            scoreUserDto.setNickName(typingUser.getNickName());
             scoreUserDto.setTypeSpeed((trues*60)/time);
             if(scoreUserDto.getProgress()==100)
                 endCheck=true;

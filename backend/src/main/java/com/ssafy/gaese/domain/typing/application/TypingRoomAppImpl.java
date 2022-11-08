@@ -223,7 +223,7 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         {
             roomNo = randRoomEnter(user.getSocketId(),lang);
 
-            System.out.println("랜덤방 추가 roomNo :");
+            System.out.println("랜덤방에 추가 roomNo :");
             System.out.println(roomNo);
 //            setNickNameToRoomNo(user.getNickName(), roomNo);
             //새로 방이 만들어진 경우
@@ -360,6 +360,7 @@ public class TypingRoomAppImpl implements TypingRoomApp{
         if (tmpList.size() > 0) {
             System.out.println("randRoomEnter");
             System.out.println("기존 랜덤 룸에 들어감");
+            System.out.println("현재 인원수  : " + tmpList.size());
             answer = tmpList.get(0);
             System.out.println("answer : " + answer);
             //이렇게 하면 사람 적은 방 부터 들어가게됨
