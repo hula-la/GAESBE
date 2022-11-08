@@ -14,12 +14,14 @@ import MyOfficePage from './features/game/pages/MyOfficePage';
 import CoinFlipPage from './features/coinflip/CoinFlipPage';
 import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
-import CSIngamePage from './features/cs/pages/CSIngamePage';
-import { useDispatch, useSelector } from 'react-redux';
+import CSRandomPage from './features/cs/pages/CSRandomPage';
 import CSResultPage from './features/cs/pages/CSResultPage';
+import CSFriendPage from './features/cs/pages/CSFriendPage';
+import { useDispatch, useSelector } from 'react-redux';
 import MyPage from './features/game/pages/MyPage';
 import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
 import FriendSocket from './features/friend/pages/FriendSocket';
+
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -45,7 +47,8 @@ const App = () => {
           <Route path="algo/*" element={<AlgoPage />} />
           <Route path="casino" element={<CoinFlipPage />} />
           <Route path="CS" element={<CSgamePage />} />
-          <Route path="CS/room" element={<CSIngamePage />} />
+          <Route path="CS/random" element={<CSRandomPage />} />
+          <Route path="CS/friend" element={<CSFriendPage />} />
           <Route path="CS/result" element={<CSResultPage />} />
         </Route>
       </Routes>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import styled from 'styled-components';
@@ -33,18 +33,43 @@ const Wrapper = styled.div`
     background-color: #f0568c;
     width: 20vh;
     height: 20vh;
+    cursor: pointer;
   }
   .friend {
     background-color: #ffd219;
     width: 20vh;
     height: 20vh;
+    cursor: pointer;
   }
 `;
 
 const CSgamePage = () => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState<Boolean>(false);
+  const [shareCode, setShareCode] = useState<String>('');
+
+  // 랜덤매칭 페이지로 이동
   const onClickRandom = () => {
-    navigate('room', { state: { roomType: 'RANDOM' } });
+    navigate('random');
+  };
+
+  // 친선전 오픈
+  const onClickFriend = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  // 방만들기
+  const onClickCreateRoom = () => {
+    navigate('friend', { state: { shareCode: null } });
+  };
+
+  // 코드 치고 들어가기
+  const onClickEnterFriend = () => {
+    navigate('friend', { state: { shareCode: shareCode } });
+  };
+
+  const onChangeCode = (e: any) => {
+    setShareCode(e.target.value);
   };
   return (
     <Wrapper>
@@ -55,7 +80,17 @@ const CSgamePage = () => {
         <div onClick={onClickRandom} className="random">
           랜덤 매칭
         </div>
-        <div className="friend">친구 매칭 </div>
+        <div onClick={onClickFriend} className="friend">
+          <div>친구 매칭</div>
+        </div>
+        {isOpen && (
+          <div>
+            <div onClick={onClickCreateRoom}>방 만들기</div>
+            <div>친구 코드</div>
+            <input onChange={onChangeCode} />
+            <button onClick={onClickEnterFriend}></button>
+          </div>
+        )}
       </div>
     </Wrapper>
   );
