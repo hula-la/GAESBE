@@ -15,17 +15,20 @@ import CoinFlipPage from './features/coinflip/CoinFlipPage';
 import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
 import CSIngamePage from './features/cs/pages/CSIngamePage';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CSResultPage from './features/cs/pages/CSResultPage';
 import MyPage from './features/game/pages/MyPage';
 import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
-
+import FriendSocket from './features/friend/pages/FriendSocket';
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(authActions.fetchUserInfoStart());
-  });
-  return (
+  },[]);
+  const {userInfo} = useSelector((state:any) => state.auth)
+
+  return (<>
+    {userInfo && <FriendSocket />}
     <BrowserRouter>
       <Routes>
         <Route path="" element={<IntroPage />} />
@@ -47,6 +50,7 @@ const App = () => {
         </Route>
       </Routes>
     </BrowserRouter>
+  </>
   );
 };
 
