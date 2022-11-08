@@ -2,8 +2,7 @@ package com.ssafy.gaese.domain.typing.service;
 
 import com.ssafy.gaese.domain.typing.application.IsPlay;
 import com.ssafy.gaese.domain.typing.common.TypingStaticData;
-import com.ssafy.gaese.domain.typing.dto.TypingRoom;
-import com.ssafy.gaese.domain.typing.dto.TypingUser;
+import com.ssafy.gaese.domain.typing.dto.*;
 import com.ssafy.gaese.domain.typing.repository.TypingRoomRepository;
 import com.ssafy.gaese.domain.typing.repository.TypingUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -197,8 +196,10 @@ public class TypingRoomService {
     //content 반환
     public String startRoom(String roomNo)
     {
+
         TypingRoom typingRoom = typingRoomRepository.findById(roomNo).get();
         typingRoom.setStartTime(TypingStaticData.timeMaker());
+        typingRoom.setStart(true);
         typingRoomRepository.save(typingRoom);
         return  typingRoom.getContent();
     }
@@ -227,14 +228,19 @@ public class TypingRoomService {
         typingUserRepository.deleteById(nick);
         delRoomNoToNick(nick);
 
-        for (TypingUser tu: typingRoom.getUsers())
+        //게임 시작하면 유저 나가도 목록에서 안꺼낼거임
+        if(!typingRoom.isStart())
         {
-            if(tu.getNickName().equals(nick))
+            for (TypingUser tu: typingRoom.getUsers())
             {
-                typingRoom.getUsers().remove(tu);
-                break;
+                if(tu.getNickName().equals(nick))
+                {
+                    typingRoom.getUsers().remove(tu);
+                    break;
+                }
             }
         }
+
 
         //방 삭제 해야함
         if(typingRoom.getUsers().size()==0)
@@ -251,5 +257,70 @@ public class TypingRoomService {
             typingRoom.getUsers().get(0).setIsHead(true);
         }
         typingRoomRepository.save(typingRoom);
+    }
+
+    public ScoreResultDto check(CheckParamDto paramDto)
+    {
+        ScoreResultDto resultDto = new ScoreResultDto();
+        resultDto.setUsers(new ArrayList<>());
+
+
+        TypingRoom typingRoom = typingRoomRepository.findById(paramDto.getRoomNo()).get();
+
+
+        System.out.println("/typing/check 에서 불러온  typingRoom 값");
+        System.out.println(typingRoom);
+
+        String content = typingRoom.getContent();
+        String[] contents = content.split("\n");
+        int contentLen = content.length()-(contents.length-1)*2;
+        int startTime =typingRoom.getStartTime();
+
+        //게임 맞,틀 증가 후 다시 저장해줘야함
+        boolean endCheck =false;
+        int maxProgress =0;
+
+        for (TypingUser typingUser: typingRoom.getUsers())
+        {
+            ScoreUserDto scoreUserDto = new ScoreUserDto();
+            int trues =typingUser.getTrues();
+            int errors =typingUser.getErrors();
+            if(paramDto.getNickName().equals(typingUser.getNickName()))
+            {
+                if(paramDto.isCheck())
+                    trues++;
+                else
+                    errors++;
+
+
+                typingUser.setTrues(trues);
+                typingUser.setErrors(errors);
+
+                typingRoomRepository.save(typingRoom);
+            }
+
+            int nowTime = TypingStaticData.timeMaker();
+
+            int time =startTime-nowTime;
+            if(time<0)
+                time+=3600;
+
+            scoreUserDto.setProgress((trues*100)/contentLen);
+            scoreUserDto.setErrors(errors);
+            scoreUserDto.setNickName(typingUser.getNickName());
+            scoreUserDto.setTypeSpeed((trues*60)/time);
+            if(trues+errors==contentLen)
+                resultDto.setEnd(true);
+            if(maxProgress<scoreUserDto.getProgress())
+            {
+                maxProgress=scoreUserDto.getProgress();
+                scoreUserDto.setRank(1);
+            }
+
+            resultDto.getUsers().add(scoreUserDto);
+        }
+
+        return resultDto;
+
     }
 }
