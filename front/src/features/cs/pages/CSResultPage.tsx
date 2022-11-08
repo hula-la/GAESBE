@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -10,13 +10,34 @@ const Container = styled.div`
 
 const CSResultPage = () => {
   const location = useLocation();
-  const { result } = location.state;
+  const { result, players } = location.state;
+  const [data, setData] = useState<any>();
+  let results: any = [];
   useEffect(() => {
-    console.log(result);
-  });
+    if (result && players) {
+      const tempId = Object.keys(result.score);
+      const tempScore = Object.values(result.score);
+
+      for (let i = 0; i < tempId.length; i++) {
+        const a = players.filter((player: any) => {
+          return player.id == tempId[i];
+        });
+        results.push([a[0].nickname, tempId[i], tempScore[i]]);
+      }
+      setData(results);
+    }
+  }, [result, players]);
   return (
     <Container>
-      <p>결과 화면</p>
+      {data &&
+        data.map((res: any, idx: number) => {
+          return (
+            <div key={idx}>
+              <p>{res[0]}</p>
+              <p>{res[2]}</p>
+            </div>
+          );
+        })}
     </Container>
   );
 };

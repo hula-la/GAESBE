@@ -305,15 +305,13 @@ const CSIngamePage = () => {
           }
           if (data.hasOwnProperty('isLast')) {
             if (data.isLast === true) {
-              setTimeout(() => {
-                client.send(
-                  '/api/cs/start',
-                  {},
-                  JSON.stringify({
-                    roomCode: roomcode,
-                  }),
-                );
-              }, 1000);
+              client.send(
+                '/api/cs/start',
+                {},
+                JSON.stringify({
+                  roomCode: roomcode,
+                }),
+              );
             }
           }
         });
@@ -410,7 +408,9 @@ const CSIngamePage = () => {
     }
     if (isEnd && result) {
       console.log('끝');
-      navigate('/game/CS/result', { state: { result: result } });
+      navigate('/game/CS/result', {
+        state: { result: result, players: players },
+      });
     }
   }, [players, result, isEnd]);
 
@@ -427,6 +427,12 @@ const CSIngamePage = () => {
       }),
     );
   };
+
+  useEffect(() => {
+    if (ranking) {
+      console.log(ranking[0][0]);
+    }
+  }, [ranking]);
 
   return (
     <Container>
@@ -535,14 +541,8 @@ const CSIngamePage = () => {
                           className="character"
                           src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
                         />
-                        <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[0])[0];
-                            })[0].nickname
-                          }
-                        </div>
-                        <div>{ranking[0][Object.keys(ranking[0])[0]]}</div>
+                        <div>{ranking[0][1]}</div>
+                        <div>{ranking[0][2]}</div>
                       </div>
                       {}
                     </div>
@@ -560,14 +560,8 @@ const CSIngamePage = () => {
                           className="character"
                           src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
                         />
-                        <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[1])[0];
-                            })[0].nickname
-                          }
-                        </div>
-                        <div>{ranking[1][Object.keys(ranking[1])[0]]}</div>
+                        <div>{ranking[1][1]}</div>
+                        <div>{ranking[1][2]}</div>
                       </div>
                       {}
                     </div>
@@ -580,20 +574,14 @@ const CSIngamePage = () => {
                           Object.keys(ranking[0])[0]
                         }.png`}
                       /> */}
-                      {/* <div>
+                      <div>
                         <img
                           className="character"
                           src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
                         />
-                        <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[2])[0];
-                            })[0].nickname
-                          }
-                        </div>
-                        <div>{ranking[2][Object.keys(ranking[2])[0]]}</div>
-                      </div> */}
+                        {/* <div>{ranking[2][1]}</div>
+                        <div>{ranking[2][2]}</div> */}
+                      </div>
                       {}
                     </div>
                   </div>
@@ -618,10 +606,16 @@ const CSIngamePage = () => {
             problem === 'a' &&
             !isNext && (
               <div>
+                {!isSolved && <div>시간초과요~</div>}
+                {isSolved && isCorrect && <div>정답입니다~</div>}
+                {isSolved && !isCorrect && <div>오답입니다~</div>}
                 {ranking &&
-                  ranking.map((player: any, idx: number) => {
+                  ranking.map((rank: any, idx: number) => {
                     return (
-                      <div key={idx}>{player[Object.keys(player)[0]]}</div>
+                      <div key={idx}>
+                        <div>{rank[1]}</div>
+                        <div>{rank[2]}</div>
+                      </div>
                     );
                   })}
               </div>
