@@ -17,24 +17,24 @@ public class TypingSocketController {
 
     // 알고리즘 방 입장/나가기
     @MessageMapping("/typing2")
-    public void algoRoom(TypingSocketDto csSocketDto) throws Exception{
-        typing2RoomService.enterOrLeave(csSocketDto);
+    public void algoRoom(TypingSocketDto typingSocketDto) throws Exception{
+        typing2RoomService.enterOrLeave(typingSocketDto);
     }
 
     // 문제 제출
     @MessageMapping("/typing2/submit")
-    public void submitAnswer(TypingSubmitDto csSubmitDto) throws Exception{
-        typingService.submitAnswer(csSubmitDto);
+    public void submitAnswer(TypingSubmitDto typingSubmitDto) throws Exception{
+        typingService.submitAnswer(typingSubmitDto);
     }
 
     @MessageMapping("/typing2/memberInfo")
-    public void memberInfo(TypingSubmitDto csSubmitDto) throws Exception{
-        typing2RoomService.getUserInRoom(csSubmitDto.getRoomCode());
+    public void memberInfo(TypingSubmitDto typingSubmitDto) throws Exception{
+        typing2RoomService.getUserInRoom(typingSubmitDto.getRoomCode());
     }
 
     @MessageMapping("/typing2/start")
-    public void memberInfo(TypingSocketDto csSocketDto) throws Exception{
-        typing2RoomService.gameProcess(csSocketDto);
+    public void memberInfo(TypingSocketDto typingSocketDto) throws Exception{
+        typing2RoomService.gameProcess(typingSocketDto);
     }
 
 

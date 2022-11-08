@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.typing2.dto;
 
 
+import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import lombok.*;
 
 @Getter
@@ -23,4 +24,5 @@ public class TypingSocketDto {
     private Long userId;
     private String roomCode;
     private RoomType roomType;
+    private TypingRecord.LangType langType;
 }
