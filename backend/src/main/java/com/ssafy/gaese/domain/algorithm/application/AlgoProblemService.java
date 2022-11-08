@@ -58,16 +58,13 @@ public class AlgoProblemService {
         List<String> problems = new LinkedList<>();
         // 크롤링 설정
         try{
-//            System.out.println("======크롤링 설정 시작 ========");
-//            ClassPathResource classPathResource = new ClassPathResource("./chromedriver");
-//            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
-            System.setProperty("webdriver.chrome.driver",ChromePath);
-            System.out.println(System.getProperty("webdriver.chrome.driver"));
-            System.out.println("======크롤링 옵션 전 ========");
-
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("headless"); // 창 없이 크롤링
-            WebDriver driver = new ChromeDriver(options);
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("--no-sandbox");
+            chromeOptions.addArguments("--headless");
+            chromeOptions.addArguments("disable-gpu");
+            chromeOptions.addArguments("--disable-dev-shm-usage");
+            ChromeDriver driver = new ChromeDriver(chromeOptions);
 
             // 크롤링
             System.out.println("======크롤링 시작 ========");
@@ -166,12 +163,7 @@ public class AlgoProblemService {
 
     public int confirmSolve(AlgoSolveReq algoSolveReq){
         try{
-//            ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver");
-//            System.out.println(classPathResource.getPath());
-//            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
-//            System.setProperty("webdriver.chrome.driver",ChromePath);
-//            String getProp = System.getProperty("webdriver.chrome.driver");
-//            System.out.println(">>>>>"+getProp);
+
             WebDriverManager.chromedriver().setup();
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.addArguments("--no-sandbox");
@@ -179,9 +171,6 @@ public class AlgoProblemService {
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
             ChromeDriver driver = new ChromeDriver(chromeOptions);
-//            ChromeOptions options = new ChromeOptions();
-//            options.addArguments("headless"); // 창 없이 크롤링
-//            WebDriver driver = new ChromeDriver(options);
             // 크롤링
             driver.get("https://www.acmicpc.net/status?problem_id="+algoSolveReq.getProblemId()
                     +"&user_id="+algoSolveReq.getUserBjId()
