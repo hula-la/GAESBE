@@ -1,22 +1,14 @@
 package com.ssafy.gaese.domain.typing2.application;
 
-import com.ssafy.gaese.domain.cs.dto.CsRecordRedisDto;
-import com.ssafy.gaese.domain.cs.dto.CsRoomDto;
-import com.ssafy.gaese.domain.cs.dto.CsSubmitDto;
-import com.ssafy.gaese.domain.cs.entity.CsProblem;
-import com.ssafy.gaese.domain.cs.entity.CsRecord;
-import com.ssafy.gaese.domain.cs.exception.DoubleSubmitException;
-import com.ssafy.gaese.domain.cs.exception.ExceedTimeException;
-import com.ssafy.gaese.domain.cs.exception.RecordNotFoundException;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
 import com.ssafy.gaese.domain.typing2.dto.TypingRecordDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSubmitDto;
 import com.ssafy.gaese.domain.typing2.entity.TypingParagraph;
 import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
-import com.ssafy.gaese.domain.typing2.exception.AlreadyEndException;
-import com.ssafy.gaese.domain.typing2.repository.*;
-import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.typing2.repository.TypingParagraphRepository;
+import com.ssafy.gaese.domain.typing2.repository.TypingRecordRepository;
+import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,60 +76,24 @@ public class TypingService {
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
     }
 
-    public void gameEnd(TypingRoomDto roomDto, List<CsProblem> randomProblem){
+    public void gameEnd(TypingRoomDto roomDto){
 
         Map<String,Object> res = new HashMap<>();
 
         // 끝났다는 메시지
         res.put("msg", "end");
 
-//        마지막 결과 보내기
-//        res.put("result", roomDto);
-//
-//        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
-//
-//
-//
-//        HashMap<Long, Long> score = roomDto.getScore();
-//
-//        HashMap<Long, Integer> rankByPlayer = new HashMap<>();
-//
-//        List<Map.Entry<Long, Long>> entryList = new LinkedList<>(score.entrySet());
-//        entryList.sort((o1, o2) -> -o1.getValue().compareTo(o2.getValue()));
-//
-//        int rank=0;
-//        long lastScore=-1;
-//
-//
-//        for(Map.Entry<Long, Long> entry : entryList){
-//            if (lastScore!=entry.getValue()) rank++;
-//            rankByPlayer.put(entry.getKey(),rank);
-//        }
-//
-//
-//        roomDto.getPlayers().forEach((k,v)->{
-//            CsRecord csRecord = CsRecord.builder()
-//                    .user(userRepository.findById(Long.valueOf(v)).orElseThrow(() -> new UserNotFoundException()))
-//                    .ranks(rankByPlayer.get(v))
-//                    .date(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-//                    .build();
-//            CsRecord saved = csRecordRepository.save(csRecord);
-//
-//
-//            // 레디스에 저장되어잇는 기록 db에 저장
-//            TypingRecordRedisDto csRecordRedisDto = typingRecordRedisRepository.findById(roomDto.getCode() + v).orElseThrow(() -> new RoomNotFoundException());
-//            Boolean[] isCorrectedList = csRecordRedisDto.getIsCorrectList();
-//            for (int i = 0; i < numProblem; i++) {
-//                TypingRecord csRecordProblem = TypingRecord.builder()
-//                        .csProblem(randomProblem.get(i))
-//                        .csRecord(saved)
-//                        .isCorrect(isCorrectedList[i])
-//                        .build();
-//                typingRecordProblemRepository.save(csRecordProblem);
-//            }
-//            typingRecordRedisRepository.deleteById(roomDto.getCode() + v);
-//        });
+        roomDto.setEnd(true);
 
+        typingRoomRedisRepository.save(roomDto);
+        deleteRoom(roomDto.getCode());
+    }
+
+    // 방 삭제 (게임 끝나면 방 삭제)
+    public boolean deleteRoom(String roomId){
+        typingRoomRedisRepository.deleteById(roomId);
+
+        return true;
     }
 
     public synchronized void submitAnswer(TypingSubmitDto typingSubmitDto){
@@ -166,10 +119,17 @@ public class TypingService {
         res.clear();
         res.put("progressByPlayer", progressByPlayer);
 
-        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
+        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
         // 바뀐 사항 저장
-        typingRoomRedisRepository.save(roomDto);
+        TypingRoomDto saved = typingRoomRedisRepository.save(roomDto);
+
+        // 한명이 다 치면 게임 끝
+        if (progressByPlayer.get(userId)>=100) {
+            gameEnd(saved);
+//
+//        res.put("msg", "end");
+        }
     }
 
 }

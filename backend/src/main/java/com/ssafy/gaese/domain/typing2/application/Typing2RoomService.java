@@ -1,10 +1,10 @@
 package com.ssafy.gaese.domain.typing2.application;
 
-import com.ssafy.gaese.domain.cs.entity.CsProblem;
 import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
+import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.typing2.repository.TypingParagraphRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
@@ -14,7 +14,6 @@ import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.bytebuddy.implementation.bytecode.assign.Assigner;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +38,8 @@ public class Typing2RoomService {
     private final SocketInfo socketInfo;
 
     private final int maxPlayer=2;
-    private final String waitRoomKey="WaitRoom";
+    private final String PythonWaitRoomKey="PythonTypingWaitRoom";
+    private final String JavaWaitRoomKey="JavaTypingWaitRoom";
 
     public void enterOrLeave(TypingSocketDto typingSocketDto) throws InterruptedException {
         TypingRoomDto roomDto=null;
@@ -118,21 +118,25 @@ public class Typing2RoomService {
 
 //              게임 시작
         typingService.gameStart(roomDto);
-//            게임 끝
-//        csService.gameEnd(saved,randomProblem);
-
-        res.put("msg", "end");
-        // 방 삭제
-        deleteRoom(roomDto.getCode());
+////            게임 끝
+////        csService.gameEnd(saved,randomProblem);
+//
+//        res.put("msg", "end");
+//        // 방 삭제
+//        deleteRoom(roomDto.getCode());
     }
 
     // 방 생성
     // 해시로 저장
-    public TypingRoomDto createRoom(){
+    public TypingRoomDto createRoom(String waitRoomKey){
 
         TypingRoomDto typingRoomDto = new TypingRoomDto();
+        if(waitRoomKey==JavaWaitRoomKey) typingRoomDto.setLangType(TypingRecord.LangType.JAVA);
+        else typingRoomDto.setLangType(TypingRecord.LangType.PYTHON);
+
 
         TypingRoomDto savedRoom = typingRoomRedisRepository.save(typingRoomDto);
+
 
         // 방만든 후에 대기 방에 넣음
         redisUtil.addSetData(waitRoomKey,savedRoom.getCode());
@@ -143,6 +147,13 @@ public class Typing2RoomService {
     //  랜덤 방 입장
     public synchronized TypingRoomDto enterRandomRoom(TypingSocketDto typingSocketDto){
 //        if (!redisUtil.isExists(waitRoomKey))
+        String waitRoomKey=null;
+        if (typingSocketDto.getLangType()== TypingRecord.LangType.JAVA){
+            waitRoomKey=JavaWaitRoomKey;
+        }else{
+            waitRoomKey=PythonWaitRoomKey;
+
+        }
         List<String> waitRooms = new ArrayList<>(redisUtil.getSetData(waitRoomKey));
         Collections.shuffle(waitRooms);
 
@@ -169,7 +180,7 @@ public class Typing2RoomService {
 
         // 들어갈 곳이 없으면 새로운 방 생성
         if (roomIdToEnter==null){
-            roomIdToEnter = createRoom().getCode();
+            roomIdToEnter = createRoom(waitRoomKey).getCode();
         }
 
         log.debug("이 방으로 들어가요~"+roomIdToEnter);
@@ -182,8 +193,15 @@ public class Typing2RoomService {
 
     // 친선전 방 만들기
     public TypingRoomDto enterMyRoom(TypingSocketDto typingSocketDto) {
+        String waitRoomKey=null;
+        if (typingSocketDto.getLangType()== TypingRecord.LangType.JAVA){
+            waitRoomKey=JavaWaitRoomKey;
+        }else{
+            waitRoomKey=PythonWaitRoomKey;
+
+        }
         // 들어갈 곳이 없으면 새로운 방 생성
-        String newRoomCode = createRoom().getCode();
+        String newRoomCode = createRoom(waitRoomKey).getCode();
 
         typingSocketDto.setRoomCode(newRoomCode);
 
@@ -223,12 +241,7 @@ public class Typing2RoomService {
         return saved;
     }
 
-    // 방 삭제 (게임 끝나면 방 삭제)
-    public boolean deleteRoom(String roomId){
-        typingRoomRedisRepository.deleteById(roomId);
 
-        return true;
-    }
 
 
     // 방에 있는 유저리스트 정보 조회
@@ -246,19 +259,26 @@ public class Typing2RoomService {
 
 
 
-//        res.put("players",getUserInRoom(csRoom.getCode()));
-        simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,playerList);
+        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomId,playerList);
         return playerList;
     }
 
-    public boolean isReadyToStart(TypingRoomDto csRoom){
+    public boolean isReadyToStart(TypingRoomDto typingRoomDto){
+        String waitRoomKey=null;
+        if (typingRoomDto.getLangType()== TypingRecord.LangType.JAVA){
+            waitRoomKey=JavaWaitRoomKey;
+        }else{
+            waitRoomKey=PythonWaitRoomKey;
 
-        HashMap<String, Long> players = csRoom.getPlayers();
+        }
+
+
+        HashMap<String, Long> players = typingRoomDto.getPlayers();
 
         // 인원 안차면 시작 안함
         if (players.size()!=maxPlayer) return false;
         // 게임 시작하면 list에서 삭제
-        redisUtil.removeSetData(waitRoomKey,csRoom.getCode());
+        redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
 
 
         return true;
