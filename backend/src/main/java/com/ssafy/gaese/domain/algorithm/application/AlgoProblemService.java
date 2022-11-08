@@ -172,8 +172,8 @@ public class AlgoProblemService {
 //            System.setProperty("webdriver.chrome.driver",ChromePath);
 //            String getProp = System.getProperty("webdriver.chrome.driver");
 //            System.out.println(">>>>>"+getProp);
-//            WebDriverManager.chromedriver().setup();
-            WebDriverManager.chromedriver().browserInDocker().create();
+            WebDriverManager.chromedriver().setup();
+//            WebDriverManager.chromedriver().browserInDocker().create();
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.addArguments("--no-sandbox");
             chromeOptions.addArguments("--headless");
