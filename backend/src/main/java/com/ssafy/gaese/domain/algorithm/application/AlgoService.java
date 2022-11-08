@@ -14,11 +14,13 @@ import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -231,10 +234,14 @@ public class AlgoService {
         String code = hashOperations.get("bjCodes",userId+"");
         Boolean res = false;
         try{
-            System.setProperty("webdriver.chrome.driver",ChromePath);
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("headless"); // 창 없이 크롤링
-            WebDriver driver = new ChromeDriver(options);
+            WebDriverManager.chromedriver().setup();
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("--no-sandbox");
+            chromeOptions.addArguments("--headless");
+            chromeOptions.addArguments("disable-gpu");
+            chromeOptions.addArguments("--disable-dev-shm-usage");
+            ChromeDriver driver = new ChromeDriver(chromeOptions);
+//            WebDriver d = new ChromeDriverService();
             // 크롤링
             driver.get("https://www.acmicpc.net/user/"+userRepository.getBjIdById(userId).get());
             WebElement element = driver.findElement(By.className("no-mathjax"));
