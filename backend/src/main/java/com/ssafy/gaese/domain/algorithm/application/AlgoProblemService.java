@@ -172,8 +172,13 @@ public class AlgoProblemService {
 //            System.setProperty("webdriver.chrome.driver",ChromePath);
 //            String getProp = System.getProperty("webdriver.chrome.driver");
 //            System.out.println(">>>>>"+getProp);
-            WebDriver driver = WebDriverManager.chromedriver().create();
-
+//            WebDriverManager.chromedriver().setup();
+            WebDriverManager.chromedriver().browserInDocker().create();
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("--no-sandbox");
+            chromeOptions.addArguments("--headless");
+            chromeOptions.addArguments("disable-gpu");
+            ChromeDriver driver = new ChromeDriver(chromeOptions);
 //            ChromeOptions options = new ChromeOptions();
 //            options.addArguments("headless"); // 창 없이 크롤링
 //            WebDriver driver = new ChromeDriver(options);
