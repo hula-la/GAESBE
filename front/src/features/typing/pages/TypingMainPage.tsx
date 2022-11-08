@@ -1,5 +1,10 @@
 import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { typingActions } from '../typingSlice';
 import { useNavigate } from 'react-router-dom';
+import { TypingRoomInterface } from '../../../models/typing';
+
 const TypingMain = styled.div`
   width: 82%;
   background-color: #232323;
@@ -28,6 +33,9 @@ const SelectLanguageBox = styled.div`
   width: 10rem;
   align-items: center;
   border: 2px solid blue;
+  /* :active {
+    background-color: white;
+  } */
 `;
 const SelectGameType = styled.div`
   border: 2px solid white;
@@ -36,10 +44,23 @@ const SelectTypeBox = styled.div`
   border: 2px solid violet;
 `;
 function TypingMainPage() {
+  const [gameType, setGameType] = useState<String>('');
   const navigate = useNavigate();
-  const handleRandomGame = () => {
+  const handleEnterGame = () => {
     navigate('game');
   };
+  const handleRandomGame = () => {
+    navigate('enter', { state: { lang: gameType } });
+  };
+  const handleChoicePython = () => {
+    setGameType('Python');
+    console.log('파이썬 선택');
+  };
+  const handleChoiceJava = () => {
+    setGameType('Java');
+    console.log('자바 선택');
+  };
+  console.log(gameType);
   return (
     <TypingMain>
       <div className="title">
@@ -47,15 +68,17 @@ function TypingMainPage() {
       </div>
       <h1>언어를 선택해주세요</h1>
       <SelectLanguage>
-        <SelectLanguageBox>파이썬</SelectLanguageBox>
-        <SelectLanguageBox>자바</SelectLanguageBox>
+        <SelectLanguageBox onClick={handleChoicePython}>
+          파이썬
+        </SelectLanguageBox>
+        <SelectLanguageBox onClick={handleChoiceJava}>자바</SelectLanguageBox>
       </SelectLanguage>
       <SelectGameType>
         <SelectTypeBox>
           <button onClick={handleRandomGame}>랜덤매칭</button>
         </SelectTypeBox>
         <SelectTypeBox>
-          <button>친선매칭</button>
+          <button onClick={handleEnterGame}>친선매칭</button>
         </SelectTypeBox>
       </SelectGameType>
     </TypingMain>

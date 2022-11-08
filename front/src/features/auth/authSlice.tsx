@@ -40,6 +40,14 @@ const authSlice = createSlice({
       state.isDuplicate = action.payload;
     },
     checkNicknameError(state, action) {},
+    // 유저 삭제
+    deleteUserInfoStart(state) {},
+    deleteUserInfoSuccess(state, action) {
+      state.userInfo = action.payload;
+    },
+    deleteUserInfoError(state, action) {
+      state.error = action.payload.status;
+    },
   },
 });
 

@@ -1,19 +1,19 @@
-import {
-  configureStore,
-  combineReducers,
-} from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './rootSaga';
 // 관리하는 슬라이스들
 import authReducer from '../features/auth/authSlice';
 import unityReducer from '../features/game/unitySlice';
-import algoReducer from '../features/algorithm/algorithmSlice'
-
+import algoReducer from '../features/algorithm/algorithmSlice';
+import typingReducer from '../features/typing/typingSlice';
+import friendReducer from '../features/friend/friendSlice'
 // rootReducers by using combineReducers
 const rootReducers = combineReducers({
   auth: authReducer,
   unity: unityReducer,
-  algo: algoReducer
+  algo: algoReducer,
+  typing: typingReducer,
+  friend: friendReducer
 });
 
 const sagaMiddleware = createSagaMiddleware();

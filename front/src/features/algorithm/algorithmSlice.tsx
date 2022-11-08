@@ -2,26 +2,29 @@ import { createSlice } from '@reduxjs/toolkit';
 import { Action } from '../../models/algo'
 import { AlgoRoomInterface } from '../../models/algo'
 
-type AlgoGame = {
-  isLoading: boolean
-  error: string | null
-  roomCode: string | null
-  needReload: boolean
-}
+type AlgoGameState = {
+  isLoading: boolean;
+  error: string | null;
+  needReload: boolean;
+  InGameInfo: AlgoRoomInterface | null
+};
 
-const initialState: AlgoGame = {
+const initialState: AlgoGameState = {
   isLoading: false,
   error: null,
-  roomCode: null,
+  InGameInfo: null,
   needReload: false,
-}
+};
 
 const algoSlice = createSlice({
   name: 'algo',
   initialState,
   reducers: {
     resetError(state) {
-      state.error = null
+      state.error = null;
+    },
+    setNeedReload(state, action: Action<boolean>) {
+      state.needReload = action.payload
     },
     creatAlgoRoom(state, action: Action<AlgoRoomInterface>) {
       state.isLoading = true
@@ -29,19 +32,19 @@ const algoSlice = createSlice({
     creatAlgoRoomSuccess(state) {
       state.isLoading = false
     },
-    enterAlgoRoom(state, action: Action<string>) {
-      state.isLoading = true
+    enterAlgoRoom(state, action: Action<AlgoRoomInterface>) {
+      state.isLoading = true;
     },
-    enterAlgoRoomSuccess(state, action: Action<string>) {
-      state.isLoading = false
-      state.roomCode = action.payload
+    enterAlgoRoomSuccess(state, action: Action<AlgoRoomInterface>) {
+      state.isLoading = false;
+      state.InGameInfo = action.payload;
     },
     exitAlgoRoom(state) {
-      state.roomCode = null
+      state.InGameInfo = null
     }
   }
 })
 
-export const algoActions = algoSlice.actions
+export const algoActions = algoSlice.actions;
 
-export default algoSlice.reducer
+export default algoSlice.reducer;

@@ -2,17 +2,18 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { algoActions } from '../algorithmSlice' 
-import { makeAlgoRoom } from '../../../api/algoApi'
 import { AlgoRoomInterface } from '../../../models/algo'
 
 function AlgoRoomMake() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { roomCode } = useSelector((state:any) => state.algo)
-  const [form, setForm] = useState<AlgoRoomInterface>({roomCode: '', time: '30', tier: '1', num: '0'})
+  const { InGameInfo } = useSelector((state:any) => state.algo)
+  const { userInfo } = useSelector((state:any) => state.auth)
+
+  const [form, setForm] = useState<AlgoRoomInterface>({roomCode: '', time: '30', tier: '1', num: '0', no: '0', master: userInfo.id})
   const tierList: {value: string, alt:string}[] = []
-  for (let i = 1; i < 31; i++) {
+  for (let i = 1; i < 21; i++) {
     tierList.push({value: `${i}`, alt:`티어이미지${i}`})
   }
 
@@ -33,10 +34,10 @@ function AlgoRoomMake() {
   }
 
   useEffect(() => {
-    if (roomCode) {
+    if (InGameInfo) {
       navigate('/game/algo/battle')
     }
-  }, [roomCode])
+  }, [InGameInfo])
 
   return <>
     <h1>방 만들기</h1>

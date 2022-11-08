@@ -15,16 +15,22 @@ import CoinFlipPage from './features/coinflip/CoinFlipPage';
 import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
 import CSRandomPage from './features/cs/pages/CSRandomPage';
-import { useDispatch } from 'react-redux';
 import CSResultPage from './features/cs/pages/CSResultPage';
 import CSFriendPage from './features/cs/pages/CSFriendPage';
+import { useDispatch, useSelector } from 'react-redux';
+import MyPage from './features/game/pages/MyPage';
+import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
+import FriendSocket from './features/friend/pages/FriendSocket';
 
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(authActions.fetchUserInfoStart());
-  });
-  return (
+  },[]);
+  const {userInfo} = useSelector((state:any) => state.auth)
+
+  return (<>
+    {userInfo && <FriendSocket />}
     <BrowserRouter>
       <Routes>
         <Route path="" element={<IntroPage />} />
@@ -34,6 +40,8 @@ const App = () => {
           <Route path="nickname" element={<SetNicknamePage />} />
         </Route>
         <Route path="game/*" element={<CombinePage />}>
+          <Route path="mypage" element={<MyPage />} />
+          <Route path="mypage/change" element={<ChangeUserInfoPage />} />
           <Route path="" element={<MyOfficePage />} />
           <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
@@ -45,6 +53,7 @@ const App = () => {
         </Route>
       </Routes>
     </BrowserRouter>
+  </>
   );
 };
 
