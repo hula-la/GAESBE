@@ -2,11 +2,8 @@ package com.ssafy.gaese.domain.typing.controller;
 
 
 import com.ssafy.gaese.domain.typing.application.IsPlay;
-import com.ssafy.gaese.domain.typing.application.TypingRoomApp;
-import com.ssafy.gaese.domain.typing.application.TypingUserApp;
 import com.ssafy.gaese.domain.typing.common.TypingStaticData;
 import com.ssafy.gaese.domain.typing.dto.*;
-import com.ssafy.gaese.domain.typing.repository.TypingRoomRepository;
 import com.ssafy.gaese.domain.typing.service.TypingRoomService;
 import com.ssafy.gaese.domain.typing.service.TypingUserService;
 import com.ssafy.gaese.domain.user.entity.User;
@@ -24,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/typing")
 @RequiredArgsConstructor
 public class TypingRoomController {
 
@@ -48,7 +44,7 @@ public class TypingRoomController {
 
 
     @MessageMapping("/typing/enter")
-    public void enter(EnterParamDto param) throws InterruptedException {
+    public synchronized void enter(EnterParamDto param) throws InterruptedException {
 
 
 
@@ -185,7 +181,7 @@ public class TypingRoomController {
 
 
             sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
-            Thread.sleep(100);
+            Thread.sleep(50);
             sendingOperations.convertAndSend("/topic/typing/"+resultDto.getRoomNo()+"/start", resultDto.getUsers());
         }
         else
