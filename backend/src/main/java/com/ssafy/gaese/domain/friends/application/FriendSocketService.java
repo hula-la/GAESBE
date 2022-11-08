@@ -3,7 +3,6 @@ package com.ssafy.gaese.domain.friends.application;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.domain.friends.dto.OnlineUserDto;
-import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
 import com.ssafy.gaese.domain.friends.exception.NotFriendException;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;

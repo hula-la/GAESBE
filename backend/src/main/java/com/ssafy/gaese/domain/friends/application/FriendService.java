@@ -9,21 +9,16 @@ import com.ssafy.gaese.domain.friends.exception.AlreadyFriendReqToMeException;
 import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.friends.repository.FriendRepository;
 import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
-import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
-import com.ssafy.gaese.domain.user.exception.ReqToMeException;
+import com.ssafy.gaese.domain.friends.exception.ReqToMeException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
-import com.ssafy.gaese.domain.user.exception.UserSameException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import springfox.documentation.swagger2.mappers.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +40,7 @@ public class FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
 
-        if (targetNickname.equals(user)) new ReqToMeException();
+        if (targetUser.equals(user)) new ReqToMeException();
 
         // 친구 상태인지 확인
         User firstuser = null;
