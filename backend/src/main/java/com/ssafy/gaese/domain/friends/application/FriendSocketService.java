@@ -16,6 +16,7 @@ import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -92,6 +93,7 @@ public class FriendSocketService {
         refreshFriend(userId);
     }
 
+    @Transactional
     public void saveFriend(Long userId, Long friendId) throws NullPointerException{
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
