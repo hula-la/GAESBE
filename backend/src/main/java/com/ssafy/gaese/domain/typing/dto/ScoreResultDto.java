@@ -14,4 +14,5 @@ public class ScoreResultDto {
 
     List<ScoreUserDto> users;
 
+    boolean isEnd;
 }

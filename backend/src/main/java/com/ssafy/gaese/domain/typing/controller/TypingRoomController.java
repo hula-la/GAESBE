@@ -191,6 +191,7 @@ public class TypingRoomController {
         else
         {
             sendingOperations.convertAndSend("/topic/typing/"+param.getId()+"/enter", resultDto);
+            sendingOperations.convertAndSend("/topic/typing/"+resultDto.getRoomNo()+"/userList", resultDto.getUsers());
         }
 //        return new ResponseEntity<EnterResultDto>(resultDto, HttpStatus.OK);
     }
@@ -201,74 +202,12 @@ public class TypingRoomController {
     @MessageMapping("/typing/check")
     public void typingCheck(CheckParamDto paramDto) throws Exception {
 
+        ScoreResultDto resultDto = typingRoomService.check(paramDto);
 
-        ScoreResultDto resultDto = new ScoreResultDto();
-        resultDto.setUsers(new ArrayList<>());
-
-        TypingRoom typingRoom =typingRoomService.getRoom(paramDto.getRoomNo()).get();
-        
-        System.out.println("/typing/check 에서 불러온  typingRoom 값");
-        System.out.println(typingRoom);
-        
-//        String RoomNo = typingRoomApp.getRoomNoToNickName(paramDto.getNickName());
-        String content = typingRoom.getContent();
-        String[] contents = content.split("\n");
-        int contentLen = content.length()-(contents.length-1)*2;
-        int startTime =typingRoom.getStartTime();
-
-        //게임 맞,틀 증가 후 다시 저장해줘야함
-        boolean endCheck =false;
-        int maxProgress =0;
-        for (TypingUser typingUser: typingRoom.getUsers())
-        {
-            ScoreUserDto scoreUserDto = new ScoreUserDto();
-            int trues =typingUser.getTrues();
-            int errors =typingUser.getErrors();
-
-            if(paramDto.isCheck())
-                trues++;
-            else
-                errors++;
-
-            int nowTime = TypingStaticData.timeMaker();
-
-            int time =startTime-nowTime;
-            if(time<0)
-                time+=3600;
-
-            scoreUserDto.setProgress(((trues+errors)*100)/contentLen);
-            scoreUserDto.setErrors(errors);
-            scoreUserDto.setNickName(typingUser.getNickName());
-            scoreUserDto.setTypeSpeed((trues*60)/time);
-            if(scoreUserDto.getProgress()==100)
-                endCheck=true;
-            if(maxProgress<scoreUserDto.getProgress())
-            {
-                maxProgress=scoreUserDto.getProgress();
-                scoreUserDto.setRank(1);
-            }
-
-            resultDto.getUsers().add(scoreUserDto);
-        }
-
-        for (int i=2; i<=resultDto.getUsers().size();i++)
-        {
-            int sec=0;
-            for (int j=0; j<=resultDto.getUsers().size();j++)
-            {
-                int now = resultDto.getUsers().get(j).getProgress();
-                if(maxProgress > now && sec < now)
-                {
-                    sec=now;
-                    resultDto.getUsers().get(j).setRank(i);
-                }
-            }
-            maxProgress=sec;
-        }
 
         sendingOperations.convertAndSend("/topic/typing/"+paramDto.getRoomNo()+"/score", resultDto);
 
-        if(endCheck)
+        if(resultDto.isEnd())
             sendingOperations.convertAndSend("/topic/typing/"+paramDto.getRoomNo()+"/end", resultDto);
 
         return;

@@ -21,14 +21,12 @@ public class TypingRoom {
 
     String roomCode;
 
-
-
-
     String content;
 
     String lang;
     //랜매는 null
 
+    boolean isStart;
 
     //분*60+초  분까지만 사용 시 바뀌는 경우는 예외처리로 계산
     Integer startTime;
