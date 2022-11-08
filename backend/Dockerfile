@@ -2,12 +2,12 @@ FROM openjdk:11-jdk-slim as builder
 
 
 WORKDIR /usr/src
-COPY /usr/src/chrome chrome
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 COPY src src
+COPY chrome chrome
 RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
 
