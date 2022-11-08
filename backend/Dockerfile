@@ -1,5 +1,9 @@
 FROM openjdk:11-jdk-slim as builder
 
+RUN apt-get update
+RUN apt-get -y install libglib2.0-dev
+RUN apt-get -y install libnss3
+
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
