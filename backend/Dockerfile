@@ -13,7 +13,6 @@ RUN ./gradlew bootJar
 
 
 FROM openjdk:11-jdk-slim
-WORKDIR /usr/src
 COPY --from=builder build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","-Dspring.profiles.active=gcp","/app.jar"]
 EXPOSE 8081
