@@ -37,10 +37,9 @@ const MyPage = () => {
   const handleDelete = () => {
     var deleteConfirm = window.confirm('정말 삭제할거?');
     if (deleteConfirm) {
+      dispatch(authActions.deleteUserInfoStart());
       navigate('/login');
-      localStorage.removeItem('accessToken')
-      dispatch(deleteUserInfoApi);
-      console.log('지금 유저 인포', userInfo)
+      console.log('지금 유저 인포', userInfo);
       // 유저 인포 널로 바꾸고
       // 엑세스 토큰 지우고
     } else {
@@ -48,14 +47,14 @@ const MyPage = () => {
     }
   };
   const handleChange = () => {
-    navigate('change')
-  }
+    navigate('change');
+  };
   return (
     <MyPageContainer>
       <MyCharacter>
         <h1>{userInfo.nickname}</h1>
         <img
-          src={`/img/rank/character${userInfo.profileChar + 1}.png`}
+          src={`/img/rank/character${userInfo.profileChar}.png`}
           alt="asdf"
         />
         <button onClick={handleChange}>정보 수정</button>

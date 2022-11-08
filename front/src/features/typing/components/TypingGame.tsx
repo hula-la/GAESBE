@@ -1,18 +1,37 @@
 import { useEffect, useState } from 'react';
-import { client } from 'stompjs';
 import styled from 'styled-components';
-import { fetchUserInfoApi } from '../../../api/authApi';
-import Stomp from 'stompjs';
-import SockJS from 'sockjs-client';
 import './style.css';
-interface CustomWebSocket extends WebSocket {
-  _transport?: any;
-}
+
 interface CharStateType {
   index: number;
   sentence: number;
   type: number;
 }
+const Personal = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+const PersonalId = styled.div`
+  width: 20%;
+  height: 5vh;
+  border: 2px solid blue;
+`;
+// const PersonalCharacter = styled.div`
+const PersonalCharacter = styled('div')<{ progress: string }>`
+  width: 550px;
+  height: 5vh;
+  border: 2px solid red;
+  /* padding-left: 100px; */
+  .img {
+    padding-left: ${(props) => props.progress};
+    height: 150%;
+  }
+`;
+const PersonalResult = styled.div`
+  width: 20%;
+  height: 5vh;
+  border: 2px solid yellow;
+`;
 const Typing = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,32 +75,7 @@ const This = styled.div`
   color: ${(props) => props.color};
 `;
 const TypingGame = () => {
-  // const socket: CustomWebSocket = new SockJS(
-  //   'https://k7e104.p.ssafy.io:8081/api/ws',
-  // );
-  // const client = Stomp.over(socket);
-  // client.connect({}, (frame) => {
-  //   client.send(
-  //     '/typing/enter',
-  //     {},
-  //     JSON.stringify({
-  //       lang: 'python',
-  //       id: '4',
-  //       nickName: '배준식',
-  //       socketId: socket._transport.url.slice(-18, -10),
-  //       roomCode: '',
-  //       isCreat: false,
-  //     }),
-  //   );
-  //   client.subscribe('/topic/typing/4/enter', (res) => {
-  //     // client.subscribe(`/typing/${userInfo.userId}/enter`, (res) => {
-  //     console.log('메세지 옴 ');
-  //     console.log('asdfasdfas', JSON.parse(res.body));
-  //   });
-  // });
-
   const example = ['forˇiˇinˇrange(1,10):', 'ˇˇˇˇprint(i)'];
-  // const example = ["for\uFE40i\uFE40in\uFE40range(1,10):", "\uFE40\uFE40\uFE40\uFE40print(i)"];
 
   const item = example.map((e) => e);
   let totalLength = 0;
@@ -91,14 +85,17 @@ const TypingGame = () => {
     sentence: 0,
     type: 0,
   });
+  const [progress, setProgress] = useState<number>(0);
   const [index, setIndex] = useState<number>(0);
   const [sentence, setSentence] = useState<number>(0);
   const [endGame, setEndGame] = useState<number>(0);
+  // let percent = parseInt(progress / totalLength);
   const handleSetKey = (event: any) => {
     if (event.key === 'Backspace') {
       event.preventDefault();
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
+        setProgress(progress + 1);
         setIndex(index + 1);
         const changedState = JSON.parse(
           JSON.stringify({ index: index, sentence: sentence, type: 1 }),
@@ -164,6 +161,7 @@ const TypingGame = () => {
           index === example[example.length - 1].length - 1
         ) {
           setIndex(index + 1);
+          setProgress(progress + 1);
           const changedState = JSON.parse(
             JSON.stringify({ index: index, sentence: sentence, type: 1 }),
           );
@@ -175,16 +173,7 @@ const TypingGame = () => {
           // 막타 아니고 그냥 맞은거라면
         } else {
           console.log(index, '맞다');
-          // 보내
-          // client.send(
-          //   '/typing/check',
-          //   {},
-          //   JSON.stringify({
-          //     nickName: '배준식',
-          //     roomNo: '1',
-          //     check: true,
-          //   }),
-          // );
+          setProgress(progress + 1);
           setIndex(index + 1);
           const changedState = JSON.parse(
             JSON.stringify({ index: index, sentence: sentence, type: 1 }),
@@ -229,7 +218,21 @@ const TypingGame = () => {
       <Typing>
         <TypingResult>
           <TypingPersonalResult>
-            여기는 실시간으로 사람1의 정보가 뜬다.
+            <Personal>
+              <PersonalId>유저 아이디</PersonalId>
+              <PersonalCharacter
+                progress={`${(progress / totalLength) * 30}vw`}
+              >
+                <img
+                  className="img"
+                  src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/2_walk.gif"
+                  alt=""
+                />
+              </PersonalCharacter>
+              <PersonalResult>
+                {((progress / totalLength) * 100).toFixed(2)} %
+              </PersonalResult>
+            </Personal>
           </TypingPersonalResult>
           <TypingPersonalResult>
             여기는 실시간으로 사람2의 정보가 뜬다.

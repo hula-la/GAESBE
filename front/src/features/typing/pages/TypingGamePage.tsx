@@ -114,20 +114,26 @@ function TypingGamePage() {
 
   return (
     <Container>
-      {isLoading && (
+      {/* {!isLoading && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
           <p className="loadingText">랜덤 매칭중~</p>
         </LoadingBlock>
       )}
-      {!isLoading && (
+      {isLoading && (
         <TypingGameMain>
           <div className="title">
             <img src="/img/gametitle/gametitle2.png" alt="title" />
           </div>
           <TypingGame />
         </TypingGameMain>
-      )}
+      )} */}
+      <TypingGameMain>
+        <div className="title">
+          <img src="/img/gametitle/gametitle2.png" alt="title" />
+        </div>
+        <TypingGame />
+      </TypingGameMain>
     </Container>
   );
 }
