@@ -1,4 +1,4 @@
-package com.ssafy.gaese.domain.user.exception;
+package com.ssafy.gaese.domain.friends.exception;
 
 public class ReqToMeException extends RuntimeException {
     public ReqToMeException() {
