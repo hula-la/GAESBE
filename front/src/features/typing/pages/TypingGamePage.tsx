@@ -22,6 +22,8 @@ const Container = styled.div`
 `;
 const LoadingBlock = styled.div`
   display: flex;
+  /* border: 2px solid red; */
+  height: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -63,7 +65,7 @@ function TypingGamePage() {
             id: userInfo.id,
             nickName: userInfo.nickname,
             socketId: socket._transport.url.slice(-18, -10),
-            roomCode: '',
+            roomCode: null,
             isCreat: false,
           }),
         );
@@ -112,20 +114,26 @@ function TypingGamePage() {
 
   return (
     <Container>
-      {isLoading && (
+      {/* {!isLoading && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
           <p className="loadingText">랜덤 매칭중~</p>
         </LoadingBlock>
       )}
-      {!isLoading && (
+      {isLoading && (
         <TypingGameMain>
           <div className="title">
             <img src="/img/gametitle/gametitle2.png" alt="title" />
           </div>
           <TypingGame />
         </TypingGameMain>
-      )}
+      )} */}
+      <TypingGameMain>
+        <div className="title">
+          <img src="/img/gametitle/gametitle2.png" alt="title" />
+        </div>
+        <TypingGame />
+      </TypingGameMain>
     </Container>
   );
 }

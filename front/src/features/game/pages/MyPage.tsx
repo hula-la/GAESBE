@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
+import { deleteUserInfoApi } from '../../../api/authApi';
+import { authActions } from '../../auth/authSlice';
+import { authSagas } from '../../auth/authSaga';
+import { useNavigate } from 'react-router-dom';
 const MyPageContainer = styled.div`
   width: 100%;
   color: white;
@@ -25,18 +29,36 @@ const MyPower = styled.div`
   width: 41rem;
 `;
 const MyPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { userInfo } = useSelector((state: any) => state.auth);
   console.log(userInfo);
+
+  const handleDelete = () => {
+    var deleteConfirm = window.confirm('정말 삭제할거?');
+    if (deleteConfirm) {
+      dispatch(authActions.deleteUserInfoStart());
+      navigate('/login');
+      console.log('지금 유저 인포', userInfo);
+      // 유저 인포 널로 바꾸고
+      // 엑세스 토큰 지우고
+    } else {
+      alert('삭제 안함');
+    }
+  };
+  const handleChange = () => {
+    navigate('change');
+  };
   return (
     <MyPageContainer>
       <MyCharacter>
         <h1>{userInfo.nickname}</h1>
         <img
-          src={`/img/rank/character${userInfo.profileChar + 1}.png`}
+          src={`/img/rank/character${userInfo.profileChar}.png`}
           alt="asdf"
         />
-        <button>정보 수정</button>
-        <button>회원 탈퇴</button>
+        <button onClick={handleChange}>정보 수정</button>
+        <button onClick={handleDelete}>회원 탈퇴</button>
         <button>기록 보기</button>
       </MyCharacter>
       <MyPower>
