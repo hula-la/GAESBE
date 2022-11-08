@@ -221,6 +221,7 @@ public class Typing2RoomService {
 
         // 방이 가득 안찼으면 player에 추가하고 변경된 정보 저장
         players.put(typingSocketDto.getSessionId(),typingSocketDto.getUserId());
+        typingRoomDto.setPlayers(players);
 
         TypingRoomDto saved = typingRoomRedisRepository.save(typingRoomDto);
 
