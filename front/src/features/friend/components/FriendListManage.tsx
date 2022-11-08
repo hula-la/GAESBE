@@ -37,7 +37,7 @@ function FriendListMange() {
   return <>
     <h2>친구목록 관리</h2>
     {friendList.length > 0 && friendList.map((friend:FriendInterface)=> {
-      return <FriendListItem friend={friend} type='manage' />
+      return <FriendListItem key={friend.id} friend={friend} type='manage' />
     })}
   </>
 }
