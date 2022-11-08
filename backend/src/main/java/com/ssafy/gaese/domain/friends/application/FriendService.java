@@ -40,7 +40,7 @@ public class FriendService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
 
-        if (targetUser.equals(user)) new ReqToMeException();
+        if (targetUser.getId().equals(user.getId())) new ReqToMeException();
 
         // 친구 상태인지 확인
         User firstuser = null;
