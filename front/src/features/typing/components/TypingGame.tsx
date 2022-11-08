@@ -75,7 +75,18 @@ const This = styled.div`
   color: ${(props) => props.color};
 `;
 const TypingGame = () => {
-  const example = ['forˇiˇinˇrange(1,10):', 'ˇˇˇˇprint(i)'];
+  const example = [
+    'xˇ=ˇint(input())',
+    'ifˇxˇ<ˇ0:',
+    'ˇˇˇˇxˇ=ˇ0',
+    "ˇˇˇˇprint('Negativeˇchangedˇtoˇzero')",
+    'elifˇxˇ==ˇ0:',
+    "ˇˇˇˇprint('Zero')",
+    'elifˇxˇ==ˇ1:',
+    "ˇˇˇˇprint('Single')",
+    'else:',
+    "ˇˇˇˇprint('More')",
+  ];
 
   const item = example.map((e) => e);
   let totalLength = 0;

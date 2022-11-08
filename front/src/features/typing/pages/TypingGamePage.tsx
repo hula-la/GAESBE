@@ -57,19 +57,9 @@ function TypingGamePage() {
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
-        client.send(
-          '/api/typing/enter',
-          {},
-          JSON.stringify({
-            lang: lang,
-            id: userInfo.id,
-            nickName: userInfo.nickname,
-            socketId: socket._transport.url.slice(-18, -10),
-            roomCode: null,
-            isCreat: false,
-          }),
-        );
         client.subscribe(`/topic/typing/${userInfo.id}/enter`, (res) => {
+          console.log('여기가 처음 구독', res.body);
+          console.log('여기가 처음 구독', JSON.parse(res.body).users.length);
           var data = JSON.parse(res.body);
           if (data.roomNo) {
             console.log('있나?');
@@ -82,6 +72,18 @@ function TypingGamePage() {
             console.log('업다');
           }
         });
+        client.send(
+          '/api/typing/enter',
+          {},
+          JSON.stringify({
+            lang: lang,
+            id: userInfo.id,
+            nickName: userInfo.nickname,
+            socketId: socket._transport.url.slice(-18, -10),
+            roomCode: null,
+            isCreat: false,
+          }),
+        );
         // client.subscribe(`/topic/typing/${roomno}/userList`, (res) => {
         //   console.log('asdfasdfasdfasd', res);
         // });
@@ -90,11 +92,13 @@ function TypingGamePage() {
           // 방 유저 정보 가져오기
           client.subscribe(`/topic/typing/${roomno}/userList`, (res) => {
             console.log('asdfasdfasdfasd', res);
+            console.log('asdfasdfasdfasd', JSON.parse(res.body).length);
             // 그 4명이면 게임 시작하자
-            if (res.body.length === 4) {
+            if (JSON.parse(res.body).length === 2) {
               client.subscribe(`/topic/typing/${roomno}/start`, (res) => {
                 // 이 res에는 우리가 쳐야 할 문단이 있다.
                 // 요거를 prop해서 게임컴포넌트에 넘겨줌
+                console.log('게임시작??');
                 console.log(res);
               });
               // 로딩 끝나는걸로 바꿔줌
@@ -106,34 +110,33 @@ function TypingGamePage() {
     }
     // leaveRoom();
     // console.log('나감');
-  });
-  // const leaveRoom = async () => {
-  //   // 소켓 끊고
-  //   await client.disconnect(() => {});
-  // };
+  }, []);
+  // useEffect(() => {
+  //   return client.disconnect(() => {});
+  // }, []);
 
   return (
     <Container>
-      {/* {!isLoading && (
+      {isLoading && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
           <p className="loadingText">랜덤 매칭중~</p>
         </LoadingBlock>
       )}
-      {isLoading && (
+      {!isLoading && (
         <TypingGameMain>
           <div className="title">
             <img src="/img/gametitle/gametitle2.png" alt="title" />
           </div>
           <TypingGame />
         </TypingGameMain>
-      )} */}
-      <TypingGameMain>
+      )}
+      {/* <TypingGameMain>
         <div className="title">
           <img src="/img/gametitle/gametitle2.png" alt="title" />
         </div>
         <TypingGame />
-      </TypingGameMain>
+      </TypingGameMain> */}
     </Container>
   );
 }
