@@ -1,7 +1,5 @@
 FROM openjdk:11-jdk-slim as builder
 
-
-WORKDIR /usr/src
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
