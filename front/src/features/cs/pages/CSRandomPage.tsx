@@ -142,6 +142,14 @@ const IngameBlock = styled.div`
   }
   .rankwrapper {
     margin-right: 1rem;
+    .character {
+      width: 30%;
+      height: 30%;
+    }
+  }
+  .character {
+    width: 70%;
+    height: 30%;
   }
 `;
 
@@ -158,12 +166,11 @@ const CSIngamePage = () => {
   const [isCorrect, setIsCorrect] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [isNext, setIsNext] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<any>(null);
   const [result, setResult] = useState<any>(null);
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
-
-  const { roomType } = location.state;
 
   const initialTime = useRef<number>(5);
   const interval = useRef<any>(null);
@@ -275,6 +282,7 @@ const CSIngamePage = () => {
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
+        // 내 개인 정보 구독
         client.subscribe(`/cs/${userInfo.id}`, (res) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
@@ -289,6 +297,9 @@ const CSIngamePage = () => {
             setIsSolved(data.isSolved);
             setIsSubmit(false);
             setProblem('a');
+            setTimeout(() => {
+              setIsNext(true);
+            }, 7000);
           } else {
             setIsCorrect(data.isCorrect);
           }
@@ -307,6 +318,7 @@ const CSIngamePage = () => {
           }
         });
 
+        // 방에 들어가기
         const enterRoom = () => {
           client.send(
             '/api/cs',
@@ -315,12 +327,13 @@ const CSIngamePage = () => {
               type: 'ENTER',
               sessionId: socket._transport.url.slice(-18, -10),
               userId: userInfo.id,
-              roomType: roomType,
+              roomType: 'RANDOM',
             }),
           );
         };
         enterRoom();
 
+        // 들어오는 순간 방의 사람들 정보를 받음
         const fetchMemberInfo = () => {
           client.send(
             '/api/cs/memberInfo',
@@ -339,6 +352,7 @@ const CSIngamePage = () => {
 
   useEffect(() => {
     if (roomCode) {
+      // 룸코드를 받으면 그 방에 대한 구독을 함
       client2.connect({}, (frame) => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
           var data1 = JSON.parse(res.body);
@@ -355,6 +369,7 @@ const CSIngamePage = () => {
             setIsCorrect(null);
             setIsSolved(null);
             setProblem(data1.currentProblem);
+            setIsNext(false);
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
           } else {
@@ -388,6 +403,7 @@ const CSIngamePage = () => {
     }
   }, [roomCode]);
 
+  // 로딩 & 끝 제어
   useEffect(() => {
     if (players) {
       setIsLoading(false);
@@ -398,6 +414,7 @@ const CSIngamePage = () => {
     }
   }, [players, result, isEnd]);
 
+  // 정답 유무 확인
   const handleAnswerSend = () => {
     client.send(
       '/api/cs/submit',
@@ -429,18 +446,22 @@ const CSIngamePage = () => {
           <div className="waitingContent">
             <div className="imgBox">
               <img src="/img/rank/waitingroom.png" className="waitingroom" />
-              <p>{countArr.indexOf(5)}</p>
               <div className="waitingCharacters">
                 {players &&
                   players.map((player: any, idx: number) => {
                     return (
-                      <img
+                      <div
                         key={idx}
-                        src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/0.png"
                         style={
                           characterLocationArr[countArr.indexOf(player.id)]
                         }
-                      />
+                      >
+                        <div>{player.nickname}</div>
+                        <img
+                          key={idx}
+                          src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/1_normal.gif"
+                        />
+                      </div>
                     );
                   })}
               </div>
@@ -455,7 +476,7 @@ const CSIngamePage = () => {
       {isStart && (
         <IngameBlock>
           <img src="/img/gametitle/gametitle3.png" className="gameTitle" />
-          {!problem && (
+          {(!problem || isNext) && (
             <div>
               <img src="/img/loadingspinner.gif" />
               <p className="loadingText">문제를 불러오고 있습니다</p>
@@ -499,23 +520,91 @@ const CSIngamePage = () => {
                   src="/img/selectbutton/fourbutton.png"
                 />
               </div>
-              <div className="rankBlock">
-                <div className="rankwrapper">
-                  <img src="/img/rank/goldmedal.png" />
-                  <img src="/img/rank/character1.png" />
+              {ranking && (
+                <div className="rankBlock">
+                  <div className="rankwrapper">
+                    <div>
+                      <img src="/img/rank/goldmedal.png" />
+                      {/* <img
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${
+                          Object.keys(ranking[0])[0]
+                        }.png`}
+                      /> */}
+                      <div>
+                        <img
+                          className="character"
+                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
+                        />
+                        <div>
+                          {
+                            players.filter((player: any) => {
+                              return player.id == Object.keys(ranking[0])[0];
+                            })[0].nickname
+                          }
+                        </div>
+                        <div>{ranking[0][Object.keys(ranking[0])[0]]}</div>
+                      </div>
+                      {}
+                    </div>
+                  </div>
+                  <div className="rankwrapper">
+                    <div>
+                      <img src="/img/rank/silvermedal.png" />
+                      {/* <img
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${
+                          Object.keys(ranking[0])[0]
+                        }.png`}
+                      /> */}
+                      <div>
+                        <img
+                          className="character"
+                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
+                        />
+                        <div>
+                          {
+                            players.filter((player: any) => {
+                              return player.id == Object.keys(ranking[1])[0];
+                            })[0].nickname
+                          }
+                        </div>
+                        <div>{ranking[1][Object.keys(ranking[1])[0]]}</div>
+                      </div>
+                      {}
+                    </div>
+                  </div>
+                  <div className="rankwrapper">
+                    <div>
+                      <img src="/img/rank/bronzemedal.png" />
+                      {/* <img
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${
+                          Object.keys(ranking[0])[0]
+                        }.png`}
+                      /> */}
+                      {/* <div>
+                        <img
+                          className="character"
+                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
+                        />
+                        <div>
+                          {
+                            players.filter((player: any) => {
+                              return player.id == Object.keys(ranking[2])[0];
+                            })[0].nickname
+                          }
+                        </div>
+                        <div>{ranking[2][Object.keys(ranking[2])[0]]}</div>
+                      </div> */}
+                      {}
+                    </div>
+                  </div>
+                  <div>
+                    <img
+                      className="character"
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}.png`}
+                    />
+                  </div>
                 </div>
-                <div className="rankwrapper">
-                  <img src="/img/rank/silvermedal.png" />
-                  <img src="/img/rank/character2.png" />
-                </div>
-                <div className="rankwrapper">
-                  <img src="/img/rank/bronzemedal.png" />
-                  <img src="/img/rank/character3.png" />
-                </div>
-                <div>
-                  <img src="/img/rank/character4.png" />
-                </div>
-              </div>
+              )}
             </div>
           )}
           {isSubmit && (
@@ -524,11 +613,19 @@ const CSIngamePage = () => {
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
-          {isCorrect !== null && isSolved !== null && problem === 'a' && (
-            <div>
-              <p>중간결과 페이지</p>
-            </div>
-          )}
+          {isCorrect !== null &&
+            isSolved !== null &&
+            problem === 'a' &&
+            !isNext && (
+              <div>
+                {ranking &&
+                  ranking.map((player: any, idx: number) => {
+                    return (
+                      <div key={idx}>{player[Object.keys(player)[0]]}</div>
+                    );
+                  })}
+              </div>
+            )}
         </IngameBlock>
       )}
     </Container>
