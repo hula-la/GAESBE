@@ -18,32 +18,32 @@ import java.rmi.ServerError;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(value = {UserNotFoundException.class})
-    public ResponseEntity<Object> handleUserNotFoundException(ServerError ex){
+    public ResponseEntity<Object> handleUserNotFoundException(){
         ErrorCode ec = ErrorCode.NOUSER_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
     @ExceptionHandler(value = {AlreadyFriendRequestException.class})
-    public ResponseEntity<Object> handleAlreadyFriendRequestException(ServerError ex){
+    public ResponseEntity<Object> handleAlreadyFriendRequestException(){
         ErrorCode ec = ErrorCode.ALREADYREQ_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
     @ExceptionHandler(value = {ReqToMeException.class})
-    public ResponseEntity<Object> handleReqToMeException(ServerError ex){
+    public ResponseEntity<Object> handleReqToMeException(){
         ErrorCode ec = ErrorCode.REQTOME_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
     @ExceptionHandler(value = {AlreadyFriendReqToMeException.class})
-    public ResponseEntity<Object> handleAlreadyFriendReqToMeException(ServerError ex){
+    public ResponseEntity<Object> handleAlreadyFriendReqToMeException(){
         ErrorCode ec = ErrorCode.ALREADYREQTOME_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
     @ExceptionHandler(value = {NotFriendException.class})
-    public ResponseEntity<Object> handleNotFriendException(ServerError ex){
+    public ResponseEntity<Object> handleNotFriendException(){
         ErrorCode ec = ErrorCode.NOTFRIEND_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
     @ExceptionHandler(value = {AlreadyFriendException.class})
-    public ResponseEntity<Object> handleAlreadyFriendException(ServerError ex){
+    public ResponseEntity<Object> handleAlreadyFriendException(){
         ErrorCode ec = ErrorCode.ALREADYFRIEND_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
