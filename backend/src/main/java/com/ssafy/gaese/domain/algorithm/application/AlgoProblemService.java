@@ -15,6 +15,7 @@ import com.ssafy.gaese.domain.algorithm.dto.AlgoSolveReq;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -37,6 +38,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 
 @Service
 @RequiredArgsConstructor
@@ -57,12 +61,14 @@ public class AlgoProblemService {
 //            System.out.println("======크롤링 설정 시작 ========");
 //            ClassPathResource classPathResource = new ClassPathResource("./chromedriver");
 //            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
-            System.setProperty("webdriver.chrome.driver","chrome/chromedriver");
-
+            System.setProperty("webdriver.chrome.driver",ChromePath);
+            System.out.println(System.getProperty("webdriver.chrome.driver"));
+            System.out.println("======크롤링 옵션 전 ========");
 
             ChromeOptions options = new ChromeOptions();
             options.addArguments("headless"); // 창 없이 크롤링
             WebDriver driver = new ChromeDriver(options);
+
             // 크롤링
             System.out.println("======크롤링 시작 ========");
             driver.get("https://www.acmicpc.net/user/"+userBjId);
@@ -72,7 +78,9 @@ public class AlgoProblemService {
             System.out.println(problems.toString());
 
         }catch (Exception e){
-            /** 크롤링 에러처리 */
+
+            System.out.println("크롤링 중 에러 발생");
+            System.out.println(e.toString());
         }
 
         if(problems.size()==0) return;
@@ -161,21 +169,25 @@ public class AlgoProblemService {
 //            ClassPathResource classPathResource = new ClassPathResource("/src/main/resources/chromedriver");
 //            System.out.println(classPathResource.getPath());
 //            System.setProperty("webdriver.chrome.driver",classPathResource.getPath());
-            System.setProperty("webdriver.chrome.driver",ChromePath);
-            String getProp = System.getProperty("webdriver.chrome.driver");
-            System.out.println(">>>>>"+getProp);
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("headless"); // 창 없이 크롤링
-            WebDriver driver = new ChromeDriver(options);
+//            System.setProperty("webdriver.chrome.driver",ChromePath);
+//            String getProp = System.getProperty("webdriver.chrome.driver");
+//            System.out.println(">>>>>"+getProp);
+            WebDriver driver = WebDriverManager.chromedriver().create();
+
+//            ChromeOptions options = new ChromeOptions();
+//            options.addArguments("headless"); // 창 없이 크롤링
+//            WebDriver driver = new ChromeDriver(options);
             // 크롤링
             driver.get("https://www.acmicpc.net/status?problem_id="+algoSolveReq.getProblemId()
                     +"&user_id="+algoSolveReq.getUserBjId()
                     +"&language_id="+algoSolveReq.getLanId());
             WebElement element = driver.findElement(By.className("result-text"));
             String result = element.getText();
+            System.out.println(" 크롤링 완료 > "+ result);
             return  result.equals("맞았습니다!!")? 1 : 0; //
 
-        }catch (NoSuchElementException e){
+        }catch (Exception e){
+            System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
         }
         return -1;
