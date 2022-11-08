@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +23,15 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
+    @PostMapping("/check")
+    public ResponseEntity<Boolean> attendanceCheck(@AuthenticationPrincipal CustomUserDetails user) {
+        Boolean isCheck = attendanceService.attendanceCheck(user.getId());
+        return ResponseEntity.ok().body(isCheck);
+    }
+
     @GetMapping("/check")
-    public ResponseEntity<Boolean> getCurrentUser(@AuthenticationPrincipal CustomUserDetails user) {
-        Boolean isCheck = attendanceService.attendanceCheck(user.getId(), LocalDate.now());
+    public ResponseEntity<List<String>> getAttendance(@AuthenticationPrincipal CustomUserDetails user) {
+        List<String> isCheck = attendanceService.getAttendance(user.getId());
         return ResponseEntity.ok().body(isCheck);
     }
 

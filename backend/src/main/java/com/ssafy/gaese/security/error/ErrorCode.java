@@ -13,7 +13,8 @@ public enum ErrorCode {
     REQTOME_TOKEN(450, "이미 보낸 친구 요청"),
     ALREADYREQTOME_TOKEN(487, "친구가 이미 요청 보냄"),
     NOTFRIEND_TOKEN(440, "친구가 아님"),
-    ALREADYFRIEND_TOKEN(445, "이미 친구임");
+    ALREADYFRIEND_TOKEN(445, "이미 친구임"),
+    ALREADYCHECK_TOKEN(446, "이미 출석체크");
 
     private final int code;
     private final String message;

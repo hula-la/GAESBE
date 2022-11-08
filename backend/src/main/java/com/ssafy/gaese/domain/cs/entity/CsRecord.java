@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.joda.time.LocalDate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,9 +35,7 @@ public class CsRecord {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @DateTimeFormat(pattern = "yyyy-MM-DD")
-    @Column(nullable = false)
-    private LocalDate date;
+    private String date;
 
 
 
@@ -47,8 +48,8 @@ public class CsRecord {
     public CsRecordDto toDto(){
         return CsRecordDto.builder()
                 .csRecordId(this.id)
-                .date(this.date)
                 .ranks(this.ranks)
+                .date(this.date)
                 .build();
     }
 
