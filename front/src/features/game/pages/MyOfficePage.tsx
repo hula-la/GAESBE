@@ -9,6 +9,8 @@ import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
 import FriendMainPage from '../../friend/pages/FriendMainPage';
 
+import { attendanceRequest } from '../../../api/mypageApi'
+
 const Friend = styled.div`
   width: 21.75%;
   background-color: #232323;
@@ -17,9 +19,18 @@ const Friend = styled.div`
 `;
 const MyOfficePage = () => {
 
+  const attendance = () => {
+    try {
+      const res = attendanceRequest()
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
-      <Level0 />
+      <Level0 attendance={attendance} />
       {/* <Level1 /> */}
       {/* <Level2 /> */}
       {/* <Level3 /> */}
