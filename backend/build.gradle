@@ -73,7 +73,7 @@ dependencies {
 	// firebase
 	implementation 'com.google.firebase:firebase-admin:9.1.0'
 
-
+	implementation "io.github.bonigarcia:webdrivermanager:5.3.1"
 
 
 }
