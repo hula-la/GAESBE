@@ -200,7 +200,7 @@ public class CsService {
             List<Map.Entry<Long, Long>> rankEntryList = new LinkedList<>(currentScore.entrySet());
             rankEntryList.sort((o1, o2) -> -o1.getValue().compareTo(o2.getValue()));
 
-            Object[][] rankList = new Object[rankEntryList.size()][2];
+            Object[][] rankList = new Object[rankEntryList.size()][3];
 
             for (int j = 0; j < rankEntryList.size(); j++) {
                 Long userId = rankEntryList.get(j).getKey();
