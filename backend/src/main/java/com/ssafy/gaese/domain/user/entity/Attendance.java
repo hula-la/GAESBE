@@ -1,9 +1,12 @@
 package com.ssafy.gaese.domain.user.entity;
 
 import lombok.*;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.util.Date;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -17,9 +20,10 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date date;
+    private LocalDate date;
 
-    @ManyToOne()
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
 }

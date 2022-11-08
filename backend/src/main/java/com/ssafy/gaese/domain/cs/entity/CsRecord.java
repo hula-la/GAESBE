@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.joda.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -33,7 +34,7 @@ public class CsRecord {
 
     @DateTimeFormat(pattern = "yyyy-MM-DD")
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
 
 
 

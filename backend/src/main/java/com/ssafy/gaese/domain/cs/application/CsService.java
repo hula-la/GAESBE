@@ -9,10 +9,12 @@ import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
 import com.ssafy.gaese.domain.cs.exception.*;
 import com.ssafy.gaese.domain.cs.repository.*;
+import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -60,7 +62,12 @@ public class CsService {
         // 사용자의 문제와 서버의 문제가 다르면 시간초과 에러 발생
         // 한번더 제출하면 안됨
         if(roomDto.getIsSolvedByPlayer().get(csSubmitDto.getUserId())) throw new DoubleSubmitException();
-        if(roomDto.getCurrentIdx()!=csSubmitDto.getProblemId()) throw new ExceedTimeException();
+        if(roomDto.getCurrentIdx()!=csSubmitDto.getProblemId()) {
+            System.out.println("문제가 지나침");
+            System.out.println("찐 문제 번호"+roomDto.getCurrentIdx());
+            System.out.println("사용자 문제 번호"+csSubmitDto.getProblemId());
+            throw new ExceedTimeException();
+        }
 
 
         // 문제가 같으면 계속 진행
@@ -190,14 +197,22 @@ public class CsService {
             HashMap<Long, Long> currentScore = roomDto.getScore();
 
             // 점수 순으로 정렬
-            List<Map.Entry<Long, Long>> entryList = new LinkedList<>(currentScore.entrySet());
-            entryList.sort((o1, o2) -> -o1.getValue().compareTo(o2.getValue()));
-            Object[] rankList = entryList.toArray();
+            List<Map.Entry<Long, Long>> rankEntryList = new LinkedList<>(currentScore.entrySet());
+            rankEntryList.sort((o1, o2) -> -o1.getValue().compareTo(o2.getValue()));
+
+            Object[][] rankList = new Object[rankEntryList.size()][2];
+
+            for (int j = 0; j < rankEntryList.size(); j++) {
+                Long userId = rankEntryList.get(j).getKey();
+                User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+                rankList[i][0] = userId;
+                rankList[i][1] = user.getNickname();
+                rankList[i][2] = rankEntryList.get(j).getValue();
+            }
+
 
             // 맞았는지
             HashMap<Long, Boolean> isSolvedByPlayer1 = roomDto.getIsSolvedByPlayer();
-
-
 
 
 
@@ -257,6 +272,8 @@ public class CsService {
 
         int rank=0;
         long lastScore=-1;
+
+
         for(Map.Entry<Long, Long> entry : entryList){
             if (lastScore!=entry.getValue()) rank++;
             rankByPlayer.put(entry.getKey(),rank);
@@ -266,12 +283,13 @@ public class CsService {
         roomDto.getPlayers().forEach((k,v)->{
             CsRecord csRecord = CsRecord.builder()
                     .user(userRepository.findById(Long.valueOf(v)).orElseThrow(() -> new UserNotFoundException()))
-                    .date(new Date())
+                    .date(LocalDate.now())
                     .ranks(rankByPlayer.get(v))
                     .build();
             CsRecord saved = csRecordRepository.save(csRecord);
 
 
+            // 레디스에 저장되어잇는 기록 db에 저장
             CsRecordRedisDto csRecordRedisDto = csRecordRedisRepository.findById(roomDto.getCode() + v).orElseThrow(() -> new RoomNotFoundException());
             Boolean[] isCorrectedList = csRecordRedisDto.getIsCorrectList();
             for (int i = 0; i < numProblem; i++) {
@@ -282,6 +300,7 @@ public class CsService {
                         .build();
                 csRecordProblemRepository.save(csRecordProblem);
             }
+            csRecordRedisRepository.deleteById(roomDto.getCode() + v);
         });
 
     }

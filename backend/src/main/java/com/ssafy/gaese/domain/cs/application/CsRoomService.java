@@ -2,6 +2,8 @@ package com.ssafy.gaese.domain.cs.application;
 
 import com.ssafy.gaese.domain.cs.dto.CsRoomDto;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
+import com.ssafy.gaese.domain.cs.repository.CsRecordRedisRepository;
+import com.ssafy.gaese.domain.cs.repository.CsRecordRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.cs.entity.CsProblem;
 import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
@@ -29,6 +31,8 @@ public class CsRoomService {
 
     private final RedisUtil redisUtil;
     private final CsRoomRedisRepository csRoomRedisRepository;
+    private final CsRecordRedisRepository csRecordRedisRepository;
+
     private final UserRepository userRepository;
     private final CsProblemRepository csProblemRepository;
 
@@ -228,6 +232,12 @@ public class CsRoomService {
     // 방 삭제 (게임 끝나면 방 삭제)
     public boolean deleteRoom(String roomId){
         csRoomRedisRepository.deleteById(roomId);
+
+        return true;
+    }
+
+    public boolean deleteRecord(String roomCode,Long userId){
+        csRecordRedisRepository.deleteById(roomCode+userId);
 
         return true;
     }
