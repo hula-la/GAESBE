@@ -60,7 +60,7 @@ const Calender = styled.img`
     transition: 0.4s ease-in-out;
   }
 `;
-const Level0 = () => {
+const Level0 = ({attendance}:any) => {
   const navigate = useNavigate();
   const handleCoin = () => {
     navigate('/game/casino');
@@ -78,7 +78,7 @@ const Level0 = () => {
       />
       <Coin onClick={handleCoin} src="/img/coin/coin.png" />
       <Note src="/img/MyOffice/level0note.png" />
-      <Calender src="/img/MyOffice/level0calender.png" />
+      <Calender onClick={attendance} src="/img/MyOffice/level0calender.png" />
     </Unity>
   );
 };
