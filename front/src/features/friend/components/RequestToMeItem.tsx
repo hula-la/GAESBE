@@ -17,7 +17,7 @@ function RequestToMeItem({requestListItem, fetchRequestToMe}: any) {
 
   const requestAccept = async () => {
     try {
-      const res = await requestToMeAccept(requestListItem.requestUser.friendId)
+      const res = await requestToMeAccept(requestListItem.requestUser.id)
       console.log(res)
       if (res.status === 200) {
         fetchRequestToMe()
