@@ -81,6 +81,7 @@ public class AlgorithmController {
     }
 
     @PostMapping("/solve/{roomCode}")
+    @ApiOperation(value="문제 맞춤 여부 확인")
     public ResponseEntity<Object> checkSolve(@PathVariable String roomCode,
                                              @AuthenticationPrincipal CustomUserDetails userDetails,
                                              @RequestBody AlgoSolveReq algoSolveReq) throws ParseException {
@@ -101,6 +102,7 @@ public class AlgorithmController {
     }
 
     @GetMapping("/bj")
+    @ApiOperation(value="백중 아이디 저장 유무 확인")
     public ResponseEntity<Object> bjIdCheck(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
         String bjId = algoService.checkBjId(userDetails.getId());
@@ -111,11 +113,13 @@ public class AlgorithmController {
         return ResponseEntity.ok().body(res);
     }
     @GetMapping("/bj/code")
+    @ApiOperation(value="백중 아이디 연동 코드 전송")
     public ResponseEntity<Object> creatCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok().body(algoService.createCode(userDetails.getId()));
     }
 
     @GetMapping("/bj/code/confirm")
+    @ApiOperation(value="백중 아이디 연동 확인")
     public ResponseEntity<Object> confirmCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok().body(algoService.confirmCode(userDetails.getId()));
     }

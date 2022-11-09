@@ -8,7 +8,6 @@ import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRoomPassRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ public class AlgoSocketService {
 
     private final AlgoRoomPassRepository algoRoomPassRepository;
     private final AlgoRedisRepository algoRedisRepository;
-    private final AlgoRedisRepositoryCustom algoRedisRepositoryCustom;
     private final RedisTemplate redisTemplate;
 
     public AlgoRoomPassDto getRoomPass(String roomCode){

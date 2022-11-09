@@ -9,7 +9,6 @@ import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
-
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -17,32 +16,23 @@ import com.ssafy.gaese.global.redis.SocketInfo;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AlgoService {
-
-//    @Value("${chrome-driver-path}")
-    private String ChromePath;
 
     private final AlgoRepository algoRepository;
     private final UserRepository userRepository;
@@ -241,7 +231,6 @@ public class AlgoService {
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
             ChromeDriver driver = new ChromeDriver(chromeOptions);
-//            WebDriver d = new ChromeDriverService();
             // 크롤링
             driver.get("https://www.acmicpc.net/user/"+userRepository.getBjIdById(userId).get());
             WebElement element = driver.findElement(By.className("no-mathjax"));
@@ -251,7 +240,8 @@ public class AlgoService {
                 hashOperations.delete("bjCodes", userId+"");
             }
         }catch (Exception e){
-            /** 크롤링 에러처리 */
+            System.out.println("크롤링 중 에러 발생");
+            System.out.println(e.getMessage());
         }
         return res;
     }
