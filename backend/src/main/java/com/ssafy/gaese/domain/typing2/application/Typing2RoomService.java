@@ -232,14 +232,27 @@ public class Typing2RoomService {
     }
 
     // 방 나가기
-    public TypingRoomDto leaveRoom(TypingSocketDto csSocketDto){
-        TypingRoomDto csRoom = typingRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+    public TypingRoomDto leaveRoom(TypingSocketDto typingSocketDto){
+        TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
 
-        HashMap<String, Long> players = csRoom.getPlayers();
-        players.remove(csSocketDto.getSessionId());
+        HashMap<String, Long> players = typingRoomDto.getPlayers();
+        players.remove(typingSocketDto.getSessionId());
+
+        // 0명이면 삭제
+        String waitRoomKey=null;
+        if (typingSocketDto.getLangType()== TypingRecord.LangType.JAVA){
+            waitRoomKey=JavaWaitRoomKey;
+        }else{
+            waitRoomKey=PythonWaitRoomKey;
+
+        }
+        if (players.size()==0) {
+            redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
+            typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
+        }
 
         // 바뀐 방 정보로 저장
-        TypingRoomDto saved = typingRoomRedisRepository.save(csRoom);
+        TypingRoomDto saved = typingRoomRedisRepository.save(typingRoomDto);
 
         getUserInRoom(saved.getCode());
         return saved;
