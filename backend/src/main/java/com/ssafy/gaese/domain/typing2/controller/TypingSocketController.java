@@ -24,7 +24,9 @@ public class TypingSocketController {
     // 문제 제출
     @MessageMapping("/typing2/submit")
     public void submitAnswer(TypingSubmitDto typingSubmitDto) throws Exception{
+        System.out.println("***8답 제출****");
         typingService.submitAnswer(typingSubmitDto);
+        System.out.println("***8답 처리 끝****");
     }
 
     @MessageMapping("/typing2/memberInfo")
