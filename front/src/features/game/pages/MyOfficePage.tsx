@@ -19,12 +19,16 @@ const Friend = styled.div`
 `;
 const MyOfficePage = () => {
 
-  const attendance = () => {
+  const attendance = async () => {
     try {
-      const res = attendanceRequest()
-      console.log(res)
-    } catch (error) {
-      console.log(error)
+      const res = await attendanceRequest()
+      if (res.status===200) {
+        alert('출석체크 되었습니다')
+      }
+    } catch (error:any) {
+      if (error.response.status===446) {
+        alert('오늘은 이미 출석했습니다')
+      }
     }
   }
 
