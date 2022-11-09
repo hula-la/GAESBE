@@ -129,10 +129,6 @@ function AlgoInBattle() {
   };
   // 방 떠나기 끝
 
-  const handleProgress = (e: React.MouseEvent) => {
-    setProgress(e.currentTarget.innerHTML);
-  };
-
   const handleLeaveRoom = async () => {
     navigate('/game/algo/list');
   };
@@ -156,8 +152,6 @@ function AlgoInBattle() {
   return (
     <>
       <h1>알고리즘 배틀 페이지</h1>
-      <button onClick={handleProgress}>before</button>
-      <button onClick={handleProgress}>after</button>
       {progress === 'before' && (
         <AlgoBeforeStart
           handleLeaveRoom={handleLeaveRoom}

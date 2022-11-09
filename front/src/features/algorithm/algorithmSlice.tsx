@@ -41,6 +41,9 @@ const algoSlice = createSlice({
     },
     exitAlgoRoom(state) {
       state.InGameInfo = null
+    },
+    checkMyAnswerRequestStart(state, action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
+      state.isLoading = true
     }
   }
 })

@@ -20,5 +20,12 @@ export const confirmAlgoRoom = async (params: string) => {
 }
 
 export const bojUserIdRequest = async (roomCode: string, userBjId: string) => {
-  const res = await client.get(`algo/user/problem/${roomCode}/${userBjId}`)
+  const res = await client.get(`/algo/user/problem/${roomCode}/${userBjId}`)
+  return res
+}
+
+export const checkMyAnswerRequest = async (meta:{roomCode:string, problemId: number, userBjId: string, lanId: number}) => {
+  const body = {'problemId':meta.problemId, 'userBjId':meta.userBjId, 'lanId':meta.lanId}
+  const res = await client.post(`/algo/solve/${meta.roomCode}`, body)
+  return res
 }
