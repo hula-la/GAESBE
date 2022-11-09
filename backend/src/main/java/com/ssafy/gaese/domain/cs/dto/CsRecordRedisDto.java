@@ -13,7 +13,7 @@ import java.util.HashSet;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("CsRecord")
+@RedisHash(value = "CsRecord", timeToLive = 60*60*2)
 public class CsRecordRedisDto {
 
     @Id
