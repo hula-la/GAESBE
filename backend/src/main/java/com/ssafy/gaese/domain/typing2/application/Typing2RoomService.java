@@ -113,7 +113,7 @@ public class Typing2RoomService {
         res.put("msg", "ready");
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
-        Thread.sleep(6*1000);
+//        Thread.sleep(6*1000);
 
         // 게임 시작했다고 클라이언트에게 알리기
 
