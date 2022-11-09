@@ -154,6 +154,8 @@ public class CsRoomService {
 
         String roomIdToEnter = null;
 
+        System.out.println("랜덤밤으로 들어감, 랜덤방 수"+waitRooms.size());
+
         for (String room:waitRooms){
             Optional<CsRoomDto> roomInfoOpt = csRoomRedisRepository.findById(room);
 
@@ -188,12 +190,14 @@ public class CsRoomService {
 
     // 친선전 방 만들기
     public CsRoomDto enterMyRoom(CsSocketDto csSocketDto) {
+        CsRoomDto csRoomDto = CsRoomDto.create();
+
         // 들어갈 곳이 없으면 새로운 방 생성
-        String newRoomCode = createRoom().getCode();
+        CsRoomDto savedRoom = csRoomRedisRepository.save(csRoomDto);
 
-        csSocketDto.setRoomCode(newRoomCode);
+        csSocketDto.setRoomCode(savedRoom.getCode());
 
-        CsRoomDto csRoomDto = enterRoom(csSocketDto);
+        csRoomDto = enterRoom(csSocketDto);
         return csRoomDto;
     }
     // 친선전 방 입장
