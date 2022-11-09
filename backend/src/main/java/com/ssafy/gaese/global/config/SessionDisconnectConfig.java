@@ -44,7 +44,7 @@ public class SessionDisconnectConfig {
             //ex
             case "Typing":
                 typingRoomService.exitRoom(info[3]);
-                socketInfo.delSocketInfo(sessionId);
+//                socketInfo.delSocketInfo(sessionId);
                 break;
             case "Cs":
                 CsSocketDto csSocketDto = CsSocketDto.builder()
@@ -56,6 +56,8 @@ public class SessionDisconnectConfig {
 
                 csRoomService.enterOrLeave(csSocketDto);
                 csRoomService.deleteRecord(info[1],Long.parseLong(info[0]));
+                // 게임을 하고 있다는 기록 지움
+                socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
             case "Typing2":
                 TypingSocketDto typingSocketDto = TypingSocketDto.builder()
