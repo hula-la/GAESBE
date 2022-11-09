@@ -65,7 +65,7 @@ public class TypingService {
 
 
         // 랜덤 문단
-        List<TypingParagraph> randomProblem = typingParagraphRepository.findRandomProblem(1,roomDto.getLangType());
+        List<TypingParagraph> randomProblem = typingParagraphRepository.findRandomProblem(1,roomDto.getLangType().name());
         TypingParagraph paragraph = randomProblem.get(0);
         Long paragraphId = paragraph.getId();
 
