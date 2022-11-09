@@ -30,6 +30,7 @@ public class TypingParagraph {
     private String content;
 
 
+    @Enumerated(EnumType.STRING)
     private TypingRecord.LangType langType;
 
 

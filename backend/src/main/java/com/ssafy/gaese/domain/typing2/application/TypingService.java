@@ -58,11 +58,13 @@ public class TypingService {
             progressByPlayer.put(v,0f);
         });
         roomDto.setProgressByPlayer(progressByPlayer);
+        res.clear();
+        res.put("roomDto",roomDto);
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
 
 
-        // numCorrectByRound 초기화
+        // 랜덤 문단
         List<TypingParagraph> randomProblem = typingParagraphRepository.findRandomProblem(1,roomDto.getLangType());
         TypingParagraph paragraph = randomProblem.get(0);
         Long paragraphId = paragraph.getId();
@@ -80,7 +82,9 @@ public class TypingService {
         roomDto = typingRoomRedisRepository.save(roomDto);
 
         // 문제 보내기
+        res.clear();
         res.put("paragraph", paragraph.getContent());
+        res.put("roomDto", roomDto);
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
     }
 

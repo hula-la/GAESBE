@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TypingParagraphRepository extends JpaRepository<TypingParagraph, Long> {
-    @Query(value = "SELECT * FROM gaese.cs_problem order by RAND() limit :ProblemNum where langType=:langType",nativeQuery = true)
+    @Query(value = "SELECT * FROM gaese.typing_paragraph WHERE langType=:langType order by RAND() limit :ProblemNum",nativeQuery = true)
     List<TypingParagraph> findRandomProblem(@Param("ProblemNum") int problemNum, TypingRecord.LangType langType);
 
 }
