@@ -2,7 +2,7 @@ import {all, takeEvery, takeLatest, put, call, take, fork, delay} from 'redux-sa
 import { AxiosResponse } from 'axios'
 import { Action, AlgoRoomInterface } from '../../models/algo'
 import { algoActions } from './algorithmSlice'
-import { confirmAlgoRoom, makeAlgoRoom } from '../../api/algoApi'
+import { confirmAlgoRoom, makeAlgoRoom, checkMyAnswerRequest } from '../../api/algoApi'
 
 
 function* enterAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
@@ -31,10 +31,27 @@ function* creatAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
   }
 }
 
+function* checkMyAnswerRequestSaga(action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
+  try {
+    const res: AxiosResponse = yield call(checkMyAnswerRequest, action.payload)
+    console.log(res)
+    if (res.status === 200) {
+      if (res.data.res === '1') {
+        console.log(res.data.msg)
+      } else {
+        alert(res.data.msg)
+      }
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function* algoSaga() {
   // const { enterAlgoRoom, creatAlgoRoom } = algoActions
   yield takeLatest(algoActions.enterAlgoRoom, enterAlgoRoomSaga)
   yield takeLatest(algoActions.creatAlgoRoom, creatAlgoRoomSaga)
+  yield takeLatest(algoActions.checkMyAnswerRequestStart, checkMyAnswerRequestSaga)
 }
 
 export const algoSagas = [fork(algoSaga)];
