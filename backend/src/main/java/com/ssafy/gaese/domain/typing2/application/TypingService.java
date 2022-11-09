@@ -44,30 +44,38 @@ public class TypingService {
     public void gameStart(TypingRoomDto roomDto) throws InterruptedException {
         Map<String,Object> res = new HashMap<>();
 
+        System.out.println("게임 시작");
+        System.out.println(roomDto);
 
         // 게임 시작했다고 클라이언트에게 알리기
         res.put("msg", "start");
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
-        List<TypingParagraph> randomProblem = typingParagraphRepository.findRandomProblem(1,roomDto.getLangType());
 
-        TypingParagraph paragraph = randomProblem.get(0);
-        Long paragraphId = paragraph.getId();
-
-        // numCorrectByRound 초기화
+        // 진행도 미리 보냄
         HashMap<Long, Float> progressByPlayer = new HashMap<>();
-
-
         roomDto.getPlayers().values().forEach(v->{
             progressByPlayer.put(v,0f);
         });
         roomDto.setProgressByPlayer(progressByPlayer);
+        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
+
+
+
+        // numCorrectByRound 초기화
+        List<TypingParagraph> randomProblem = typingParagraphRepository.findRandomProblem(1,roomDto.getLangType());
+        TypingParagraph paragraph = randomProblem.get(0);
+        Long paragraphId = paragraph.getId();
+
+        System.out.println("선택된 문단"+paragraph.getContent());
+        System.out.println("선택된 문단"+paragraph.getId());
+
+
         roomDto.setParagraphId(paragraphId);
         roomDto.setParagraphLength(paragraph.getContent().length());
 
 //        시작 시간 알림
         roomDto.setStartTime(System.currentTimeMillis());
-
 
         roomDto = typingRoomRedisRepository.save(roomDto);
 
