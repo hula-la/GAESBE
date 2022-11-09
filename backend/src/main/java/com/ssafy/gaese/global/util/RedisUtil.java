@@ -39,46 +39,9 @@ public class RedisUtil {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         return setOperations.remove(key,value);
     }
-
-
-    public void setHashData(String key, Map<String, String[]> map){
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
-        hashOperations.putAll(key,map);
-    }
-    public Float getHashData(Long key1, Long key2){
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
-        return (Float) hashOperations.get(String.valueOf(key1),String.valueOf(key2));
-    }
-    public Map<String, String[]> getHashEntry(String key1){
-        HashOperations<String, String, String[]> hashOperations = redisTemplate.opsForHash();
-        return hashOperations.entries(String.valueOf(key1));
+    public Boolean isExistSetData(String key, String value){
+        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
+        return setOperations.isMember(key,value);
     }
 
-    // 데이터 저장
-    public void setData(String key, String value){
-        ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set(key, value);
-    }
-
-    // 유효 기간 설정
-    public void setDataExpire(String key, String value, long duration){
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        Duration expireDuration = Duration.ofSeconds(duration);
-        valueOperations.set(key, value, expireDuration);
-    }
-
-    // key를 통해 value 삭제
-    public void deleteData(String key){
-        redisTemplate.delete(key);
-    }
-
-    public void print(){
-        Set<byte[]> keys = redisTemplate.getConnectionFactory().getConnection().keys("*".getBytes());
-
-        Iterator<byte[]> it = keys.iterator();
-        while(it.hasNext()){
-            byte[] data = (byte[])it.next();
-            System.out.println(new String(data, 0, data.length));
-        }
-    }
 }

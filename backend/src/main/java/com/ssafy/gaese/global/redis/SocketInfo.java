@@ -1,11 +1,14 @@
 package com.ssafy.gaese.global.redis;
 
+import com.ssafy.gaese.global.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SocketInfo {
 
     //권민용
@@ -17,10 +20,11 @@ public class SocketInfo {
     //Val = ',' 로 구분자를 둔 String 형태
     //순서 : {id},{roomCode},{gameType},{nickName}
     //nickName 은 개인적으로 필요해서 넣었습니다. set 넣으실때 null이 아닌 빈 문자열이나 더미값 넣어주세요.
-    @Autowired
-    StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate redisTemplate;
+    private final RedisUtil redisUtil;
 
     static final String key ="SocketInfo";
+    static final String gamekey ="GameOnlinePlayer";
 
     public String geSocketInfo(String socketId)
     {
@@ -41,8 +45,22 @@ public class SocketInfo {
 
         sb.append(id).append(',').append(roomCode).append(',').append(gameType).append(',').append(nickName);
 
+    }
 
-        HashOperations.put(key,socketId,sb.toString());
+    public void setOnlinePlayer(Long userId)
+    {
+        redisUtil.addSetData(gamekey, String.valueOf(userId));
+
+    }
+    public boolean isPlayGame(Long userId)
+    {
+        return redisUtil.isExistSetData(gamekey, String.valueOf(userId));
+
+    }
+    public void stopPlayGame(Long userId)
+    {
+        redisUtil.removeSetData(gamekey, String.valueOf(userId));
+
     }
 
     public void delSocketInfo(String socketId)
@@ -51,5 +69,7 @@ public class SocketInfo {
                 redisTemplate.opsForHash();
 
         HashOperations.delete(key,socketId);
+
+
     }
 }

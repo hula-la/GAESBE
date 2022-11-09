@@ -1,8 +1,8 @@
 package com.ssafy.gaese.domain.cs.application;
 
 import com.ssafy.gaese.domain.cs.dto.CsRecordDto;
-import com.ssafy.gaese.domain.cs.dto.CsRecordRedisDto;
-import com.ssafy.gaese.domain.cs.dto.CsRoomDto;
+import com.ssafy.gaese.domain.cs.dto.redis.CsRecordRedisDto;
+import com.ssafy.gaese.domain.cs.dto.redis.CsRoomDto;
 import com.ssafy.gaese.domain.cs.dto.CsSubmitDto;
 import com.ssafy.gaese.domain.cs.entity.CsProblem;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
@@ -12,7 +12,6 @@ import com.ssafy.gaese.domain.cs.repository.*;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
-import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

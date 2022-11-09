@@ -1,9 +1,9 @@
 package com.ssafy.gaese.domain.cs.application;
 
-import com.ssafy.gaese.domain.cs.dto.CsRoomDto;
+import com.ssafy.gaese.domain.cs.dto.redis.CsRoomDto;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
+import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.cs.repository.CsRecordRedisRepository;
-import com.ssafy.gaese.domain.cs.repository.CsRecordRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.cs.entity.CsProblem;
 import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
@@ -15,9 +15,7 @@ import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -47,13 +45,21 @@ public class CsRoomService {
 
     private final String waitRoomKey="WaitRoom";
 
+
     public void enterOrLeave(CsSocketDto csSocketDto) throws InterruptedException {
         CsRoomDto roomDto=null;
         Map<String,Object> res = new HashMap<>();
-        Map<String,Object> roomResByUser = new HashMap<>();
 
         // 방 입장
+        Long userId = csSocketDto.getUserId();
         if(csSocketDto.getType() == CsSocketDto.Type.ENTER){
+            // 다른 게임을 하고있는 중인지 확인
+            if(socketInfo.isPlayGame(userId)){
+                res.clear();
+                res.put("playAnotherGame", true);
+                simpMessagingTemplate.convertAndSend("/cs/"+ userId,res);
+                throw new PlayAnotherGameException();
+            }
 
 
             // 랜덤방 들어가기
@@ -71,28 +77,24 @@ public class CsRoomService {
             }
 
             socketInfo.setSocketInfo(csSocketDto.getSessionId(),
-                    csSocketDto.getUserId().toString(),
+                    userId.toString(),
                     csSocketDto.getRoomCode(),
                     "Cs",
                     null);
 
-            log.debug(csSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에 입장하였습니다.");
-            res.put("enter",csSocketDto.getUserId());
+            // 한개의 게임에만 접속할 수 있도록
+            socketInfo.setOnlinePlayer(userId);
         }
         // 방 나가기
         else if(csSocketDto.getType() == CsSocketDto.Type.LEAVE){
-            roomDto = leaveRoom(csSocketDto);
-            log.debug(csSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에서 나갔습니다.");
-            res.put("exit",csSocketDto.getUserId());
-
+            leaveRoom(csSocketDto);
+            return;
         }
 
-        // enter exit 정보를 방 전원에게 보내줌
-//        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
-
         // 방 코드를 개인에게 전달
-        roomResByUser.put("room",roomDto.getCode());
-        simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),roomResByUser);
+        res.clear();
+        res.put("room",roomDto.getCode());
+        simpMessagingTemplate.convertAndSend("/cs/"+ userId,res);
 
         Thread.sleep(1*1000);
 
@@ -102,7 +104,7 @@ public class CsRoomService {
 
         res.clear();
         res.put("isLast", isLast);
-        simpMessagingTemplate.convertAndSend("/cs/"+csSocketDto.getUserId(),res);
+        simpMessagingTemplate.convertAndSend("/cs/"+ userId,res);
         
 
     }
@@ -137,6 +139,7 @@ public class CsRoomService {
     public CsRoomDto createRoom(){
 
         CsRoomDto csRoomDto = CsRoomDto.create();
+        csRoomDto.setRoomType(CsRoomDto.RoomType.RANDOM);
 
         CsRoomDto savedRoom = csRoomRedisRepository.save(csRoomDto);
 
@@ -191,6 +194,12 @@ public class CsRoomService {
     // 친선전 방 만들기
     public CsRoomDto enterMyRoom(CsSocketDto csSocketDto) {
         CsRoomDto csRoomDto = CsRoomDto.create();
+        csRoomDto.setRoomType(CsRoomDto.RoomType.FRIEND);
+
+        // 해당 user가 반장
+        Long userId = csSocketDto.getUserId();
+        csRoomDto.setMaster(csSocketDto.getUserId());
+        simpMessagingTemplate.convertAndSend("/cs/"+userId,"master");
 
         // 들어갈 곳이 없으면 새로운 방 생성
         CsRoomDto savedRoom = csRoomRedisRepository.save(csRoomDto);
@@ -199,6 +208,18 @@ public class CsRoomService {
 
         csRoomDto = enterRoom(csSocketDto);
         return csRoomDto;
+    }
+    public void changeMaster(CsRoomDto csRoom){
+        HashMap<String, Long> players = csRoom.getPlayers();
+        Collection<Long> keys = players.values();
+
+        // 반장이 될 사람
+        Long nextMasterPlayerId = (Long) keys.toArray()[0];
+        csRoom.setMaster(nextMasterPlayerId);
+        csRoomRedisRepository.save(csRoom);
+
+        simpMessagingTemplate.convertAndSend("/cs/"+nextMasterPlayerId,"master");
+
     }
     // 친선전 방 입장
     public synchronized CsRoomDto enterRoom(CsSocketDto csSocketDto){
@@ -220,7 +241,7 @@ public class CsRoomService {
     }
 
     // 방 나가기
-    public CsRoomDto leaveRoom(CsSocketDto csSocketDto){
+    public void leaveRoom(CsSocketDto csSocketDto){
         CsRoomDto csRoom = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
 
         HashMap<String, Long> players = csRoom.getPlayers();
@@ -232,11 +253,18 @@ public class CsRoomService {
         if (players.size()==0) {
             redisUtil.removeSetData(waitRoomKey,csRoom.getCode());
             deleteRoom(csRoom.getCode());
+            return;
+        }
+
+        // 나간사람이 친선전의 반장이면 다음 사람한테 반장 위임
+        if (csRoom.getRoomType()== CsRoomDto.RoomType.FRIEND&&
+        csRoom.getMaster()==csSocketDto.getUserId()){
+            changeMaster(csRoom);
         }
 
         CsRoomDto saved = csRoomRedisRepository.save(csRoom);
         getUserInRoom(saved.getCode());
-        return saved;
+//        return saved;
     }
 
     // 방 삭제 (게임 끝나면 방 삭제)

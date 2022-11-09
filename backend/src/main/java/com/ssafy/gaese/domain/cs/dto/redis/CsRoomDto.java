@@ -1,8 +1,7 @@
-package com.ssafy.gaese.domain.cs.dto;
+package com.ssafy.gaese.domain.cs.dto.redis;
 
 
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -15,10 +14,9 @@ import java.util.*;
 @NoArgsConstructor
 @RedisHash(value = "CsRoom", timeToLive = 60*60*2)
 public class CsRoomDto {
-    public enum RoomStatus {
-        START, WAIT;
+    public enum RoomType {
+        RANDOM, FRIEND;
     }
-
 
     @Id
     private String code;
@@ -28,7 +26,8 @@ public class CsRoomDto {
     private HashSet<Long> problems;
     private Long currentIdx;
     private int round;
-    private RoomStatus roomStatus;
+    private RoomType roomType;
+    private Long master;
 
     // 문제를 풀었는지
     private HashMap<Long, Boolean> isSolvedByPlayer;
@@ -39,12 +38,8 @@ public class CsRoomDto {
 
     public static CsRoomDto create() {
         CsRoomDto csRoomDto = new CsRoomDto();
-        csRoomDto.players = new HashMap<>();
-        csRoomDto.problems = new HashSet<>();
         csRoomDto.currentIdx = -1L;
         csRoomDto.round = 0;
-        csRoomDto.roomStatus = RoomStatus.WAIT;
-        csRoomDto.numCorrectByRound = new HashMap<>();
         return csRoomDto;
     }
 }

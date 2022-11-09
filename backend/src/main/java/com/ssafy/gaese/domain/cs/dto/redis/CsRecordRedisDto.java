@@ -1,12 +1,9 @@
-package com.ssafy.gaese.domain.cs.dto;
+package com.ssafy.gaese.domain.cs.dto.redis;
 
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-
-import java.util.HashMap;
-import java.util.HashSet;
 
 @Getter
 @Setter
