@@ -47,17 +47,17 @@ function TypingMainPage() {
   const [gameType, setGameType] = useState<String>('');
   const navigate = useNavigate();
   const handleEnterGame = () => {
-    navigate('game');
+    navigate('enter', { state: { lang: gameType } });
   };
   const handleRandomGame = () => {
     navigate('enter', { state: { lang: gameType } });
   };
   const handleChoicePython = () => {
-    setGameType('Python');
+    setGameType('PYTHON');
     console.log('파이썬 선택');
   };
   const handleChoiceJava = () => {
-    setGameType('Java');
+    setGameType('JAVA');
     console.log('자바 선택');
   };
   console.log(gameType);
@@ -78,7 +78,7 @@ function TypingMainPage() {
           <button onClick={handleRandomGame}>랜덤매칭</button>
         </SelectTypeBox>
         <SelectTypeBox>
-          <button onClick={handleEnterGame}>친선매칭</button>
+          <button onClick={handleEnterGame}>솔로게임</button>
         </SelectTypeBox>
       </SelectGameType>
     </TypingMain>

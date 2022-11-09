@@ -8,16 +8,19 @@ import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import CombinePage from './features/game/pages/CombinePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import CSgamePage from './features/cs/pages/CSgamePage';
+import AttendancePage from './features/game/pages/AttendancePage'
 
 import Background from './components/Layout/Background';
 import MyOfficePage from './features/game/pages/MyOfficePage';
 import CoinFlipPage from './features/coinflip/CoinFlipPage';
 import AlgoPage from './features/algorithm/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
-import CSIngamePage from './features/cs/pages/CSIngamePage';
-import { useDispatch, useSelector } from 'react-redux';
+import CSRandomPage from './features/cs/pages/CSRandomPage';
 import CSResultPage from './features/cs/pages/CSResultPage';
+import CSFriendPage from './features/cs/pages/CSFriendPage';
+import { useDispatch, useSelector } from 'react-redux';
 import MyPage from './features/game/pages/MyPage';
+import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
 import FriendSocket from './features/friend/pages/FriendSocket';
 
 const App = () => {
@@ -39,12 +42,15 @@ const App = () => {
         </Route>
         <Route path="game/*" element={<CombinePage />}>
           <Route path="mypage" element={<MyPage />} />
+          <Route path="mypage/change" element={<ChangeUserInfoPage />} />
+          <Route path="mypage/attendance" element={<AttendancePage />} />
           <Route path="" element={<MyOfficePage />} />
           <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
           <Route path="casino" element={<CoinFlipPage />} />
           <Route path="CS" element={<CSgamePage />} />
-          <Route path="CS/room" element={<CSIngamePage />} />
+          <Route path="CS/random" element={<CSRandomPage />} />
+          <Route path="CS/friend" element={<CSFriendPage />} />
           <Route path="CS/result" element={<CSResultPage />} />
         </Route>
       </Routes>

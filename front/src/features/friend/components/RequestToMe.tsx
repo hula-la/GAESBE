@@ -29,7 +29,7 @@ function RequestToMe() {
 
   return <>
     <h1>친구 요청 목록</h1>
-    {requestList.length ? <>
+    {requestList.length > 0 ? <>
       {requestList.map((requestListItem:RequestList) => {
         return <RequestToMeItem key={requestListItem.friendReqId} requestListItem={requestListItem} fetchRequestToMe={fetchRequestToMe} />
       })}</>

@@ -20,6 +20,18 @@ export const requestToMeAccept = async (friendId:number) => {
 
 // 친구 요청 거절
 export const requestToMeDelete = async (reqId:number) => {
-  const res = await client.delete('friend/request', {params: {reqId:reqId}})
+  const res = await client.delete('/friend/request', {params: {reqId:reqId}})
+  return res
+}
+
+// 친구 리스트 불러오기
+export const fetchFriends = async () => {
+  const res = await client.get('/friend/list')
+  return res
+}
+
+// 친구 삭제하기
+export const deleteFriend = async (friendId:number) => {
+  const res = await client.delete('/friend', {params:{friendId:friendId}})
   return res
 }

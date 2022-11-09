@@ -15,11 +15,17 @@ function FriendSocket() {
   const dispatch = useDispatch()
 
   const { userInfo } = useSelector((state:any) => state.auth)
-
+  // let socket: CustomWebSocket
   const socket: CustomWebSocket = new SockJS('https://k7e104.p.ssafy.io:8081/api/ws')
-  const client = Stomp.over(socket)
-  // 최초 입장시 소켓 뚫고, 백준id보내기
-  useEffect(() => {
+  let client: Stomp.Client
+  const loginConnect = () => {
+    client = Stomp.over(socket)
+    client.heartbeat.outgoing = 0
+    client.heartbeat.incoming = 0
+    // 개발 버전에서만 콘솔 뜨게 하기
+    if (process.env.NODE_ENV !== "development") {
+      client.debug = function() {}
+    }
     // 입장할때 소켓 뚫기
     client.connect({}, frame => {
       // 친구목록 메세지 받을 위치
@@ -29,7 +35,14 @@ function FriendSocket() {
 
       // 뚫었으니 들어갔다고 알리기
       client.send('/api/friend/connect', {}, JSON.stringify({sessionId: socket._transport.url.slice(-18,-10), userId: userInfo.id}))
+    }, function() {
+      loginConnect()
+      console.log(socket)
     })
+  }
+  // 최초 입장시 소켓 뚫고, 백준id보내기
+  useEffect(() => {
+    loginConnect()
     return () => {
       client.disconnect(()=>{})
     }

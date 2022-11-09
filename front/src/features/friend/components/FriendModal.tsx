@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
 import RequestToMe from './RequestToMe';
 import RequestToYou from './RequestToYou';
+import FriendListMange from './FriendListManage';
 
 const StyledModal = styled.div`
   padding: 3vmin;
@@ -32,9 +33,9 @@ const StyledModal = styled.div`
 `;
 
 
-function FriendModal({ handleCloseModal }: any) {
+function FriendModal({ handleModal }: any) {
 
-  const {modal} = useSelector((state:any) => state.friend)
+  const [option, setOption] = useState<string|null>('manage')
 
   useEffect(() => {
     document.body.style.cssText = `
@@ -49,11 +50,22 @@ function FriendModal({ handleCloseModal }: any) {
     };
   }, []);
 
+  const handleOption = (e:string) => {
+    setOption(null)
+    setTimeout(() => {
+      setOption(e)
+    }, 100);
+  }
+
   return (
-    <StyledModalDiv onClick={handleCloseModal}>
+    <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e)=> e.stopPropagation()}>
-        {modal==='toYou' && <RequestToYou />}
-        {modal==='toMe' && <RequestToMe />}
+        <button onClick={() => handleOption('manage')}>친구관리</button>
+        <button onClick={() => handleOption('toYou')}>신청하기</button>
+        <button onClick={() => handleOption('toMe')}>요청관리</button>
+        {option==='manage' && <FriendListMange />}
+        {option==='toYou' && <RequestToYou />}
+        {option==='toMe' && <RequestToMe />}
       </StyledModal>
     </StyledModalDiv>
   )
