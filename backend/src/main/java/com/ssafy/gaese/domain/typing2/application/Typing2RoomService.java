@@ -83,7 +83,10 @@ public class Typing2RoomService {
         // enter exit 정보를 방 전원에게 보내줌
 //        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
+
         // 방 코드를 개인에게 전달
+        System.out.println("방코드를 개인에게 전달"+roomDto);
+        System.out.println("방코드를 개인에게 전달"+roomDto.getCode());
         roomResByUser.put("room",roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
 
@@ -183,7 +186,7 @@ public class Typing2RoomService {
             roomIdToEnter = createRoom(waitRoomKey).getCode();
         }
 
-        log.debug("이 방으로 들어가요~"+roomIdToEnter);
+        System.out.println("이 방으로 들어가요~"+roomIdToEnter);
 
         typingSocketDto.setRoomCode(roomIdToEnter);
 
