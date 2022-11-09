@@ -227,8 +227,14 @@ public class CsRoomService {
         players.remove(csSocketDto.getSessionId());
 
         // 바뀐 방 정보로 저장
-        CsRoomDto saved = csRoomRedisRepository.save(csRoom);
 
+        // 0명이면 삭제
+        if (players.size()==0) {
+            redisUtil.removeSetData(waitRoomKey,csRoom.getCode());
+            deleteRoom(csRoom.getCode());
+        }
+
+        CsRoomDto saved = csRoomRedisRepository.save(csRoom);
         getUserInRoom(saved.getCode());
         return saved;
     }
@@ -247,9 +253,11 @@ public class CsRoomService {
     }
 
     // 방에 있는 유저리스트 정보 조회
-    public List<UserDto> getUserInRoom(String roomId){
+    public void getUserInRoom(String roomId){
         System.out.println();
         CsRoomDto room = csRoomRedisRepository.findById(roomId).orElseThrow(()->new RoomNotFoundException());
+
+        if (room.getPlayers()==null) return;
 
         List<UserDto> playerList = room.getPlayers().values().stream()
                 .map(id->{
@@ -263,7 +271,6 @@ public class CsRoomService {
 
 //        res.put("players",getUserInRoom(csRoom.getCode()));
         simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,playerList);
-        return playerList;
     }
 
     public boolean isReadyToStart(CsRoomDto csRoom){
