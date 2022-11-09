@@ -108,7 +108,7 @@ public class TypingService {
         return true;
     }
 
-    public synchronized void submitAnswer(TypingSubmitDto typingSubmitDto){
+    public void submitAnswer(TypingSubmitDto typingSubmitDto){
         Map<String,Object> res = new HashMap<>();
 
         TypingRoomDto roomDto = typingRoomRedisRepository
