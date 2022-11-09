@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import styled from 'styled-components';
+import CSIsLoadingPage from '../components/CSIsLoading';
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -11,6 +12,7 @@ interface CustomWebSocket extends WebSocket {
 
 const Container = styled.div`
   width: 82%;
+  height: 100%;
   background-color: #232323;
   color: #ffffff;
   font-family: 'NeoDunggeunmo';
@@ -22,21 +24,12 @@ const Container = styled.div`
   }
 `;
 
-const LoadingBlock = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  .loadingText {
-    font-size: large;
-  }
-`;
-
 const WaitingBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100%;
   .waitingroom {
     width: 100%;
     height: 100%;
@@ -44,11 +37,12 @@ const WaitingBlock = styled.div`
   .subtitle {
     font-size: 30px;
     font-weight: 400;
+    height: 10%;
   }
   .waitingContent {
     display: flex;
-    width: 100%;
-    height: 100%;
+    width: 60%;
+    height: 70%;
   }
   .imgBox {
     position: relative;
@@ -436,12 +430,7 @@ const CSIngamePage = () => {
 
   return (
     <Container>
-      {isLoading && (
-        <LoadingBlock>
-          <img src="/img/loadingspinner.gif" />
-          <p className="loadingText">랜덤 매칭중~</p>
-        </LoadingBlock>
-      )}
+      {isLoading && <CSIsLoadingPage />}
       {!isLoading && !isStart && (
         <WaitingBlock>
           <img src="/img/gametitle/gametitle3.png" className="gameTitle" />

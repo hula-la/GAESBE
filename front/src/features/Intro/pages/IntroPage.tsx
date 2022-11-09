@@ -4,6 +4,23 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   position: relative;
   background-color: #232323;
+  font-family: 'NeoDunggeunmo';
+
+  .Intro {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .introContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 66px;
+    font-weight: 700;
+    text-align: center;
+  }
 
   .introImg {
     position: relative;
@@ -23,7 +40,6 @@ const Wrapper = styled.div`
   .txt01 {
     max-width: 70%;
     margin: 0 auto;
-    font-family: 'NotoR';
     font-size: 32px;
     color: #fff;
     text-align: center;
@@ -40,7 +56,6 @@ const Wrapper = styled.div`
         p {
           max-width: 80%;
           font-size: 36px;
-          font-family: 'NotoM';
           color: #333;
           transition: color 0.5s;
           text-align: center;
@@ -266,8 +281,10 @@ const IntroPage = () => {
 
   return (
     <Wrapper>
-      <div ref={IntroImgRef}>
+      <div className="Intro" ref={IntroImgRef}>
         <img src="/img/Intro/Intro1.jpg" alt="Intro" className="introImg" />
+        <div className="introContent">개츠비와 함께</div>
+        <img src="/img/Pointer_Down.png" />
       </div>
       <div ref={fixMotionRef} className="fix_motion">
         <article className="fix_wrap inner">
@@ -295,13 +312,13 @@ const IntroPage = () => {
                 <div className="object_wrap">
                   <div className="object">
                     <figure>
-                      <img src="" alt="" />
+                      <img src="" />
                     </figure>
                     <figure>
-                      <img src="" alt="" />
+                      <img src="" />
                     </figure>
                     <figure>
-                      <img src="" alt="" />
+                      <img src="" />
                     </figure>
                   </div>
                 </div>
