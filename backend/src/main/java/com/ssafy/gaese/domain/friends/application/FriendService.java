@@ -29,8 +29,6 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
-
 
 
     public boolean requestFriend(Long userId, String targetNickname) throws NullPointerException{
