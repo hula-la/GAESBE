@@ -53,11 +53,11 @@ function TypingMainPage() {
     navigate('enter', { state: { lang: gameType } });
   };
   const handleChoicePython = () => {
-    setGameType('Python');
+    setGameType('PYTHON');
     console.log('파이썬 선택');
   };
   const handleChoiceJava = () => {
-    setGameType('Java');
+    setGameType('JAVA');
     console.log('자바 선택');
   };
   console.log(gameType);

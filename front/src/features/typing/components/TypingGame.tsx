@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
+interface CustomWebSocket extends WebSocket {
+  _transport?: any;
+}
 
 interface CharStateType {
   index: number;
@@ -75,18 +82,22 @@ const This = styled.div`
   color: ${(props) => props.color};
 `;
 const TypingGame = () => {
-  const example = [
-    'xˇ=ˇint(input())',
-    'ifˇxˇ<ˇ0:',
-    'ˇˇˇˇxˇ=ˇ0',
-    "ˇˇˇˇprint('Negativeˇchangedˇtoˇzero')",
-    'elifˇxˇ==ˇ0:',
-    "ˇˇˇˇprint('Zero')",
-    'elifˇxˇ==ˇ1:',
-    "ˇˇˇˇprint('Single')",
-    'else:',
-    "ˇˇˇˇprint('More')",
-  ];
+  let roomcode: string;
+  let testtest: number;
+  const location = useLocation();
+  const { lang } = location.state;
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [roomCode, setRoomCode] = useState<string>('');
+  const { userInfo } = useSelector((state: any) => state.auth);
+  const socket: CustomWebSocket = new SockJS(
+    'https://k7e104.p.ssafy.io:8081/api/ws',
+  );
+  // const example = [
+  //   "wordsˇ=ˇ['cat',ˇ'window',ˇ'defenestrate']",
+  //   'forˇwˇinˇwords:',
+  //   'print(w,ˇlen(w))',
+  // ];
+  const example = ['forˇiˇinˇrange(1,ˇ10):', 'ˇˇˇˇprint(i)'];
 
   const item = example.map((e) => e);
   let totalLength = 0;
@@ -100,12 +111,110 @@ const TypingGame = () => {
   const [index, setIndex] = useState<number>(0);
   const [sentence, setSentence] = useState<number>(0);
   const [endGame, setEndGame] = useState<number>(0);
+  const [test, setTest] = useState<number>(0);
+
+  const client = Stomp.over(socket);
+  const client2 = Stomp.over(socket);
+  useEffect(() => {
+    if (userInfo) {
+      client.connect({}, (frame) => {
+        console.log('*****************121**************************');
+        // client.subscribe(`/cs/${userInfo.id}`, (res) => {
+        client.subscribe(`/typing2/${userInfo.id}`, (res) => {
+          var data = JSON.parse(res.body);
+          if (data.hasOwnProperty('room')) {
+            setRoomCode(data.room);
+            roomcode = data.room;
+          }
+          if (data.hasOwnProperty('isLast')) {
+            if (data.isLast === true) {
+              client.send(
+                '/api/typing2/start',
+                {},
+                JSON.stringify({
+                  langType: lang,
+                  roomCode: roomcode,
+                }),
+              );
+              console.log('시작했나요???');
+            }
+          }
+          console.log('첫구독', res);
+        });
+        const enterRoom = () => {
+          client.send(
+            // '/api/cs',
+            '/api/typing2',
+            {},
+            JSON.stringify({
+              langType: lang,
+              type: 'ENTER',
+              sessionId: socket._transport.url.slice(-18, -10),
+              userId: userInfo.id,
+              roomType: 'RANDOM',
+            }),
+          );
+        };
+        enterRoom();
+        const fetchMemberInfo = () => {
+          client.send(
+            '/api/typing2/memberInfo',
+            {},
+            JSON.stringify({
+              roomCode: roomcode,
+            }),
+          );
+        };
+        setTimeout(() => {
+          fetchMemberInfo();
+        }, 2000);
+      });
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (roomCode) {
+      client2.connect({}, (frame) => {
+        console.log('*****************177**************************');
+        client2.subscribe('/typing2/room/' + roomCode, (res) => {
+          // console.log('클라이언트 2 결과', res);
+          // console.log('클라이언트 2 결과 바디', res.body);
+          var testdata = JSON.parse(res.body);
+          // if (testdata.progressByPlayer.hasOwnProperty(`${userInfo.id}`)) {
+          //   console.log(testdata.progressByPlayer);
+          //   console.log(testdata.progressByPlayer.userInfoid);
+          // }
+          if (testdata.hasOwnProperty('progressByPlayer')) {
+            console.log(testdata.progressByPlayer);
+            console.log(testdata.progressByPlayer[`${userInfo.id}`]);
+            setTest(testdata.progressByPlayer[`${userInfo.id}`]);
+            testtest = testdata.progressByPlayer[`${userInfo.id}`];
+            // setRoomCode(data.room);
+            // roomcode = data.room;
+          }
+        });
+      });
+    }
+    console.log('재실행?', progress);
+  }, [roomCode]);
   // let percent = parseInt(progress / totalLength);
+
   const handleSetKey = (event: any) => {
     if (event.key === 'Backspace') {
       event.preventDefault();
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
+        console.log('****************보냄********************');
+        client.send(
+          '/api/typing2/submit',
+          {},
+          JSON.stringify({
+            roomCode: roomCode,
+            sessionId: socket._transport.url.slice(-18, -10),
+            isCorrect: true,
+            userId: userInfo.id,
+          }),
+        );
         setProgress(progress + 1);
         setIndex(index + 1);
         const changedState = JSON.parse(
@@ -115,7 +224,7 @@ const TypingGame = () => {
         console.log(index, '맞다');
       } else if (example[sentence][index] !== event.key) {
         if (charState.type === 1) {
-          console.log(index, '처음 틀림');
+          // console.log(index, '처음 틀림');
           const changedState = JSON.parse(
             JSON.stringify({ index: index, sentence: sentence, type: 2 }),
           );
@@ -173,6 +282,17 @@ const TypingGame = () => {
         ) {
           setIndex(index + 1);
           setProgress(progress + 1);
+          console.log('****************보냄********************');
+          client.send(
+            '/api/typing2/submit',
+            {},
+            JSON.stringify({
+              roomCode: roomCode,
+              sessionId: socket._transport.url.slice(-18, -10),
+              isCorrect: true,
+              userId: userInfo.id,
+            }),
+          );
           const changedState = JSON.parse(
             JSON.stringify({ index: index, sentence: sentence, type: 1 }),
           );
@@ -184,6 +304,18 @@ const TypingGame = () => {
           // 막타 아니고 그냥 맞은거라면
         } else {
           console.log(index, '맞다');
+          console.log('****************보냄********************');
+          client.send(
+            '/api/typing2/submit',
+            {},
+            JSON.stringify({
+              roomCode: roomCode,
+              sessionId: socket._transport.url.slice(-18, -10),
+              isCorrect: true,
+              userId: userInfo.id,
+            }),
+          );
+
           setProgress(progress + 1);
           setIndex(index + 1);
           const changedState = JSON.parse(
@@ -241,7 +373,8 @@ const TypingGame = () => {
                 />
               </PersonalCharacter>
               <PersonalResult>
-                {((progress / totalLength) * 100).toFixed(2)} %
+                {test}
+                {/* {((progress / totalLength) * 100).toFixed(2)} % */}
               </PersonalResult>
             </Personal>
           </TypingPersonalResult>
