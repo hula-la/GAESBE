@@ -15,7 +15,7 @@ import java.util.HashSet;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@RedisHash(value = "TypingRoom")
+@RedisHash(value = "TypingRoom", timeToLive = 3600)
 public class TypingRoomDto {
 
     @Id

@@ -107,7 +107,8 @@ public class TypingService {
 
         HashMap<Long, Float> progressByPlayer = roomDto.getProgressByPlayer();
         long paragraphLength = roomDto.getParagraphLength();
-        float pointPerWord = (float) (100 / paragraphLength);
+//        float pointPerWord = (float) (100 / paragraphLength);
+        float pointPerWord = (float) (1);
         Long userId = typingSubmitDto.getUserId();
 
         progressByPlayer.put(userId,progressByPlayer.get(userId)+pointPerWord);
