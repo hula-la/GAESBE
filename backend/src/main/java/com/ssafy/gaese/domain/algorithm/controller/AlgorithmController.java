@@ -106,7 +106,6 @@ public class AlgorithmController {
 
         HashMap<String , String> res = new HashMap<>();
         res.put("bjId",bjId);
-
         return ResponseEntity.ok().body(res);
     }
     @GetMapping("/bj/code")
