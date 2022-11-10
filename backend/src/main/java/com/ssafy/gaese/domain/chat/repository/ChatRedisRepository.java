@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ChatRedisRepository extends CrudRepository<MessageDto,String> {
-
     @Override
     List<MessageDto> findAllById(Iterable from);
 }
