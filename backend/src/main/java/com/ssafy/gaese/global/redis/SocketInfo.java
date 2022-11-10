@@ -45,6 +45,7 @@ public class SocketInfo {
 
         sb.append(id).append(',').append(roomCode).append(',').append(gameType).append(',').append(nickName);
 
+        HashOperations.put(key,socketId,sb.toString());
     }
 
     public void setOnlinePlayer(Long userId)
