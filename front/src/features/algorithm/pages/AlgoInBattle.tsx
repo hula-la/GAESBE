@@ -35,7 +35,6 @@ function AlgoInBattle() {
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
   const client = Stomp.over(socket);
-
   // 최초 입장시 소켓 뚫고, 백준id보내기
   useEffect(() => {
     if (InGameInfo === null) {
@@ -43,7 +42,6 @@ function AlgoInBattle() {
     } else {
       // 입장할때 소켓 뚫기
       client.connect({}, (frame) => {
-        console.log(frame);
         // 입장, 퇴장 관련 메세지 받을 위치
         client.subscribe(`/algo/room/${InGameInfo.roomCode}`, (res) => {
           if (progress==='before') {
@@ -167,8 +165,8 @@ function AlgoInBattle() {
   };
 
   return (
-    <>{InGameInfo===null? null 
-    : <>
+    <>{(InGameInfo && client) && 
+      <>
         <h1>알고리즘 배틀 페이지</h1>
         {progress === 'before' && (
           <AlgoBeforeStart

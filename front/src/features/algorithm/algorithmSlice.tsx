@@ -45,6 +45,7 @@ const algoSlice = createSlice({
       state.InGameInfo = null
     },
     checkMyAnswerRequestStart(state, action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
+      console.log('dispatch실행됨')
       state.isLoading = true
     },
     solveSuccess(state, action: Action<boolean>) {

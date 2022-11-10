@@ -11,6 +11,7 @@ function AlgoAfterStart({ client, ranking, handleLeaveRoom, progress, problemLis
 
   const passProblem = () => {
     setPassDisabled(true)
+    console.log('샌드 할 때 후', client.connected)
     client.send('/api/algo/pass', {}, JSON.stringify({roomCode: InGameInfo.roomCode}))
   }
 

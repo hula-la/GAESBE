@@ -32,12 +32,16 @@ function* creatAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
 }
 
 function* checkMyAnswerRequestSaga(action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
+  console.log('크롤링 요청함')
   try {
     const res: AxiosResponse = yield call(checkMyAnswerRequest, action.payload)
+    console.log('크롤링 정보 받음')
     if (res.status === 200) {
       if (res.data.result === 1) {
         yield alert(res.data.msg)
         yield put(algoActions.solveSuccess(true))
+      } else {
+        yield alert(res.data.msg)
       }
     }
   } catch (error) {

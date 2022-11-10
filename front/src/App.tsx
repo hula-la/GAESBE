@@ -12,7 +12,7 @@ import CSgamePage from './features/cs/pages/CSgamePage';
 import Background from './components/Layout/Background';
 import MyOfficePage from './features/game/pages/MyOfficePage';
 import CoinFlipPage from './features/coinflip/CoinFlipPage';
-import AlgoPage from './features/algorithm/AlgoPage';
+import AlgoPage from './features/algorithm/pages/AlgoPage';
 import TypingPage from './features/typing/pages/TypingPage';
 import CSRandomPage from './features/cs/pages/CSRandomPage';
 import CSResultPage from './features/cs/pages/CSResultPage';

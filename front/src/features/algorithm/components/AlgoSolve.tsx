@@ -60,11 +60,19 @@ function AlgoSolve({client, problemList, inGameUsers, ranking, problemIndex}: an
   }
 
   useEffect(() => {
+    console.log('solve 감지해서 useEffect 실행함')
     if (solve) {
+      console.log('solve바뀌기 전', solve)
+      sendMyRank()
       dispatch(algoActions.solveSuccess(false))
-      client.send('/api/algo/rank', {}, JSON.stringify({roomCode: InGameInfo.roomCode}))
     }
+    console.log('solve바뀐 후', solve)
   }, [solve])
+
+  const sendMyRank = () => {
+    console.log(client)
+    client.send('/api/algo/rank', {}, JSON.stringify({roomCode: InGameInfo.roomCode}))
+  }
 
   return <>
     <h2>문제 풀때 컴포넌트</h2>
