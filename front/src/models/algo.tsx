@@ -18,7 +18,8 @@ export interface AlgoRoomInterface {
   tier: string
   num: string
   no : string
-  master?: string
+  start: boolean
+  master: string
 }
 
 /**

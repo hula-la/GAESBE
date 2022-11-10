@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
+import BeforeSolveUsers from './BeforeSolveUsers'
 
-import { InGameUsersInterface } from '../../../models/algo'
 
 
 function AlgoBeforeStart({ handleLeaveRoom, startGame, inGameUsers }: any) {
@@ -10,14 +10,9 @@ function AlgoBeforeStart({ handleLeaveRoom, startGame, inGameUsers }: any) {
 
   return <>
     <h1>시작 전 대기 방</h1>
+    <BeforeSolveUsers inGameUsers={inGameUsers} />
     <button onClick={handleLeaveRoom}>대기방에서 나가기</button>
     {InGameInfo.master == userInfo.id && <button onClick={startGame}>배틀 시작하기</button>}
-    {inGameUsers.map((user: InGameUsersInterface) => {
-      return <div key={user.id}>
-        <h2>{user.nickname}</h2>
-        <p>{user.profileChar}</p>
-      </div>
-    })}
   </>
 }
 export default AlgoBeforeStart

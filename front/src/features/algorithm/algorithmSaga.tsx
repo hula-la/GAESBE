@@ -8,10 +8,10 @@ import { confirmAlgoRoom, makeAlgoRoom, checkMyAnswerRequest } from '../../api/a
 function* enterAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
   try {
     const ok: AxiosResponse = yield call(confirmAlgoRoom, action.payload.roomCode);
-    if (ok.data === true) {
+    if (ok.data.result === true) {
       yield put(algoActions.enterAlgoRoomSuccess(action.payload));
     } else {
-      alert('방이 가득 찬 것 같아요.\n목록을 새로고침 할게요');
+      alert(ok.data.msg);
       yield put(algoActions.setNeedReload(true))
     }
   } catch (error) {
@@ -34,12 +34,10 @@ function* creatAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
 function* checkMyAnswerRequestSaga(action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
   try {
     const res: AxiosResponse = yield call(checkMyAnswerRequest, action.payload)
-    console.log(res)
     if (res.status === 200) {
-      if (res.data.res === '1') {
-        console.log(res.data.msg)
-      } else {
-        alert(res.data.msg)
+      if (res.data.result === 1) {
+        yield alert(res.data.msg)
+        yield put(algoActions.solveSuccess(true))
       }
     }
   } catch (error) {
