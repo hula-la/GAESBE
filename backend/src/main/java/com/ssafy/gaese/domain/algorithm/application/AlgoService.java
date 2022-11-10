@@ -110,11 +110,6 @@ public class AlgoService {
         return res;
     }
 
-    public AlgoRoomDto createRoom(AlgoRoomDto algoRoomDto){
-        String code = algoRedisRepositoryCustom.createCode();
-      return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
-    }
-
     public boolean enterRoom(AlgoSocketDto algoSocketDto) {
 
         String enterUser = algoSocketDto.getUserId();
@@ -137,6 +132,12 @@ public class AlgoService {
             socketInfo.setOnlinePlayer(Long.parseLong(algoSocketDto.getUserId()));
             return true;
         }
+    }
+
+    public AlgoRoomDto createRoom(AlgoRoomDto algoRoomDto){
+
+        String code = algoRedisRepositoryCustom.createCode();
+        return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
     }
 
     public void leaveRoom(AlgoSocketDto algoSocketDto){
@@ -225,6 +226,7 @@ public class AlgoService {
         if(algoRedisRepositoryCustom.getRoomNum(roomCode) >= 4) return -1;
         return 1;
     }
+
     public List<String> getUserIds(String roomCode){
         return algoRedisRepositoryCustom.getUserInRoom(roomCode);
     }

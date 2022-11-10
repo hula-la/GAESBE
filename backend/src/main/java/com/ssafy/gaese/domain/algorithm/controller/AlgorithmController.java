@@ -3,6 +3,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.*;
+import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,10 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Api(value="Algorithm", tags={"Algorithm"})
@@ -29,6 +32,7 @@ public class AlgorithmController {
 
     private final AlgoService algoService;
     private final AlgoProblemService algoProblemService;
+    private final SocketInfo socketInfo;
 
     @GetMapping("/room")
     @ApiOperation(value = "생성된 알고리즘 방 조회", notes = "생성된 알고리즘 방 조회")
@@ -38,8 +42,10 @@ public class AlgorithmController {
 
     @PostMapping("/room")
     @ApiOperation(value = "알고리즘 방 생성", notes = "방 생성")
-    public ResponseEntity<AlgoRoomDto> createRoom(@RequestBody  AlgoRoomDto algoRoomDto){
+    public ResponseEntity<AlgoRoomDto> createRoom(
+            @RequestBody  AlgoRoomDto algoRoomDto){
         return ResponseEntity.ok().body(algoService.createRoom(algoRoomDto));
+
     }
 
     @DeleteMapping("/room/{code}")
@@ -49,12 +55,24 @@ public class AlgorithmController {
         return ResponseEntity.ok().body("방 삭제 성공");
     }
 
+
     @PostMapping("/record")
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
     public ResponseEntity<String> createRecord(@RequestBody AlgoRecordReq algoRecordReq,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
         algoService.createAlgoRecord(algoRecordReq, userDetails.getId());
         return ResponseEntity.ok().body("success");
+    }
+
+    @GetMapping("/play")
+    @ApiOperation(value = "게임 중인지 확인")
+    public ResponseEntity<Boolean> confirmPlay( @AuthenticationPrincipal CustomUserDetails userDetails){
+
+        if(socketInfo.isPlayGame(userDetails.getId())){
+            return ResponseEntity.ok().body(false);
+        }
+        return ResponseEntity.ok().body(true);
+
     }
 
     @GetMapping("/record")
