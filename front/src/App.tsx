@@ -8,6 +8,7 @@ import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import CombinePage from './features/game/pages/CombinePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import CSgamePage from './features/cs/pages/CSgamePage';
+import AttendancePage from './features/game/pages/AttendancePage'
 
 import Background from './components/Layout/Background';
 import MyOfficePage from './features/game/pages/MyOfficePage';
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="game/*" element={<CombinePage />}>
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypage/change" element={<ChangeUserInfoPage />} />
+          <Route path="mypage/attendance" element={<AttendancePage />} />
           <Route path="" element={<MyOfficePage />} />
           <Route path="typing/*" element={<TypingPage />} />
           <Route path="algo/*" element={<AlgoPage />} />
