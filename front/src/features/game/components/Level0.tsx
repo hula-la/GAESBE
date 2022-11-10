@@ -5,7 +5,7 @@ const Unity = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 64%;
   background-color: #232323;
   background-image: url(/img/MyOffice/level00.png);
   background-repeat: no-repeat;
