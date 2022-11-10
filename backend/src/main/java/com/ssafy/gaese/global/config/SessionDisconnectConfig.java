@@ -41,11 +41,11 @@ public class SessionDisconnectConfig {
         //각자 처리가 필요한 곳으로 보냄
         switch (info[2])
         {
-            //ex
-            case "Typing":
-                typingRoomService.exitRoom(info[3]);
-//                socketInfo.delSocketInfo(sessionId);
-                break;
+            
+//             case "Typing":
+//                 typingRoomService.exitRoom(info[3]);
+// //                socketInfo.delSocketInfo(sessionId);
+//                 break;
             case "Cs":
                 CsSocketDto csSocketDto = CsSocketDto.builder()
                         .type(CsSocketDto.Type.LEAVE)
