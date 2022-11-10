@@ -77,6 +77,8 @@ public class SessionDisconnectConfig {
                         .userId(info[0]).build();
 
                 algoService.leaveRoom(algoSocketDto);
+                // 게임을 하고 있다는 기록 지움
+                socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
 
             case "Friend" :
