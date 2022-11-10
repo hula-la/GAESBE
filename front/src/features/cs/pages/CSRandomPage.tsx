@@ -395,6 +395,12 @@ const CSIngamePage = () => {
     }
   }, [roomCode]);
 
+  useEffect(() => {
+    return () => {
+      client.disconnect(() => {});
+    };
+  }, []);
+
   // 로딩 & 끝 제어
   useEffect(() => {
     if (players) {

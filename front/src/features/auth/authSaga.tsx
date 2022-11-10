@@ -14,6 +14,7 @@ import {
   createUserInfoApi,
   checkNicknameApi,
   deleteUserInfoApi,
+  fetchAbilityApi,
 } from '../../api/authApi';
 import { AxiosResponse } from 'axios';
 
@@ -31,6 +32,22 @@ function* fetchUserInfoSaga(action: any) {
 function* onFetchUserInfo() {
   const { fetchUserInfoStart } = authActions;
   yield takeLatest(fetchUserInfoStart, fetchUserInfoSaga);
+}
+
+// 유저 역량 정보 받아오기
+function* fetchAbilitySaga(action: any) {
+  const { fetchAbilitySuccess, fetchAbilityError } = authActions;
+  try {
+    const response: AxiosResponse = yield call(fetchAbilityApi);
+    yield put(fetchAbilitySuccess(response.data));
+  } catch (e: any) {
+    yield put(fetchAbilityError(e.response));
+  }
+}
+
+function* onFetchAbility() {
+  const { fetchAbilityStart } = authActions;
+  yield takeLatest(fetchAbilityStart, fetchAbilitySaga);
 }
 
 // 유저 초기 정보 설정
@@ -94,4 +111,5 @@ export const authSagas = [
   fork(onCreateUserInfo),
   fork(onCheckNickname),
   fork(deleteUserInfo),
+  fork(onFetchAbility),
 ];

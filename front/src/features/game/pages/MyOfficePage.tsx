@@ -7,10 +7,16 @@ import Level3 from '../components/Level3';
 import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
-import FriendMainPage from '../../friend/pages/FriendMainPage';
 import { attendanceRequest } from '../../../api/mypageApi';
+import { useSelector } from 'react-redux';
+
+const MyRoom = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const MyOfficePage = () => {
+  const { userAbility } = useSelector((state: any) => state.auth);
   const attendance = async () => {
     try {
       const res = await attendanceRequest();
@@ -24,7 +30,7 @@ const MyOfficePage = () => {
     }
   };
   return (
-    <>
+    <MyRoom>
       <Level0 attendance={attendance} />
       {/* <Level1 /> */}
       {/* <Level2 /> */}
@@ -32,8 +38,13 @@ const MyOfficePage = () => {
       {/* <Level4 /> */}
       {/* <Level5 /> */}
       {/* <Level6 /> */}
-      <FriendMainPage />
-    </>
+      <div>
+        <div>
+          <div>ALGORITHM LV.{}</div>
+          <img src="" alt="algo_exp" />
+        </div>
+      </div>
+    </MyRoom>
   );
 };
 

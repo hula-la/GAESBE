@@ -5,7 +5,7 @@ const Unity = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 64%;
+  width: 66%;
   background-color: #232323;
   background-image: url(/img/MyOffice/level00.png);
   background-repeat: no-repeat;
@@ -60,7 +60,7 @@ const Calender = styled.img`
     transition: 0.4s ease-in-out;
   }
 `;
-const Level0 = ({attendance}:any) => {
+const Level0 = ({ attendance }: any) => {
   const navigate = useNavigate();
   const handleCoin = () => {
     navigate('/game/casino');
