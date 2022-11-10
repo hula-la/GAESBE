@@ -196,10 +196,14 @@ public class CsRoomService {
         CsRoomDto csRoomDto = CsRoomDto.create();
         csRoomDto.setRoomType(CsRoomDto.RoomType.FRIEND);
 
+        // res 초기화
+        Map<String,Object> res = new HashMap<>();
+        res.put("master",true);
+
         // 해당 user가 반장
         Long userId = csSocketDto.getUserId();
         csRoomDto.setMaster(csSocketDto.getUserId());
-        simpMessagingTemplate.convertAndSend("/cs/"+userId,"master");
+        simpMessagingTemplate.convertAndSend("/cs/"+userId,res);
 
         // 들어갈 곳이 없으면 새로운 방 생성
         CsRoomDto savedRoom = csRoomRedisRepository.save(csRoomDto);
@@ -218,7 +222,11 @@ public class CsRoomService {
         csRoom.setMaster(nextMasterPlayerId);
         csRoomRedisRepository.save(csRoom);
 
-        simpMessagingTemplate.convertAndSend("/cs/"+nextMasterPlayerId,"master");
+        // res 초기화
+        Map<String,Object> res = new HashMap<>();
+        res.put("master",true);
+
+        simpMessagingTemplate.convertAndSend("/cs/"+nextMasterPlayerId,res);
 
     }
     // 친선전 방 입장

@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.user.application;
 
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final FriendSocketService friendSocketService;
 
     @Transactional
     public UserDto modify(UserDto userDto, long userId){
@@ -20,6 +22,8 @@ public class UserService {
 
         System.out.println("user입니다 "+user);
         System.out.println("userDto입니다 "+userDto.toString());
+        // 나갔다는 것을 알림
+        friendSocketService.refreshFriend(userId);
         return user.update(userDto.getNickname(), userDto.getProfileChar()).toDto();
 
     }
@@ -30,6 +34,8 @@ public class UserService {
         if(!user.isPresent()) return false;
         User findUser = user.get();
         userRepository.delete(findUser);
+        // 나갔다는 것을 알림
+        friendSocketService.refreshFriend(userId);
         return true;
     }
 
