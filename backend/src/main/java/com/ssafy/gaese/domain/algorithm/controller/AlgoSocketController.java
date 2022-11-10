@@ -65,10 +65,15 @@ public class AlgoSocketController {
     // 문제 선택 시작, timer 시작, no : 0 전송 , AlgoRoomPassDto 저장
     @MessageMapping("/algo/start/pass")
     public void algoPassTimer(AlgoProblemReq algoProblemReq) throws Exception{
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("type","START");
+
+        simpMessagingTemplate.convertAndSend("/algo/start/pass/"+algoProblemReq.getRoomCode(),res);
 
         algoSocketService.createAlgoRoomPass(algoProblemReq.getRoomCode());
 
-        HashMap<String, Object> res = new HashMap<>();
+        res.clear();
+        res.put("type","PROBLEM");
         res.put("no",0);
         res.put("master",algoService.getMaster(algoProblemReq.getRoomCode()));
         res.put("problems",algoProblemService.getCommonProblems(algoProblemReq));
@@ -82,10 +87,7 @@ public class AlgoSocketController {
         if(!algoSocketService.getRoomPass(algoRoomCodeDto.getRoomCode()).isPass())
             algoSocketService.setProblemPass(algoRoomCodeDto.getRoomCode());
 
-        HashMap<String, Object> res = new HashMap<>();
-        res.put("master",algoService.getMaster(algoRoomCodeDto.getRoomCode()));
-        simpMessagingTemplate.convertAndSend("/algo/pass/"+algoRoomCodeDto.getRoomCode(),res);
-    }
+       }
 
     
     // timer 시작, 종료시 pass 상태 확인 후 PASS or START 전송
@@ -104,6 +106,7 @@ public class AlgoSocketController {
             HashMap<String, Object> res = new HashMap<>();
             res.put("type","PASS");
             res.put("no",algoSocketService.getRoomPass(roomCodeDto.getRoomCode()).getNowNo());
+            res.put("master",algoService.getMaster(roomCodeDto.getRoomCode()));
             simpMessagingTemplate.convertAndSend("/algo/pass/"+roomCodeDto.getRoomCode(),res);
         }else{
             System.out.println("========= 문제 풀이 시작 ========= ");
