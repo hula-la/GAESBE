@@ -5,7 +5,8 @@ import FriendModal from '../components/FriendModal';
 import styled from 'styled-components';
 
 const FriendSide = styled.div`
-  width: 18%;
+  width: 18vw;
+  min-width: 12rem;
   height: 100%;
   background-color: #232323;
   color: white;
@@ -19,7 +20,7 @@ const FriendSide = styled.div`
     // 몇 줄을 넣어도 상관없다!!
   }
   50% {
-    transform : translateX(-5vw); /* 애니메이션이 50%만큼 동작시 */
+    transform : translateX(-1vw); /* 애니메이션이 50%만큼 동작시 */
   }
   100% {
     transform : translateX(0); /* 애니메이션이 100%만큼 동작시 */
