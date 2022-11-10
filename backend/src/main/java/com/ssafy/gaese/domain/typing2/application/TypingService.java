@@ -105,6 +105,7 @@ public class TypingService {
         res.put("msg", "end");
         res.put("winUserId", winUser.getId());
         res.put("winUserNickName", winUser.getNickname());
+        res.put("winUserProfile", winUser.getProfileChar());
         roomDto.setEnd(true);
 
         typingRoomRedisRepository.save(roomDto);
