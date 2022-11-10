@@ -10,6 +10,22 @@ const FriendSide = styled.div`
   background-color: #232323;
   color: white;
 
+  animation-name : showToLeft;
+  animation-duration : 1s;
+
+  @keyframes showToLeft{
+  0% {
+    transform : translateX(16vw); /* 애니메이션이 0%만큼 동작시 */
+    // 몇 줄을 넣어도 상관없다!!
+  }
+  50% {
+    transform : translateX(-5vw); /* 애니메이션이 50%만큼 동작시 */
+  }
+  100% {
+    transform : translateX(0); /* 애니메이션이 100%만큼 동작시 */
+  }
+}
+
   .sideTitle {
     display: flex;
     flex-direction: row;
