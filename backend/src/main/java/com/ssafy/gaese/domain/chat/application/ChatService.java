@@ -25,11 +25,15 @@ public class ChatService {
         List<MessageDto> allMsg = new ArrayList<>();
         for( MessageDto messageDto : getMessages(fromId)){
             if(messageDto.getToUser().equals(toId)){
-
+                allMsg.add(messageDto);
             }
         }
-        allMsg.addAll(getMessages(fromId));
-        allMsg.addAll(getMessages(toId));
+
+        for( MessageDto messageDto : getMessages(toId)){
+            if(messageDto.getToUser().equals(toId)){
+                allMsg.add(messageDto);
+            }
+        }
         return allMsg;
     }
 
