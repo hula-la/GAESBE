@@ -33,8 +33,12 @@ public class SessionDisconnectConfig {
         String sessionId=event.getSessionId();
         System.out.println("나가는 세션 : "+ sessionId);
 
+        String s = socketInfo.geSocketInfo(sessionId);
+        if (s==null) return;
         //순서 : {id},{roomCode},{gameType},{nickName}
-        String[] info = socketInfo.geSocketInfo(sessionId).split(",");
+
+
+        String[] info = s.split(",");
 
         //각자 처리가 필요한 곳으로 보냄
         switch (info[2])

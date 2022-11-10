@@ -32,7 +32,7 @@ public class AlgorithmController {
 
     @GetMapping("/room")
     @ApiOperation(value = "생성된 알고리즘 방 조회", notes = "생성된 알고리즘 방 조회")
-    public ResponseEntity<List<AlgoRoomDto>> roomList(){
+    public ResponseEntity<HashMap<String,List<AlgoRoomDto>>> roomList(){
         return ResponseEntity.ok().body(algoService.getRooms());
     }
 
@@ -66,10 +66,13 @@ public class AlgorithmController {
 
     @GetMapping("/confirm/{roomCode}")
     @ApiOperation(value="입장 가능 여부 판단", notes = "입장 가능 여부 판단")
-    public ResponseEntity<Boolean> confirmEnter(@PathVariable String roomCode,
+    public ResponseEntity<HashMap<String,Object>> confirmEnter(@PathVariable String roomCode,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails){
-
-        return ResponseEntity.ok().body(algoService.confirmRoomEnter(roomCode));
+        HashMap<String,Object> res = new HashMap<>();
+        int result = algoService.confirmRoomEnter(roomCode,userDetails.getId());
+        res.put("result", algoService.confirmRoomEnter(roomCode,userDetails.getId())>0?true:false);
+        res.put("msg", result==1? "입장":result==0 ?  "이미 다른 게임 중 입니다." : "인원이 다 찼습니다." );
+        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/user/problem/{roomCode}/{userBjId}")

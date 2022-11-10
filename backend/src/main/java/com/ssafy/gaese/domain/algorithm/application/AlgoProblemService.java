@@ -11,6 +11,7 @@ import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
+import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSolveReq;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
@@ -181,13 +182,18 @@ public class AlgoProblemService {
         return 0;
     }
 
-    public void saveStartTime(String roomCode){
+    public void startGame(String roomCode){
+
+        // 시작 시간 설정
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         LocalTime now = LocalTime.now();
         DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("HH:mm:ss");
         System.out.println("==== 시간 ====="+now.format(formatter));
         hashOperations.put(roomCode,"startTime",now.format(formatter));
         System.out.println(hashOperations.get(roomCode,"startTime"));
+
+        // 시작 상태로 변경
+        hashOperations.put("algoRoom:"+roomCode,"algoRoomDto.isStart","1");
     }
 
     public void saveUserTime(String roomCode, Long userId) throws ParseException {

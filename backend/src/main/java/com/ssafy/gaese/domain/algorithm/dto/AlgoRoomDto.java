@@ -19,12 +19,12 @@ public class AlgoRoomDto {
     private String num;
     private String no;
     private String master;
+    private boolean isStart;
 
     public AlgoRoomRedisDto toRedisDto(String roomCode){
         return AlgoRoomRedisDto.builder()
                 .algoRoomDto(this)
                 .roomCode(roomCode)
-                .users(new ArrayList<>())
                 .build();
     }
     public void changeMaster(String master){

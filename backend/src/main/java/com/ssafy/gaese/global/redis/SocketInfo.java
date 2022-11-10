@@ -55,6 +55,8 @@ public class SocketInfo {
     }
     public boolean isPlayGame(Long userId)
     {
+        System.out.println("게임 중인지 검사");
+        System.out.println(userId);
         return redisUtil.isExistSetData(gamekey, String.valueOf(userId));
 
     }

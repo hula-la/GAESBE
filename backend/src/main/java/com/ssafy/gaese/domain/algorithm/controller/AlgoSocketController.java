@@ -13,6 +13,8 @@ import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +33,7 @@ public class AlgoSocketController {
     private final AlgoProblemService algoProblemService;
     private final AlgoSocketService algoSocketService;
     private final SocketInfo socketInfo;
+    private final RedisTemplate redisTemplate;
 
     // 알고리즘 방 입장/나가기
     @MessageMapping("/algo")
@@ -42,15 +45,9 @@ public class AlgoSocketController {
 
         if(algoSocketDto.getType() == AlgoSocketDto.Type.ENTER) {
 
-            // 다른 게임 중인지 확인
-            if (socketInfo.isPlayGame(Long.parseLong(algoSocketDto.getUserId()))) {
-                res.clear();
-                res.put("playAnotherGame", true);
-                res.put("msg", "다른 게임에 접속 중");
-                simpMessagingTemplate.convertAndSend("/algo/" + algoSocketDto.getUserId(), res);
-                throw new PlayAnotherGameException();
-            }
+            SetOperations<String ,String > setOperations = redisTemplate.opsForSet();
             if (algoService.enterRoom(algoSocketDto)) {
+                res.put("playAnotherGame", false);
                 res.put("msg", algoSocketDto.getUserId() + " 님이 접속하셨습니다.");
             }
 
@@ -106,7 +103,8 @@ public class AlgoSocketController {
         }else{
             System.out.println("========= 문제 풀이 시작 ========= ");
             //문제 풀이 시작 > 시작 시간 저장
-            algoProblemService.saveStartTime(roomCodeDto.getRoomCode());
+
+            algoProblemService.startGame(roomCodeDto.getRoomCode());
 
             HashMap<String, Object> res = new HashMap<>();
             res.put("type","START");

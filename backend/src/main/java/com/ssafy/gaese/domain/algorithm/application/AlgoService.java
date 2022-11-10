@@ -4,10 +4,8 @@ import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
-import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoUserRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.*;
-import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -90,32 +88,40 @@ public class AlgoService {
         return algoRecords.map(algoRecord -> algoRecord.toDto());
     }
 
-    public List<AlgoRoomDto> getRooms(){
-        return algoRedisRepositoryCustom.getRooms();
+    public HashMap<String,List<AlgoRoomDto>> getRooms(){
+
+        HashMap<String,List<AlgoRoomDto>> res = new HashMap<>();
+        List<AlgoRoomDto> waitRoomList = new ArrayList<>();
+        List<AlgoRoomDto> startRoomList = new ArrayList<>();
+
+        Iterable<AlgoRoomRedisDto> algoRoomRedisDtos = algoRedisRepositoryCustom.getRooms();
+
+        for(AlgoRoomRedisDto algoRoomRedisDto : algoRoomRedisDtos) {
+             if(algoRoomRedisDto.getAlgoRoomDto().isStart()){
+                startRoomList.add(algoRoomRedisDto.toDto());
+            }else{
+                waitRoomList.add(algoRoomRedisDto.toDto());
+            }
+        }
+
+        res.put("start",startRoomList);
+        res.put("wait",waitRoomList);
+
+        return res;
     }
 
     public AlgoRoomDto createRoom(AlgoRoomDto algoRoomDto){
         String code = algoRedisRepositoryCustom.createCode();
-        AlgoRoomRedisDto algoRoomRedisDto = algoRoomDto.toRedisDto(code);
-        AlgoUserRedisDto algoUserRedisDto = new AlgoUserRedisDto(algoRoomDto.getMaster());
-        algoRoomRedisDto.addUser(algoUserRedisDto);
-
-        System.out.println(" =========== 사용자 확인 =========== ");
-        System.out.println(algoRoomRedisDto.getUsers().toString());
-        return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
+      return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
     }
 
     public boolean enterRoom(AlgoSocketDto algoSocketDto) {
-
-//        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-//        String key = algoSocketDto.getRoomCode() + "-user";
 
         String enterUser = algoSocketDto.getUserId();
 
         userRepository.findById(Long.parseLong(enterUser)).orElseThrow(()->new UserNotFoundException());
 
         List<String> userInRoom = algoRedisRepositoryCustom.getUserInRoom(algoSocketDto.getRoomCode());
-//                hashOperations.get(key, algoSocketDto.getSessionId());
 
         if (enterUser != null && userInRoom.contains(enterUser)) {
             return false;
@@ -155,37 +161,45 @@ public class AlgoService {
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
         if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
             
-            changeMaster(algoSocketDto.getRoomCode());
-            System.out.println("마스터 변경");
+            if(changeMaster(algoSocketDto.getRoomCode())){
+                System.out.println("마스터 변경");
+
+                HashMap<String, Object> res = new HashMap<>();
+                res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
+
+                List<AlgoUserDto> users = getUsers(getUserIds(algoSocketDto.getRoomCode()));
+                res.put("users",users);
+                res.put("master", getMaster(algoSocketDto.getRoomCode()));
+                simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
+
+            }else{
+                System.out.println("방 제거");
+                deleteRoom(algoSocketDto.getRoomCode());
+                return;
+            }
         }
-
-
-        HashMap<String, Object> res = new HashMap<>();
-        res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
-
-        List<AlgoUserDto> users = getUsers(getUserIds(algoSocketDto.getRoomCode()));
-        res.put("users",users);
-        res.put("master", getMaster(algoSocketDto.getRoomCode()));
-        simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
-
-
     }
 
 
     public String getMaster(String roomCode){
-        AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException());
-        return algoRoomRedisDto.getAlgoRoomDto().getMaster();
+        Optional<AlgoRoomRedisDto> opt = algoRedisRepository.findById(roomCode);
+        if(opt.isPresent()){
+            AlgoRoomRedisDto algoRoomRedisDto = opt.get();
+            return algoRoomRedisDto.getAlgoRoomDto().getMaster();
+        }else{
+            return null;
+        }
     }
-    public void changeMaster(String roomCode){
+    public boolean changeMaster(String roomCode){
         List<String> userIds = algoRedisRepositoryCustom.getUserInRoom(roomCode);
         if(userIds.size()==0) {
-            deleteRoom(roomCode);
-            return;
+            return false;
         }
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException());
         algoRoomRedisDto.getAlgoRoomDto().changeMaster(userIds.get(0));
         System.out.println(algoRoomRedisDto.toDto());
         algoRedisRepository.save(algoRoomRedisDto);
+        return true;
     }
 
     public void deleteRoom(String code){
@@ -206,10 +220,10 @@ public class AlgoService {
 
     }
 
-    public Boolean confirmRoomEnter(String roomCode){
-        System.out.println(algoRedisRepositoryCustom.getRoomNum(roomCode));
-        if(algoRedisRepositoryCustom.getRoomNum(roomCode) >= 4) return false;
-        return true;
+    public int confirmRoomEnter(String roomCode, Long userId){
+        if(socketInfo.isPlayGame(userId)) return 0;
+        if(algoRedisRepositoryCustom.getRoomNum(roomCode) >= 4) return -1;
+        return 1;
     }
     public List<String> getUserIds(String roomCode){
         return algoRedisRepositoryCustom.getUserInRoom(roomCode);

@@ -20,8 +20,6 @@ public class AlgoRoomRedisDto {
     @Id
     private String roomCode;
     private AlgoRoomDto algoRoomDto;
-    private List<AlgoUserRedisDto> users;
-
     public AlgoRoomDto toDto(){
         return AlgoRoomDto.builder()
                 .roomCode(this.getRoomCode())
@@ -30,11 +28,9 @@ public class AlgoRoomRedisDto {
                 .tier(this.getAlgoRoomDto().getTier())
                 .time(this.getAlgoRoomDto().getTime())
                 .master(this.getAlgoRoomDto().getMaster())
+                .isStart(this.getAlgoRoomDto().isStart())
                 .build();
     }
 
-    public void addUser(AlgoUserRedisDto algoUserRedisDto){
-        this.getUsers().add(algoUserRedisDto);
-    }
 
 }
