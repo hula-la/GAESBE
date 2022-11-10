@@ -67,7 +67,6 @@ public class AlgoSocketController {
     public void algoPassTimer(AlgoProblemReq algoProblemReq) throws Exception{
         HashMap<String, Object> res = new HashMap<>();
         res.put("type","START");
-
         simpMessagingTemplate.convertAndSend("/algo/start/pass/"+algoProblemReq.getRoomCode(),res);
 
         algoSocketService.createAlgoRoomPass(algoProblemReq.getRoomCode());
