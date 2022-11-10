@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   height: 100vh;
   background-color: #232323;
-  overflow:hidden;
+  overflow: hidden;
 `;
 const CombinePage = () => {
   return (

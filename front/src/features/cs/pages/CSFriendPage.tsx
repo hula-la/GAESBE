@@ -440,25 +440,22 @@ const CSFriendPage = () => {
                 className="waitingroom"
                 alt="room"
               />
-              <div className="waitingCharacters">
-                {players &&
-                  players.map((player: any, idx: number) => {
-                    return (
-                      <div
-                        key={idx}
-                        style={
-                          characterLocationArr[countArr.indexOf(player.id)]
-                        }
-                      >
-                        <div>{player.nickname}</div>
-                        <img
-                          src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/1_normal.gif"
-                          alt="character"
-                        />
-                      </div>
-                    );
-                  })}
-              </div>
+              {players &&
+                players.map((player: any, idx: number) => {
+                  return (
+                    <div
+                      key={idx}
+                      style={characterLocationArr[countArr.indexOf(player.id)]}
+                    >
+                      <div>{player.nickname}</div>
+                      <img
+                        style={{ height: '100%', width: '100%' }}
+                        src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/1_normal.gif"
+                        alt="character"
+                      />
+                    </div>
+                  );
+                })}
             </div>
             {players &&
               players.map((player: any, idx: number) => {

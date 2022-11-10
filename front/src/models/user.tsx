@@ -12,6 +12,8 @@ export interface UserAbility {
   csLv: number;
   typingExp: number;
   typingLv: number;
+  luckExp: number;
+  luckLv: number;
 }
 
 export interface User {
