@@ -52,9 +52,12 @@ public class SessionDisconnectConfig {
                         .sessionId(sessionId)
                         .build();
 
+                System.out.println("******************방 나감"+info[0]);
                 csRoomService.enterOrLeave(csSocketDto);
+                System.out.println("******************기록지움"+info[0]);
                 csRoomService.deleteRecord(info[1],Long.parseLong(info[0]));
                 // 게임을 하고 있다는 기록 지움
+                System.out.println("******************나간다"+info[0]);
                 socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
             case "Typing2":
