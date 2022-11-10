@@ -10,10 +10,7 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.ssafy.gaese.global.util.SocketUtil.roomCodeMaker;
@@ -57,16 +54,8 @@ public class AlgoRedisRepositoryCustom {
 //    }
 
     //  생성된 방 list
-    public List<AlgoRoomDto> getRooms(){
-
-        List<AlgoRoomDto> roomList = new ArrayList<>();
-        Iterable<AlgoRoomRedisDto> algoRoomRedisDtos = algoRedisRepository.findAll();
-        for(AlgoRoomRedisDto algoRoomRedisDto : algoRoomRedisDtos) {
-            System.out.println("========== 사용자 get  ==========");
-            System.out.println(algoRoomRedisDto.toString());
-            roomList.add(algoRoomRedisDto.toDto());
-        }
-        return roomList;
+    public Iterable<AlgoRoomRedisDto>  getRooms(){
+        return algoRedisRepository.findAll();
 
     }
 
@@ -74,16 +63,9 @@ public class AlgoRedisRepositoryCustom {
     public AlgoRoomDto createRoom(AlgoRoomRedisDto algoRoomRedisDto){
 
         algoRedisRepository.save(algoRoomRedisDto);
-//        hashOperations.put(code,"code",code);
-//        hashOperations.put(code,"time", algoRoomDto.getTime());
-//        hashOperations.put(code,"tier",algoRoomDto.getTier());
-//        hashOperations.put(code,"num",algoRoomDto.getNum());
-//        stringRedisTemplate.expire(code,1, TimeUnit.DAYS);
-
         AlgoRoomRedisDto saved = algoRedisRepository.findById(algoRoomRedisDto.getRoomCode())
                 .orElseThrow(()->new NoSuchElementException());
-        System.out.println(" =========== 사용자 저장 =========== ");
-        System.out.println(saved.toString());
+
         return saved.toDto();
 
     }
