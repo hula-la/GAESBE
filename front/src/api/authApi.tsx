@@ -23,3 +23,8 @@ export const deleteUserInfoApi = async () => {
   localStorage.removeItem('accessToken');
   return res;
 };
+
+export const fetchAbilityApi = async () => {
+  const res = await client.get(`ability/me`);
+  return res;
+};

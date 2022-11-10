@@ -157,7 +157,7 @@ const CSFriendPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
-  const [isLast, setIsLast] = useState<Boolean>(false);
+  const [isMaster, setIsMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
@@ -284,21 +284,10 @@ const CSFriendPage = () => {
             setTimeout(() => {
               setIsNext(true);
             }, 7000);
+          } else if (data.hasOwnProperty('master')) {
+            setIsMaster(true);
           } else {
             setIsCorrect(data.isCorrect);
-          }
-          if (data.hasOwnProperty('isLast')) {
-            if (data.isLast === true) {
-              setTimeout(() => {
-                client.send(
-                  '/api/cs/start',
-                  {},
-                  JSON.stringify({
-                    roomCode: roomcode,
-                  }),
-                );
-              }, 1000);
-            }
           }
         });
 
@@ -330,7 +319,7 @@ const CSFriendPage = () => {
         };
         setTimeout(() => {
           fetchMemberInfo();
-        }, 1000);
+        }, 2000);
       });
     }
   }, [userInfo]);
@@ -342,9 +331,7 @@ const CSFriendPage = () => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
-            if (data1.msg === 'ready') {
-              setIsLast(true);
-            } else if (data1.msg === 'end') {
+            if (data1.msg === 'end') {
               setIsEnd(true);
               setResult(data1.result);
             } else {
@@ -388,6 +375,11 @@ const CSFriendPage = () => {
     }
   }, [roomCode]);
 
+  useEffect(() => {
+    return () => {
+      client.disconnect(() => {});
+    };
+  }, []);
   // 로딩 & 끝 제어
   useEffect(() => {
     if (players) {
@@ -398,6 +390,16 @@ const CSFriendPage = () => {
       navigate('/game/CS/result', { state: { result: result } });
     }
   }, [players, result, isEnd]);
+
+  const onClickStart = () => {
+    client.send(
+      '/api/cs/start',
+      {},
+      JSON.stringify({
+        roomCode: roomCode,
+      }),
+    );
+  };
 
   // 정답 유무 확인
   const handleAnswerSend = () => {
@@ -417,18 +419,27 @@ const CSFriendPage = () => {
     <Container>
       {isLoading && (
         <LoadingBlock>
-          <img src="/img/loadingspinner.gif" />
+          <img src="/img/loadingspinner.gif" alt="loadingSpinner" />
           <p className="loadingText">방에 들어가는중~</p>
         </LoadingBlock>
       )}
       {!isLoading && !isStart && (
         <WaitingBlock>
-          <img src="/img/gametitle/gametitle3.png" className="gameTitle" />
+          <img
+            src="/img/gametitle/gametitle3.png"
+            className="gameTitle"
+            alt="gameTitle"
+          />
           <div className="subtitle">친선전</div>
+          {isMaster && <button onClick={onClickStart}>게임시작</button>}
           {/* {isLast && <p>{sec}초 후 게임이 시작됩니다!</p>} */}
           <div className="waitingContent">
             <div className="imgBox">
-              <img src="/img/rank/waitingroom.png" className="waitingroom" />
+              <img
+                src="/img/rank/waitingroom.png"
+                className="waitingroom"
+                alt="room"
+              />
               <div className="waitingCharacters">
                 {players &&
                   players.map((player: any, idx: number) => {
@@ -439,10 +450,10 @@ const CSFriendPage = () => {
                           characterLocationArr[countArr.indexOf(player.id)]
                         }
                       >
-                        <div key={idx}>{player.nickname}</div>
+                        <div>{player.nickname}</div>
                         <img
-                          key={idx}
                           src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/1_normal.gif"
+                          alt="character"
                         />
                       </div>
                     );
@@ -458,10 +469,14 @@ const CSFriendPage = () => {
       )}
       {isStart && (
         <IngameBlock>
-          <img src="/img/gametitle/gametitle3.png" className="gameTitle" />
+          <img
+            src="/img/gametitle/gametitle3.png"
+            className="gameTitle"
+            alt="gameTitle"
+          />
           {(!problem || isNext) && (
             <div>
-              <img src="/img/loadingspinner.gif" />
+              <img src="/img/loadingspinner.gif" alt="loadingSpinner" />
               <p className="loadingText">문제를 불러오고 있습니다</p>
             </div>
           )}
@@ -486,46 +501,46 @@ const CSFriendPage = () => {
                   className="selectbutton"
                   onClick={handleAnswerSend}
                   src="/img/selectbutton/onebutton.png"
+                  alt="button"
                 />
                 <img
                   className="selectbutton"
                   onClick={handleAnswerSend}
                   src="/img/selectbutton/twobutton.png"
+                  alt="button"
                 />
                 <img
                   className="selectbutton"
                   onClick={handleAnswerSend}
                   src="/img/selectbutton/threebutton.png"
+                  alt="button"
                 />
                 <img
                   className="selectbutton"
                   onClick={handleAnswerSend}
                   src="/img/selectbutton/fourbutton.png"
+                  alt="button"
                 />
               </div>
               {ranking && (
                 <div className="rankBlock">
                   <div className="rankwrapper">
                     <div>
-                      <img src="/img/rank/goldmedal.png" />
+                      <img src="/img/rank/goldmedal.png" alt="medal" />
                       {/* <img
+                        alt='character
                         src={`${process.env.REACT_APP_S3_URL}/profile/${
                           Object.keys(ranking[0])[0]
                         }.png`}
                       /> */}
                       <div>
                         <img
+                          alt="character"
                           className="character"
                           src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
                         />
-                        <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[0])[0];
-                            })[0].nickname
-                          }
-                        </div>
-                        <div>{ranking[0][Object.keys(ranking[0])[0]]}</div>
+                        <div>{ranking[0][1]}</div>
+                        <div>{ranking[0][2]}</div>
                       </div>
                       {}
                     </div>
@@ -543,14 +558,8 @@ const CSFriendPage = () => {
                           className="character"
                           src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
                         />
-                        <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[1])[0];
-                            })[0].nickname
-                          }
-                        </div>
-                        <div>{ranking[1][Object.keys(ranking[1])[0]]}</div>
+                        <div>{ranking[1][1]}</div>
+                        <div>{ranking[1][2]}</div>
                       </div>
                       {}
                     </div>

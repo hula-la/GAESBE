@@ -316,7 +316,7 @@ const IntroPage = () => {
   }, []);
 
   const onClickArrow = () => {
-    window.scrollTo({ top: sectionOffsetTop, behavior: 'smooth' });
+    window.scrollTo({ top: 20, behavior: 'smooth' });
   };
 
   return (
