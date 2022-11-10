@@ -1,7 +1,6 @@
 package com.ssafy.gaese.global.config;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
-import com.ssafy.gaese.domain.typing.service.TypingRoomService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
@@ -19,7 +18,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class SessionDisconnectConfig {
 
-    private final TypingRoomService typingRoomService;
 
     private final SocketInfo socketInfo;
 
