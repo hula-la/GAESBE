@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,15 @@ public class AlgoService {
     private final RedisTemplate<String, String> redisTemplate;
     private final SocketInfo socketInfo;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final AlgoSocketService algoSocketService;
 
+
+    public void saveAlgoRecord(String roomCode){
+
+        System.out.println("user");
+        List<String> users = getUserIds(roomCode);
+
+    }
 
     public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
@@ -149,14 +158,29 @@ public class AlgoService {
         String startTime = hashOperations.get(algoSocketDto.getRoomCode(), "startTime");
         if(startTime != null ){
             System.out.println("시작함");
-            //시작 후
+            // redisdp 랭킹 있는지 확인 후
+            // redis에 랭킹에 저장
+            // 시간은 -- 으로
             AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
-            AlgoRankDto algoRankDto = AlgoRankDto.builder()
-                    .min("--").nickName(userRepository.getNickNameById(Long.parseLong(algoSocketDto.getUserId()))).userId(Long.parseLong(algoSocketDto.getUserId())).build();
-            zSetOperations.add(algoRankDto.getRoomCode()+"-rank", algoRankDto.getNickName(), algoRoomRedisDto.getAlgoRoomDto().getTime());
-            algoRankRedisRepository.save(algoRankDto);
+            List<AlgoRankDto> ranks = algoSocketService.getCurrentRank(algoSocketDto.getRoomCode());
+            boolean isSaved = false;
+            for(AlgoRankDto rank : ranks){
+                if(rank.getUserId().equals(algoSocketDto.getUserId())){ // 저장되어있음
+                    isSaved = true;
+                    break;
+                }
+            }
+
+            if(!isSaved){
+                AlgoRankDto algoRankDto = AlgoRankDto.builder()
+                        .min("--").nickName(userRepository.getNickNameById(Long.parseLong(algoSocketDto.getUserId()))).userId(Long.parseLong(algoSocketDto.getUserId())).build();
+
+                zSetOperations.add(algoRankDto.getRoomCode()+"-rank", algoRankDto.getNickName(), algoRoomRedisDto.getAlgoRoomDto().getTime());
+                algoRankRedisRepository.save(algoRankDto);
+            }
         }
         System.out.println("떠날꺼임");
+
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
 
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
@@ -172,12 +196,17 @@ public class AlgoService {
                 res.put("users",users);
                 res.put("master", getMaster(algoSocketDto.getRoomCode()));
                 simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
-
+                return;
             }else{
                 System.out.println("방 제거");
                 deleteRoom(algoSocketDto.getRoomCode());
                 return;
             }
+        }
+        if(getUserIds(algoSocketDto.getRoomCode()).size()==0){
+            System.out.println("사람 없음 방 제거");
+            deleteRoom(algoSocketDto.getRoomCode());
+            return;
         }
     }
 
@@ -205,6 +234,9 @@ public class AlgoService {
 
     public void deleteRoom(String code){
         HashOperations<String,String,String>hashOperations = redisTemplate.opsForHash();
+        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
+
         //시작했다면
         String startTime = hashOperations.get(code, "startTime");
         if(startTime != null ){
@@ -218,6 +250,8 @@ public class AlgoService {
         algoRedisRepository.delete(algoRoomRedisDto);
         // 방 유저 정보 삭제
         algoRedisRepositoryCustom.deleteRoomUser(algoRoomRedisDto);
+        // 랭킹 정보 삭제
+        zSetOperations.removeRange(code+"-rank",0,-1);
 
     }
 

@@ -79,6 +79,7 @@ public class AlgoProblemService {
 
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
+
         }
 
         if(problems.size()==0) return;
