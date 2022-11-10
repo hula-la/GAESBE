@@ -10,9 +10,34 @@ import Level6 from '../components/Level6';
 import { attendanceRequest } from '../../../api/mypageApi';
 import { useSelector } from 'react-redux';
 
-const MyRoom = styled.div`
-  width: 100%;
-  height: 100%;
+const Wrapper = styled.div`
+  width: 66%;
+  height: 97%;
+  position: relative;
+  .abilitys {
+    position: absolute;
+    bottom: 3%;
+    left: 12%;
+    display: flex;
+    flex-direction: row;
+    color: #ffffff;
+    width: 90%;
+    .ability {
+      margin-right: 5rem;
+      width: 25%;
+      font-family: 'NeoDunggeunmo';
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gaze {
+      width: 100%;
+      margin-top: 0.5rem;
+      box-shadow: 0px 0px 3px 4px #ffffff;
+    }
+  }
 `;
 
 const MyOfficePage = () => {
@@ -30,7 +55,7 @@ const MyOfficePage = () => {
     }
   };
   return (
-    <MyRoom>
+    <Wrapper>
       <Level0 attendance={attendance} />
       {/* <Level1 /> */}
       {/* <Level2 /> */}
@@ -38,13 +63,39 @@ const MyOfficePage = () => {
       {/* <Level4 /> */}
       {/* <Level5 /> */}
       {/* <Level6 /> */}
-      <div>
-        <div>
-          <div>ALGORITHM LV.{}</div>
-          <img src="" alt="algo_exp" />
+      {userAbility && (
+        <div className="abilitys">
+          <div className="ability">
+            <div>ALGORITHM Lv.{userAbility.algorithmLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.algorithmExp}.png`}
+              alt="algo_exp"
+            />
+          </div>
+          <div className="ability">
+            <div>CS Lv.{userAbility.csLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.csExp}.png`}
+              alt="cs_exp"
+            />
+          </div>
+          <div className="ability">
+            <div>TYPING Lv.{userAbility.typingLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.typingExp}.png`}
+              alt="typing_exp"
+            />
+          </div>
+          <div className="ability">
+            <div>LUCK Lv.{}</div>
+            <img src="" alt="luck_exp" />
+          </div>
         </div>
-      </div>
-    </MyRoom>
+      )}
+    </Wrapper>
   );
 };
 
