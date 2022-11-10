@@ -15,9 +15,6 @@ const Wrapper = styled.div`
     align-items: center;
     font-weight: 400;
     box-shadow: var(--shadow-1);
-    @media only screen and (min-device-width: 375px) and (max-device-width: 479px) {
-      box-shadow: 2px 2px 2px #4646466b;
-    }
     color: #ffffff;
     margin: 0 auto;
     cursor: pointer;

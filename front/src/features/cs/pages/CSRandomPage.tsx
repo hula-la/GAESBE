@@ -447,25 +447,22 @@ const CSIngamePage = () => {
           <div className="waitingContent">
             <div className="imgBox">
               <img src="/img/rank/waitingroom.png" className="waitingroom" />
-              <div className="waitingCharacters">
-                {players &&
-                  players.map((player: any, idx: number) => {
-                    return (
-                      <div
+              {players &&
+                players.map((player: any, idx: number) => {
+                  return (
+                    <div
+                      key={idx}
+                      style={characterLocationArr[countArr.indexOf(player.id)]}
+                    >
+                      <div>{player.nickname}</div>
+                      <img
+                        style={{ height: '100%', width: '100%' }}
                         key={idx}
-                        style={
-                          characterLocationArr[countArr.indexOf(player.id)]
-                        }
-                      >
-                        <div>{player.nickname}</div>
-                        <img
-                          key={idx}
-                          src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/1_normal.gif"
-                        />
-                      </div>
-                    );
-                  })}
-              </div>
+                        src={`${process.env.REACT_APP_S3_URL}/profile/1_normal.gif`}
+                      />
+                    </div>
+                  );
+                })}
             </div>
             {players &&
               players.map((player: any, idx: number) => {

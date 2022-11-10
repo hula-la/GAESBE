@@ -90,8 +90,12 @@ const MyOfficePage = () => {
             />
           </div>
           <div className="ability">
-            <div>LUCK Lv.{}</div>
-            <img src="" alt="luck_exp" />
+            <div>LUCK Lv.{userAbility.luckLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.luckExp}.png`}
+              alt="luck_exp"
+            />
           </div>
         </div>
       )}
