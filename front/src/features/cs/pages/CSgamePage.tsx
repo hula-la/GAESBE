@@ -22,6 +22,7 @@ const Wrapper = styled.div`
     z-index: -1;
     width: 100%;
     height: 100vh;
+    filter: blur(3px);
   }
   .content {
     margin-top: 10rem;

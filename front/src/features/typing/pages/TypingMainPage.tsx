@@ -13,9 +13,9 @@ const TypingMain = styled.div`
   color: white;
   .title {
     text-align: center;
-    height: 30%;
+    height: 25%;
     img {
-      height: 60%;
+      height: 80%;
     }
   }
 `;

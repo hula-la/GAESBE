@@ -395,6 +395,12 @@ const CSIngamePage = () => {
     }
   }, [roomCode]);
 
+  useEffect(() => {
+    return () => {
+      client.disconnect(() => {});
+    };
+  }, []);
+
   // 로딩 & 끝 제어
   useEffect(() => {
     if (players) {
@@ -409,12 +415,12 @@ const CSIngamePage = () => {
   }, [players, result, isEnd]);
 
   // 정답 유무 확인
-  const handleAnswerSend = () => {
+  const handleAnswerSend = (e: any, number: any) => {
     client.send(
       '/api/cs/submit',
       {},
       JSON.stringify({
-        answer: '3',
+        answer: number,
         problemId: problem.id,
         userId: userInfo.id,
         roomCode: roomCode,
@@ -496,22 +502,22 @@ const CSIngamePage = () => {
               <div className="selectbuttons">
                 <img
                   className="selectbutton"
-                  onClick={handleAnswerSend}
+                  onClick={(e) => handleAnswerSend(e, 1)}
                   src="/img/selectbutton/onebutton.png"
                 />
                 <img
                   className="selectbutton"
-                  onClick={handleAnswerSend}
+                  onClick={(e) => handleAnswerSend(e, 2)}
                   src="/img/selectbutton/twobutton.png"
                 />
                 <img
                   className="selectbutton"
-                  onClick={handleAnswerSend}
+                  onClick={(e) => handleAnswerSend(e, 3)}
                   src="/img/selectbutton/threebutton.png"
                 />
                 <img
                   className="selectbutton"
-                  onClick={handleAnswerSend}
+                  onClick={(e) => handleAnswerSend(e, 4)}
                   src="/img/selectbutton/fourbutton.png"
                 />
               </div>

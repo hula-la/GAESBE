@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+/* 커서 */
+html, body {
+  cursor: url("../public/img/cursor/default_cursor.png"),auto;
+
+}

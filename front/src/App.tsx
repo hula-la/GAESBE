@@ -5,7 +5,7 @@ import './App.css';
 import IntroPage from './features/Intro/pages/IntroPage';
 import LoginPage from './features/auth/pages/LoginPage';
 import SetNicknamePage from './features/auth/pages/SetNicknamePage';
-import CombinePage from './features/game/pages/CombinePage';
+import GamePage from './features/game/pages/GamePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import CSgamePage from './features/cs/pages/CSgamePage';
 
@@ -26,8 +26,9 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(authActions.fetchUserInfoStart());
-  },[]);
-  const {userInfo} = useSelector((state:any) => state.auth)
+    dispatch(authActions.fetchAbilityStart());
+  }, []);
+  const { userInfo } = useSelector((state: any) => state.auth);
 
   return (<>
     {userInfo && <FriendSocket />}
