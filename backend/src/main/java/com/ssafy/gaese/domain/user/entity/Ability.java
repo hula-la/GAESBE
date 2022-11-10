@@ -23,12 +23,15 @@ public class Ability {
     @OneToOne(mappedBy = "ability")
     private User user;
 
-    @ColumnDefault("0")
+    @ColumnDefault("1")
     private int algorithmLv;
-    @ColumnDefault("0")
+    @ColumnDefault("1")
     private int csLv;
-    @ColumnDefault("0")
+    @ColumnDefault("1")
     private int typingLv;
+
+    @ColumnDefault("1")
+    private int luckLv;
 
     @ColumnDefault("0")
     private int algorithmExp;
@@ -36,6 +39,8 @@ public class Ability {
     private int csExp;
     @ColumnDefault("0")
     private int typingExp;
+    @ColumnDefault("0")
+    private int luckExp;
 
     public void levelUp(String field){
         switch (field){
@@ -47,6 +52,9 @@ public class Ability {
                 break;
             case "typing":
                 this.typingLv++;
+                break;
+            case "luck":
+                this.luckLv++;
                 break;
             default:
                 throw new RuntimeException();
@@ -64,6 +72,9 @@ public class Ability {
             case "typing":
                 this.typingExp+=plus;
                 break;
+            case "luck":
+                this.luckExp+=plus;
+                break;
             default:
                 throw new RuntimeException();
         }
@@ -77,6 +88,8 @@ public class Ability {
                 .algorithmLv(this.algorithmLv)
                 .csLv(this.csLv)
                 .typingLv(this.typingLv)
+                .luckLv(this.luckLv)
+                .luckExp(this.luckExp)
                 .userId(this.user.getId())
                 .id(this.id)
                 .build();

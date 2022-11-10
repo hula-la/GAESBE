@@ -15,7 +15,14 @@ public class AbilityService {
     private final AbilityRepository abilityRepository;
 
     public AbilityDto getAbility(Long userId){
-        Ability ability = abilityRepository.findByUser_Id(userId).orElseThrow(() -> new AbilityNotFoundException());
+        Optional<Ability> abilityOpt = abilityRepository.findByUser_Id(userId);
+
+        Ability ability=null;
+
+        if (!abilityOpt.isPresent()){
+            ability=abilityRepository.save(new Ability());
+        } else ability=abilityOpt.get();
+
         return ability.toDto();
     }
 
