@@ -20,7 +20,4 @@ public class ChatSocketController {
         chatService.saveMessage(messageDto);
         simpMessagingTemplate.convertAndSend("/chat/"+messageDto.getToUser(),messageDto);
     }
-
-
-
 }

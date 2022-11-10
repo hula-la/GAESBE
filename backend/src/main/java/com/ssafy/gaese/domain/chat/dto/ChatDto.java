@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ChatDto {
 
-    String rightUser;
-    String leftUser;
+    String fromUser;
+    String toUser;
 }

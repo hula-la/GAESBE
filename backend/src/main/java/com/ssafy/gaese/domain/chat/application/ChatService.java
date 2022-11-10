@@ -21,16 +21,21 @@ public class ChatService {
 
     private final ChatRedisRepository chatRedisRepository;
 
-    public List<MessageDto> getAllMessages( String rUserId, String lUserId){
+    public List<MessageDto> getAllMessages( String fromId, String toId){
         List<MessageDto> allMsg = new ArrayList<>();
-        allMsg.addAll(getMessages(rUserId,lUserId));
-        allMsg.addAll(getMessages(lUserId, rUserId));
+        for( MessageDto messageDto : getMessages(fromId)){
+            if(messageDto.getToUser().equals(toId)){
+
+            }
+        }
+        allMsg.addAll(getMessages(fromId));
+        allMsg.addAll(getMessages(toId));
         return allMsg;
     }
 
-    public List<MessageDto> getMessages(String from, String to){
-        List<MessageDto> res = chatRedisRepository.findAllById(Collections.singleton(from));
-        res.addAll(chatRedisRepository.findAllById(Collections.singleton(from)));
+    public List<MessageDto> getMessages(String fromId){
+        List<MessageDto> res = chatRedisRepository.findAllById(Collections.singleton(fromId));
+        res.addAll(chatRedisRepository.findAllById(Collections.singleton(fromId)));
         return res;
     }
 
