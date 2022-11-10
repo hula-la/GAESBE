@@ -74,7 +74,9 @@ public class TypingService {
 
 
         roomDto.setParagraphId(paragraphId);
-        roomDto.setParagraphLength(paragraph.getContent().length());
+        roomDto.setParagraphLength(paragraph.getContent().replace(" ","").length());
+        //paragraph.getContent().length()
+        //줄 구분할 공백 부분 카운팅 제거
 
 //        시작 시간 알림
         roomDto.setStartTime(System.currentTimeMillis());
@@ -121,8 +123,8 @@ public class TypingService {
         Long userId = typingSubmitDto.getUserId();
         HashMap<Long, Float> progressByPlayer = roomDto.getProgressByPlayer();
         long paragraphLength = roomDto.getParagraphLength();
-        Float Point =progressByPlayer.get(userId);
-        float pointPerWord = (float) (100*Point / paragraphLength);
+//        Float Point =progressByPlayer.get(userId);
+        float pointPerWord = (float) (100 / paragraphLength);
 //        float pointPerWord = (float) (1);
 
         progressByPlayer.put(userId,progressByPlayer.get(userId)+pointPerWord);
