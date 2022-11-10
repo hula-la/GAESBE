@@ -10,6 +10,8 @@ import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 
+import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
+import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -28,18 +30,30 @@ public class AlgoSocketController {
     private final AlgoService algoService;
     private final AlgoProblemService algoProblemService;
     private final AlgoSocketService algoSocketService;
+    private final SocketInfo socketInfo;
 
     // 알고리즘 방 입장/나가기
     @MessageMapping("/algo")
     public void algoRoom(AlgoSocketDto algoSocketDto) throws Exception{
-        List<String> userIds = new LinkedList<>();
+
         Map<String,Object> res = new HashMap<>();
         System.out.println("===== 들어옴==== ");
         System.out.println(algoSocketDto.getType());
-        if(algoSocketDto.getType() == AlgoSocketDto.Type.ENTER){
-            if(algoService.enterRoom(algoSocketDto)){
-                res.put("msg",algoSocketDto.getUserId()+" 님이 접속하셨습니다.");
+
+        if(algoSocketDto.getType() == AlgoSocketDto.Type.ENTER) {
+
+            // 다른 게임 중인지 확인
+            if (socketInfo.isPlayGame(Long.parseLong(algoSocketDto.getUserId()))) {
+                res.clear();
+                res.put("playAnotherGame", true);
+                res.put("msg", "다른 게임에 접속 중");
+                simpMessagingTemplate.convertAndSend("/algo/" + algoSocketDto.getUserId(), res);
+                throw new PlayAnotherGameException();
             }
+            if (algoService.enterRoom(algoSocketDto)) {
+                res.put("msg", algoSocketDto.getUserId() + " 님이 접속하셨습니다.");
+            }
+
         }else if(algoSocketDto.getType() == AlgoSocketDto.Type.LEAVE){
             algoService.leaveRoom(algoSocketDto);
             res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");

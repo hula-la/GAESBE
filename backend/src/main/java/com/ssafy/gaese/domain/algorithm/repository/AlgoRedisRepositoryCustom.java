@@ -89,15 +89,13 @@ public class AlgoRedisRepositoryCustom {
     }
 
     // 방 삭제
-    public void deleteRoom(AlgoRoomRedisDto algoRoomRedisDto){
-        algoRedisRepository.delete(algoRoomRedisDto);
+    public void deleteRoomUser(AlgoRoomRedisDto algoRoomRedisDto){
         stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode()+"-user");
         stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode());
     }
 
     //  방 입장
     public void enterRoom(AlgoSocketDto algoSocketDto){
-
         HashOperations<String,String ,String> hashOperations = stringRedisTemplate.opsForHash();
 
         hashOperations.put(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId(),algoSocketDto.getUserId());
@@ -126,8 +124,6 @@ public class AlgoRedisRepositoryCustom {
         for (String key : list.keySet()) {
             users.add(list.get(key));
         }
-        System.out.println("getUserInRoom");
-        System.out.println(users.toString());
 
         return users;
     }

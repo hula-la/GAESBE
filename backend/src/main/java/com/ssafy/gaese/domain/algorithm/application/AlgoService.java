@@ -2,13 +2,12 @@ package com.ssafy.gaese.domain.algorithm.application;
 
 import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
+import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoUserRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
-import com.ssafy.gaese.domain.algorithm.repository.AlgoRankRedisRepository;
-import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
-import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepositoryCustom;
-import com.ssafy.gaese.domain.algorithm.repository.AlgoRepository;
+import com.ssafy.gaese.domain.algorithm.repository.*;
+import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -39,6 +38,7 @@ public class AlgoService {
     private final AlgoRedisRepository algoRedisRepository;
     private final AlgoRedisRepositoryCustom algoRedisRepositoryCustom;
     private final AlgoRankRedisRepository algoRankRedisRepository;
+    private final AlgoRoomPassRepository algoRoomPassRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final SocketInfo socketInfo;
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -63,9 +63,7 @@ public class AlgoService {
                     .ranking(algoRecordReq.getRanking())
                     .solveTime(algoRankDto.getMin())
                     .build();
-
-
-
+            algoRankRedisRepository.delete(algoRankDto);
         }else{
             algoRecordDto = AlgoRecordDto.builder()
                     .isSolve(false)
@@ -82,6 +80,7 @@ public class AlgoService {
 
 
         algoRepository.save(algoRecordDto.toEntity(user));
+
         return algoRecordDto;
     }
 
@@ -106,18 +105,21 @@ public class AlgoService {
         return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
     }
 
-    public boolean enterRoom(AlgoSocketDto algoSocketDto){
+    public boolean enterRoom(AlgoSocketDto algoSocketDto) {
 
-        HashOperations<String,String ,String> hashOperations = redisTemplate.opsForHash();
-        String key = algoSocketDto.getRoomCode()+"-user";
+//        HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
+//        String key = algoSocketDto.getRoomCode() + "-user";
 
-        String userId = hashOperations.get(key,algoSocketDto.getSessionId());
+        String enterUser = algoSocketDto.getUserId();
 
-        System.out.println("enterUser : " + userId);
-        System.out.println("saved "+algoSocketDto.getUserId());
-        if(userId != null && userId.equals(algoSocketDto.getUserId())){
+        userRepository.findById(Long.parseLong(enterUser)).orElseThrow(()->new UserNotFoundException());
+
+        List<String> userInRoom = algoRedisRepositoryCustom.getUserInRoom(algoSocketDto.getRoomCode());
+//                hashOperations.get(key, algoSocketDto.getSessionId());
+
+        if (enterUser != null && userInRoom.contains(enterUser)) {
             return false;
-        }else{
+        } else {
             algoRedisRepositoryCustom.enterRoom(algoSocketDto);
             //session 정보 저장
             socketInfo.setSocketInfo(algoSocketDto.getSessionId(),
@@ -125,8 +127,10 @@ public class AlgoService {
                     algoSocketDto.getRoomCode(),
                     "Algo",
                     null);
+            // 한개의 게임에만 접속할 수 있도록
+            socketInfo.setOnlinePlayer(Long.parseLong(algoSocketDto.getUserId()));
             return true;
-         }
+        }
     }
 
     public void leaveRoom(AlgoSocketDto algoSocketDto){
@@ -134,7 +138,7 @@ public class AlgoService {
         HashOperations<String ,String, String > hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
 
-        // 1. startTime 있는지 확인
+        // 시작했는지 (startTime 있는지) 확인
         String startTime = hashOperations.get(algoSocketDto.getRoomCode(), "startTime");
         if(startTime != null ){
             System.out.println("시작함");
@@ -185,8 +189,21 @@ public class AlgoService {
     }
 
     public void deleteRoom(String code){
+        HashOperations<String,String,String>hashOperations = redisTemplate.opsForHash();
+        //시작했다면
+        String startTime = hashOperations.get(code, "startTime");
+        if(startTime != null ){
+            // pass 정보 삭제
+            AlgoRoomPassDto algoRoomPassDto  = algoRoomPassRepository.findById(code).orElseThrow(()-> new NoSuchElementException());
+            algoRoomPassRepository.delete(algoRoomPassDto);
+        }
+
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(code).orElseThrow(()->new NoSuchElementException());
-        algoRedisRepositoryCustom.deleteRoom(algoRoomRedisDto);
+        // 방 삭제
+        algoRedisRepository.delete(algoRoomRedisDto);
+        // 방 유저 정보 삭제
+        algoRedisRepositoryCustom.deleteRoomUser(algoRoomRedisDto);
+
     }
 
     public Boolean confirmRoomEnter(String roomCode){
