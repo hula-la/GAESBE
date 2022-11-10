@@ -5,11 +5,12 @@ const Unity = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 66%;
+  width: 100%;
+  height: 100%;
   background-color: #232323;
   position: relative;
 
-  .imageContainer{
+  .imageContainer {
     width: 73%;
     position: relative;
     display: inline-block;
@@ -21,8 +22,6 @@ const MyRoom = styled.img`
   width: 100%;
   height: 15%;
   margin-bottom: 15%;
-
-
 `;
 const MyComputer = styled.img`
   width: 15%;
@@ -33,7 +32,7 @@ const MyComputer = styled.img`
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    cursor: url("/img/cursor/hover_cursor.png"),auto;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
 `;
 const Coin = styled.img`
@@ -45,7 +44,7 @@ const Coin = styled.img`
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    cursor: url("/img/cursor/hover_cursor.png"),auto;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
 `;
 const Note = styled.img`
@@ -56,7 +55,7 @@ const Note = styled.img`
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    cursor: url("/img/cursor/hover_cursor.png"),auto;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
 `;
 const Calender = styled.img`
@@ -72,7 +71,7 @@ const Calender = styled.img`
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    cursor: url("/img/cursor/hover_cursor.png"),auto;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
 `;
 const Level0 = ({ attendance }: any) => {
@@ -87,8 +86,7 @@ const Level0 = ({ attendance }: any) => {
   return (
     <Unity>
       <div className="imageContainer">
-        <MyRoom src="/img/MyOffice/level00.png"
-        alt="lv0 room"/>
+        <MyRoom src="/img/MyOffice/level00.png" alt="lv0 room" />
 
         <MyComputer
           onClick={handleAlert}
