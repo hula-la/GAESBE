@@ -5,6 +5,7 @@ const initialState: User = {
   isLoading: false,
   isDuplicate: false,
   userInfo: null,
+  userAbility: null,
   error: null,
 };
 
@@ -26,6 +27,13 @@ const authSlice = createSlice({
     fetchUserInfoError(state, action) {
       state.error = action.payload.status;
     },
+    // 유저 역량 불러오기
+    fetchAbilityStart(state) {},
+    fetchAbilitySuccess(state, action) {
+      state.userAbility = action.payload;
+      console.log(state.userAbility);
+    },
+    fetchAbilityError(state, action) {},
     // 유저 닉네임, 프로필 생성
     createUserInfoStart(state, action) {},
     createUserInfoSuccess(state, action) {

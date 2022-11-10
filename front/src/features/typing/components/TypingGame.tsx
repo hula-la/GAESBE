@@ -146,8 +146,14 @@ const TypingGame = () => {
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
 
-  const client = Stomp.over(socket);
-  const client2 = Stomp.over(socket);
+  const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
+
+  useEffect(() => {
+    client.current = Stomp.over(socket);
+    client2.current = Stomp.over(socket);
+  }, []);
+
   useEffect(() => {
     if (isEnd && resultId && resultNickName && resultProfile) {
       console.log('끄읕');
@@ -171,7 +177,7 @@ const TypingGame = () => {
   }, [isReady]);
   useEffect(() => {
     if (userInfo) {
-      client.connect({}, (frame) => {
+      client.current.connect({}, (frame: any) => {
         console.log('*****************121**************************');
         client.subscribe(`/typing2/${userInfo.id}`, (res) => {
           var data = JSON.parse(res.body);
@@ -181,7 +187,7 @@ const TypingGame = () => {
           }
           if (data.hasOwnProperty('isLast')) {
             if (data.isLast === true) {
-              client.send(
+              client.current.send(
                 '/api/typing2/start',
                 {},
                 JSON.stringify({
@@ -210,8 +216,21 @@ const TypingGame = () => {
           );
         };
         enterRoom();
+
+        setTimeout(() => {
+          client.current.subscribe('/typing2/room/' + roomcode, (res: any) => {
+            var testdata = JSON.parse(res.body);
+            if (testdata.hasOwnProperty('progressByPlayer')) {
+              console.log(testdata.progressByPlayer);
+              console.log(testdata.progressByPlayer[`${userInfo.id}`]);
+              setTest(testdata.progressByPlayer[`${userInfo.id}`]);
+              testtest = testdata.progressByPlayer[`${userInfo.id}`];
+            }
+          });
+        }, 1000);
+
         const fetchMemberInfo = () => {
-          client.send(
+          client.current.send(
             '/api/typing2/memberInfo',
             {},
             JSON.stringify({

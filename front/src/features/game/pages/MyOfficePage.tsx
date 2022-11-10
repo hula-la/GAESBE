@@ -7,33 +7,55 @@ import Level3 from '../components/Level3';
 import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
-import FriendMainPage from '../../friend/pages/FriendMainPage';
+import { attendanceRequest } from '../../../api/mypageApi';
+import { useSelector } from 'react-redux';
 
-import { attendanceRequest } from '../../../api/mypageApi'
-
-const Friend = styled.div`
-  width: 21.75%;
-  background-color: #232323;
-  border: 2px solid red;
-  color: white;
-`;
-const MyOfficePage = () => {
-
-  const attendance = async () => {
-    try {
-      const res = await attendanceRequest()
-      if (res.status===200) {
-        alert('출석체크 되었습니다')
-      }
-    } catch (error:any) {
-      if (error.response.status===446) {
-        alert('오늘은 이미 출석했습니다')
-      }
+const Wrapper = styled.div`
+  width: 66%;
+  height: 97%;
+  position: relative;
+  .abilitys {
+    position: absolute;
+    bottom: 3%;
+    left: 12%;
+    display: flex;
+    flex-direction: row;
+    color: #ffffff;
+    width: 90%;
+    .ability {
+      margin-right: 5rem;
+      width: 25%;
+      font-family: 'NeoDunggeunmo';
+      font-size: 1.2rem;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .gaze {
+      width: 100%;
+      margin-top: 0.5rem;
+      box-shadow: 0px 0px 3px 4px #ffffff;
     }
   }
+`;
 
+const MyOfficePage = () => {
+  const { userAbility } = useSelector((state: any) => state.auth);
+  const attendance = async () => {
+    try {
+      const res = await attendanceRequest();
+      if (res.status === 200) {
+        alert('출석체크 되었습니다');
+      }
+    } catch (error: any) {
+      if (error.response.status === 446) {
+        alert('오늘은 이미 출석했습니다');
+      }
+    }
+  };
   return (
-    <>
+    <Wrapper>
       <Level0 attendance={attendance} />
       {/* <Level1 /> */}
       {/* <Level2 /> */}
@@ -41,10 +63,39 @@ const MyOfficePage = () => {
       {/* <Level4 /> */}
       {/* <Level5 /> */}
       {/* <Level6 /> */}
-      <Friend>
-        <FriendMainPage/>
-      </Friend>
-    </>
+      {userAbility && (
+        <div className="abilitys">
+          <div className="ability">
+            <div>ALGORITHM Lv.{userAbility.algorithmLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.algorithmExp}.png`}
+              alt="algo_exp"
+            />
+          </div>
+          <div className="ability">
+            <div>CS Lv.{userAbility.csLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.csExp}.png`}
+              alt="cs_exp"
+            />
+          </div>
+          <div className="ability">
+            <div>TYPING Lv.{userAbility.typingLv}</div>
+            <img
+              className="gaze"
+              src={`/img/ability/expBar/exp${userAbility.typingExp}.png`}
+              alt="typing_exp"
+            />
+          </div>
+          <div className="ability">
+            <div>LUCK Lv.{}</div>
+            <img src="" alt="luck_exp" />
+          </div>
+        </div>
+      )}
+    </Wrapper>
   );
 };
 
