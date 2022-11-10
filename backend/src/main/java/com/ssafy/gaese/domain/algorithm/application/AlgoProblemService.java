@@ -38,6 +38,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -46,8 +48,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 @RequiredArgsConstructor
 public class AlgoProblemService {
 
-    @Value("${chrome-driver-path}")
-    private String ChromePath;
     private final RedisTemplate<String, String> redisTemplate;
     private final AlgoRankRedisRepository algoRankRedisRepository;
     private final UserRepository userRepository;
@@ -102,8 +102,7 @@ public class AlgoProblemService {
             }
 
         }else{
-//            FileInputStream serviceAccount =
-//                    new FileInputStream(ResourceUtils.getFile("classpath:firebaseKey.json"));
+
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(new ClassPathResource("/firebaseKey.json").getInputStream()))
                     .setDatabaseUrl("https://ssafy-final-pjt-3addc-default-rtdb.firebaseio.com")
@@ -118,7 +117,6 @@ public class AlgoProblemService {
                 db.collection(tier).orderBy("submit", Query.Direction.DESCENDING);
         QuerySnapshot querySnapshot = query.get().get();
         int len = querySnapshot.size();
-        System.out.println(tier +"개수 : "+len);
         len  = len < 50 ? len : 50;
         for (int i = 0; i < len; i++) {
             DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(i);
@@ -135,11 +133,8 @@ public class AlgoProblemService {
 
     public List<AlgoProblemDto> getCommonProblems(AlgoProblemReq algoProblemReq) throws ExecutionException, InterruptedException, IOException {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
-
         List<AlgoProblemDto> algoProblemDtoList = getTierProblems(algoProblemReq.getTier()); // 티어 전체 문제
-
         Set<String> problemsSet = new HashSet<>();
-
 
         for(String user : algoProblemReq.getUsers()){
             String key = algoProblemReq.getRoomCode()+"-"+user;
@@ -147,23 +142,22 @@ public class AlgoProblemService {
                 problemsSet.addAll(setOperations.members(key));
             }
         }
-        System.out.println(
 
-        );
         // 푼 문제들 제외
         for (int i = algoProblemDtoList.size() - 1; i >= 0; i--) {
             if (problemsSet.contains(algoProblemDtoList.get(i).getProblemId()))
                 algoProblemDtoList.remove(algoProblemDtoList.get(i));
         }
         System.out.println("=====> 최종 문제 수 : " + algoProblemDtoList.size());
+
         // list 섞고 그 중 10개 가져오기
         Collections.shuffle(algoProblemDtoList);
-        return algoProblemDtoList.subList(0, 10);
+       return algoProblemDtoList.subList(0, 10);
     }
 
     public int confirmSolve(AlgoSolveReq algoSolveReq){
-        try{
 
+        try{
             WebDriverManager.chromedriver().setup();
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.addArguments("--no-sandbox");
@@ -184,8 +178,7 @@ public class AlgoProblemService {
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
         }
-        return -1;
-
+        return 0;
     }
 
     public void saveStartTime(String roomCode){

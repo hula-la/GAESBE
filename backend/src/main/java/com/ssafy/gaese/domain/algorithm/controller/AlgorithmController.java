@@ -2,10 +2,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRecordReq;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoSolveReq;
+import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,9 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Api(value="Algorithm", tags={"Algorithm"})
 @RestController
@@ -92,10 +91,8 @@ public class AlgorithmController {
         if( result == 1) {
             algoProblemService.saveUserTime(roomCode,userDetails.getId());
             res.put("msg","맞았습니다 !");
-        }else if(result == 0){
-            res.put("msg","제출이 확인되지 않았습니다.");
         }else{
-            res.put("msg","제출 확인 중 오류가 발생했습니다. 다시 시도해 주세요");
+            res.put("msg","제출이 확인되지 않았습니다.");
         }
 
         return ResponseEntity.ok().body(res);
@@ -109,7 +106,6 @@ public class AlgorithmController {
 
         HashMap<String , String> res = new HashMap<>();
         res.put("bjId",bjId);
-
         return ResponseEntity.ok().body(res);
     }
     @GetMapping("/bj/code")
@@ -122,5 +118,9 @@ public class AlgorithmController {
     @ApiOperation(value="백중 아이디 연동 확인")
     public ResponseEntity<Object> confirmCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok().body(algoService.confirmCode(userDetails.getId()));
+    }
+    @PostMapping("/test")
+    public void test(@RequestBody AlgoProblemReq algoProblemReq) throws IOException, ExecutionException, InterruptedException {
+        algoProblemService.getCommonProblems(algoProblemReq);
     }
 }
