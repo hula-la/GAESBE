@@ -32,14 +32,14 @@ public class TypingController {
 
 
     @GetMapping("/record")
-    @ApiOperation(value = "cs 게임 기록 조회", notes = "사용자별 알고리즘 게임 기록 조회")
+    @ApiOperation(value = "typing 게임 기록 조회", notes = "사용자별 알고리즘 게임 기록 조회")
     public ResponseEntity<Page<TypingRecordDto>> recordList(Pageable pageable,
                                                             @AuthenticationPrincipal CustomUserDetails userDetails){
         return ResponseEntity.ok().body(typingService.findTypingRecord(userDetails.getId(),pageable));
     }
 
     @GetMapping("/find")
-    @ApiOperation(value = "cs 게임 기록 조회", notes = "사용자별 알고리즘 게임 기록 조회")
+    @ApiOperation(value = "typing  게임 기록 조회", notes = "사용자별 알고리즘 게임 기록 조회")
     public ResponseEntity<List<TypingParagraph>> test(int problemNum, TypingRecord.LangType langType){
         return ResponseEntity.ok().body(typingParagraphRepository.findRandomProblem(problemNum,langType.name()));
     }

@@ -53,8 +53,8 @@ public class Typing2RoomService {
             if(socketInfo.isPlayGame(typingSocketDto.getUserId()))
             {
 //                반려하는 부분 만들어 줘야함
-//                simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-//                 return;
+                simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
+                 return;
             }
 
 
@@ -62,7 +62,8 @@ public class Typing2RoomService {
 
 
             // 랜덤방 들어가기
-            if (typingSocketDto.getRoomType()!= TypingSocketDto.RoomType.FRIEND) roomDto = enterRandomRoom(typingSocketDto);
+            if (typingSocketDto.getRoomType()!= TypingSocketDto.RoomType.FRIEND)
+                roomDto = enterRandomRoom(typingSocketDto);
             // 친선전 들어가기
             else {
                 // 방만들기
@@ -224,8 +225,8 @@ public class Typing2RoomService {
 
         typingSocketDto.setRoomCode(newRoomCode);
 
-        TypingRoomDto csRoomDto = enterRoom(typingSocketDto);
-        return csRoomDto;
+        TypingRoomDto typingRoomDto = enterRoom(typingSocketDto);
+        return typingRoomDto;
     }
     // 친선전 방 입장
     public synchronized TypingRoomDto enterRoom(TypingSocketDto typingSocketDto){
@@ -252,7 +253,18 @@ public class Typing2RoomService {
         TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
 
         HashMap<String, Long> players = typingRoomDto.getPlayers();
-        players.remove(typingSocketDto.getSessionId());
+        //true면 시작한 상태고 룸 내 유저 정보 놔둘거임
+        게임 시작시에도 나가면 줄어든긴 할 데이터 넣어서 관리 해야함
+        if(typingRoomDto.isStart())
+        {
+            return typingRoomDto;
+        }
+        else {
+
+            players.remove(typingSocketDto.getSessionId());
+        }
+
+
 
         // 0명이면 삭제
         String waitRoomKey=null;
@@ -265,6 +277,8 @@ public class Typing2RoomService {
         if (players.size()==0) {
             redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
             typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
+            //사람이 0명이면 어차피 보내줘야할 사람도 없으니 여기서 null로 끝내는게 로직상 맞을거 같아요.
+            return null;
         }
 
         // 바뀐 방 정보로 저장
@@ -312,8 +326,8 @@ public class Typing2RoomService {
         if (players.size()!=maxPlayer) return false;
         // 게임 시작하면 list에서 삭제
         redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
-
-
+        typingRoomDto.setStart(true);
+        typingRoomRedisRepository.save(typingRoomDto);
         return true;
     }
 
