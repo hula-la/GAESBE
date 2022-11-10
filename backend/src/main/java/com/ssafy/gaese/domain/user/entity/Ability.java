@@ -42,6 +42,10 @@ public class Ability {
     @ColumnDefault("0")
     private int luckExp;
 
+    public Ability(User user) {
+        this.user = user;
+    }
+
     public void levelUp(String field){
         switch (field){
             case "algorithm":
