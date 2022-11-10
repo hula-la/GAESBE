@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { TypingRoomInterface } from '../../../models/typing';
 
 const TypingMain = styled.div`
-  width: 82%;
+  width: 66%;
   background-color: #232323;
   justify-content: center;
   text-align: center;

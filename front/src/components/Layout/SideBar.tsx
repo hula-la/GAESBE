@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Side = styled.div`
-  width: 18%;
+  width: 18vw;
+  min-width: 12rem;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -87,7 +88,7 @@ const Side = styled.div`
     justify-content: center;
     justify-content: space-evenly;
 
-    padding: 25% 0;
+    padding: 15% 0;
 
 
     .folder {
@@ -102,7 +103,7 @@ const Side = styled.div`
 
       .folderIcon{
         position: absolute;
-        left: 2%;
+        margin-left: 4%;
       }
 
 
@@ -112,8 +113,8 @@ const Side = styled.div`
         cursor: url("/img/cursor/hover_cursor.png"),auto;}
 
       .folderClose{
-        width:35%;
-        height: 100%;
+        width:4rem;
+        /* height: 100%; */
         left: 4%;
       }
 
@@ -123,8 +124,8 @@ const Side = styled.div`
 
       .folderOpen{
         opacity: 0;
-        width:44%;
-        height:102%;
+        width:4rem;
+        /* height:102%; */
       }
 
       :hover .folderOpen{
@@ -149,7 +150,7 @@ const Side = styled.div`
       }
     }
   }
-`;
+`; 
 
 const SideBar = () => {
   const navigate = useNavigate();
