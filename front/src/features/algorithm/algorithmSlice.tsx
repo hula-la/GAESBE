@@ -7,6 +7,7 @@ type AlgoGameState = {
   error: string | null;
   needReload: boolean;
   InGameInfo: AlgoRoomInterface | null
+  solve: boolean
 };
 
 const initialState: AlgoGameState = {
@@ -14,6 +15,7 @@ const initialState: AlgoGameState = {
   error: null,
   InGameInfo: null,
   needReload: false,
+  solve: false
 };
 
 const algoSlice = createSlice({
@@ -44,6 +46,9 @@ const algoSlice = createSlice({
     },
     checkMyAnswerRequestStart(state, action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
       state.isLoading = true
+    },
+    solveSuccess(state, action: Action<boolean>) {
+      state.solve = action.payload
     }
   }
 })

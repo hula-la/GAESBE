@@ -13,7 +13,7 @@ function AlgoRoomList() {
   const dispatch = useDispatch()
   
   const { needReload } = useSelector((state: any) => state.algo)
-  const [roomList, setRoomList] = useState<AlgoRoomInterface[]>([])
+  const [roomList, setRoomList] = useState<{start:AlgoRoomInterface[], wait:AlgoRoomInterface[]}>({start:[], wait:[]})
 
   useEffect(() => {
     if (needReload) {
@@ -47,7 +47,11 @@ function AlgoRoomList() {
     <h1>알고 배틀 방 목록</h1>
     <button onClick={handleGoMain}>메인으로</button>
     <button onClick={handleReload}>목록 다시 불러오기</button>
-    {roomList && roomList.map(room => {
+    
+    {roomList.start.length>0 && roomList.start.map(room => {
+      return <AlgoRoom key={room.roomCode} roomInfo={room} />
+    })}
+    {roomList.wait.length>0 && roomList.wait.map(room => {
       return <AlgoRoom key={room.roomCode} roomInfo={room} />
     })}
   </>
