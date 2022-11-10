@@ -81,6 +81,7 @@ public class TypingService {
         //paragraph.getContent().length()
         //줄 구분할 공백 부분 카운팅 제거
 
+        roomDto.setStart(true);
 //        시작 시간 알림
         roomDto.setStartTime(System.currentTimeMillis());
 
@@ -104,6 +105,7 @@ public class TypingService {
 
         typingRoomRedisRepository.save(roomDto);
         deleteRoom(roomDto.getCode());
+        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
     }
 
     // 방 삭제 (게임 끝나면 방 삭제)
