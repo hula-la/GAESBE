@@ -1,21 +1,23 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
 import AlgoSelect from "./AlgoSelect"
 import AlgoSolve from "./AlgoSolve"
 
-function AlgoAfterStart({ client, handleLeaveRoom, progress, problemList, problemIndex }: any) {
+function AlgoAfterStart({ client, ranking, handleLeaveRoom, progress, problemList, problemIndex, inGameUsers }: any) {
   const {InGameInfo} = useSelector((state:any) => state.algo)
 
+  const [passDisabled, setPassDisabled] = useState<boolean>(false)
+
   const passProblem = () => {
+    setPassDisabled(true)
     client.send('/api/algo/pass', {}, JSON.stringify({roomCode: InGameInfo.roomCode}))
   }
 
   return <>
-    <h1>주사위는 던져졌다!!</h1>
     <button onClick={handleLeaveRoom}>게임방에서 나가기</button>
-    {progress === 'select' && <AlgoSelect problemList={problemList} passProblem={passProblem} problemIndex={problemIndex} />}
-    {progress === 'solve' && <AlgoSolve problemList={problemList} problemIndex={problemIndex}  />}
+    {progress === 'select' && <AlgoSelect inGameUsers={inGameUsers} passDisabled={passDisabled} problemList={problemList} passProblem={passProblem} problemIndex={problemIndex} />}
+    {progress === 'solve' && <AlgoSolve inGameUsers={inGameUsers} client={client} ranking={ranking} problemList={problemList} problemIndex={problemIndex}  />}
   </>
 }
 export default AlgoAfterStart

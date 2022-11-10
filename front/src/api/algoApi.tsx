@@ -9,7 +9,9 @@ export const makeAlgoRoom = async (body: {
   roomCode: string
   time: string
   tier: string
-  num: string}) => {
+  num: string
+  master: string
+  start: boolean}) => {
   const res = await client.post('algo/room', body)
   return res
 }
