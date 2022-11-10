@@ -10,6 +10,40 @@ const Wrapper = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+    .pointerDown {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      width: 2rem;
+      animation-name: move_arrow;
+      animation-duration: 0.5s;
+      animation-delay: 0s;
+      animation-direction: alternate;
+      animation-iteration-count: infinite;
+      animation-play-state: running;
+      animation-timing-function: linear;
+      :hover {
+        cursor: pointer;
+      }
+    }
+    @keyframes move_arrow {
+      0% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+    .goOffice {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #232323;
+      text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff;
+      font-size: 24px;
+      cursor: pointer;
+    }
   }
   .introContent {
     position: absolute;
@@ -17,7 +51,8 @@ const Wrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     color: #ffffff;
-    font-size: 66px;
+    text-shadow: -5px 0 #000000, 0 5px #000000, 5px 0 #000000, 0 5px #000000;
+    font-size: 55px;
     font-weight: 700;
     text-align: center;
   }
@@ -26,6 +61,7 @@ const Wrapper = styled.div`
     position: relative;
     height: 100vh;
     width: 100%;
+    filter: blur(3px);
   }
   .inner {
     max-width: 1100px;
@@ -154,7 +190,7 @@ const IntroPage = () => {
   let scrollHeight: any;
   let winScrollTop: any;
   let sectionOffsetTop: any;
-  let sectionScrollTop;
+  let sectionScrollTop: any;
   let scrollRealHeight;
   let scrollPercent;
   let percent: any;
@@ -279,12 +315,23 @@ const IntroPage = () => {
     };
   }, []);
 
+  const onClickArrow = () => {
+    window.scrollTo({ top: sectionOffsetTop, behavior: 'smooth' });
+  };
+
   return (
     <Wrapper>
       <div className="Intro" ref={IntroImgRef}>
         <img src="/img/Intro/Intro1.jpg" alt="Intro" className="introImg" />
-        <div className="introContent">개츠비와 함께</div>
-        <img src="/img/Pointer_Down.png" />
+        <div className="introContent">
+          개츠비와 함께 각종 역량을 키와 보세요!
+        </div>
+        <div className="goOffice">Go To Office</div>
+        <img
+          onClick={onClickArrow}
+          className="pointerDown"
+          src="/img/Pointer_Down.png"
+        />
       </div>
       <div ref={fixMotionRef} className="fix_motion">
         <article className="fix_wrap inner">

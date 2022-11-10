@@ -8,7 +8,6 @@ import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
 import FriendMainPage from '../../friend/pages/FriendMainPage';
-
 import { attendanceRequest } from '../../../api/mypageApi'
 
 const Friend = styled.div`
@@ -31,7 +30,6 @@ const MyOfficePage = () => {
       }
     }
   }
-
   return (
     <>
       <Level0 attendance={attendance} />
@@ -41,9 +39,7 @@ const MyOfficePage = () => {
       {/* <Level4 /> */}
       {/* <Level5 /> */}
       {/* <Level6 /> */}
-      <Friend>
-        <FriendMainPage/>
-      </Friend>
+      <FriendMainPage />
     </>
   );
 };
