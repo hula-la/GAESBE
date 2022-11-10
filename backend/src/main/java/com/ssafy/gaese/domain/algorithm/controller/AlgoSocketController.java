@@ -70,6 +70,7 @@ public class AlgoSocketController {
 
         HashMap<String, Object> res = new HashMap<>();
         res.put("no",0);
+        res.put("master",algoService.getMaster(algoProblemReq.getRoomCode()));
         res.put("problems",algoProblemService.getCommonProblems(algoProblemReq));
         simpMessagingTemplate.convertAndSend("/algo/start/pass/"+algoProblemReq.getRoomCode(),res);
     }
@@ -80,6 +81,10 @@ public class AlgoSocketController {
         System.out.println("[controller] pass 누름");
         if(!algoSocketService.getRoomPass(algoRoomCodeDto.getRoomCode()).isPass())
             algoSocketService.setProblemPass(algoRoomCodeDto.getRoomCode());
+
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("master",algoService.getMaster(algoRoomCodeDto.getRoomCode()));
+        simpMessagingTemplate.convertAndSend("/algo/pass/"+algoRoomCodeDto.getRoomCode(),res);
     }
 
     
