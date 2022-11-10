@@ -54,10 +54,13 @@ public class TypingService {
 
         // 진행도 미리 보냄
         HashMap<Long, Float> progressByPlayer = new HashMap<>();
+        HashMap<Long, Integer> point = new HashMap<>();
         roomDto.getPlayers().values().forEach(v->{
             progressByPlayer.put(v,0f);
+            point.put(v,0);
         });
         roomDto.setProgressByPlayer(progressByPlayer);
+        roomDto.setPoint(point);
         res.clear();
         res.put("roomDto",roomDto);
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
@@ -122,12 +125,13 @@ public class TypingService {
 
         Long userId = typingSubmitDto.getUserId();
         HashMap<Long, Float> progressByPlayer = roomDto.getProgressByPlayer();
+        Integer point = roomDto.getPoint().get(userId)+1;
+        roomDto.getPoint().put(userId,point);
         long paragraphLength = roomDto.getParagraphLength();
-//        Float Point =progressByPlayer.get(userId);
-        float pointPerWord = (float) (100 / paragraphLength);
+        float pointPerWord = (float) (100*point / paragraphLength);
 //        float pointPerWord = (float) (1);
 
-        progressByPlayer.put(userId,progressByPlayer.get(userId)+pointPerWord);
+        progressByPlayer.put(userId,pointPerWord);
 
         roomDto.setProgressByPlayer(progressByPlayer);
 

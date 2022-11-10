@@ -26,8 +26,11 @@ public class TypingRoomDto {
     private TypingRecord.LangType langType;
 
     private boolean isEnd;
+    private boolean isStart;
 
     private HashMap<Long, Float> progressByPlayer;
+
+    private HashMap<Long, Integer> point;
 
 //    시작 시간
     private long startTime;

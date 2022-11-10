@@ -49,6 +49,18 @@ public class Typing2RoomService {
         // 방 입장
         if(typingSocketDto.getType() == TypingSocketDto.Type.ENTER){
 
+            //이미 방에 참여중인지 체크
+            if(socketInfo.isPlayGame(typingSocketDto.getUserId()))
+            {
+//                반려하는 부분 만들어 줘야함
+//                simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
+//                 return;
+            }
+
+            socketInfo.setOnlinePlayer(typingSocketDto.getUserId());
+
+
+
             // 랜덤방 들어가기
             if (typingSocketDto.getRoomType()!= TypingSocketDto.RoomType.FRIEND) roomDto = enterRandomRoom(typingSocketDto);
             // 친선전 들어가기
@@ -74,6 +86,8 @@ public class Typing2RoomService {
         }
         // 방 나가기
         else if(typingSocketDto.getType() == TypingSocketDto.Type.LEAVE){
+            socketInfo.delSocketInfo(typingSocketDto.getSessionId());
+            socketInfo.stopPlayGame(typingSocketDto.getUserId());
             roomDto = leaveRoom(typingSocketDto);
             log.debug(typingSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에서 나갔습니다.");
             res.put("exit",typingSocketDto.getUserId());
