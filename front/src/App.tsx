@@ -40,7 +40,7 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="nickname" element={<SetNicknamePage />} />
         </Route>
-        <Route path="game/*" element={<CombinePage />}>
+        <Route path="game/*" element={<GamePage />}>
           <Route path="mypage" element={<MyPage />} />
           <Route path="mypage/change" element={<ChangeUserInfoPage />} />
           <Route path="" element={<MyOfficePage />} />
