@@ -9,6 +9,7 @@ import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.typing2.repository.TypingParagraphRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRecordRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
+import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -94,13 +95,16 @@ public class TypingService {
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
     }
 
-    public void gameEnd(TypingRoomDto roomDto){
+    public void gameEnd(TypingRoomDto roomDto,Long winUserId){
 
         Map<String,Object> res = new HashMap<>();
 
+        User winUser = userRepository.findById(winUserId).get();
+
         // 끝났다는 메시지
         res.put("msg", "end");
-
+        res.put("winUserId", winUser.getId());
+        res.put("winUserNickName", winUser.getNickname());
         roomDto.setEnd(true);
 
         typingRoomRedisRepository.save(roomDto);
@@ -123,7 +127,6 @@ public class TypingService {
                 .orElseThrow(()->new RoomNotFoundException());
 
         System.out.println("제출하고 나서"+roomDto);
-
 
         Long userId = typingSubmitDto.getUserId();
         HashMap<Long, Float> progressByPlayer = roomDto.getProgressByPlayer();
@@ -149,7 +152,7 @@ public class TypingService {
 
         // 한명이 다 치면 게임 끝
         if (progressByPlayer.get(userId)>=100) {
-            gameEnd(saved);
+            gameEnd(saved, userId);
 //
 //        res.put("msg", "end");
         }
