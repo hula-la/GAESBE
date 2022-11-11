@@ -121,8 +121,12 @@ public class AlgoSocketController {
             Long time = algoSocketService.getTime(roomCodeDto.getRoomCode());
 
             Thread.sleep(1000*60*time);
+
+            // 끝나면 랭킹 전송
+
             res = new HashMap<>();
             res.put("type","FINISH");
+            res.put("type",algoSocketService.getCurrentRank(roomCodeDto.getRoomCode()));
             simpMessagingTemplate.convertAndSend("/algo/problem/"+roomCodeDto.getRoomCode(),res);
         }
     }

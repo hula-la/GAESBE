@@ -2,6 +2,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
+import com.ssafy.gaese.domain.algorithm.application.AlgoSocketService;
 import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.security.model.CustomUserDetails;
@@ -31,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 public class AlgorithmController {
 
     private final AlgoService algoService;
+    private final AlgoSocketService algoSocketService;
     private final AlgoProblemService algoProblemService;
     private final SocketInfo socketInfo;
 
@@ -140,8 +142,9 @@ public class AlgorithmController {
     public ResponseEntity<Object> confirmCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok().body(algoService.confirmCode(userDetails.getId()));
     }
-    @PostMapping("/test")
-    public void test(@RequestBody AlgoProblemReq algoProblemReq) throws IOException, ExecutionException, InterruptedException {
-        algoProblemService.getCommonProblems(algoProblemReq);
+    @PostMapping("/test/{roomCode}")
+    public void test(@PathVariable String roomCode) throws IOException, ExecutionException, InterruptedException {
+        System.out.println(algoSocketService.getCurrentRank(roomCode));
+
     }
 }

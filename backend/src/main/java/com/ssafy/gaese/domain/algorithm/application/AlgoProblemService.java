@@ -79,6 +79,7 @@ public class AlgoProblemService {
 
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
+
         }
 
         if(problems.size()==0) return;
@@ -152,7 +153,7 @@ public class AlgoProblemService {
         System.out.println("=====> 최종 문제 수 : " + algoProblemDtoList.size());
 
         // list 섞고 그 중 10개 가져오기
-        Collections.shuffle(algoProblemDtoList);
+//        Collections.shuffle(algoProblemDtoList);
        return algoProblemDtoList.subList(0, 10);
     }
 
