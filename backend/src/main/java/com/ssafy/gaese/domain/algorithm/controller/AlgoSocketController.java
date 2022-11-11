@@ -49,10 +49,11 @@ public class AlgoSocketController {
                 res.put("msg", algoSocketDto.getUserId() + " 님이 접속하셨습니다.");
             }
 
-        }else if(algoSocketDto.getType() == AlgoSocketDto.Type.LEAVE){
-            algoService.leaveRoom(algoSocketDto);
-            res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
         }
+//        else if(algoSocketDto.getType() == AlgoSocketDto.Type.LEAVE){
+//            algoService.leaveRoom(algoSocketDto);
+//            res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
+//        }
 
         List<AlgoUserDto> users = algoService.getUsers(algoService.getUserIds(algoSocketDto.getRoomCode()));
         res.put("users",users);

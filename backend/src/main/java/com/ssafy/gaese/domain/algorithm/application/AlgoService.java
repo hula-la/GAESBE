@@ -149,11 +149,11 @@ public class AlgoService {
         return algoRedisRepositoryCustom.createRoom(algoRoomDto.toRedisDto(code));
     }
 
-    public void leaveRoom(AlgoSocketDto algoSocketDto){
+    public void leaveRoom(AlgoSocketDto algoSocketDto,String userId){
         System.out.println(algoSocketDto.getSessionId() + "나간다");
         HashOperations<String ,String, String > hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
-
+        User user = userRepository.findById(Long.parseLong(userId)).orElseThrow(()->new UserNotFoundException());
         // 시작했는지 (startTime 있는지) 확인
         String startTime = hashOperations.get(algoSocketDto.getRoomCode(), "startTime");
         if(startTime != null ){
@@ -184,6 +184,7 @@ public class AlgoService {
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
 
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
+
         if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
             
             if(changeMaster(algoSocketDto.getRoomCode())){
@@ -200,12 +201,16 @@ public class AlgoService {
             }else{
                 System.out.println("방 제거");
                 deleteRoom(algoSocketDto.getRoomCode());
+                // 방 유저 정보 삭제
+                algoRedisRepositoryCustom.deleteRoomUser(algoRoomRedisDto,user.getBjId());
                 return;
             }
         }
         if(getUserIds(algoSocketDto.getRoomCode()).size()==0){
             System.out.println("사람 없음 방 제거");
             deleteRoom(algoSocketDto.getRoomCode());
+            // 방 유저 정보 삭제
+            algoRedisRepositoryCustom.deleteRoomUser(algoRoomRedisDto,user.getBjId());
             return;
         }
     }
@@ -248,8 +253,8 @@ public class AlgoService {
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(code).orElseThrow(()->new NoSuchElementException());
         // 방 삭제
         algoRedisRepository.delete(algoRoomRedisDto);
-        // 방 유저 정보 삭제
-        algoRedisRepositoryCustom.deleteRoomUser(algoRoomRedisDto);
+        // 방 시작 정보 삭제
+        redisTemplate.delete(algoRoomRedisDto.getRoomCode());
         // 랭킹 정보 삭제
         zSetOperations.removeRange(code+"-rank",0,-1);
 

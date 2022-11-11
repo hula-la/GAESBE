@@ -34,24 +34,12 @@ public class AlgoRedisRepositoryCustom {
             List<String> codeList  = list.range("codes",0,-1);
             System.out.println(codeList.toString());
             if(codeList.contains(code)) continue;
-//            list.rightPush("codes",code);
-//            list.rightPush("algoCodes",code);
             break;
         }
-//        stringRedisTemplate.expire("codes",1, TimeUnit.DAYS);
-//        stringRedisTemplate.expire("algoCodes",1, TimeUnit.DAYS);
 
         return code;
     }
 
-    //  Room Code 삭제
-//    public Long deleteCode(String code){
-//        ListOperations<String,String > listOperations = stringRedisTemplate.opsForList();
-//        if(listOperations.remove("algoCodes",1,code) == 1 ){
-//            return listOperations.remove("codes",1,code);
-//        }
-//        return -1l;
-//    }
 
     //  생성된 방 list
     public Iterable<AlgoRoomRedisDto>  getRooms(){
@@ -71,9 +59,9 @@ public class AlgoRedisRepositoryCustom {
     }
 
     // 방 삭제
-    public void deleteRoomUser(AlgoRoomRedisDto algoRoomRedisDto){
+    public void deleteRoomUser(AlgoRoomRedisDto algoRoomRedisDto,String userBjId){
         stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode()+"-user");
-        stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode());
+        stringRedisTemplate.delete(algoRoomRedisDto.getRoomCode()+"-"+userBjId);
     }
 
     //  방 입장
@@ -94,7 +82,6 @@ public class AlgoRedisRepositoryCustom {
         hashOperations.delete(algoSocketDto.getRoomCode() + "-user", algoSocketDto.getSessionId());
         // algoRoom:roomCode 정보에 인원 수 정보 -1
         hashOperations.increment("algoRoom:" + algoSocketDto.getRoomCode(), "algoRoomDto.num", -1);
-
     }
 
 
