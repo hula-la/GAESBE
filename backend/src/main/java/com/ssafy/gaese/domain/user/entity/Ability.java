@@ -22,7 +22,7 @@ public class Ability {
 
     @MapsId
     @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
-    @JoinColumn(name = "ability")
+    @JoinColumn(name = "userId")
     private User user;
 
     @ColumnDefault("1")
