@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import styled from 'styled-components';
+import FriendModal from '../../friend/components/FriendModal';
+import { friendActions } from '../../friend/friendSlice';
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -156,6 +158,7 @@ const IngameBlock = styled.div`
 const CSFriendPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [isMaster, setIsMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
@@ -171,7 +174,7 @@ const CSFriendPage = () => {
   const [result, setResult] = useState<any>(null);
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
-
+  const { modal } = useSelector((state: any) => state.friend);
   const { shareCode } = location.state;
 
   const initialTime = useRef<number>(5);
@@ -415,6 +418,13 @@ const CSFriendPage = () => {
     );
   };
 
+  const handleModal = () => {
+    dispatch(friendActions.handleModal('invite'));
+  };
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
+  };
+
   return (
     <Container>
       {isLoading && (
@@ -425,6 +435,10 @@ const CSFriendPage = () => {
       )}
       {!isLoading && !isStart && (
         <WaitingBlock>
+          {modal === 'invite' && (
+            <FriendModal handleModal={closeModal} type="invite" />
+          )}
+
           <img
             src="/img/gametitle/gametitle3.png"
             className="gameTitle"
@@ -457,6 +471,7 @@ const CSFriendPage = () => {
                   );
                 })}
             </div>
+            <button onClick={handleModal}>친구 초대</button>
             {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;

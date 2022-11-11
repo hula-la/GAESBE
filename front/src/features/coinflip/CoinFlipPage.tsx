@@ -1,5 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { coinActions } from './coinFlipSlice';
 
 const Container = styled.div`
   width: 82%;
@@ -107,29 +110,42 @@ const Container = styled.div`
 `;
 
 const CoinFlipPage = () => {
-  const [flagment, setFlagment] = useState(false);
+  const dispatch = useDispatch();
   const coinRef = useRef<HTMLDivElement | null>(null);
-  const onClickFlip = () => {
-    let i = Math.floor(Math.random() * 2);
+  const { result } = useSelector((state: any) => state.coin);
+  const [flagment, setFlagment] = useState(false);
+
+  const onClickBet = () => {
+    dispatch(coinActions.requestCoinFlipStart({ patten: 6, point: 0 }));
+  };
+
+  const coinFlip = () => {
     coinRef.current!.style.animation = 'none';
-    if (i) {
+    if (result.patten === 7) {
       if (flagment) {
         coinRef.current!.style.animation = 'bk-spin-bk 3s forwards';
         setFlagment(true);
       } else {
-        coinRef.current!.style.animation = 'fr-spin-fr 3s forwards';
-        setFlagment(false);
+        coinRef.current!.style.animation = 'fr-spin-bk 3s forwards';
+        setFlagment(true);
       }
     } else {
       if (flagment) {
         coinRef.current!.style.animation = 'bk-spin-fr 3s forwards';
         setFlagment(false);
       } else {
-        coinRef.current!.style.animation = 'fr-spin-bk 3s forwards';
-        setFlagment(true);
+        coinRef.current!.style.animation = 'fr-spin-fr 3s forwards';
+        setFlagment(false);
       }
     }
   };
+
+  useEffect(() => {
+    if (result) {
+      coinFlip();
+    }
+  }, [result]);
+
   return (
     <Container>
       {/* <div className="stats">
@@ -149,8 +165,8 @@ const CoinFlipPage = () => {
         <div className="tails"></div>
       </div>
       <div className="buttons">
-        <button onClick={onClickFlip} id="flip-button">
-          Flip Coin
+        <button onClick={onClickBet} id="flip-button">
+          베팅!
         </button>
       </div>
     </Container>

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import styled from 'styled-components';
+
 import CSIsLoadingPage from '../components/CSIsLoading';
 
 interface CustomWebSocket extends WebSocket {
@@ -427,12 +428,6 @@ const CSIngamePage = () => {
       }),
     );
   };
-
-  useEffect(() => {
-    if (ranking) {
-      console.log(ranking[0][0]);
-    }
-  }, [ranking]);
 
   return (
     <Container>

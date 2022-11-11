@@ -1,48 +1,53 @@
+import { createSlice } from '@reduxjs/toolkit';
 
-import { createSlice } from "@reduxjs/toolkit"
-
-import { Action, FriendsInterface } from '../../models/friend'
+import { Action, FriendsInterface } from '../../models/friend';
 
 interface FriendStateInterface {
-  friends: FriendsInterface | null
-  isLoading: boolean
-  modal: boolean
-  isSuccess: boolean
-  needReload: boolean
+  friends: FriendsInterface | null;
+  isLoading: boolean;
+  modal: string | null;
+  secondModal: boolean;
+  isSuccess: boolean;
+  needReload: boolean;
 }
 
 const initialState: FriendStateInterface = {
   friends: null,
   isLoading: false,
-  modal: false,
+  modal: null,
+  secondModal: false,
   isSuccess: false,
-  needReload: false
-}
+  needReload: false,
+};
 
 const friendSlice = createSlice({
   name: 'friend',
   initialState,
   reducers: {
-    setNeedReload(state, action:Action<boolean>) {
-      state.needReload = action.payload
+    setNeedReload(state, action: Action<boolean>) {
+      state.needReload = action.payload;
     },
-    setIsSuccess(state, action:Action<boolean>) {
-      state.isSuccess = action.payload
+    setIsSuccess(state, action: Action<boolean>) {
+      state.isSuccess = action.payload;
     },
-    handleModal(state) {
-      state.modal = !state.modal
+    handleModal(state, action) {
+      // state.modal = !state.modal;
+      state.modal = action.payload;
+    },
+    handleSecondModal(state) {
+      state.secondModal = !state.secondModal;
     },
     setFriends(state, action: Action<FriendsInterface>) {
-      state.friends = action.payload
+      state.friends = action.payload;
     },
     requestFriendStart(state, action: Action<string>) {
-      state.isLoading = true
+      state.isLoading = true;
     },
     requestFriendFinish(state) {
-      state.isLoading = false
-    }
-  }
-})
+      state.isLoading = false;
+    },
+  },
+});
 
 export const friendActions = friendSlice.actions;
 

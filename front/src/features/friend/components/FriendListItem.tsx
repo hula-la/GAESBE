@@ -6,7 +6,6 @@ import { deleteFriend } from '../../../api/friendApi';
 import { friendActions } from '../friendSlice';
 
 const FriendListItemBlock = styled.div`
-  height: 100%;
   width: 100%;
   .friendBoxWrapper {
     height: 4rem;
@@ -189,7 +188,12 @@ function FriendListItem({ friend, type }: any) {
               {/* <hr className="styledHr" /> */}
               <div className="bubbleText linetb mid">채팅방</div>
               {/* <hr className="styledHr" /> */}
-              <div className="bubbleText textRed bottom">친구 삭제</div>
+              <div
+                className="bubbleText textRed bottom"
+                onClick={handleDeleteFriend}
+              >
+                친구 삭제
+              </div>
             </div>
           </div>
           <div className="profileNickname">

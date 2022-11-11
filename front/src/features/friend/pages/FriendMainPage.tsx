@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { friendActions } from '../friendSlice';
 import FriendList from './FriendList';
 import FriendModal from '../components/FriendModal';
+import FriendSecondModal from '../components/FriendSecondModal';
 import styled from 'styled-components';
 
 const FriendSide = styled.div`
@@ -11,21 +12,21 @@ const FriendSide = styled.div`
   background-color: #232323;
   color: white;
 
-  animation-name : showToLeft;
-  animation-duration : 1s;
+  animation-name: showToLeft;
+  animation-duration: 1s;
 
-  @keyframes showToLeft{
-  0% {
-    transform : translateX(16vw); /* 애니메이션이 0%만큼 동작시 */
-    // 몇 줄을 넣어도 상관없다!!
+  @keyframes showToLeft {
+    0% {
+      transform: translateX(16vw); /* 애니메이션이 0%만큼 동작시 */
+      // 몇 줄을 넣어도 상관없다!!
+    }
+    50% {
+      transform: translateX(-1vw); /* 애니메이션이 50%만큼 동작시 */
+    }
+    100% {
+      transform: translateX(0); /* 애니메이션이 100%만큼 동작시 */
+    }
   }
-  50% {
-    transform : translateX(-1vw); /* 애니메이션이 50%만큼 동작시 */
-  }
-  100% {
-    transform : translateX(0); /* 애니메이션이 100%만큼 동작시 */
-  }
-}
 
   .sideTitle {
     display: flex;
@@ -57,6 +58,7 @@ const FriendSide = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow-y: auto;
   }
   .friendButtons {
     display: flex;
@@ -75,9 +77,16 @@ function FriendMainPage() {
   const dispatch = useDispatch();
   const { friends } = useSelector((state: any) => state.friend);
   const { modal } = useSelector((state: any) => state.friend);
+  const { secondModal } = useSelector((state: any) => state.friend);
 
   const handleModal = () => {
-    dispatch(friendActions.handleModal());
+    dispatch(friendActions.handleModal('request'));
+  };
+  const handleSecondModal = () => {
+    dispatch(friendActions.handleSecondModal());
+  };
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
   };
   return (
     <FriendSide>
@@ -90,13 +99,20 @@ function FriendMainPage() {
         <div className="sideTitleContent">Friends</div>
       </div>
       <div className="sideMain">
-        {modal && <FriendModal handleModal={handleModal} />}
+        {modal === 'request' && (
+          <FriendModal handleModal={closeModal} type="request" />
+        )}
+        {secondModal && (
+          <FriendSecondModal handleSecondModal={handleSecondModal} />
+        )}
         {friends ? <FriendList /> : <div>친구창이 조용합니다...</div>}
         <div className="friendButtons">
           <button className="friendButton" onClick={handleModal}>
             친구신청
           </button>
-          <button className="friendButton">대기목록</button>
+          <button className="friendButton" onClick={handleSecondModal}>
+            대기목록
+          </button>
         </div>
       </div>
     </FriendSide>

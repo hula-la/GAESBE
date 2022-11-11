@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import RequestToMe from './RequestToMe';
 import RequestToYou from './RequestToYou';
 import FriendListMange from './FriendListManage';
-import InviteFriend from './InviteFriend';
 
 const StyledModal = styled.div`
   padding: 3vmin;
@@ -33,7 +32,7 @@ const StyledModalDiv = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
 `;
 
-function FriendModal({ handleModal, type }: any) {
+function FriendSecondModal({ handleSecondModal }: any) {
   const [option, setOption] = useState<string | null>('manage');
 
   useEffect(() => {
@@ -56,16 +55,12 @@ function FriendModal({ handleModal, type }: any) {
     }, 100);
   };
 
-  useEffect(() => {
-    console.log(type);
-  });
   return (
-    <StyledModalDiv onClick={handleModal}>
+    <StyledModalDiv onClick={handleSecondModal}>
       <StyledModal onClick={(e) => e.stopPropagation()}>
-        {type === 'request' && <RequestToYou />}
-        {type === 'invite' && <InviteFriend />}
+        <RequestToMe />
       </StyledModal>
     </StyledModalDiv>
   );
 }
-export default FriendModal;
+export default FriendSecondModal;
