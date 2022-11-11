@@ -5,12 +5,13 @@ export interface Action<T> {
 
 /**
 AlgoRoomInterface
-code : 방 코드
-time : 푼제 풀 시간
-tier : 문제 티어
-num : 입장한 사람 수
-no : 현재 문제 index번호
-master : userId
+roomCode : 방 코드 string
+time : 푼제 풀 시간 string
+tier : 문제 티어 string
+num : 입장한 사람 수 string
+no : 현재 문제 index번호 string
+start: 시작한 게임인지 boolean
+master : userId string
 */
 export interface AlgoRoomInterface {
   roomCode: string
@@ -23,10 +24,10 @@ export interface AlgoRoomInterface {
 }
 
 /**
- bjId: 백준아이디
- id: 유저아이디(pk)
- nickname: 유저닉네임
- profileChar: 프로필사진 숫자
+ bjId: 백준아이디 string
+ id: 유저아이디(pk) number
+ nickname: 유저닉네임 string
+ profileChar: 프로필사진 숫자 number
  */
 export interface InGameUsersInterface {
   bjId: string
@@ -36,12 +37,12 @@ export interface InGameUsersInterface {
 }
 
 /**
- problemId : 문제 번호
- correct: 정답 수
- ratio: 정답률
- submit: 제출 수
- tag: 다국어?
- title: 제목
+ problemId : 문제 번호 string
+ correct: 정답 수 string
+ ratio: 정답률 string
+ submit: 제출 수 string
+ tag: 다국어? string
+ title: 제목 string
  */
 export interface ProblemInterface {
   problemId : string
@@ -50,4 +51,32 @@ export interface ProblemInterface {
   submit: string
   tag: string
   title: string
+}
+
+/**
+ userId: 유저아이디number
+ roomCode: 방 코드string
+ min: 걸린 시간(분)string
+ nickName: 닉네임string
+ profileChar: 프로필 사진number
+ */
+export interface RankingUserInfo {
+  userId:number
+  roomCode:string
+  min:string
+  nickName: string
+  profileChar: number
+}
+
+/**
+ roomCode: 방 코드 string
+ problemId: 문제번호 string
+ ranking: 내 순위 number
+ code: 내 코드 string
+ */
+export interface RecordSendInterface {
+  roomCode: string
+  problemId: string
+  ranking: number
+  code: string
 }

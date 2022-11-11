@@ -2,7 +2,6 @@ import { useSelector } from 'react-redux'
 import { Routes, Route } from 'react-router-dom'
 import AlgoInBattle from './AlgoInBattle'
 import AlgoMainPage from './AlgoMainPage'
-import AlgoRoomList from './AlgoRoomList'
 import AlgoRoomMake from './AlgoRoomMake'
 import styled from 'styled-components'
 
@@ -19,7 +18,6 @@ function AlgoPage() {
       <Routes>
         <Route path="" element={<AlgoMainPage />} />
         <Route path="/make" element={<AlgoRoomMake />} />
-        <Route path="/list" element={<AlgoRoomList />} />
         <Route path="/battle" element={<AlgoInBattle />} />
       </Routes>
     }

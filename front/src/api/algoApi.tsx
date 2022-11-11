@@ -1,5 +1,7 @@
 import client from "./client";
 
+import {RecordSendInterface} from '../models/algo'
+
 export const fetchAlgoRoomList = async () => {
   const res = await client.get('algo/room')
   return res
@@ -29,5 +31,17 @@ export const bojUserIdRequest = async (roomCode: string, userBjId: string) => {
 export const checkMyAnswerRequest = async (meta:{roomCode:string, problemId: number, userBjId: string, lanId: number}) => {
   const body = {'problemId':meta.problemId, 'userBjId':meta.userBjId, 'lanId':meta.lanId}
   const res = await client.post(`/algo/solve/${meta.roomCode}`, body)
+  return res
+}
+
+export const endGame = async (body:RecordSendInterface) => {
+  console.log('기록요청 여러번')
+  const res = await client.post('/algo/record', body)
+  return res
+}
+
+// 내가 게임중인지 판단하는 요청(게임중이면 방 생성 불가능)
+export const roomMakePlaying = async () => {
+  const res = await client.get('/algo/play')
   return res
 }

@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ProblemInterface } from '../../../models/algo';
+import { ProblemInterface, RankingUserInfo } from '../../../models/algo';
 import { algoActions } from '../algorithmSlice';
 
 import ProblemInfo from './ProblemInfo';
-import BeforeSolveUsers from './BeforeSolveUsers';
 
 interface LanguageInterface {
   lanId: number;
@@ -18,6 +17,8 @@ function AlgoSolve({
   inGameUsers,
   ranking,
   problemIndex,
+  myRank,
+  timeOut
 }: any) {
   const dispatch = useDispatch();
 
@@ -34,12 +35,25 @@ function AlgoSolve({
     lanId: 1003,
     code: '',
   });
+  const [firstLoading, setFirstLoadgin] = useState<boolean>(true)
 
   useEffect(() => {
     return () => {
       dispatch(algoActions.solveSuccess(false));
     };
   }, []);
+
+  useEffect(() => {
+    if (firstLoading) {
+      setFirstLoadgin(false)
+      return
+    }
+    if (myRank !== 5 && !timeOut) {
+      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code}))
+    } else if (timeOut && myRank === 5) {
+      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code}))
+    }
+  }, [myRank, timeOut])
 
   const handleRadio = (e: React.SyntheticEvent<HTMLInputElement>) => {
     setForm({
@@ -79,17 +93,13 @@ function AlgoSolve({
   };
 
   useEffect(() => {
-    console.log('solve 감지해서 useEffect 실행함');
     if (solve) {
-      console.log('solve바뀌기 전', solve);
       sendMyRank();
       dispatch(algoActions.solveSuccess(false));
     }
-    console.log('solve바뀐 후', solve);
   }, [solve]);
 
   const sendMyRank = () => {
-    console.log(client);
     client.current.send(
       '/api/algo/rank',
       {},
@@ -100,8 +110,13 @@ function AlgoSolve({
   return (
     <>
       <h2>문제 풀때 컴포넌트</h2>
-      <BeforeSolveUsers inGameUsers={inGameUsers} />
-      {ranking}
+      {ranking.map((user:RankingUserInfo, index:number) => {
+        return <div key={index}>
+          <h2>{user.nickName}</h2>
+          <img src={`/img/rank/character${user.profileChar}.png`} alt="프로필이미지" />
+          <h3>걸린 시간 : {user.min} 분</h3>
+        </div>
+      })}
       <ProblemInfo nowProblem={nowProblem} />
       <button onClick={handleGoToSolve}>문제풀러가기</button>
       {languageList.map((language) => (
