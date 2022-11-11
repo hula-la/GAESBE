@@ -3,10 +3,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoSocketService;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomCodeDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
+import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 
@@ -19,6 +16,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,10 +49,11 @@ public class AlgoSocketController {
                 res.put("msg", algoSocketDto.getUserId() + " 님이 접속하셨습니다.");
             }
 
-        }else if(algoSocketDto.getType() == AlgoSocketDto.Type.LEAVE){
-            algoService.leaveRoom(algoSocketDto);
-            res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
         }
+//        else if(algoSocketDto.getType() == AlgoSocketDto.Type.LEAVE){
+//            algoService.leaveRoom(algoSocketDto);
+//            res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
+//        }
 
         List<AlgoUserDto> users = algoService.getUsers(algoService.getUserIds(algoSocketDto.getRoomCode()));
         res.put("users",users);
@@ -121,17 +120,24 @@ public class AlgoSocketController {
             Long time = algoSocketService.getTime(roomCodeDto.getRoomCode());
 
             Thread.sleep(1000*60*time);
+
+            // 끝나면 랭킹 전송
+
             res = new HashMap<>();
             res.put("type","FINISH");
+            res.put("type",algoSocketService.getCurrentRank(roomCodeDto.getRoomCode()));
             simpMessagingTemplate.convertAndSend("/algo/problem/"+roomCodeDto.getRoomCode(),res);
         }
     }
     @MessageMapping("/algo/rank")
-    public void getRank(AlgoRoomCodeDto roomCodeDto){
-        List<AlgoRankDto> ranking = algoSocketService.getCurrentRank(roomCodeDto.getRoomCode());
-        HashMap<String,List<AlgoRankDto>> res = new HashMap<>();
-        res.put("ranking",ranking);
-        simpMessagingTemplate.convertAndSend("/algo/rank/"+roomCodeDto.getRoomCode(),res);
+    public void getRank(AlgoRoomDto algoRoomDto) throws ParseException {
+
+        HashMap<String, Object> res = new HashMap<>();
+        List<AlgoRankDto> ranking = algoSocketService.getCurrentRank(algoRoomDto.getRoomCode());
+        res.put("ranking", ranking);
+        simpMessagingTemplate.convertAndSend("/algo/rank/" + algoRoomDto.getRoomCode(), res);
+
+
     }
 
 }

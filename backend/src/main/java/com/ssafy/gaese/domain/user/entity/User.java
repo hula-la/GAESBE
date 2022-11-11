@@ -47,8 +47,13 @@ public class User {
 
     private String refreshToken;
 
-    @OneToOne
-    @JoinColumn(name = "abilityId")
+    @OneToOne(mappedBy = "user"
+            , cascade = {
+            CascadeType.PERSIST
+            ,CascadeType.MERGE
+            , CascadeType.REMOVE // 사용자 삭제시 FCM Key 함께 삭제
+    }
+    )
     private Ability ability;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
