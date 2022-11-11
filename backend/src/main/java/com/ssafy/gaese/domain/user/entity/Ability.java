@@ -14,7 +14,14 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Ability")
+@Table(name = "Ability",
+        indexes = {
+                @Index(name = "idx_algo", columnList = "algorithmLv, algorithmExp"),
+                @Index(name = "idx_cs", columnList = "csLv, csExp"),
+                @Index(name = "idx_typing", columnList = "typingLv, typingExp"),
+                @Index(name = "idx_luck", columnList = "luckLv, luckExp")
+        }
+)
 public class Ability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
