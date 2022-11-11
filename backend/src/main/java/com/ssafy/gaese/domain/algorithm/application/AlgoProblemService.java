@@ -185,6 +185,7 @@ public class AlgoProblemService {
     }
 
     public void saveTime(String roomCode){
+
         // 시작 시간 설정
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         LocalTime now = LocalTime.now();
@@ -202,7 +203,7 @@ public class AlgoProblemService {
         hashOperations.put("algoRoom:"+roomCode,"algoRoomDto.isStart","1");
     }
 
-    public void saveUserTime(String roomCode, Long userId) throws ParseException {
+    public void saveUserTime(String problemId,String roomCode, Long userId) throws ParseException {
 
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
@@ -215,14 +216,16 @@ public class AlgoProblemService {
         Date finTime = new SimpleDateFormat("HH:mm:ss").parse(hashOperations.get(roomCode, "startTime"));
         System.out.println(startTime);
         System.out.println(finTime);
-        int minDiff = (int)(startTime.getTime() - finTime.getTime()) / 60000;
-
+        double minDiff = (startTime.getTime() - finTime.getTime()) / 60000.0; // 분 단위
         System.out.println(minDiff+"분");
 
-        //redis 저장 - 랭킹용
         AlgoRankDto algoRankDto = AlgoRankDto.builder()
-                .min(minDiff+"").nickName(userRepository.getNickNameById(userId)+"").userId(userId).build();
-        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), Double.parseDouble(algoRankDto.getMin()));
+                .problemId(problemId)
+                .min((int)minDiff+"")
+                .nickName(userRepository.getNickNameById(userId)+"")
+                .userId(userId).build();
+        //redis 저장 - 랭킹용
+        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), minDiff);
         //redis 저장 - 기록용
         algoRankRedisRepository.save(algoRankDto);
 
