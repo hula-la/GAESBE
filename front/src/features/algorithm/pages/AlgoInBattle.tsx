@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,16 +34,20 @@ function AlgoInBattle() {
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
-  const client = Stomp.over(socket);
+  const client = useRef<any>(null);
+  useEffect(() => {
+    client.current = Stomp.over(socket);
+  }, []);
+
   // 최초 입장시 소켓 뚫고, 백준id보내기
   useEffect(() => {
     if (InGameInfo === null) {
       navigate('/game/algo/list')
     } else {
       // 입장할때 소켓 뚫기
-      client.connect({}, (frame) => {
+      client.current.connect({}, (frame: any) => {
         // 입장, 퇴장 관련 메세지 받을 위치
-        client.subscribe(`/algo/room/${InGameInfo.roomCode}`, (res) => {
+        client.current.subscribe(`/algo/room/${InGameInfo.roomCode}`, (res: any) => {
           if (progress==='before') {
             setInGameUsers(JSON.parse(res.body).users);
             const newGameInfo = JSON.parse(JSON.stringify(InGameInfo));
@@ -53,13 +57,13 @@ function AlgoInBattle() {
         });
   
         // 문제 선택 시작 메세지 받을 위치
-        client.subscribe(`/algo/start/pass/${InGameInfo.roomCode}`, (res) => {
+        client.current.subscribe(`/algo/start/pass/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).type==='START') {
             console.log('게임시작했다 로딩 보여줘라')
           } else {
             setProblemList(JSON.parse(res.body).problems);
             if (JSON.parse(res.body).master == userInfo.id) {
-              client.send(
+              client.current.send(
                 `/api/algo/timer`,
                 {},
                 JSON.stringify({ roomCode: InGameInfo.roomCode }),
@@ -70,12 +74,12 @@ function AlgoInBattle() {
         });
   
         // 문제 패스 메세지 받기
-        client.subscribe(`/algo/pass/${InGameInfo.roomCode}`, (res: any) => {
+        client.current.subscribe(`/algo/pass/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).no) {
             setProblemIndex(JSON.parse(res.body).no);
           }
           if (JSON.parse(res.body).master == userInfo.id) {
-            client.send(
+            client.current.send(
               `/api/algo/timer`,
               {},
               JSON.stringify({ roomCode: InGameInfo.roomCode }),
@@ -84,7 +88,7 @@ function AlgoInBattle() {
         });
   
         // 문제 시작 메세지 받기
-        client.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res: any) => {
+        client.current.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res: any) => {
           setProblemIndex(JSON.parse(res.body).no);
           setAfterProgress('solve');
           console.log('문제 시작한다는');
@@ -92,12 +96,12 @@ function AlgoInBattle() {
         });
 
         // 랭킹 메세지 받기
-        client.subscribe(`/algo/rank/${InGameInfo.roomCode}`, (res:any) => {
+        client.current.subscribe(`/algo/rank/${InGameInfo.roomCode}`, (res:any) => {
           setRanking(JSON.parse(res.body).ranking)
         })
   
         // 뚫었으니 들어갔다고 알리기
-        client.send(
+        client.current.send(
           '/api/algo',
           {},
           JSON.stringify({
@@ -138,7 +142,7 @@ function AlgoInBattle() {
   // 방 떠나기
   const leaveRoom = async () => {
     // 소켓 끊고
-    await client.disconnect(() => {});
+    await client.current.disconnect(() => {});
     // 스토어의 방 정보 비우기
     await dispatch(algoActions.exitAlgoRoom());
   };
@@ -153,7 +157,7 @@ function AlgoInBattle() {
     const userBjIds = inGameUsers.map((user: InGameUsersInterface) => {
       return user.bjId;
     });
-    client.send(
+    client.current.send(
       `/api/algo/start/pass`,
       {},
       JSON.stringify({
