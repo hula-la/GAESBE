@@ -68,7 +68,7 @@ public class AlgoService {
                     .isRetry(false)
                     .problemId(algoRecordReq.getProblemId())
                     .ranking(algoRecordReq.getRanking())
-                    .solveTime(algoRankDto.getMin())
+                    .solveTime(algoRankDto.getMin()+"")
                     .build();
             algoRankRedisRepository.delete(algoRankDto);
         }else{
@@ -159,25 +159,27 @@ public class AlgoService {
         if(startTime != null ){
             System.out.println("시작함");
             // redisdp 랭킹 있는지 확인 후
-            // redis에 랭킹에 저장
-            // 시간은 -- 으로
-            AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
+//            AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
             List<AlgoRankDto> ranks = algoSocketService.getCurrentRank(algoSocketDto.getRoomCode());
-            boolean isSaved = false;
-            for(AlgoRankDto rank : ranks){
+            for(int i =0; i<ranks.size() ; i++){
+                AlgoRankDto rank = ranks.get(i);
                 if(rank.getUserId().equals(algoSocketDto.getUserId())){ // 저장되어있음
-                    isSaved = true;
+                    AlgoRecordDto algoRecordDto = AlgoRecordDto.builder()
+                            .isSolve(true)
+                            .roomCode(algoSocketDto.getRoomCode())
+                            .userId(Long.parseLong(algoSocketDto.getUserId()))
+                            .date(new Date())
+                            .code(algoSocketDto.getRoomCode())
+                            .isRetry(false)
+                            .problemId(Long.parseLong(rank.getProblemId()))
+                            .ranking(i+1)
+                            .solveTime(rank.getMin()+"")
+                            .build();
+                    algoRepository.save(algoRecordDto.toEntity(user));
                     break;
                 }
             }
 
-            if(!isSaved){
-                AlgoRankDto algoRankDto = AlgoRankDto.builder()
-                        .min("--").nickName(userRepository.getNickNameById(Long.parseLong(algoSocketDto.getUserId()))).userId(Long.parseLong(algoSocketDto.getUserId())).build();
-
-                zSetOperations.add(algoRankDto.getRoomCode()+"-rank", algoRankDto.getNickName(), algoRoomRedisDto.getAlgoRoomDto().getTime());
-                algoRankRedisRepository.save(algoRankDto);
-            }
         }
         System.out.println("떠날꺼임");
 

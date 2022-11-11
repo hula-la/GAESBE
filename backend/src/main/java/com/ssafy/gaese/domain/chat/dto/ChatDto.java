@@ -1,10 +1,33 @@
 package com.ssafy.gaese.domain.chat.dto;
 
-import lombok.Data;
+import com.ssafy.gaese.domain.chat.entity.Chat;
+import lombok.*;
+import org.junit.Before;
 
-@Data
+import javax.persistence.Column;
+import java.util.Date;
+
+@Builder
+@Getter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChatDto {
 
-    String fromUser;
-    String toUser;
+    private Long id;
+    private Long from;
+    private Long to;
+    private String msg;
+    private Date date;
+
+    public Chat toEntity(){
+        return Chat.builder()
+                .to(this.to)
+                .from(this.from)
+                .msg(this.msg)
+                .date(this.date)
+                .date(this.date)
+                .build();
+    }
+
 }

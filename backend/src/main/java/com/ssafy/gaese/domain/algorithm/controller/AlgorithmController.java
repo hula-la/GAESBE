@@ -114,7 +114,7 @@ public class AlgorithmController {
         HashMap<String,Object> res = new HashMap<>();
         res.put("result",result);
         if( result == 1) {
-            algoProblemService.saveUserTime(roomCode,userDetails.getId());
+            algoProblemService.saveUserTime(algoSolveReq.getProblemId()+"",roomCode,userDetails.getId());
             res.put("msg","맞았습니다 !");
         }else{
             res.put("msg","제출이 확인되지 않았습니다.");

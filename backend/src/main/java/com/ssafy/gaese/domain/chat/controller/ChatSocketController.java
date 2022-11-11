@@ -1,7 +1,7 @@
 package com.ssafy.gaese.domain.chat.controller;
 
 import com.ssafy.gaese.domain.chat.application.ChatService;
-import com.ssafy.gaese.domain.chat.dto.MessageDto;
+import com.ssafy.gaese.domain.chat.dto.ChatDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,10 +14,10 @@ public class ChatSocketController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatService chatService;
 
-    //  메세지 보내기
+    //  메세지 보내면 여기로 받음
     @MessageMapping("/chat/send") // prefix 와 합쳐짐
-    public void sendMessage(MessageDto messageDto) throws Exception{
-        chatService.saveMessage(messageDto);
-        simpMessagingTemplate.convertAndSend("/chat/"+messageDto.getToUser(),messageDto);
+    public void sendMessage(ChatDto chatDto) throws Exception{
+        //메시지 저장
+
     }
 }

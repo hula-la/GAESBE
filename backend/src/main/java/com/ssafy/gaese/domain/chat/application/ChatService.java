@@ -1,8 +1,6 @@
 package com.ssafy.gaese.domain.chat.application;
 
 
-import com.ssafy.gaese.domain.chat.dto.MessageDto;
-import com.ssafy.gaese.domain.chat.repository.ChatRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
