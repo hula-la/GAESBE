@@ -12,7 +12,7 @@ public class FlipResultDto {
     //맞췃으면 true
     private boolean isCorrect;
     private int patten;
-
+    private int winningStreak;
     //아마 변화한 값을 넣어줄듯함
     private Long point;
 

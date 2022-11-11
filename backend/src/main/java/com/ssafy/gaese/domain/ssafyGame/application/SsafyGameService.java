@@ -48,6 +48,7 @@ public class SsafyGameService {
 
         resultDto.setPoint(user.getPoint());
         resultDto.setPatten(rand);
+        resultDto.setWinningStreak(user.getWinningStreak());
 
         userRepository.save(user);
 
