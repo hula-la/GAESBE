@@ -9,6 +9,9 @@ interface FriendStateInterface {
   secondModal: boolean;
   isSuccess: boolean;
   needReload: boolean;
+  isInvite: boolean;
+  friendId: number | null;
+  invitedGameInfo: any;
 }
 
 const initialState: FriendStateInterface = {
@@ -18,6 +21,9 @@ const initialState: FriendStateInterface = {
   secondModal: false,
   isSuccess: false,
   needReload: false,
+  isInvite: false,
+  friendId: null,
+  invitedGameInfo: null,
 };
 
 const friendSlice = createSlice({
@@ -45,6 +51,12 @@ const friendSlice = createSlice({
     },
     requestFriendFinish(state) {
       state.isLoading = false;
+    },
+    inviteFriend(state, action) {
+      state.friendId = action.payload;
+    },
+    invitedGame(state, action) {
+      state.invitedGameInfo = action.payload;
     },
   },
 });

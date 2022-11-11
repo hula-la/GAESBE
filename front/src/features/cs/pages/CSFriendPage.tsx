@@ -175,6 +175,7 @@ const CSFriendPage = () => {
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
   const { modal } = useSelector((state: any) => state.friend);
+  const { friendId } = useSelector((state: any) => state.friend);
   const { shareCode } = location.state;
 
   const initialTime = useRef<number>(5);
@@ -260,17 +261,20 @@ const CSFriendPage = () => {
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
-  const client = Stomp.over(socket);
+  const client = useRef<any>(null);
   // client.debug = () => {};
 
   const client2 = Stomp.over(socket);
+  useEffect(() => {
+    client.current = Stomp.over(socket);
+  }, []);
 
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
-      client.connect({}, (frame) => {
+      client.current.connect({}, (frame: any) => {
         // 내 개인 정보 구독
-        client.subscribe(`/cs/${userInfo.id}`, (res) => {
+        client.current.subscribe(`/cs/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
@@ -296,7 +300,7 @@ const CSFriendPage = () => {
 
         // 방에 들어가기
         const enterRoom = () => {
-          client.send(
+          client.current.send(
             '/api/cs',
             {},
             JSON.stringify({
@@ -312,7 +316,7 @@ const CSFriendPage = () => {
 
         // 들어오는 순간 방의 사람들 정보를 받음
         const fetchMemberInfo = () => {
-          client.send(
+          client.current.send(
             '/api/cs/memberInfo',
             {},
             JSON.stringify({
@@ -380,7 +384,7 @@ const CSFriendPage = () => {
 
   useEffect(() => {
     return () => {
-      client.disconnect(() => {});
+      client.current.disconnect(() => {});
     };
   }, []);
   // 로딩 & 끝 제어
@@ -395,7 +399,7 @@ const CSFriendPage = () => {
   }, [players, result, isEnd]);
 
   const onClickStart = () => {
-    client.send(
+    client.current.send(
       '/api/cs/start',
       {},
       JSON.stringify({
@@ -406,7 +410,7 @@ const CSFriendPage = () => {
 
   // 정답 유무 확인
   const handleAnswerSend = () => {
-    client.send(
+    client.current.send(
       '/api/cs/submit',
       {},
       JSON.stringify({
@@ -424,6 +428,22 @@ const CSFriendPage = () => {
   const closeModal = () => {
     dispatch(friendActions.handleModal(null));
   };
+
+  useEffect(() => {
+    if (friendId) {
+      client.current.send(
+        '/api/friend/invite',
+        {},
+        JSON.stringify({
+          userId: friendId,
+          gameType: 'cs',
+          roomCode: roomCode,
+        }),
+      );
+    }
+  }, [friendId]);
+
+  const invite = () => {};
 
   return (
     <Container>

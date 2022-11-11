@@ -4,6 +4,8 @@ import FriendList from './FriendList';
 import FriendModal from '../components/FriendModal';
 import FriendSecondModal from '../components/FriendSecondModal';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FriendSide = styled.div`
   width: 18vw;
@@ -37,6 +39,7 @@ const FriendSide = styled.div`
     background: #ffffff;
     border: 3px solid #000000;
     border-radius: 10px;
+    color: #000000;
 
     .sideTitleImg {
       height: 100%;
@@ -46,7 +49,6 @@ const FriendSide = styled.div`
       margin-left: 0.8rem;
       font-size: 48px;
       font-weight: 700;
-      color: #000000;
     }
   }
   .sideMain {
@@ -75,9 +77,18 @@ const FriendSide = styled.div`
 
 function FriendMainPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isInvite, setIsInvite] = useState<boolean>(false);
   const { friends } = useSelector((state: any) => state.friend);
   const { modal } = useSelector((state: any) => state.friend);
   const { secondModal } = useSelector((state: any) => state.friend);
+  const { invitedGameInfo } = useSelector((state: any) => state.friend);
+
+  useEffect(() => {
+    if (invitedGameInfo) {
+      setIsInvite(true);
+    }
+  }, [invitedGameInfo]);
 
   const handleModal = () => {
     dispatch(friendActions.handleModal('request'));
@@ -88,16 +99,34 @@ function FriendMainPage() {
   const closeModal = () => {
     dispatch(friendActions.handleModal(null));
   };
+  const acceptInvite = () => {
+    setIsInvite(false);
+    navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
+      state: { shareCode: invitedGameInfo.inviteRoomCode },
+    });
+  };
+  const rejectInvite = () => {
+    setIsInvite(false);
+  };
+
   return (
     <FriendSide>
-      <div className="sideTitle">
-        <img
-          className="sideTitleImg"
-          src="/img/friendEarth.png"
-          alt="friendmark"
-        />
-        <div className="sideTitleContent">Friends</div>
-      </div>
+      {!isInvite && (
+        <div className="sideTitle">
+          <img
+            className="sideTitleImg"
+            src="/img/friendEarth.png"
+            alt="friendmark"
+          />
+          <div className="sideTitleContent">Friends</div>
+        </div>
+      )}
+      {isInvite && (
+        <div className="sideTitle">
+          <div onClick={acceptInvite}>수락</div>
+          <div onClick={rejectInvite}>거절</div>
+        </div>
+      )}
       <div className="sideMain">
         {modal === 'request' && (
           <FriendModal handleModal={closeModal} type="request" />

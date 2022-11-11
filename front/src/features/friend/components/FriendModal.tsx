@@ -33,7 +33,7 @@ const StyledModalDiv = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
 `;
 
-function FriendModal({ handleModal, type }: any) {
+function FriendModal({ handleModal, type, client }: any) {
   const [option, setOption] = useState<string | null>('manage');
 
   useEffect(() => {
@@ -56,9 +56,6 @@ function FriendModal({ handleModal, type }: any) {
     }, 100);
   };
 
-  useEffect(() => {
-    console.log(type);
-  });
   return (
     <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e) => e.stopPropagation()}>
