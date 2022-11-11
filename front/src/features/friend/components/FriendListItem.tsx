@@ -162,7 +162,7 @@ const FriendListItemBlock = styled.div`
   }
 `;
 
-function FriendListItem({ friend, type }: any) {
+function FriendListItem({ friend, type, category }: any) {
   const dispatch = useDispatch();
 
   const handleDeleteFriend = async () => {
@@ -178,24 +178,30 @@ function FriendListItem({ friend, type }: any) {
     }
   };
 
+  const invite = () => {
+    dispatch(friendActions.inviteFriend(friend.id));
+  };
+
   return (
     <FriendListItemBlock>
       <div className="friendBoxWrapper">
         <div className="friendBox">
-          <div className="speechBubbleWrapper">
-            <div className="speechBubble">
-              <div className="bubbleText top">방 놀러가기</div>
-              {/* <hr className="styledHr" /> */}
-              <div className="bubbleText linetb mid">채팅방</div>
-              {/* <hr className="styledHr" /> */}
-              <div
-                className="bubbleText textRed bottom"
-                onClick={handleDeleteFriend}
-              >
-                친구 삭제
+          {category === 'noInvite' && (
+            <div className="speechBubbleWrapper">
+              <div className="speechBubble">
+                <div className="bubbleText top">방 놀러가기</div>
+                {/* <hr className="styledHr" /> */}
+                <div className="bubbleText linetb mid">채팅방</div>
+                {/* <hr className="styledHr" /> */}
+                <div
+                  className="bubbleText textRed bottom"
+                  onClick={handleDeleteFriend}
+                >
+                  친구 삭제
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className="profileNickname">
             <div className="profileCircle">
               <img
@@ -210,8 +216,10 @@ function FriendListItem({ friend, type }: any) {
               <div className="nickname">{friend.nickname}</div>
             </div>
           </div>
-
-          <img className="messageImg" src="/img/messageImg.png" />
+          {category === 'noInvite' && (
+            <img className="messageImg" src="/img/messageImg.png" />
+          )}
+          {category === 'invite' && <button onClick={invite}>초대하기</button>}
         </div>
       </div>
     </FriendListItemBlock>

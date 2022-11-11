@@ -28,7 +28,12 @@ function FriendSocket() {
     client.connect({}, (frame) => {
       // 친구목록 메세지 받을 위치
       client.subscribe(`/friend/${userInfo.id}`, (res) => {
-        dispatch(friendActions.setFriends(JSON.parse(res.body)));
+        var data = JSON.parse(res.body);
+        if (data.hasOwnProperty('inviteGameType')) {
+          dispatch(friendActions.invitedGame(data));
+        } else {
+          dispatch(friendActions.setFriends(JSON.parse(res.body)));
+        }
       });
       // 뚫었으니 들어갔다고 알리기
       client.send(

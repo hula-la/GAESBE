@@ -21,6 +21,7 @@ function FriendList() {
                 key={onlineFriend.id}
                 type="online"
                 friend={onlineFriend}
+                category="noInvite"
               />
             );
           })}
@@ -35,6 +36,7 @@ function FriendList() {
                   key={offlineFriend.id}
                   type="offline"
                   friend={offlineFriend}
+                  category="noInvite"
                 />
               );
             },
