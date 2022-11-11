@@ -20,7 +20,9 @@ public class Ability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "ability")
+    @MapsId
+    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
+    @JoinColumn(name = "ability")
     private User user;
 
     @ColumnDefault("1")
