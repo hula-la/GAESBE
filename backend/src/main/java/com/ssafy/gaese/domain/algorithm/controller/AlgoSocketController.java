@@ -3,10 +3,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoSocketService;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomCodeDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
+import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 
@@ -19,6 +16,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,11 +129,14 @@ public class AlgoSocketController {
         }
     }
     @MessageMapping("/algo/rank")
-    public void getRank(AlgoRoomCodeDto roomCodeDto){
-        List<AlgoRankDto> ranking = algoSocketService.getCurrentRank(roomCodeDto.getRoomCode());
-        HashMap<String,List<AlgoRankDto>> res = new HashMap<>();
-        res.put("ranking",ranking);
-        simpMessagingTemplate.convertAndSend("/algo/rank/"+roomCodeDto.getRoomCode(),res);
+    public void getRank(AlgoRoomDto algoRoomDto) throws ParseException {
+
+        HashMap<String, Object> res = new HashMap<>();
+        List<AlgoRankDto> ranking = algoSocketService.getCurrentRank(algoRoomDto.getRoomCode());
+        res.put("ranking", ranking);
+        simpMessagingTemplate.convertAndSend("/algo/rank/" + algoRoomDto.getRoomCode(), res);
+
+
     }
 
 }

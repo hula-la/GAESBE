@@ -39,11 +39,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 
 @Service
 @RequiredArgsConstructor
@@ -52,11 +47,13 @@ public class AlgoProblemService {
     private final RedisTemplate<String, String> redisTemplate;
     private final AlgoRankRedisRepository algoRankRedisRepository;
     private final UserRepository userRepository;
+    ChromeDriver driver = null;
 
     public void getSolvedProblem(String roomCode, String userBjId){
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         String key = roomCode+"-"+userBjId;
         List<String> problems = new LinkedList<>();
+
         // 크롤링 설정
         try{
             WebDriverManager.chromedriver().setup();
@@ -65,7 +62,7 @@ public class AlgoProblemService {
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
-            ChromeDriver driver = new ChromeDriver(chromeOptions);
+            driver = new ChromeDriver(chromeOptions);
 
             // 크롤링
             System.out.println("======크롤링 시작 ========");
@@ -80,6 +77,8 @@ public class AlgoProblemService {
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
 
+        }finally {
+            driver.quit();
         }
 
         if(problems.size()==0) return;
@@ -166,7 +165,7 @@ public class AlgoProblemService {
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
-            ChromeDriver driver = new ChromeDriver(chromeOptions);
+            driver = new ChromeDriver(chromeOptions);
             // 크롤링
             driver.get("https://www.acmicpc.net/status?problem_id="+algoSolveReq.getProblemId()
                     +"&user_id="+algoSolveReq.getUserBjId()
@@ -179,6 +178,8 @@ public class AlgoProblemService {
         }catch (Exception e){
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
+        }finally {
+            driver.quit();
         }
         return 0;
     }

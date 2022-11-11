@@ -42,7 +42,7 @@ public class AlgoService {
     private final SocketInfo socketInfo;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AlgoSocketService algoSocketService;
-
+    static ChromeDriver driver = null;
 
     public void saveAlgoRecord(String roomCode){
 
@@ -290,6 +290,7 @@ public class AlgoService {
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         String code = hashOperations.get("bjCodes",userId+"");
         Boolean res = false;
+
         try{
             WebDriverManager.chromedriver().setup();
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -297,7 +298,7 @@ public class AlgoService {
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
-            ChromeDriver driver = new ChromeDriver(chromeOptions);
+            driver = new ChromeDriver(chromeOptions);
             // 크롤링
             driver.get("https://www.acmicpc.net/user/"+userRepository.getBjIdById(userId).get());
             WebElement element = driver.findElement(By.className("no-mathjax"));
@@ -309,6 +310,8 @@ public class AlgoService {
         }catch (Exception e){
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.getMessage());
+        }finally {
+            driver.quit();
         }
         return res;
     }
