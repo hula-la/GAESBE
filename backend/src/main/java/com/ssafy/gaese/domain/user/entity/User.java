@@ -78,6 +78,13 @@ public class User {
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.REMOVE)
     private Set<FriendRequest> targetUser;
 
+    //싸피게임에 필요하여 추가한 재화 POINT와 연승정보 winning_streak
+    @ColumnDefault("0")
+//    @Column(nullable = false, columnDefinition = "default 0")
+    private Long point;
+
+    @ColumnDefault("0")
+    private int winningStreak;
 
 
     public User update(String nickname, int profileChar) {
