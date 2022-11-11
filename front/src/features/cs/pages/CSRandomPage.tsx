@@ -458,7 +458,7 @@ const CSIngamePage = () => {
                       <img
                         style={{ height: '100%', width: '100%' }}
                         key={idx}
-                        src={`${process.env.REACT_APP_S3_URL}/profile/1_normal.gif`}
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                       />
                     </div>
                   );

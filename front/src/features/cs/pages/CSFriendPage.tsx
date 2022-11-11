@@ -450,7 +450,7 @@ const CSFriendPage = () => {
                       <div>{player.nickname}</div>
                       <img
                         style={{ height: '100%', width: '100%' }}
-                        src="https://chukkachukka.s3.ap-northeast-2.amazonaws.com/profile/1_normal.gif"
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
                       />
                     </div>

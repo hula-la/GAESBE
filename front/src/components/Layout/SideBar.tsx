@@ -18,23 +18,21 @@ const Side = styled.div`
 
   /* transition: all 0.5s linear;
   transform: translateX( 50px ); */
-  animation-name : showToRight;
-  animation-duration : 1s;
+  animation-name: showToRight;
+  animation-duration: 1s;
 
-  @keyframes showToRight{
-  0% {
-    transform : translateX(-16vw); /* 애니메이션이 0%만큼 동작시 */
-    // 몇 줄을 넣어도 상관없다!!
+  @keyframes showToRight {
+    0% {
+      transform: translateX(-16vw); /* 애니메이션이 0%만큼 동작시 */
+      // 몇 줄을 넣어도 상관없다!!
+    }
+    50% {
+      transform: translateX(1vw); /* 애니메이션이 50%만큼 동작시 */
+    }
+    100% {
+      transform: translateX(0); /* 애니메이션이 100%만큼 동작시 */
+    }
   }
-  50% {
-    transform : translateX(1vw); /* 애니메이션이 50%만큼 동작시 */
-  }
-  100% {
-    transform : translateX(0); /* 애니메이션이 100%만큼 동작시 */
-  }
-}
-
-
 
   .logoBox {
     height: 13%;
@@ -90,7 +88,6 @@ const Side = styled.div`
 
     padding: 15% 0;
 
-
     .folder {
       display: flex;
       align-items: center;
@@ -101,38 +98,36 @@ const Side = styled.div`
       /* margin-bottom: 1.5rem; */
       /* margin-left: 2.5rem; */
 
-      .folderIcon{
+      .folderIcon {
         position: absolute;
         margin-left: 4%;
       }
 
-
       transition: all 0.2s linear;
       :hover {
-        transform: translateY( -1vh );
-        cursor: url("/img/cursor/hover_cursor.png"),auto;}
+        transform: translateY(-1vh);
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
 
-      .folderClose{
-        width:4rem;
+      .folderClose {
+        width: 4rem;
         /* height: 100%; */
         left: 4%;
       }
 
-      :hover .folderClose{
+      :hover .folderClose {
         opacity: 0;
       }
 
-      .folderOpen{
+      .folderOpen {
         opacity: 0;
-        width:4rem;
+        width: 4rem;
         /* height:102%; */
       }
 
-      :hover .folderOpen{
+      :hover .folderOpen {
         opacity: 100;
-        
       }
-      
 
       .menu {
         height: 75%;
@@ -150,7 +145,7 @@ const Side = styled.div`
       }
     }
   }
-`; 
+`;
 
 const SideBar = () => {
   const navigate = useNavigate();
@@ -172,7 +167,7 @@ const SideBar = () => {
             <div>Lv1. 반지하</div>
           </div>
           <img
-            src={`${process.env.REACT_APP_S3_URL}/profile/1_normal.gif`}
+            src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
             className="profileImg"
             alt="profileImg"
           />
@@ -181,28 +176,68 @@ const SideBar = () => {
       <div className="menubar">
         <div onClick={() => handleOnClick('')} className="folder">
           {/* <div className='folderImg'></div> */}
-          <img src="/img/folderIcon/FolderClose.png" alt="menu" className="folderIcon folderClose" />
-          <img src="/img/folderIcon/FolderOpen.png" alt="menu" className="folderIcon folderOpen" />
+          <img
+            src="/img/folderIcon/FolderClose.png"
+            alt="menu"
+            className="folderIcon folderClose"
+          />
+          <img
+            src="/img/folderIcon/FolderOpen.png"
+            alt="menu"
+            className="folderIcon folderOpen"
+          />
           <p className="foldername">MYROOM</p>
         </div>
         <div onClick={() => handleOnClick('typing')} className="folder">
-        <img src="/img/folderIcon/FolderClose.png" alt="menu" className="folderIcon folderClose" />
-          <img src="/img/folderIcon/FolderOpen.png" alt="menu" className="folderIcon folderOpen" />
+          <img
+            src="/img/folderIcon/FolderClose.png"
+            alt="menu"
+            className="folderIcon folderClose"
+          />
+          <img
+            src="/img/folderIcon/FolderOpen.png"
+            alt="menu"
+            className="folderIcon folderOpen"
+          />
           <p className="foldername">TYPING</p>
         </div>
         <div onClick={() => handleOnClick('algo')} className="folder">
-        <img src="/img/folderIcon/FolderClose.png" alt="menu" className="folderIcon folderClose" />
-          <img src="/img/folderIcon/FolderOpen.png" alt="menu" className="folderIcon folderOpen" />
+          <img
+            src="/img/folderIcon/FolderClose.png"
+            alt="menu"
+            className="folderIcon folderClose"
+          />
+          <img
+            src="/img/folderIcon/FolderOpen.png"
+            alt="menu"
+            className="folderIcon folderOpen"
+          />
           <p className="foldername">ALGORITHM</p>
         </div>
         <div onClick={() => handleOnClick('CS')} className="folder">
-        <img src="/img/folderIcon/FolderClose.png" alt="menu" className="folderIcon folderClose" />
-          <img src="/img/folderIcon/FolderOpen.png" alt="menu" className="folderIcon folderOpen" />
+          <img
+            src="/img/folderIcon/FolderClose.png"
+            alt="menu"
+            className="folderIcon folderClose"
+          />
+          <img
+            src="/img/folderIcon/FolderOpen.png"
+            alt="menu"
+            className="folderIcon folderOpen"
+          />
           <p className="foldername">CS</p>
         </div>
         <div onClick={() => handleOnClick('casino')} className="folder">
-        <img src="/img/folderIcon/FolderClose.png" alt="menu" className="folderIcon folderClose" />
-          <img src="/img/folderIcon/FolderOpen.png" alt="menu" className="folderIcon folderOpen" />
+          <img
+            src="/img/folderIcon/FolderClose.png"
+            alt="menu"
+            className="folderIcon folderClose"
+          />
+          <img
+            src="/img/folderIcon/FolderOpen.png"
+            alt="menu"
+            className="folderIcon folderOpen"
+          />
           <p className="foldername">MINI</p>
         </div>
       </div>
