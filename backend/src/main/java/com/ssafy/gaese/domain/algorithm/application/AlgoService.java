@@ -263,6 +263,7 @@ public class AlgoService {
     public int confirmRoomEnter(String roomCode, Long userId){
         if(socketInfo.isPlayGame(userId)) return 0;
         if(algoRedisRepositoryCustom.getRoomNum(roomCode) >= 4) return -1;
+        if(algoRedisRepository.findById(roomCode).get().getAlgoRoomDto().isStart()) return -2;
         return 1;
     }
 

@@ -184,8 +184,7 @@ public class AlgoProblemService {
         return 0;
     }
 
-    public void startGame(String roomCode){
-
+    public void saveTime(String roomCode){
         // 시작 시간 설정
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         LocalTime now = LocalTime.now();
@@ -193,6 +192,11 @@ public class AlgoProblemService {
         System.out.println("==== 시간 ====="+now.format(formatter));
         hashOperations.put(roomCode,"startTime",now.format(formatter));
         System.out.println(hashOperations.get(roomCode,"startTime"));
+
+    }
+
+    public void setStartGame(String roomCode){
+        HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
 
         // 시작 상태로 변경
         hashOperations.put("algoRoom:"+roomCode,"algoRoomDto.isStart","1");
