@@ -9,27 +9,36 @@ const FriendListItemBlock = styled.div`
   height: 100%;
   width: 100%;
   .friendBoxWrapper {
-    height: 100%;
+    height: 4rem;
     width: 100%;
     margin-top: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    :hover .speechBubbleWrapper {
+      display: block;
+    }
   }
   .friendBox {
     position: relative;
     box-sizing: border-box;
     border: 3px solid #8d84f3;
     border-radius: 10px;
-    height: 10%;
+    height: 100%;
     width: 85%;
     margin-top: 0.5rem;
     display: flex;
     justify-content: space-around;
     align-items: center;
+
+    .linetb {
+      border-bottom: 1px solid black;
+      border-top: 1px solid black;
+    }
     .speechBubbleWrapper {
       position: absolute;
-      left: -70%;
+      right: calc(100% + 17px);
       display: none;
     }
     .speechBubble {
@@ -37,10 +46,10 @@ const FriendListItemBlock = styled.div`
       background: #ffc02d;
       border-radius: 0.4em;
       width: 9rem;
-      height: 6rem;
+      /* height: 6rem; */
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
+      /* justify-content: space-evenly; */
       .styledHr {
         margin: 0 auto;
         width: 98%;
@@ -52,11 +61,36 @@ const FriendListItemBlock = styled.div`
         text-align: center;
         color: #000000;
         font-weight: 550;
+        padding: 0.4rem 0;
       }
-      .bubbleText2 {
-        text-align: center;
+      .bubbleText:hover {
+        background-color: #e6a713;
+      }
+      .bubbleText.top:hover {
+        border-top-left-radius: 0.4rem;
+        border-top-right-radius: 0.4rem;
+      }
+      .bubbleText.mid:hover::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 17px solid transparent;
+        border-left-color: #e6a713;
+        border-right: 0;
+        margin-top: -17px;
+        margin-right: -17px;
+        z-index: 5;
+      }
+      .bubbleText.bottom:hover {
+        border-bottom-right-radius: 0.4rem;
+        border-bottom-left-radius: 0.4rem;
+      }
+
+      .textRed {
         color: #ff0000;
-        font-weight: 550;
       }
     }
 
@@ -83,8 +117,8 @@ const FriendListItemBlock = styled.div`
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        height: 82%;
-        width: 34%;
+        height: 2rem;
+        width: 2rem;
         background-color: #ffffff;
         .profile {
           height: 90%;
@@ -110,9 +144,7 @@ const FriendListItemBlock = styled.div`
         }
       }
     }
-    .friendBox:hover .speechBubbleWrapper {
-      display: block;
-    }
+
     .nicknameBox {
       margin-left: 0.5rem;
       .level {
@@ -153,11 +185,11 @@ function FriendListItem({ friend, type }: any) {
         <div className="friendBox">
           <div className="speechBubbleWrapper">
             <div className="speechBubble">
-              <div className="bubbleText">방 놀러가기</div>
-              <hr className="styledHr" />
-              <div className="bubbleText">채팅방</div>
-              <hr className="styledHr" />
-              <div className="bubbleText2">친구 삭제</div>
+              <div className="bubbleText top">방 놀러가기</div>
+              {/* <hr className="styledHr" /> */}
+              <div className="bubbleText linetb mid">채팅방</div>
+              {/* <hr className="styledHr" /> */}
+              <div className="bubbleText textRed bottom">친구 삭제</div>
             </div>
           </div>
           <div className="profileNickname">
