@@ -17,7 +17,10 @@ public class ChatSocketController {
     //  메세지 보내면 여기로 받음
     @MessageMapping("/chat/send") // prefix 와 합쳐짐
     public void sendMessage(ChatDto chatDto) throws Exception{
-        //메시지 저장
+        // 메시지 저장
 
+
+        // 메시지 전송
+        simpMessagingTemplate.convertAndSend("/chat/"+chatDto.getFrom()+"/from/"+chatDto.getTo());
     }
 }

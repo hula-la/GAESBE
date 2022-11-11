@@ -22,9 +22,9 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private Long from;
+    private Long fromId;
     @Column(nullable = false)
-    private Long to;
+    private Long toId;
     @Column(nullable = false)
     private String msg;
     @Column(nullable = false)
@@ -32,8 +32,8 @@ public class Chat {
 
     public ChatDto toDto(){
         return ChatDto.builder()
-                .to(this.to)
-                .from(this.from)
+                .to(this.toId)
+                .from(this.fromId)
                 .msg(this.msg)
                 .date(this.date)
                 .build();

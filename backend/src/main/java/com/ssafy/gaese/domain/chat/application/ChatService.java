@@ -1,43 +1,34 @@
 package com.ssafy.gaese.domain.chat.application;
 
 
+import com.ssafy.gaese.domain.chat.dto.ChatDto;
+import com.ssafy.gaese.domain.chat.entity.Chat;
+import com.ssafy.gaese.domain.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ChatService {
 
-    private final ChatRedisRepository chatRedisRepository;
+    private final ChatRepository chatRepository;
 
-    public List<MessageDto> getAllMessages( String fromId, String toId){
-        List<MessageDto> allMsg = new ArrayList<>();
-        for( MessageDto messageDto : getMessages(fromId)){
-            if(messageDto.getToUser().equals(toId)){
-                allMsg.add(messageDto);
-            }
-        }
-
-        for( MessageDto messageDto : getMessages(toId)){
-            if(messageDto.getToUser().equals(toId)){
-                allMsg.add(messageDto);
-            }
-        }
-        return allMsg;
+    //메시지 저장
+    public ChatDto saveMsg(ChatDto chatDto){
+        Chat saved = chatRepository.save(chatDto.toEntity());
+        return saved.toDto();
     }
 
-    public List<MessageDto> getMessages(String fromId){
-        List<MessageDto> res = chatRedisRepository.findAllById(Collections.singleton(fromId));
-        res.addAll(chatRedisRepository.findAllById(Collections.singleton(fromId)));
-        return res;
+    // 메시지 불러오기
+    public List<ChatDto> getMsg(Long from, Long to){
+        return chatRepository.findAllByFromIdAndToId(from,to).stream().map(chat -> chat.toDto()).collect(Collectors.toList());
     }
 
-    public void saveMessage(MessageDto messageDto){
-        chatRedisRepository.save(messageDto);
-    }
+    //요청 표시
+    public void checkSend(Long from,Long to){
 
+    }
 }

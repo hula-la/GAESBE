@@ -22,8 +22,8 @@ public class ChatDto {
 
     public Chat toEntity(){
         return Chat.builder()
-                .to(this.to)
-                .from(this.from)
+                .toId(this.to)
+                .fromId(this.from)
                 .msg(this.msg)
                 .date(this.date)
                 .date(this.date)
