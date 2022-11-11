@@ -62,11 +62,12 @@ public class AlgorithmController {
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
     public ResponseEntity<String> createRecord(@RequestBody AlgoRecordReq algoRecordReq,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
+
         algoService.createAlgoRecord(algoRecordReq, userDetails.getId());
 
         String msg = "";
         if(algoRecordReq.getRanking()==1) msg = " 축하합니다 ! ";
-        else if(algoRecordReq.getRanking()>5) msg = " 수고하셨습니다 ! ";
+        else if(algoRecordReq.getRanking()<5) msg = " 수고하셨습니다 ! ";
         else msg = "아쉽지만 다음에 다시 도전 ! ";
 
         HashMap<String,Object> res = new HashMap<>();
