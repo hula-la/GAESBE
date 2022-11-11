@@ -55,6 +55,7 @@ function* sendMyRankSaga(action: Action<RecordSendInterface>) {
   try {
     const res: AxiosResponse = yield call(endGame, action.payload)
     if (res.status===200) {
+      yield put(algoActions.setGameResult(res.data))
       yield put(algoActions.loadingEnd())
     }
   } catch (error) {

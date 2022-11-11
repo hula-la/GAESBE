@@ -5,6 +5,7 @@ import { ProblemInterface, RankingUserInfo } from '../../../models/algo';
 import { algoActions } from '../algorithmSlice';
 
 import ProblemInfo from './ProblemInfo';
+import GameResultModal from './GameResultModal'
 
 interface LanguageInterface {
   lanId: number;
@@ -29,23 +30,34 @@ function AlgoSolve({
     { lanId: 1004, name: 'c' },
   ];
   const nowProblem: ProblemInterface = problemList[problemIndex];
-  const { InGameInfo, solve } = useSelector((state: any) => state.algo);
+  const { InGameInfo, solve, gameResultMsg } = useSelector((state: any) => state.algo);
   const { userInfo } = useSelector((state: any) => state.auth);
   const [form, setForm] = useState<{ lanId: number; code: string }>({
     lanId: 1003,
     code: '',
   });
-  const [firstLoading, setFirstLoadgin] = useState<boolean>(true)
-
+  const [firstLoading, setFirstLoading] = useState<boolean>(true)
+  const [firstModalLoading, setFirstModalLoading] = useState<boolean>(true)
+  // 게임이 끝나면 모달을 열고
+  const [modal, setModal] = useState<boolean>(false)
+  // 결과 모달 자동으로 열기
+  useEffect(() => {
+    if (gameResultMsg && firstModalLoading) {
+      setModal(true)
+      setFirstModalLoading(false)
+    }
+  }, [gameResultMsg])
+  // 컴포넌트 사라질때 문제 성공 리셋
   useEffect(() => {
     return () => {
       dispatch(algoActions.solveSuccess(false));
+      dispatch(algoActions.setGameResult(''))
     };
   }, []);
 
   useEffect(() => {
     if (firstLoading) {
-      setFirstLoadgin(false)
+      setFirstLoading(false)
       return
     }
     if (myRank !== 5 && !timeOut) {
@@ -106,10 +118,14 @@ function AlgoSolve({
       JSON.stringify({ roomCode: InGameInfo.roomCode }),
     );
   };
+  const handleModal = () => {
+    setModal(!modal)
+  }
 
   return (
     <>
       <h2>문제 풀때 컴포넌트</h2>
+      {modal && <GameResultModal handleModal={handleModal} myRank={myRank} />}
       {ranking.map((user:RankingUserInfo, index:number) => {
         return <div key={index}>
           <h2>{user.nickName}</h2>
@@ -119,29 +135,33 @@ function AlgoSolve({
       })}
       <ProblemInfo nowProblem={nowProblem} />
       <button onClick={handleGoToSolve}>문제풀러가기</button>
-      {languageList.map((language) => (
-        <label key={language.lanId} htmlFor={language.name}>
-          <input
-            type="radio"
-            name="lanId"
-            id={language.name}
-            value={language.lanId}
-            onChange={handleRadio}
-            checked={form.lanId === language.lanId}
-          />
-          {language.name}
-        </label>
-      ))}
       <br />
-      <textarea
-        ref={codeTextArea}
-        style={{ resize: 'none', overflow: 'auto' }}
-        rows={30}
-        cols={60}
-        wrap="off"
-        onChange={handleCode}
-      />
-      <button onClick={handleCheckSubmit}>정답 확인하기</button>
+      {gameResultMsg ? null
+      : <> 
+          {languageList.map((language) => (
+            <label key={language.lanId} htmlFor={language.name}>
+              <input
+                type="radio"
+                name="lanId"
+                id={language.name}
+                value={language.lanId}
+                onChange={handleRadio}
+                checked={form.lanId === language.lanId}
+              />
+              {language.name}
+            </label>
+          ))}
+          <textarea
+            ref={codeTextArea}
+            style={{ resize: 'none', overflow: 'auto' }}
+            rows={30}
+            cols={60}
+            wrap="off"
+            onChange={handleCode}
+          />
+          <button onClick={handleCheckSubmit}>정답 확인하기</button>
+        </>
+      }
     </>
   );
 }

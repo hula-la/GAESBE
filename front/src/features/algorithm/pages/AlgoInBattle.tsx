@@ -29,6 +29,7 @@ function AlgoInBattle() {
   const [ranking, setRanking] = useState<RankingUserInfo[]>([])
   const [myRank, setMyRank] = useState<number>(5)
   const [timeOut, setTimeOut] = useState<boolean>(false)
+  const [finished, setFinishied] = useState<boolean>(false)
 
   useEffect(() => {
     for (let i = 0; i < 4; i++) {
@@ -104,6 +105,7 @@ function AlgoInBattle() {
         client.current.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).type==='FINISH') {
             setTimeOut(true)
+            setFinishied(true)
           } else {
             setProblemIndex(JSON.parse(res.body).no);
             setAfterProgress('solve');
@@ -144,15 +146,13 @@ function AlgoInBattle() {
       // change end
       alert('게임중에는 나갈 수 없습니다');
     };
-
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);
-
     return () => window.removeEventListener('popstate', preventGoBack);
   }, []);
   // 뒤로가기 막는 useEffect
   // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  usePrompt('게임에서 기권패배 될 수 있습니다', true);
+  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
   // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
 
   // 방 떠나기

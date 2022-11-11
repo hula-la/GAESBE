@@ -6,14 +6,16 @@ type AlgoGameState = {
   isLoading: boolean;
   needReload: boolean;
   InGameInfo: AlgoRoomInterface | null
-  solve: boolean
+  solve: boolean,
+  gameResultMsg: string
 };
 
 const initialState: AlgoGameState = {
   isLoading: false,
   InGameInfo: null,
   needReload: false,
-  solve: false
+  solve: false,
+  gameResultMsg: ''
 };
 
 const algoSlice = createSlice({
@@ -40,7 +42,10 @@ const algoSlice = createSlice({
     solveSuccess(state, action: Action<boolean>) {
       state.solve = action.payload
     },
-    sendMyRank(state, action: Action<RecordSendInterface>) {}
+    sendMyRank(state, action: Action<RecordSendInterface>) {},
+    setGameResult(state, action: Action<string>) {
+      state.gameResultMsg = action.payload
+    }
   }
 })
 
