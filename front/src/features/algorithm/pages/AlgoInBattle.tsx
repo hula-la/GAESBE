@@ -208,9 +208,6 @@ function AlgoInBattle() {
             timeOut={timeOut}
           />
         )}
-        {progress==='battleEnd' && (
-          <> </>
-        )}
       </>
     }</>
   );
