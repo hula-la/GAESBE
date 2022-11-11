@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -6,8 +6,9 @@ import { deleteUserInfoApi } from '../../../api/authApi';
 import { authActions } from '../../auth/authSlice';
 import { authSagas } from '../../auth/authSaga';
 import { useNavigate } from 'react-router-dom';
+import { gameActions } from '../gameSlice';
 const MyPageContainer = styled.div`
-  width: 100%;
+  width: 66%;
   color: white;
   background-color: #232323;
   border: 2px solid red;
@@ -32,7 +33,6 @@ const MyPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state: any) => state.auth);
-  console.log(userInfo);
 
   const handleDelete = () => {
     var deleteConfirm = window.confirm('정말 삭제할거?');
@@ -49,18 +49,24 @@ const MyPage = () => {
   const handleChange = () => {
     navigate('change');
   };
+
+  useEffect(() => {
+    dispatch(gameActions.fetchRecordStart());
+  }, []);
   return (
     <MyPageContainer>
-      <MyCharacter>
-        <h1>{userInfo.nickname}</h1>
-        <img
-          src={`/img/rank/character${userInfo.profileChar}.png`}
-          alt="asdf"
-        />
-        <button onClick={handleChange}>정보 수정</button>
-        <button onClick={handleDelete}>회원 탈퇴</button>
-        <button>기록 보기</button>
-      </MyCharacter>
+      {userInfo && (
+        <MyCharacter>
+          <h1>{userInfo.nickname}</h1>
+          <img
+            src={`/img/rank/character${userInfo.profileChar}.png`}
+            alt="asdf"
+          />
+          <button onClick={handleChange}>정보 수정</button>
+          <button onClick={handleDelete}>회원 탈퇴</button>
+          <button>기록 보기</button>
+        </MyCharacter>
+      )}
       <MyPower>
         <h1>역량 부분</h1>
       </MyPower>
