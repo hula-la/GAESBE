@@ -131,7 +131,7 @@ public class AlgoSocketController {
 
             res = new HashMap<>();
             res.put("type","FINISH");
-            res.put("type",algoSocketService.getCurrentRank(roomCodeDto.getRoomCode()));
+            res.put("ranking",algoSocketService.getCurrentRank(roomCodeDto.getRoomCode()));
             simpMessagingTemplate.convertAndSend("/algo/problem/"+roomCodeDto.getRoomCode(),res);
         }
     }

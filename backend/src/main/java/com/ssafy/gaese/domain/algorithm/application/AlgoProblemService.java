@@ -9,6 +9,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.querydsl.core.types.dsl.StringOperation;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
@@ -207,6 +208,7 @@ public class AlgoProblemService {
 
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+
         String start = hashOperations.get(roomCode, "startTime");
         if(start == null ){
             System.out.println("start time을 찾을 수 없습니다.");
@@ -226,6 +228,7 @@ public class AlgoProblemService {
                 .userId(userId).build();
         //redis 저장 - 랭킹용
         zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), minDiff);
+
         //redis 저장 - 기록용
         algoRankRedisRepository.save(algoRankDto);
 
