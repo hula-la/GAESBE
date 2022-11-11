@@ -26,4 +26,10 @@ public class AbilityController {
         return ResponseEntity.ok().body(abilityDto);
     }
 
+    @GetMapping("/rank")
+    public ResponseEntity<AbilityDto> getRank(@AuthenticationPrincipal CustomUserDetails user) {
+        AbilityDto abilityDto = abilityService.getAbility(user.getId());
+        return ResponseEntity.ok().body(abilityDto);
+    }
+
 }
