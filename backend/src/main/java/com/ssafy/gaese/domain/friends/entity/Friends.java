@@ -24,7 +24,6 @@ public class Friends {
     @Column
     private Date createdDate;
 
-
     @ManyToOne
     @JoinColumn(name = "firstUserId", referencedColumnName = "id")
     User firstUser;

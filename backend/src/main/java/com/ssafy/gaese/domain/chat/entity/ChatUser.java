@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.chat.entity;
 
 
+import com.ssafy.gaese.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +20,14 @@ public class ChatUser {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
-    private Long friendId;
+
+    @ManyToOne
+    @JoinColumn(name = "toUserId", referencedColumnName = "id")
+    User toUser;
+
+    @ManyToOne
+    @JoinColumn(name = "fromUserId", referencedColumnName = "id")
+    User fromUser;
     private boolean open;
     private boolean wait;
 

@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.user.entity;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
+import com.ssafy.gaese.domain.chat.entity.ChatUser;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
@@ -77,6 +78,12 @@ public class User {
 
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.REMOVE)
     private Set<FriendRequest> targetUser;
+
+    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.REMOVE)
+    private List<ChatUser> fromUser;
+
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.REMOVE)
+    private List<ChatUser> toUser;
 
     //싸피게임에 필요하여 추가한 재화 POINT와 연승정보 winning_streak
     @ColumnDefault("0")

@@ -66,7 +66,7 @@ public class AlgoService {
                     .date(date)
                     .code(algoRecordReq.getCode())
                     .isRetry(false)
-                    .problemId(algoRecordReq.getProblemId())
+                    .problemId(Long.parseLong(algoRankDto.getProblemId()))
                     .ranking(algoRecordReq.getRanking())
                     .solveTime(algoRankDto.getMin()+"")
                     .build();
