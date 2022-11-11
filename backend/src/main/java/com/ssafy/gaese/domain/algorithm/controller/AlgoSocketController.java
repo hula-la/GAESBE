@@ -62,15 +62,21 @@ public class AlgoSocketController {
     }
     
     // 문제 선택 시작, timer 시작, no : 0 전송 , AlgoRoomPassDto 저장
+    /*
+    입장 시, start 인지 확인, start로 변경
+     */
     @MessageMapping("/algo/start/pass")
     public void algoPassTimer(AlgoProblemReq algoProblemReq) throws Exception{
         HashMap<String, Object> res = new HashMap<>();
         res.put("type","START");
+        // 방 시작 상태로 변경
+        algoProblemService.setStartGame(algoProblemReq.getRoomCode());
+        // 문제 전송 중임을 알림
         simpMessagingTemplate.convertAndSend("/algo/start/pass/"+algoProblemReq.getRoomCode(),res);
-
         algoSocketService.createAlgoRoomPass(algoProblemReq.getRoomCode());
 
         res.clear();
+        // 문제 전송
         res.put("type","PROBLEM");
         res.put("no",0);
         res.put("master",algoService.getMaster(algoProblemReq.getRoomCode()));
@@ -108,9 +114,9 @@ public class AlgoSocketController {
             simpMessagingTemplate.convertAndSend("/algo/pass/"+roomCodeDto.getRoomCode(),res);
         }else{
             System.out.println("========= 문제 풀이 시작 ========= ");
-            //문제 풀이 시작 > 시작 시간 저장
 
-            algoProblemService.startGame(roomCodeDto.getRoomCode());
+            //문제 풀이 시작 > 시작 시간 저장
+            algoProblemService.saveTime(roomCodeDto.getRoomCode());
 
             HashMap<String, Object> res = new HashMap<>();
             res.put("type","START");
@@ -129,6 +135,12 @@ public class AlgoSocketController {
             simpMessagingTemplate.convertAndSend("/algo/problem/"+roomCodeDto.getRoomCode(),res);
         }
     }
+
+    @MessageMapping("/algo/startGame")
+    public void startGame(AlgoRoomDto algoRoomDto){
+
+    }
+
     @MessageMapping("/algo/rank")
     public void getRank(AlgoRoomDto algoRoomDto) throws ParseException {
 

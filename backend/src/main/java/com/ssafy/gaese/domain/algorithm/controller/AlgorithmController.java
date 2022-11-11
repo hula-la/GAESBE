@@ -91,7 +91,9 @@ public class AlgorithmController {
         HashMap<String,Object> res = new HashMap<>();
         int result = algoService.confirmRoomEnter(roomCode,userDetails.getId());
         res.put("result", algoService.confirmRoomEnter(roomCode,userDetails.getId())>0?true:false);
-        res.put("msg", result==1? "입장":result==0 ?  "이미 다른 게임 중 입니다." : "인원이 다 찼습니다." );
+        res.put("msg", result==1? "입장" :
+                        result==0 ?  "이미 다른 게임 중 입니다." :
+                        result==-1?"인원이 다 찼습니다." :"이미 시작 중인 방입니다." );
         return ResponseEntity.ok().body(res);
     }
 
