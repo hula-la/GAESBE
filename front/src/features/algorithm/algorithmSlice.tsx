@@ -1,44 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Action } from '../../models/algo'
-import { AlgoRoomInterface } from '../../models/algo'
+import { AlgoRoomInterface, RecordSendInterface } from '../../models/algo'
 
 type AlgoGameState = {
   isLoading: boolean;
-  error: string | null;
   needReload: boolean;
   InGameInfo: AlgoRoomInterface | null
-  solve: boolean
+  solve: boolean,
+  gameResultMsg: string
 };
 
 const initialState: AlgoGameState = {
   isLoading: false,
-  error: null,
   InGameInfo: null,
   needReload: false,
-  solve: false
+  solve: false,
+  gameResultMsg: ''
 };
 
 const algoSlice = createSlice({
   name: 'algo',
   initialState,
   reducers: {
-    resetError(state) {
-      state.error = null;
+    loadingEnd(state) {
+      state.isLoading = false
     },
     setNeedReload(state, action: Action<boolean>) {
       state.needReload = action.payload
     },
-    creatAlgoRoom(state, action: Action<AlgoRoomInterface>) {
-      state.isLoading = true
-    },
-    creatAlgoRoomSuccess(state) {
-      state.isLoading = false
-    },
-    enterAlgoRoom(state, action: Action<AlgoRoomInterface>) {
-      state.isLoading = true;
-    },
+    creatAlgoRoom(state, action: Action<AlgoRoomInterface>) {},
+    enterAlgoRoom(state, action: Action<AlgoRoomInterface>) {},
     enterAlgoRoomSuccess(state, action: Action<AlgoRoomInterface>) {
-      state.isLoading = false;
       state.InGameInfo = action.payload;
     },
     exitAlgoRoom(state) {
@@ -49,6 +41,10 @@ const algoSlice = createSlice({
     },
     solveSuccess(state, action: Action<boolean>) {
       state.solve = action.payload
+    },
+    sendMyRank(state, action: Action<RecordSendInterface>) {},
+    setGameResult(state, action: Action<string>) {
+      state.gameResultMsg = action.payload
     }
   }
 })

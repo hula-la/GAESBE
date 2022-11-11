@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ import SockJS from 'sockjs-client';
 import { algoActions } from '../algorithmSlice';
 import { bojUserIdRequest } from '../../../api/algoApi';
 import { usePrompt } from '../../../utils/block';
-import { InGameUsersInterface, ProblemInterface } from '../../../models/algo';
+import { InGameUsersInterface, ProblemInterface, RankingUserInfo } from '../../../models/algo';
 
 import AlgoBeforeStart from '../components/AlgoBeforeStart';
 import AlgoAfterStart from '../components/AlgoAfterStart';
@@ -26,7 +26,21 @@ function AlgoInBattle() {
   const [afterProgress, setAfterProgress] = useState<string>('select');
   const [problemList, setProblemList] = useState<ProblemInterface[]>([]);
   const [problemIndex, setProblemIndex] = useState<number>(0);
-  const [ranking, setRanking] = useState<{nickName:string, min:number}[]>([])
+  const [ranking, setRanking] = useState<RankingUserInfo[]>([])
+  const [myRank, setMyRank] = useState<number>(5)
+  const [timeOut, setTimeOut] = useState<boolean>(false)
+  const [finished, setFinishied] = useState<boolean>(false)
+
+  useEffect(() => {
+    for (let i = 0; i < 4; i++) {
+      if (ranking[i]) {
+        if (ranking[i].userId === userInfo.id) {
+          setMyRank(i+1)
+          break
+        }
+      }
+    }
+  }, [ranking])
 
   const { InGameInfo } = useSelector((state: any) => state.algo);
   const { userInfo } = useSelector((state: any) => state.auth);
@@ -34,18 +48,20 @@ function AlgoInBattle() {
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
-  const client = Stomp.over(socket);
+  const client = useRef<any>(null);
+  useEffect(() => {
+    client.current = Stomp.over(socket);
+  }, []);
 
   // 최초 입장시 소켓 뚫고, 백준id보내기
   useEffect(() => {
     if (InGameInfo === null) {
-      navigate('/game/algo/list')
+      navigate('/game/algo')
     } else {
       // 입장할때 소켓 뚫기
-      client.connect({}, (frame) => {
-        console.log(frame);
+      client.current.connect({}, (frame: any) => {
         // 입장, 퇴장 관련 메세지 받을 위치
-        client.subscribe(`/algo/room/${InGameInfo.roomCode}`, (res) => {
+        client.current.subscribe(`/algo/room/${InGameInfo.roomCode}`, (res: any) => {
           if (progress==='before') {
             setInGameUsers(JSON.parse(res.body).users);
             const newGameInfo = JSON.parse(JSON.stringify(InGameInfo));
@@ -55,13 +71,13 @@ function AlgoInBattle() {
         });
   
         // 문제 선택 시작 메세지 받을 위치
-        client.subscribe(`/algo/start/pass/${InGameInfo.roomCode}`, (res) => {
+        client.current.subscribe(`/algo/start/pass/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).type==='START') {
             console.log('게임시작했다 로딩 보여줘라')
           } else {
             setProblemList(JSON.parse(res.body).problems);
             if (JSON.parse(res.body).master == userInfo.id) {
-              client.send(
+              client.current.send(
                 `/api/algo/timer`,
                 {},
                 JSON.stringify({ roomCode: InGameInfo.roomCode }),
@@ -72,12 +88,12 @@ function AlgoInBattle() {
         });
   
         // 문제 패스 메세지 받기
-        client.subscribe(`/algo/pass/${InGameInfo.roomCode}`, (res: any) => {
+        client.current.subscribe(`/algo/pass/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).no) {
             setProblemIndex(JSON.parse(res.body).no);
           }
           if (JSON.parse(res.body).master == userInfo.id) {
-            client.send(
+            client.current.send(
               `/api/algo/timer`,
               {},
               JSON.stringify({ roomCode: InGameInfo.roomCode }),
@@ -86,20 +102,24 @@ function AlgoInBattle() {
         });
   
         // 문제 시작 메세지 받기
-        client.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res: any) => {
-          setProblemIndex(JSON.parse(res.body).no);
-          setAfterProgress('solve');
-          console.log('문제 시작한다는');
-          console.log(JSON.parse(res.body));
+        client.current.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res: any) => {
+          if (JSON.parse(res.body).type==='FINISH') {
+            setTimeOut(true)
+            setFinishied(true)
+          } else {
+            setProblemIndex(JSON.parse(res.body).no);
+            setAfterProgress('solve');
+          }
         });
 
         // 랭킹 메세지 받기
-        client.subscribe(`/algo/rank/${InGameInfo.roomCode}`, (res:any) => {
-          setRanking(JSON.parse(res.body).ranking)
+        client.current.subscribe(`/algo/rank/${InGameInfo.roomCode}`, (res:any) => {
+          const rankingInfo = JSON.parse(res.body)
+          setRanking(rankingInfo.ranking)
         })
   
         // 뚫었으니 들어갔다고 알리기
-        client.send(
+        client.current.send(
           '/api/algo',
           {},
           JSON.stringify({
@@ -126,28 +146,26 @@ function AlgoInBattle() {
       // change end
       alert('게임중에는 나갈 수 없습니다');
     };
-
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);
-
     return () => window.removeEventListener('popstate', preventGoBack);
   }, []);
   // 뒤로가기 막는 useEffect
   // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  usePrompt('게임에서 기권패배 될 수 있습니다', true);
+  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
   // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
 
   // 방 떠나기
   const leaveRoom = async () => {
     // 소켓 끊고
-    await client.disconnect(() => {});
+    await client.current.disconnect(() => {});
     // 스토어의 방 정보 비우기
     await dispatch(algoActions.exitAlgoRoom());
   };
   // 방 떠나기 끝
 
   const handleLeaveRoom = () => {
-    navigate('/game/algo/list');
+    navigate('/game/algo');
   };
 
   // 내가 방장이다 게임 시작할거다
@@ -155,7 +173,7 @@ function AlgoInBattle() {
     const userBjIds = inGameUsers.map((user: InGameUsersInterface) => {
       return user.bjId;
     });
-    client.send(
+    client.current.send(
       `/api/algo/start/pass`,
       {},
       JSON.stringify({
@@ -167,8 +185,8 @@ function AlgoInBattle() {
   };
 
   return (
-    <>{InGameInfo===null? null 
-    : <>
+    <>{InGameInfo && 
+      <>
         <h1>알고리즘 배틀 페이지</h1>
         {progress === 'before' && (
           <AlgoBeforeStart
@@ -186,7 +204,12 @@ function AlgoInBattle() {
             client={client}
             problemList={problemList}
             problemIndex={problemIndex}
+            myRank={myRank}
+            timeOut={timeOut}
           />
+        )}
+        {progress==='battleEnd' && (
+          <> </>
         )}
       </>
     }</>
