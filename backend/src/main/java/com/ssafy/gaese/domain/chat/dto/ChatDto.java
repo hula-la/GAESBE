@@ -29,5 +29,8 @@ public class ChatDto {
                 .date(this.date)
                 .build();
     }
+    public void setDate(){
+        this.date = new Date();
+    }
 
 }
