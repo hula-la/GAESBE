@@ -79,10 +79,10 @@ public class User {
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.REMOVE)
     private Set<FriendRequest> targetUser;
 
-    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "me", cascade = CascadeType.REMOVE)
     private List<ChatUser> fromUser;
 
-    @OneToMany(mappedBy = "toUser", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.REMOVE)
     private List<ChatUser> toUser;
 
     //싸피게임에 필요하여 추가한 재화 POINT와 연승정보 winning_streak

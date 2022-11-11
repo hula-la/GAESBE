@@ -9,20 +9,29 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ChatUserRepository extends JpaRepository<ChatUser,Long> {
-    Optional<ChatUser> findByFromUserAndToUser(User from, User to);
+
+
+    Optional<ChatUser> findByFriendAndMe(User friend, User me);
+
+//    List<ChatUser> findByMeAndWait(User me, boolean wait);
+
+    ChatUser findByMe_IdAndFriend_Id(Long myId, Long friendId);
 
     @Transactional
     @Modifying
-    @Query("UPDATE ChatUser u SET u.open=:open WHERE u.fromUser=:fromUserId")
-    void updateOpen(@Param("fromUserId") Long fromUserId, @Param("open") boolean open);
+    @Query("UPDATE ChatUser u SET u.open=:open WHERE u.me.id =:myId AND u.friend.id=:friendId")
+    void updateOpen(@Param("myId") Long myId,@Param("friendId") Long friendId, @Param("open") boolean open);
 
     @Transactional
     @Modifying
-    @Query("UPDATE ChatUser u SET u.open=:wait WHERE u.fromUser=:open")
-    void updateWait(@Param("fromUserId") Long fromUserId, @Param("open") User open);
+    @Query("UPDATE ChatUser u SET u.wait=:wait WHERE u.friend.id =:friendId AND u.me.id=:myId")
+    void updateWait(@Param("myId") Long myId, @Param("friendId") Long friendId, @Param("wait") boolean wait);
+
 
 }
