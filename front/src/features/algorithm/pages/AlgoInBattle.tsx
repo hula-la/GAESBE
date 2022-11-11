@@ -12,6 +12,7 @@ import { InGameUsersInterface, ProblemInterface, RankingUserInfo } from '../../.
 
 import AlgoBeforeStart from '../components/AlgoBeforeStart';
 import AlgoAfterStart from '../components/AlgoAfterStart';
+import LoadingSpinner from '../components/LoadingSpinner'
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -21,6 +22,9 @@ function AlgoInBattle() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const { InGameInfo, isLoading } = useSelector((state: any) => state.algo);
+  const { userInfo } = useSelector((state: any) => state.auth);
+
   const [inGameUsers, setInGameUsers] = useState<InGameUsersInterface[]>([]);
   const [progress, setProgress] = useState<string>('before');
   const [afterProgress, setAfterProgress] = useState<string>('select');
@@ -29,7 +33,6 @@ function AlgoInBattle() {
   const [ranking, setRanking] = useState<RankingUserInfo[]>([])
   const [myRank, setMyRank] = useState<number>(5)
   const [timeOut, setTimeOut] = useState<boolean>(false)
-  const [finished, setFinishied] = useState<boolean>(false)
 
   useEffect(() => {
     for (let i = 0; i < 4; i++) {
@@ -42,8 +45,6 @@ function AlgoInBattle() {
     }
   }, [ranking])
 
-  const { InGameInfo } = useSelector((state: any) => state.algo);
-  const { userInfo } = useSelector((state: any) => state.auth);
 
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
@@ -105,7 +106,6 @@ function AlgoInBattle() {
         client.current.subscribe(`/algo/problem/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).type==='FINISH') {
             setTimeOut(true)
-            setFinishied(true)
           } else {
             setProblemIndex(JSON.parse(res.body).no);
             setAfterProgress('solve');
@@ -188,11 +188,12 @@ function AlgoInBattle() {
     <>{InGameInfo && 
       <>
         <h1>알고리즘 배틀 페이지</h1>
+        {isLoading && <LoadingSpinner loadingMsg='로딩중입니다' />}
         {progress === 'before' && (
           <AlgoBeforeStart
-          handleLeaveRoom={handleLeaveRoom}
-          startGame={startGame}
-          inGameUsers={inGameUsers}
+            handleLeaveRoom={handleLeaveRoom}
+            startGame={startGame}
+            inGameUsers={inGameUsers}
           />
         )}
         {progress === 'after' && (
