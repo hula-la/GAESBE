@@ -41,6 +41,7 @@ public class Chat {
 
     public ChatDto toDto(){
         return ChatDto.builder()
+                .id(this.id)
                 .to(this.toUser.getId())
                 .from(this.fromUser.getId())
                 .msg(this.msg)
