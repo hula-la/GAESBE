@@ -51,6 +51,7 @@ public class ChatService {
     }
 
 
+    @Transactional
     // 메시지 확인
     public void checkMsg(ChatPostDto chatPostDto){
         List<Long> msgIds = chatPostDto.getMsgIds();
