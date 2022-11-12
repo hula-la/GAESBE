@@ -12,7 +12,6 @@ import { InGameUsersInterface, ProblemInterface, RankingUserInfo } from '../../.
 
 import AlgoBeforeStart from '../components/AlgoBeforeStart';
 import AlgoAfterStart from '../components/AlgoAfterStart';
-import LoadingSpinner from '../components/LoadingSpinner'
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -22,7 +21,7 @@ function AlgoInBattle() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { InGameInfo, isLoading } = useSelector((state: any) => state.algo);
+  const { InGameInfo } = useSelector((state: any) => state.algo);
   const { userInfo } = useSelector((state: any) => state.auth);
 
   const [inGameUsers, setInGameUsers] = useState<InGameUsersInterface[]>([]);
@@ -74,7 +73,7 @@ function AlgoInBattle() {
         // 문제 선택 시작 메세지 받을 위치
         client.current.subscribe(`/algo/start/pass/${InGameInfo.roomCode}`, (res: any) => {
           if (JSON.parse(res.body).type==='START') {
-            console.log('게임시작했다 로딩 보여줘라')
+            dispatch(algoActions.setLoadingMsg('START'))
           } else {
             setProblemList(JSON.parse(res.body).problems);
             if (JSON.parse(res.body).master == userInfo.id) {
@@ -82,8 +81,9 @@ function AlgoInBattle() {
                 `/api/algo/timer`,
                 {},
                 JSON.stringify({ roomCode: InGameInfo.roomCode }),
-              );
-            }
+                );
+              }
+            dispatch(algoActions.setLoadingMsg(''))
             setProgress('after');
           }
         });
@@ -188,7 +188,6 @@ function AlgoInBattle() {
     <>{InGameInfo && 
       <>
         <h1>알고리즘 배틀 페이지</h1>
-        {isLoading && <LoadingSpinner loadingMsg='로딩중입니다' />}
         {progress === 'before' && (
           <AlgoBeforeStart
             handleLeaveRoom={handleLeaveRoom}

@@ -8,6 +8,7 @@ type AlgoGameState = {
   InGameInfo: AlgoRoomInterface | null
   solve: boolean,
   gameResultMsg: string
+  loadingMsg: string
 };
 
 const initialState: AlgoGameState = {
@@ -15,7 +16,8 @@ const initialState: AlgoGameState = {
   InGameInfo: null,
   needReload: false,
   solve: false,
-  gameResultMsg: ''
+  gameResultMsg: '',
+  loadingMsg: ''
 };
 
 const algoSlice = createSlice({
@@ -25,6 +27,10 @@ const algoSlice = createSlice({
     loadingEnd(state) {
       state.isLoading = false
     },
+    setLoadingMsg(state, action: Action<string>) {
+      state.loadingMsg = action.payload
+    }
+    ,
     setNeedReload(state, action: Action<boolean>) {
       state.needReload = action.payload
     },
@@ -37,12 +43,14 @@ const algoSlice = createSlice({
       state.InGameInfo = null
     },
     checkMyAnswerRequestStart(state, action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
+      state.loadingMsg = 'SUBMIT'
       state.isLoading = true
     },
     solveSuccess(state, action: Action<boolean>) {
       state.solve = action.payload
     },
-    sendMyRank(state, action: Action<RecordSendInterface>) {},
+    sendMyRank(state, action: Action<RecordSendInterface>) {
+    },
     setGameResult(state, action: Action<string>) {
       state.gameResultMsg = action.payload
     }

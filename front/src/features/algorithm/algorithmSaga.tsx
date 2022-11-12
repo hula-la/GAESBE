@@ -49,6 +49,7 @@ function* checkMyAnswerRequestSaga(action: Action<{roomCode:string, problemId: n
     console.log(error)
     yield put(algoActions.loadingEnd())
   }
+  yield put(algoActions.setLoadingMsg(''))
 }
 
 function* sendMyRankSaga(action: Action<RecordSendInterface>) {
