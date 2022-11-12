@@ -6,6 +6,7 @@ import { algoActions } from '../algorithmSlice';
 
 import ProblemInfo from './ProblemInfo';
 import GameResultModal from './GameResultModal'
+import LoadingSpinner from './LoadingSpinner'
 
 interface LanguageInterface {
   lanId: number;
@@ -30,8 +31,10 @@ function AlgoSolve({
     { lanId: 1004, name: 'c' },
   ];
   const nowProblem: ProblemInterface = problemList[problemIndex];
-  const { InGameInfo, solve, gameResultMsg } = useSelector((state: any) => state.algo);
+
+  const { InGameInfo, solve, gameResultMsg, loadingMsg } = useSelector((state: any) => state.algo);
   const { userInfo } = useSelector((state: any) => state.auth);
+
   const [form, setForm] = useState<{ lanId: number; code: string }>({
     lanId: 1003,
     code: '',
@@ -40,6 +43,7 @@ function AlgoSolve({
   const [firstModalLoading, setFirstModalLoading] = useState<boolean>(true)
   // 게임이 끝나면 모달을 열고
   const [modal, setModal] = useState<boolean>(false)
+
   // 결과 모달 자동으로 열기
   useEffect(() => {
     if (gameResultMsg && firstModalLoading) {
@@ -125,6 +129,7 @@ function AlgoSolve({
   return (
     <>
       <h2>문제 풀때 컴포넌트</h2>
+      {loadingMsg==='SUBMIT' && <LoadingSpinner loadingMsg='제출 확인 중' />}
       {modal && <GameResultModal handleModal={handleModal} myRank={myRank} />}
       {ranking.map((user:RankingUserInfo, index:number) => {
         return <div key={index}>
