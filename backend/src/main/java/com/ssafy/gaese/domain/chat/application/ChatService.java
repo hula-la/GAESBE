@@ -2,49 +2,74 @@ package com.ssafy.gaese.domain.chat.application;
 
 
 import com.ssafy.gaese.domain.chat.dto.ChatDto;
-import com.ssafy.gaese.domain.chat.dto.MessageDto;
-import com.ssafy.gaese.domain.chat.repository.ChatRedisRepository;
+import com.ssafy.gaese.domain.chat.dto.ChatGetDto;
+import com.ssafy.gaese.domain.chat.dto.ChatPostDto;
+import com.ssafy.gaese.domain.chat.entity.Chat;
+import com.ssafy.gaese.domain.chat.exception.ChatNotFoundException;
+import com.ssafy.gaese.domain.chat.repository.ChatRepository;
+import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ChatService {
 
-    private final ChatRedisRepository chatRedisRepository;
+    private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
 
-    public List<MessageDto> getAllMessages( String fromId, String toId){
-        List<MessageDto> allMsg = new ArrayList<>();
-        for( MessageDto messageDto : getMessages(fromId)){
-            if(messageDto.getToUser().equals(toId)){
-                allMsg.add(messageDto);
-            }
-        }
 
-        for( MessageDto messageDto : getMessages(toId)){
-            if(messageDto.getToUser().equals(toId)){
-                allMsg.add(messageDto);
-            }
-        }
-        return allMsg;
+    //메시지 부르기
+    @Transactional
+    public ChatGetDto getChats(Long userId){
+        List<Chat> myChat = chatRepository.findMyChat(userId);
+
+        HashMap<Long, List<ChatDto>> chatList = new HashMap<>();
+
+        myChat.forEach(chat -> {
+            Long fromUserId = chat.getFromUser().getId();
+            Long toUserId = chat.getToUser().getId();
+
+
+            // 상대 userId를 key로 저장
+            Long key=null;
+            if (userId==fromUserId) key=toUserId;
+            else key=fromUserId;
+
+            chatList.computeIfAbsent(key, k -> new LinkedList<>()).add(chat.toDto());
+
+        });
+
+        return ChatGetDto.builder().chatList(chatList).build();
     }
 
-    public List<MessageDto> getMessages(String fromId){
-        List<MessageDto> res = chatRedisRepository.findAllById(Collections.singleton(fromId));
-        res.addAll(chatRedisRepository.findAllById(Collections.singleton(fromId)));
-        return res;
+
+    @Transactional
+    // 메시지 확인
+    public void checkMsg(ChatPostDto chatPostDto){
+        List<Long> msgIds = chatPostDto.getMsgIds();
+
+        // 메시지들 확인했다고 체크
+        msgIds.forEach(id->{
+            Chat chat = chatRepository.findById(id).orElseThrow(() -> new ChatNotFoundException());
+            chat.checkMsg();
+        });
     }
 
-    public void saveMessage(MessageDto messageDto){
-        chatRedisRepository.save(messageDto);
+    public ChatDto saveMsg(ChatDto chatDto){
+        User toUser = userRepository.findById(chatDto.getTo()).orElseThrow(() -> new UserNotFoundException());
+        User fromUser = userRepository.findById(chatDto.getFrom()).orElseThrow(()->new UserNotFoundException());
+
+        Chat saved = chatRepository.save(chatDto.newChat(fromUser,toUser));
+        return saved.toDto();
     }
+
 
 }

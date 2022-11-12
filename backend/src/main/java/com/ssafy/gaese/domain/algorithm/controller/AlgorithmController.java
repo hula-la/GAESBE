@@ -2,6 +2,7 @@ package com.ssafy.gaese.domain.algorithm.controller;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
+import com.ssafy.gaese.domain.algorithm.application.AlgoSocketService;
 import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.security.model.CustomUserDetails;
@@ -31,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 public class AlgorithmController {
 
     private final AlgoService algoService;
+    private final AlgoSocketService algoSocketService;
     private final AlgoProblemService algoProblemService;
     private final SocketInfo socketInfo;
 
@@ -60,8 +62,19 @@ public class AlgorithmController {
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
     public ResponseEntity<String> createRecord(@RequestBody AlgoRecordReq algoRecordReq,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
+
         algoService.createAlgoRecord(algoRecordReq, userDetails.getId());
-        return ResponseEntity.ok().body("success");
+
+        String msg = "";
+        if(algoRecordReq.getRanking()==1) msg = " 축하합니다 ! ";
+        else if(algoRecordReq.getRanking()<5) msg = " 수고하셨습니다 ! ";
+        else msg = "아쉽지만 다음에 다시 도전 ! ";
+
+        HashMap<String,Object> res = new HashMap<>();
+        res.put("roomCode",algoRecordReq.getRoomCode());
+        res.put("ranking",algoRecordReq.getRanking());
+        res.put("msg",msg);
+        return ResponseEntity.ok().body(msg);
     }
 
     @GetMapping("/play")
@@ -89,7 +102,9 @@ public class AlgorithmController {
         HashMap<String,Object> res = new HashMap<>();
         int result = algoService.confirmRoomEnter(roomCode,userDetails.getId());
         res.put("result", algoService.confirmRoomEnter(roomCode,userDetails.getId())>0?true:false);
-        res.put("msg", result==1? "입장":result==0 ?  "이미 다른 게임 중 입니다." : "인원이 다 찼습니다." );
+        res.put("msg", result==1? "입장" :
+                        result==0 ?  "이미 다른 게임 중 입니다." :
+                        result==-1?"인원이 다 찼습니다." :"이미 시작 중인 방입니다." );
         return ResponseEntity.ok().body(res);
     }
 
@@ -110,7 +125,7 @@ public class AlgorithmController {
         HashMap<String,Object> res = new HashMap<>();
         res.put("result",result);
         if( result == 1) {
-            algoProblemService.saveUserTime(roomCode,userDetails.getId());
+            algoProblemService.saveUserTime(algoSolveReq.getProblemId()+"",roomCode,userDetails.getId());
             res.put("msg","맞았습니다 !");
         }else{
             res.put("msg","제출이 확인되지 않았습니다.");
@@ -140,8 +155,9 @@ public class AlgorithmController {
     public ResponseEntity<Object> confirmCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return ResponseEntity.ok().body(algoService.confirmCode(userDetails.getId()));
     }
-    @PostMapping("/test")
-    public void test(@RequestBody AlgoProblemReq algoProblemReq) throws IOException, ExecutionException, InterruptedException {
-        algoProblemService.getCommonProblems(algoProblemReq);
+    @PostMapping("/test/{roomCode}")
+    public void test(@PathVariable String roomCode) throws IOException, ExecutionException, InterruptedException {
+        System.out.println(algoSocketService.getCurrentRank(roomCode));
+
     }
 }

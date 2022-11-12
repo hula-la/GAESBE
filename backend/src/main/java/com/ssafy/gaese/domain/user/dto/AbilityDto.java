@@ -13,8 +13,10 @@ public class AbilityDto {
     private int algorithmLv;
     private int csLv;
     private int typingLv;
+    private int luckLv;
 
     private int algorithmExp;
     private int csExp;
     private int typingExp;
+    private int luckExp;
 }

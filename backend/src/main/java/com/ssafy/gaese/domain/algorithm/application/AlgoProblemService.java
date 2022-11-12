@@ -9,6 +9,7 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.querydsl.core.types.dsl.StringOperation;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemReq;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoRoomDto;
@@ -39,11 +40,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 
 @Service
 @RequiredArgsConstructor
@@ -52,11 +48,13 @@ public class AlgoProblemService {
     private final RedisTemplate<String, String> redisTemplate;
     private final AlgoRankRedisRepository algoRankRedisRepository;
     private final UserRepository userRepository;
+    ChromeDriver driver = null;
 
     public void getSolvedProblem(String roomCode, String userBjId){
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         String key = roomCode+"-"+userBjId;
         List<String> problems = new LinkedList<>();
+
         // 크롤링 설정
         try{
             WebDriverManager.chromedriver().setup();
@@ -65,7 +63,7 @@ public class AlgoProblemService {
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
-            ChromeDriver driver = new ChromeDriver(chromeOptions);
+            driver = new ChromeDriver(chromeOptions);
 
             // 크롤링
             System.out.println("======크롤링 시작 ========");
@@ -79,6 +77,9 @@ public class AlgoProblemService {
 
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
+
+        }finally {
+            driver.quit();
         }
 
         if(problems.size()==0) return;
@@ -145,14 +146,14 @@ public class AlgoProblemService {
         }
 
         // 푼 문제들 제외
-        for (int i = algoProblemDtoList.size() - 1; i >= 0; i--) {
-            if (problemsSet.contains(algoProblemDtoList.get(i).getProblemId()))
-                algoProblemDtoList.remove(algoProblemDtoList.get(i));
-        }
+//        for (int i = algoProblemDtoList.size() - 1; i >= 0; i--) {
+//            if (problemsSet.contains(algoProblemDtoList.get(i).getProblemId()))
+//                algoProblemDtoList.remove(algoProblemDtoList.get(i));
+//        }
         System.out.println("=====> 최종 문제 수 : " + algoProblemDtoList.size());
 
         // list 섞고 그 중 10개 가져오기
-        Collections.shuffle(algoProblemDtoList);
+//        Collections.shuffle(algoProblemDtoList);
        return algoProblemDtoList.subList(0, 10);
     }
 
@@ -165,7 +166,7 @@ public class AlgoProblemService {
             chromeOptions.addArguments("--headless");
             chromeOptions.addArguments("disable-gpu");
             chromeOptions.addArguments("--disable-dev-shm-usage");
-            ChromeDriver driver = new ChromeDriver(chromeOptions);
+            driver = new ChromeDriver(chromeOptions);
             // 크롤링
             driver.get("https://www.acmicpc.net/status?problem_id="+algoSolveReq.getProblemId()
                     +"&user_id="+algoSolveReq.getUserBjId()
@@ -178,11 +179,13 @@ public class AlgoProblemService {
         }catch (Exception e){
             System.out.println("크롤링 중 에러 발생");
             System.out.println(e.toString());
+        }finally {
+            driver.quit();
         }
         return 0;
     }
 
-    public void startGame(String roomCode){
+    public void saveTime(String roomCode){
 
         // 시작 시간 설정
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
@@ -192,14 +195,20 @@ public class AlgoProblemService {
         hashOperations.put(roomCode,"startTime",now.format(formatter));
         System.out.println(hashOperations.get(roomCode,"startTime"));
 
+    }
+
+    public void setStartGame(String roomCode){
+        HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
+
         // 시작 상태로 변경
         hashOperations.put("algoRoom:"+roomCode,"algoRoomDto.isStart","1");
     }
 
-    public void saveUserTime(String roomCode, Long userId) throws ParseException {
+    public void saveUserTime(String problemId,String roomCode, Long userId) throws ParseException {
 
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+
         String start = hashOperations.get(roomCode, "startTime");
         if(start == null ){
             System.out.println("start time을 찾을 수 없습니다.");
@@ -209,14 +218,17 @@ public class AlgoProblemService {
         Date finTime = new SimpleDateFormat("HH:mm:ss").parse(hashOperations.get(roomCode, "startTime"));
         System.out.println(startTime);
         System.out.println(finTime);
-        int minDiff = (int)(startTime.getTime() - finTime.getTime()) / 60000;
-
+        double minDiff = (startTime.getTime() - finTime.getTime()) / 60000.0; // 분 단위
         System.out.println(minDiff+"분");
 
-        //redis 저장 - 랭킹용
         AlgoRankDto algoRankDto = AlgoRankDto.builder()
-                .min(minDiff+"").nickName(userRepository.getNickNameById(userId)+"").userId(userId).build();
-        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), Double.parseDouble(algoRankDto.getMin()));
+                .problemId(problemId)
+                .min((int)minDiff+"")
+                .nickName(userRepository.getNickNameById(userId)+"")
+                .userId(userId).build();
+        //redis 저장 - 랭킹용
+        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), minDiff);
+
         //redis 저장 - 기록용
         algoRankRedisRepository.save(algoRankDto);
 
