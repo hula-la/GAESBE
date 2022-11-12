@@ -21,7 +21,10 @@ public class TypingRoomDto {
     @Id
     private String code;
     private HashMap<String, Long> players;
+    private int realPlayerCount;
     private Long paragraphId;
+    private Long masterId;
+
 
     private TypingRecord.LangType langType;
 
@@ -36,6 +39,8 @@ public class TypingRoomDto {
     private long startTime;
     //    시작 시간
     private long paragraphLength;
+
+    private TypingSocketDto.RoomType roomType;
 
 
 }
