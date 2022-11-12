@@ -32,6 +32,9 @@ const TypingPersonalResult = styled.div`
   color: white;
   height: 7vh;
   margin-bottom: 1px;
+
+  
+  
 `;
 const Personal = styled.div`
   display: flex;
@@ -42,22 +45,62 @@ const PersonalId = styled.div`
   width: 15%;
   height: 7vh;
   /* border: 2px solid blue; */
-  border: 2px solid white;
-  border-radius: 5px;
+  /* border: 2px solid white; */
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding-top: 0.5rem;
+
+  div{
+
+  }
+  
 `;
 const PersonalCharacter = styled.div`
+  background: #deb36d;
+
   width: 70%;
   height: 7vh;
-  /* border: 2px solid red; */
-  border: 2px solid white;
-  border-radius: 5px;
+  border-top: 0.5rem solid white;
+  border-bottom: 0.5rem solid white;
+
+  position: relative;
+
+  .imgNormal{
+    transform: scaleX(-1);
+  }
+  
+  &::after{
+    content: '';
+    position: absolute;
+    border-right: 3rem solid #d50303;
+    height: calc(100% + 1rem);
+    right:-3rem;
+    top:-0.5rem;
+    
+  }
+  &::Before{
+    content: '';
+    position: absolute;
+    border-right: 2rem solid white;
+    height: calc(100% + 1rem);
+    /* left:-2rem; */
+    top:-0.5rem;
+    
+  }
+
+  
 `;
 const CharacterImg = styled('img')<{ progress: string }>`
   padding-left: ${(props) => props.progress};
-  height: 90%;
+  // 부드럽게 움직이도록
+  transition: all 0.4s;
+  height: 130%;
+  bottom: 20%;
+  position: absolute;
+
+  z-index: 1;
 `;
 const PersonalResult = styled.div`
   width: 15%;
@@ -67,6 +110,8 @@ const PersonalResult = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  /* border-left: 2rem solid red; */
 `;
 const Typing = styled.div`
   display: flex;
@@ -78,6 +123,7 @@ const TypingResult = styled.div`
   width: 90%;
   color: white;
   margin-bottom: 3rem;
+
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -274,22 +320,12 @@ const TypingGame = () => {
       1, // 밀리초 간격으로 실행
     );
   }
-  // const example = [
-  //   'xˇ=ˇint(input())',
-  //   'ifˇxˇ<ˇ0:',
-  //   'ˇˇˇˇxˇ=ˇ0',
-  //   "ˇˇˇˇprint('Negativeˇchangedˇtoˇzero')",
-  //   'elifˇxˇ==ˇ0:',
-  //   "ˇˇˇˇprint('Zero')",
-  //   'elifˇxˇ==ˇ1:',
-  //   "ˇˇˇˇprint('Single')",
-  //   'else:',
-  //   "ˇˇˇˇprint('More')",
-  // ];
+
   const exapmleitem = `${paragraph}`;
   const example = exapmleitem.split(' ');
   const item = example.map((e) => e);
   let totalLength = 0;
+  const arr = [0, 1, 2, 3]
   item.map((e) => (totalLength += e.length));
   const [charState, setCharState] = useState<CharStateType>({
     index: 0,
@@ -407,320 +443,79 @@ const TypingGame = () => {
           <p className="loadingText">랜덤 매칭중~</p>
         </LoadingBlock>
       )}
-      {isLoading && players && (
-        <Typing>
-          <TypingResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 0 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 0 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                '%'
-                              : '0%'
-                          }
-                          className="img"
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 0 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 1 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 1 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                '%'
-                              : '0%'
-                          }
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 1 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 2 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 2 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                'px'
-                              : '0vw'
-                          }
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 2 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 3 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 3 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                'px'
-                              : '0vw'
-                          }
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 3 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-          </TypingResult>
 
+      <Typing>
+        {players && (
+                    <TypingResult>
+                    {arr.map((a: any, idx: number) => {
+                      return (
+                        <div key={idx}>
+                          <TypingPersonalResult>
+                        <Personal>
+                          <PersonalId>
+                                {idx<players.length&& (<div>{players[idx].nickname}</div> )}
+                          </PersonalId>
+                              <PersonalCharacter>
+                                {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                                {isLoading&&idx < players.length && (
+                                  <CharacterImg
+                                    progress={
+                                      testProgress
+                                        ? testProgress.progressByPlayer[`${players[idx].id}`] +
+                                          '%'
+                                        : '0%'
+                                    }
+                                    className="imgNormal"
+                                    src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+                                    alt="playerImg"
+                                  />)}
+                                
+                                {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                                {!isLoading && idx < players.length && (
+                                  <CharacterImg
+                                    progress={
+                                      testProgress
+                                        ? testProgress.progressByPlayer[`${players[idx].id}`] +
+                                          '%'
+                                        : '0%'
+                                    }
+                                    className="img"
+                                    src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
+                                    alt="playerImg"
+                                  /> )}
+                          </PersonalCharacter>
+                              <PersonalResult>
+                                {idx < players.length && testProgress&&(
+                                  <div>
+                                    {testProgress.progressByPlayer[`${players[idx].id}`]}
+                                  </div>
+                                )}
+                          </PersonalResult>
+                        </Personal>
+                          </TypingPersonalResult>
+                        </div>
+                      )
+                    })}
+          
+                    </TypingResult>
+        )
+
+        }
+
+
+      {/* 대기하고 있을때 */}
+        {isLoading && players && (
           <WaitingTypingGameBox>
             {!isReady && <p>4명의 인원이 모이면 시작합니다</p>}
             {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
-          </WaitingTypingGameBox>
-        </Typing>
+            </WaitingTypingGameBox>
       )}
-      {!isLoading && (
-        <Typing>
-          <TypingResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 0 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 0 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                '%'
-                              : '0%'
-                          }
-                          className="img"
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 0 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 1 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 1 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                '%'
-                              : '0%'
-                          }
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 1 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 2 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 2 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                'px'
-                              : '0vw'
-                          }
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 2 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-            <TypingPersonalResult>
-              <Personal>
-                <PersonalId>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 3 ? <div>{player.nickname}</div> : null;
-                    })}
-                </PersonalId>
-                <PersonalCharacter>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 3 ? (
-                        <CharacterImg
-                          progress={
-                            testProgress
-                              ? testProgress.progressByPlayer[`${player.id}`] +
-                                'px'
-                              : '0vw'
-                          }
-                          src={`/img/rank/character${player.profileChar}.png`}
-                          alt="asdf"
-                        />
-                      ) : null;
-                    })}
-                </PersonalCharacter>
-                <PersonalResult>
-                  {players &&
-                    players.map((player: any, idx: any) => {
-                      return idx === 3 && testProgress ? (
-                        <div>
-                          {testProgress.progressByPlayer[`${player.id}`]}
-                        </div>
-                      ) : null;
-                    })}
-                </PersonalResult>
-              </Personal>
-            </TypingPersonalResult>
-          </TypingResult>
 
+      {/* 게임 시작했을 때 */}
+
+      
+
+      {!isLoading && (
           <TypingGameBox
             onKeyDown={(event) => handleSetKey(event)}
             tabIndex={1}
@@ -767,8 +562,9 @@ const TypingGame = () => {
               );
             })}
           </TypingGameBox>
+        )}
+        
         </Typing>
-      )}
     </div>
   );
 };

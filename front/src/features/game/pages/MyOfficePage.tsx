@@ -35,7 +35,7 @@ const Wrapper = styled.div`
     .gaze {
       width: 100%;
       margin-top: 0.5rem;
-      box-shadow: 0px 0px 3px 4px #ffffff;
+      /* box-shadow: 0px 0px 3px 4px #ffffff; */
     }
   }
 `;
