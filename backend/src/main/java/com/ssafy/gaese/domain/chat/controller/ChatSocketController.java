@@ -24,6 +24,7 @@ public class ChatSocketController {
 
         //친구에게 새로운 메시지를 보냈다는 신호 보내기
         simpMessagingTemplate.convertAndSend("/friend/"+chatDto.getTo(),saved);
+        simpMessagingTemplate.convertAndSend("/friend/"+chatDto.getFrom(),saved);
 
     }
 }
