@@ -13,7 +13,7 @@ public interface ChatRepository extends JpaRepository<Chat,Long> {
 
 //    List<Chat> findAllByFromIdAndToIdOrToIdAndFromId(Long  from, Long to);
 
-    @Query("SELECT c From Chat c  WHERE c.fromUser.id =:myId OR c.toUser.id=:friendId")
+    @Query("SELECT c From Chat c  WHERE c.fromUser.id =:myId OR c.toUser.id=:myId")
     List<Chat> findMyChat(@Param("myId") Long myId);
 
 }
