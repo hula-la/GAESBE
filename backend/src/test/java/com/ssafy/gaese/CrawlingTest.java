@@ -7,6 +7,9 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoProblemDto;
 import com.ssafy.gaese.domain.algorithm.repository.AlgoRedisRepository;
+import com.ssafy.gaese.domain.user.entity.Ability;
+import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -119,6 +122,17 @@ public class CrawlingTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless"); // 창 없이 크롤링
         WebDriver driver = new ChromeDriver(options);
+
+    }
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @org.junit.Test
+    public void name() {
+        Optional<User> byId = userRepository.findById(12L);
+        Ability ability = byId.get().getAbility();
+        System.out.println(ability);
 
     }
 }
