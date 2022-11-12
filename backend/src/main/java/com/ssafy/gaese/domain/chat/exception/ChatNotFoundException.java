@@ -1,4 +1,4 @@
-package com.ssafy.gaese.domain.chat2.exception;
+package com.ssafy.gaese.domain.chat.exception;
 
 public class ChatNotFoundException extends RuntimeException {
     public ChatNotFoundException() {

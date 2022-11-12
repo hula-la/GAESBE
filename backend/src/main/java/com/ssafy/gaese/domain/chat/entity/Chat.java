@@ -1,7 +1,7 @@
-package com.ssafy.gaese.domain.chat2.entity;
+package com.ssafy.gaese.domain.chat.entity;
 
 
-import com.ssafy.gaese.domain.chat2.dto.ChatDto;
+import com.ssafy.gaese.domain.chat.dto.ChatDto;
 import com.ssafy.gaese.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

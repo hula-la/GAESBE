@@ -2,7 +2,7 @@ package com.ssafy.gaese.global.config;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.chat2.application.ChatService;
+import com.ssafy.gaese.domain.chat.application.ChatService;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;

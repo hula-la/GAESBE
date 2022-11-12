@@ -1,9 +1,9 @@
-package com.ssafy.gaese.domain.chat2.controller;
+package com.ssafy.gaese.domain.chat.controller;
 
 
-import com.ssafy.gaese.domain.chat2.application.ChatService;
-import com.ssafy.gaese.domain.chat2.dto.ChatGetDto;
-import com.ssafy.gaese.domain.chat2.dto.ChatPostDto;
+import com.ssafy.gaese.domain.chat.application.ChatService;
+import com.ssafy.gaese.domain.chat.dto.ChatGetDto;
+import com.ssafy.gaese.domain.chat.dto.ChatPostDto;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

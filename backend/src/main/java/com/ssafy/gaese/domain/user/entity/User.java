@@ -1,7 +1,7 @@
 package com.ssafy.gaese.domain.user.entity;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
-import com.ssafy.gaese.domain.chat2.entity.Chat;
+import com.ssafy.gaese.domain.chat.entity.Chat;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.entity.FriendRequest;

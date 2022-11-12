@@ -1,13 +1,14 @@
-package com.ssafy.gaese.domain.chat2.application;
+package com.ssafy.gaese.domain.chat.application;
 
 
-import com.ssafy.gaese.domain.chat2.dto.ChatDto;
-import com.ssafy.gaese.domain.chat2.dto.ChatGetDto;
-import com.ssafy.gaese.domain.chat2.dto.ChatPostDto;
-import com.ssafy.gaese.domain.chat2.entity.Chat;
-import com.ssafy.gaese.domain.chat2.exception.ChatNotFoundException;
-import com.ssafy.gaese.domain.chat2.repository.ChatRepository;
-import com.ssafy.gaese.domain.friends.application.FriendService;
+import com.ssafy.gaese.domain.chat.dto.ChatDto;
+import com.ssafy.gaese.domain.chat.dto.ChatGetDto;
+import com.ssafy.gaese.domain.chat.dto.ChatPostDto;
+import com.ssafy.gaese.domain.chat.entity.Chat;
+import com.ssafy.gaese.domain.chat.exception.ChatNotFoundException;
+import com.ssafy.gaese.domain.chat.repository.ChatRepository;
+import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ChatService {
 
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
 
 
     //메시지 부르기
@@ -58,6 +60,14 @@ public class ChatService {
             Chat chat = chatRepository.findById(id).orElseThrow(() -> new ChatNotFoundException());
             chat.checkMsg();
         });
+    }
+
+    public ChatDto saveMsg(ChatDto chatDto){
+        User toUser = userRepository.findById(chatDto.getTo()).orElseThrow(() -> new UserNotFoundException());
+        User fromUser = userRepository.findById(chatDto.getFrom()).orElseThrow(()->new UserNotFoundException());
+
+        Chat saved = chatRepository.save(chatDto.newChat(fromUser,toUser));
+        return saved.toDto();
     }
 
 
