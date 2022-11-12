@@ -2,8 +2,7 @@ package com.ssafy.gaese.global.config;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
-import com.ssafy.gaese.domain.chat.application.ChatService;
-import com.ssafy.gaese.domain.chat.dto.ChatSocketDto;
+import com.ssafy.gaese.domain.chat2.application.ChatService;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
@@ -93,13 +92,6 @@ public class SessionDisconnectConfig {
                         .userId(Long.parseLong(info[0])).build();
 
                 friendSocketService.userLeave(friendSocketDto);
-                break;
-            case "chat" :
-                ChatSocketDto chatSocketDto = ChatSocketDto.builder()
-                        .sessionId(sessionId)
-                        .friendId(Long.parseLong(info[1]))
-                        .myId(Long.parseLong(info[0])).build();
-                chatService.leaveUser(chatSocketDto);
                 break;
             default: break;
         }

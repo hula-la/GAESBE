@@ -1,7 +1,8 @@
-package com.ssafy.gaese.domain.chat.entity;
+package com.ssafy.gaese.domain.chat2.entity;
 
 
-import com.ssafy.gaese.domain.chat.dto.ChatDto;
+import com.ssafy.gaese.domain.chat2.dto.ChatDto;
+import com.ssafy.gaese.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,22 +21,36 @@ public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private Long fromId;
-    @Column(nullable = false)
-    private Long toId;
+
+    @ManyToOne
+    @JoinColumn(name = "fromUserId")
+    private User fromUser;
+
+    @ManyToOne
+    @JoinColumn(name = "toUserId")
+    private User toUser;
+
     @Column(nullable = false)
     private String msg;
     @Column(nullable = false)
     private Date date;
 
+    // 메시지를 확인했는지 유무
+    @Column(nullable = false)
+    private Boolean checked;
+
     public ChatDto toDto(){
         return ChatDto.builder()
-                .to(this.toId)
-                .from(this.fromId)
+                .to(this.toUser.getId())
+                .from(this.fromUser.getId())
                 .msg(this.msg)
                 .date(this.date)
+                .checked(this.checked)
                 .build();
+    }
+
+    public void checkMsg(){
+        this.checked = true;
     }
 
 }
