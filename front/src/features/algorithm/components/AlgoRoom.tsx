@@ -12,9 +12,15 @@ function AlgoRoom({roomInfo}: Props) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { InGameInfo } = useSelector((state: any) => state.algo)
+  const {userInfo} = useSelector((state:any) => state.auth)
 
   const handleEnterRoom = () => {
-    dispatch(algoActions.enterAlgoRoom(roomInfo))
+    if (userInfo.bjId) {
+      dispatch(algoActions.enterAlgoRoom(roomInfo))
+    } else {
+      alert('백준아이디를 연동해야지만 게임을 할 수 있습니다')
+      navigate('/game/algo')
+    }
   }
 
   useEffect(() => {

@@ -21,6 +21,13 @@ function AlgoRoomMake() {
     navigate('/game/algo')
   }
 
+  useEffect(() => {
+    if (!userInfo.bjId) {
+      alert('백준아이디를 연동해야지만 게임을 할 수 있습니다')
+      handleGoMain()
+    }
+  }, [])
+
   const handeOnChange = (e: React.FormEvent<HTMLInputElement>) => {
     setForm({
       ...form,
