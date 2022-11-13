@@ -31,7 +31,9 @@ public class ChatController {
 
     // 해당 메시지를 봤다는 신호 보내기
     @PostMapping("/chat")
-    public void chackMsg(ChatPostDto chatPostDto){
+    public void checkMsg(ChatPostDto chatPostDto){
+        System.out.println("checkMsg");
+        System.out.println(chatPostDto.toString());
         //메시지 저장
         chatService.checkMsg(chatPostDto);
     }
