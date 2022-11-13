@@ -1,6 +1,6 @@
 export interface Action<T> {
-  type: string
-  payload: T
+  type: string;
+  payload: T;
 }
 
 /**
@@ -9,12 +9,12 @@ export interface Action<T> {
  profileChar: 프로필 사진 번호
  */
 export interface FriendInterface {
-  id: number
-  nickname: string
-  profileChar: number
+  id: number;
+  nickname: string;
+  profileChar: number;
 }
 
 export interface FriendsInterface {
-  online?: FriendInterface[]
-  offline?: FriendInterface[]
+  online?: FriendInterface[];
+  offline?: FriendInterface[];
 }
