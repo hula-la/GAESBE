@@ -11,7 +11,13 @@ interface FriendStateInterface {
   needReload: boolean;
   isInvite: boolean;
   friendId: number | null;
+  chatFriendId: number | null;
   invitedGameInfo: any;
+  alarmList: any;
+  waitFriendList: any;
+  isChatOpen: boolean;
+  chatList: any;
+  sendContent: any;
 }
 
 const initialState: FriendStateInterface = {
@@ -23,7 +29,13 @@ const initialState: FriendStateInterface = {
   needReload: false,
   isInvite: false,
   friendId: null,
+  chatFriendId: null,
   invitedGameInfo: null,
+  alarmList: [],
+  waitFriendList: [],
+  isChatOpen: false,
+  chatList: null,
+  sendContent: null,
 };
 
 const friendSlice = createSlice({
@@ -52,11 +64,43 @@ const friendSlice = createSlice({
     requestFriendFinish(state) {
       state.isLoading = false;
     },
+    // 게임에 친구 초대
     inviteFriend(state, action) {
       state.friendId = action.payload;
     },
     invitedGame(state, action) {
       state.invitedGameInfo = action.payload;
+    },
+    // 채팅 관련
+    fetchAlarmList(state, action) {
+      console.log(action);
+    },
+    fetchWaitFriend(state, action) {
+      console.log(action);
+    },
+    openChatRoom(state, action) {
+      state.chatFriendId = action.payload;
+      state.isChatOpen = true;
+    },
+    closeChatRoom(state) {
+      state.isChatOpen = false;
+    },
+    // 채팅 목록 불러오기
+    fetchChatStart(state) {},
+    fetchChatSuccess(state, action) {
+      state.chatList = action.payload.chatList;
+    },
+    fetchChatError(state, action) {},
+    // 채팅 보내기
+    sendChat(state, action) {
+      state.sendContent = action.payload;
+      console.log(action.payload);
+    },
+    // 채팅 받기
+    recieveChat(state, action) {
+      const tmp = [action.payload.chatItem];
+      const newArr = tmp.concat(state.chatList[action.payload.id]);
+      state.chatList[action.payload.id] = newArr;
     },
   },
 });

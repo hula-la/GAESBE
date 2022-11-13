@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
@@ -14,6 +13,7 @@ const FriendListItemBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 0.2rem;
 
     :hover .speechBubbleWrapper {
       display: block;
@@ -35,10 +35,12 @@ const FriendListItemBlock = styled.div`
       border-bottom: 1px solid black;
       border-top: 1px solid black;
     }
+
     .speechBubbleWrapper {
       position: absolute;
-      right: calc(100% + 17px);
+      top: calc(100% + 6px);
       display: none;
+      z-index: 1;
     }
     .speechBubble {
       position: relative;
@@ -96,15 +98,16 @@ const FriendListItemBlock = styled.div`
     .speechBubble:after {
       content: '';
       position: absolute;
-      right: 0;
-      top: 50%;
+      top: 0;
+      left: 50%;
       width: 0;
       height: 0;
-      border: 17px solid transparent;
-      border-left-color: #ffc02d;
-      border-right: 0;
+      border: 20px solid transparent;
+      border-bottom-color: #ffc02d;
+      border-top: 0;
+      margin-left: -20px;
       margin-top: -17px;
-      margin-right: -17px;
+      z-index: -1;
     }
     .profileNickname {
       width: 65%;
@@ -162,7 +165,7 @@ const FriendListItemBlock = styled.div`
   }
 `;
 
-function FriendListItem({ friend, type, category }: any) {
+function FriendListItem({ friend, type, category, chatCnt }: any) {
   const dispatch = useDispatch();
 
   const handleDeleteFriend = async () => {
@@ -182,6 +185,10 @@ function FriendListItem({ friend, type, category }: any) {
     dispatch(friendActions.inviteFriend(friend.id));
   };
 
+  const openChat = () => {
+    dispatch(friendActions.openChatRoom(friend.id));
+  };
+
   return (
     <FriendListItemBlock>
       <div className="friendBoxWrapper">
@@ -191,7 +198,9 @@ function FriendListItem({ friend, type, category }: any) {
               <div className="speechBubble">
                 <div className="bubbleText top">방 놀러가기</div>
                 {/* <hr className="styledHr" /> */}
-                <div className="bubbleText linetb mid">채팅방</div>
+                <div className="bubbleText linetb mid" onClick={openChat}>
+                  채팅방
+                </div>
                 {/* <hr className="styledHr" /> */}
                 <div
                   className="bubbleText textRed bottom"
@@ -216,9 +225,7 @@ function FriendListItem({ friend, type, category }: any) {
               <div className="nickname">{friend.nickname}</div>
             </div>
           </div>
-          {category === 'noInvite' && (
-            <img className="messageImg" src="/img/messageImg.png" />
-          )}
+          {category === 'noInvite' && <div>{chatCnt}</div>}
           {category === 'invite' && <button onClick={invite}>초대하기</button>}
         </div>
       </div>

@@ -73,16 +73,89 @@ const FriendSide = styled.div`
       margin-left: 0.5rem;
     }
   }
+  .chatRoomWrapper {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    box-sizing: border-box;
+    width: 25%;
+    height: 40%;
+    background: #ffc02d;
+    border: 3px solid #000000;
+    border-radius: 10px;
+  }
+  .chatRoom {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .close {
+      position: absolute;
+      right: 0.8rem;
+      top: 0.5rem;
+    }
+    .chatContent {
+      overflow-y: auto;
+      height: 92%;
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #2f3542;
+        border-radius: 10px;
+        background-clip: padding-box;
+        border: 2px solid transparent;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: grey;
+        border-radius: 10px;
+        box-shadow: inset 0px 0px 5px white;
+      }
+    }
+
+    .chatInputs {
+      width: 100%;
+      height: 9%;
+      display: flex;
+      flex-direction: row;
+      .chatInput {
+        width: 82%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 3px solid #000000;
+        border-radius: 10px;
+      }
+      .chatButton {
+        width: 22%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 3px solid #000000;
+        border-radius: 10px;
+        background: #f0568c;
+      }
+    }
+  }
 `;
 
 function FriendMainPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isInvite, setIsInvite] = useState<boolean>(false);
+  const [showChatList, setShowChatList] = useState<any>(null);
+  const [content, setContent] = useState<string>('');
+  const { userInfo } = useSelector((state: any) => state.auth);
   const { friends } = useSelector((state: any) => state.friend);
   const { modal } = useSelector((state: any) => state.friend);
   const { secondModal } = useSelector((state: any) => state.friend);
   const { invitedGameInfo } = useSelector((state: any) => state.friend);
+  const { isChatOpen } = useSelector((state: any) => state.friend);
+  const { chatFriendId } = useSelector((state: any) => state.friend);
+  const { chatList } = useSelector((state: any) => state.friend);
+
+  useEffect(() => {
+    if (chatFriendId) {
+      setShowChatList(chatList[chatFriendId]);
+    }
+  }, [chatFriendId, chatList]);
 
   useEffect(() => {
     if (invitedGameInfo) {
@@ -90,23 +163,45 @@ function FriendMainPage() {
     }
   }, [invitedGameInfo]);
 
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(friendActions.fetchChatStart());
+    }
+  }, [userInfo]);
+
   const handleModal = () => {
     dispatch(friendActions.handleModal('request'));
   };
+
   const handleSecondModal = () => {
     dispatch(friendActions.handleSecondModal());
   };
+
   const closeModal = () => {
     dispatch(friendActions.handleModal(null));
   };
+
   const acceptInvite = () => {
     setIsInvite(false);
     navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
       state: { shareCode: invitedGameInfo.inviteRoomCode },
     });
   };
+
   const rejectInvite = () => {
     setIsInvite(false);
+  };
+
+  const onClickClose = () => {
+    dispatch(friendActions.closeChatRoom());
+  };
+
+  const onChangeContent = (e: any) => {
+    setContent(e.target.value);
+  };
+
+  const onSubmitChat = () => {
+    dispatch(friendActions.sendChat(content));
   };
 
   return (
@@ -144,6 +239,38 @@ function FriendMainPage() {
           </button>
         </div>
       </div>
+      {isChatOpen && (
+        <div className="chatRoomWrapper">
+          <div className="chatRoom">
+            <img
+              src="/img/close.png"
+              onClick={onClickClose}
+              className="close"
+              alt="close"
+            />
+            <div className="chatContent">
+              {showChatList &&
+                showChatList.map((chat: any, idx: number) => {
+                  return (
+                    <div key={idx}>
+                      <p>{chat.msg}</p>
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="chatInputs">
+              <input
+                onChange={onChangeContent}
+                className="chatInput"
+                type="text"
+              />
+              <button onClick={onSubmitChat} className="chatButton">
+                전송
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </FriendSide>
   );
 }
