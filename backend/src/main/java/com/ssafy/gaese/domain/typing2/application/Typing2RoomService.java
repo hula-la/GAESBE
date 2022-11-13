@@ -110,7 +110,9 @@ public class Typing2RoomService {
         boolean isLast = isReadyToStart(roomDto);
 
         res.clear();
+
         res.put("isLast", isLast);
+        res.put("isMaster", roomDto.getMasterId()==typingSocketDto.getUserId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),res);
         
 
