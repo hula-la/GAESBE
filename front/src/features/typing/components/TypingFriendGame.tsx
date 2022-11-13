@@ -1,10 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import FriendModal from '../../friend/components/FriendModal';
+import { friendActions } from '../../friend/friendSlice';
+import { setMaxListeners } from 'events';
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
@@ -166,12 +169,13 @@ const This = styled.div`
   display: inline;
   color: ${(props) => props.color};
 `;
-const TypingGame = () => {
+const TypingFriendGame = () => {
   let roomcode: string;
   let testtest: number;
   let testprogress: any;
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { lang } = location.state;
   const [players, setPlayers] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -187,6 +191,10 @@ const TypingGame = () => {
   const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
   const [sec, setSec] = useState(3);
+  const { modal } = useSelector((state: any) => state.friend);
+  const { shareCode } = location.state;
+  const { friendId } = useSelector((state: any) => state.friend);
+  const [master, setMaster] = useState<Boolean>(false);
 
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
@@ -206,15 +214,15 @@ const TypingGame = () => {
       });
     }
   }, [isEnd, resultId, resultNickName, resultProfile]);
-  useEffect(() => {
-    if (isReady) {
-      interval.current = setInterval(() => {
-        setSec(initialTime.current % 60);
-        initialTime.current -= 1;
-      }, 1000);
-      return () => clearInterval(interval.current);
-    }
-  }, [isReady]);
+  // useEffect(() => {
+  //   if (isReady) {
+  //     interval.current = setInterval(() => {
+  //       setSec(initialTime.current % 60);
+  //       initialTime.current -= 1;
+  //     }, 1000);
+  //     return () => clearInterval(interval.current);
+  //   }
+  // }, [isReady]);
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
@@ -236,9 +244,15 @@ const TypingGame = () => {
                 }),
               );
               setIsReady(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 5000);
+              setIsLoading(false);
+              // setTimeout(() => {
+              //   setIsLoading(false);
+              // }, 5000);
+            }
+          }
+          if (data.hasOwnProperty('isMaster')) {
+            if (data.isMaster === true) {
+              setMaster(true);
             }
           }
         });
@@ -251,7 +265,8 @@ const TypingGame = () => {
               type: 'ENTER',
               sessionId: socket._transport.url.slice(-18, -10),
               userId: userInfo.id,
-              roomType: 'RANDOM',
+              roomType: 'FRIEND',
+              roomCode: shareCode
             }),
           );
         };
@@ -292,9 +307,10 @@ const TypingGame = () => {
           } else if (testdata.hasOwnProperty('msg')) {
             if (testdata.msg === 'start') {
               setIsReady(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 5000);
+              setIsLoading(false)
+              // setTimeout(() => {
+              //   setIsLoading(false);
+              // }, 5000);
             } else if (testdata.msg === 'end') {
               setResultId(testdata.winUserId);
               setResultNickName(testdata.winUserNickName);
@@ -442,6 +458,39 @@ const TypingGame = () => {
     } else {
     }
   };
+  const handleModal = () => {
+    dispatch(friendActions.handleModal('invite'));
+  };
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
+  };
+  const onClickStart = () => {
+    client.send(
+      '/api/typing2/start',
+      {},
+      JSON.stringify({
+        langType: lang,
+        roomCode: roomCode,
+      }),
+    );
+    setIsLoading(false)
+  };
+  useEffect(() => {
+    if (friendId) {
+        waitForConnection(client, function () {
+            client.send(
+                '/api/friend/invite',
+                {},
+                JSON.stringify({
+                  userId: friendId,
+                  gameType: 'typing',
+                  roomCode: roomCode,
+                }),
+              );
+          });
+    }
+  }, [friendId]);
+  const invite = () => {};
   return (
     <div>
       {isLoading && !players && (
@@ -452,8 +501,14 @@ const TypingGame = () => {
       )}
 
       <Typing>
+        
         {players && (
-                    <TypingResult>
+            <TypingResult>
+                                            {modal === 'invite' && (
+                            <FriendModal handleModal={closeModal} type="invite" />
+                          )}
+                          <button onClick={handleModal}>친구 초대</button>
+                          {master && <button onClick={onClickStart}>게임시작</button>}
                     {arr.map((a: any, idx: number) => {
                       return (
                         <div key={idx}>
@@ -512,9 +567,9 @@ const TypingGame = () => {
 
       {/* 대기하고 있을때 */}
         {isLoading && players && (
+          
           <WaitingTypingGameBox>
-            {!isReady && <p>4명의 인원이 모이면 시작합니다</p>}
-            {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+            <p>방장이 시작하기를 기다리세요</p>
             </WaitingTypingGameBox>
       )}
 
@@ -576,4 +631,4 @@ const TypingGame = () => {
   );
 };
 
-export default TypingGame;
+export default TypingFriendGame;
