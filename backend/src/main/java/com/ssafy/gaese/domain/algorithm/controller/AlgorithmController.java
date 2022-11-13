@@ -139,10 +139,10 @@ public class AlgorithmController {
         return ResponseEntity.ok().body(algoService.createCode(userDetails.getId()));
     }
 
-    @GetMapping("/bj/code/confirm")
+    @GetMapping("/bj/code/confirm/{bjId}")
     @ApiOperation(value="백중 아이디 연동 확인")
-    public ResponseEntity<Object> confirmCode(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ResponseEntity.ok().body(algoService.confirmCode(userDetails.getId()));
+    public ResponseEntity<Object> confirmCode(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable String bjId) {
+        return ResponseEntity.ok().body(algoService.confirmCode(userDetails.getId(),bjId));
     }
     @PostMapping("/test/{roomCode}")
     public void test(@PathVariable String roomCode) throws IOException, ExecutionException, InterruptedException {

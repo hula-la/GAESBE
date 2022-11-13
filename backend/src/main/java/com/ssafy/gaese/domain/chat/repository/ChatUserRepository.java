@@ -18,9 +18,6 @@ public interface ChatUserRepository extends JpaRepository<ChatUser,Long> {
 
 
     Optional<ChatUser> findByFriendAndMe(User friend, User me);
-
-//    List<ChatUser> findByMeAndWait(User me, boolean wait);
-
     ChatUser findByMe_IdAndFriend_Id(Long myId, Long friendId);
 
     @Transactional

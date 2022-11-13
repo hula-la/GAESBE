@@ -33,5 +33,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u.bjId FROM User u WHERE u.id=:id")
     Optional<String> getBjIdById(Long id);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.bjId=:bjId WHERE u.id=:id")
+    int updateBjId(@Param("id") Long id, @Param("bjId") String bjId);
 
 }

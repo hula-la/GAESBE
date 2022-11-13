@@ -294,7 +294,7 @@ public class AlgoService {
         return code;
     }
 
-    public Boolean confirmCode(Long userId){
+    public Boolean confirmCode(Long userId, String bjId){
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         String code = hashOperations.get("bjCodes",userId+"");
         Boolean res = false;
@@ -308,11 +308,14 @@ public class AlgoService {
             chromeOptions.addArguments("--disable-dev-shm-usage");
             driver = new ChromeDriver(chromeOptions);
             // 크롤링
-            driver.get("https://www.acmicpc.net/user/"+userRepository.getBjIdById(userId).get());
+            driver.get("https://www.acmicpc.net/user/"+bjId);
             WebElement element = driver.findElement(By.className("no-mathjax"));
             String msg = element.getText();
             if(msg.contains(code)){
-                res = true;
+
+                if(userRepository.updateBjId(userId,bjId)==1){
+                    res = true;
+                }
                 hashOperations.delete("bjCodes", userId+"");
             }
         }catch (Exception e){
