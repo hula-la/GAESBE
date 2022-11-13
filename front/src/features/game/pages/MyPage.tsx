@@ -7,6 +7,8 @@ import { authActions } from '../../auth/authSlice';
 import { authSagas } from '../../auth/authSaga';
 import { useNavigate } from 'react-router-dom';
 import { gameActions } from '../gameSlice';
+
+import AttendanceComponent from '../components/AttendanceComponent'
 const MyPageContainer = styled.div`
   width: 66%;
   color: white;
@@ -55,6 +57,7 @@ const MyPage = () => {
   }, []);
   return (
     <MyPageContainer>
+      <AttendanceComponent />
       {userInfo && (
         <MyCharacter>
           <h1>{userInfo.nickname}</h1>
