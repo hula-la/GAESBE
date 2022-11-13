@@ -1,12 +1,14 @@
 package com.ssafy.gaese.domain.user.entity;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
+import com.ssafy.gaese.domain.chat.entity.Chat;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
-import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
 import com.ssafy.gaese.domain.user.dto.UserDto;
+import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
+import com.ssafy.gaese.domain.user.entity.item.UserOffice;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -21,6 +23,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name = "User")
 public class User {
 
@@ -77,6 +80,20 @@ public class User {
 
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.REMOVE)
     private Set<FriendRequest> targetUser;
+
+
+    @OneToMany(mappedBy = "fromUser", cascade = CascadeType.REMOVE)
+    private List<Chat> fromChatUser;
+
+    @OneToMany(mappedBy = "toUser", cascade = CascadeType.REMOVE)
+    private List<Chat> toUser;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<UserOffice> userOfficeList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<UserCharacter> userCharacterList;
 
     //싸피게임에 필요하여 추가한 재화 POINT와 연승정보 winning_streak
     @ColumnDefault("0")

@@ -2,6 +2,7 @@ package com.ssafy.gaese.global.config;
 
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
+import com.ssafy.gaese.domain.chat.application.ChatService;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
@@ -24,7 +25,7 @@ public class SessionDisconnectConfig {
     private final CsRoomService csRoomService;
     private final Typing2RoomService typingRoomService2;
     private final FriendSocketService friendSocketService;
-
+    private final ChatService chatService;
     private final AlgoService algoService;
 
     @EventListener
@@ -92,7 +93,6 @@ public class SessionDisconnectConfig {
 
                 friendSocketService.userLeave(friendSocketDto);
                 break;
-
             default: break;
         }
 
