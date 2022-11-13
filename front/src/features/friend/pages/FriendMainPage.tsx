@@ -152,7 +152,7 @@ function FriendMainPage() {
   const { chatList } = useSelector((state: any) => state.friend);
 
   useEffect(() => {
-    if (chatFriendId) {
+    if (chatFriendId && chatList.hasOwnProperty(chatFriendId)) {
       setShowChatList(chatList[chatFriendId]);
     }
   }, [chatFriendId, chatList]);

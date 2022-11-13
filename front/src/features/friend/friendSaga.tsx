@@ -2,7 +2,11 @@ import { takeLatest, put, call, fork } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
 import { Action } from '../../models/friend';
 import { friendActions } from './friendSlice';
-import { fetchChatApi, requsetFriendRequest } from '../../api/friendApi';
+import {
+  fetchChatApi,
+  postChatApi,
+  requsetFriendRequest,
+} from '../../api/friendApi';
 
 function* requestFriendSaga(action: Action<string>) {
   try {
@@ -35,9 +39,20 @@ function* fetchChatSaga(action: any) {
   }
 }
 
+function* postChatSaga(action: any) {
+  try {
+    const { msgIds, friendId } = action.payload;
+    const res: AxiosResponse = yield call(postChatApi, { msgIds });
+    yield put(friendActions.postChatSuccess(friendId));
+  } catch (e: any) {
+    yield put(friendActions.postChatError(e));
+  }
+}
+
 function* friendSaga() {
   yield takeLatest(friendActions.requestFriendStart, requestFriendSaga);
   yield takeLatest(friendActions.fetchChatStart, fetchChatSaga);
+  yield takeLatest(friendActions.postChatStart, postChatSaga);
 }
 
 export const friendSagas = [fork(friendSaga)];

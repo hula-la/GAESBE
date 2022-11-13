@@ -49,3 +49,10 @@ export const fetchChatApi = async () => {
   const res = await client.get('/chat');
   return res;
 };
+
+// 채팅 읽었다는 신호 보내기
+export const postChatApi = async (data: any) => {
+  const res = await client.post('/chat', data);
+  console.log(res);
+  return res;
+};

@@ -17,6 +17,8 @@ interface FriendStateInterface {
   waitFriendList: any;
   isChatOpen: boolean;
   chatList: any;
+  checkedChatList: any;
+  uncheckedChatList: any;
   sendContent: any;
 }
 
@@ -35,6 +37,8 @@ const initialState: FriendStateInterface = {
   waitFriendList: [],
   isChatOpen: false,
   chatList: null,
+  checkedChatList: null,
+  uncheckedChatList: null,
   sendContent: null,
 };
 
@@ -89,19 +93,51 @@ const friendSlice = createSlice({
     fetchChatStart(state) {},
     fetchChatSuccess(state, action) {
       state.chatList = action.payload.chatList;
+      const wholeChatList = action.payload.chatList;
+      const idList = Object.keys(wholeChatList);
+      const unchecked = idList.map((idx: any) => {
+        return wholeChatList[idx].filter((chat: any) => {
+          return chat.checked === false;
+        });
+      });
+      const checked = idList.map((idx: any) => {
+        return wholeChatList[idx].filter((chat: any) => {
+          return chat.checked === true;
+        });
+      });
+
+      let checkedObj: any = {};
+      let uncheckedObj: any = {};
+      for (let i = 0; i < unchecked.length; i++) {
+        checkedObj[idList[i]] = checked[i];
+        uncheckedObj[idList[i]] = unchecked[i];
+      }
+      state.uncheckedChatList = uncheckedObj;
+      state.checkedChatList = checkedObj;
     },
-    fetchChatError(state, action) {},
+    fetchChatError(state, action) {
+      console.log(action.payload);
+    },
     // 채팅 보내기
     sendChat(state, action) {
       state.sendContent = action.payload;
-      console.log(action.payload);
     },
     // 채팅 받기
     recieveChat(state, action) {
       const tmp = [action.payload.chatItem];
-      const newArr = tmp.concat(state.chatList[action.payload.id]);
-      state.chatList[action.payload.id] = newArr;
+      const newArr = tmp.concat(state.uncheckedChatList[action.payload.id]);
+      const newArr2 = tmp.concat(state.chatList[action.payload.id]);
+      if (!state.isChatOpen) {
+        state.uncheckedChatList[action.payload.id] = newArr;
+      }
+      state.chatList[action.payload.id] = newArr2;
     },
+    // 채팅 읽었다는 신호 보내기
+    postChatStart(state, action) {},
+    postChatSuccess(state, action) {
+      state.uncheckedChatList[action.payload] = [];
+    },
+    postChatError(state, action) {},
   },
 });
 

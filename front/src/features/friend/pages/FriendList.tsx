@@ -10,23 +10,7 @@ const FriendListBlock = styled.div`
 
 function FriendList() {
   const { friends } = useSelector((state: any) => state.friend);
-  const { chatList } = useSelector((state: any) => state.friend);
-  const [chatCntObj, setChatCntObj] = useState<any>(null);
-
-  useEffect(() => {
-    const tmp = Object.keys(chatList).map((id) => {
-      return chatList[id].map((chat: any) => {
-        return chat.checked === false;
-      }).length;
-    });
-
-    const tmpObj: any = {};
-    const chatIdList = Object.keys(chatList);
-    for (let i = 0; i < chatIdList.length; i++) {
-      tmpObj[chatIdList[i]] = tmp[i];
-    }
-    setChatCntObj(tmpObj);
-  }, [chatList]);
+  const { uncheckedChatList } = useSelector((state: any) => state.friend);
 
   return (
     <FriendListBlock>
@@ -39,7 +23,11 @@ function FriendList() {
                 type="online"
                 friend={onlineFriend}
                 category="noInvite"
-                chatCnt={chatCntObj[onlineFriend.id]}
+                chatCnt={
+                  uncheckedChatList[onlineFriend.id]
+                    ? uncheckedChatList[onlineFriend.id].length
+                    : ''
+                }
               />
             );
           })}
@@ -55,7 +43,11 @@ function FriendList() {
                   type="offline"
                   friend={offlineFriend}
                   category="noInvite"
-                  chatCnt={chatCntObj[offlineFriend.id]}
+                  chatCnt={
+                    uncheckedChatList[offlineFriend.id]
+                      ? uncheckedChatList[offlineFriend.id].length
+                      : ''
+                  }
                 />
               );
             },

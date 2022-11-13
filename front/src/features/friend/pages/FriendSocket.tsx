@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Stomp from 'stompjs';
@@ -16,7 +16,8 @@ function FriendSocket() {
   const { userInfo } = useSelector((state: any) => state.auth);
   const { chatFriendId } = useSelector((state: any) => state.friend);
   const { sendContent } = useSelector((state: any) => state.friend);
-  const { chatList } = useSelector((state: any) => state.friend);
+  const { isChatOpen } = useSelector((state: any) => state.friend);
+  const [msgId, setMsgId] = useState<any>(null);
 
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
@@ -41,13 +42,22 @@ function FriendSocket() {
         if (data.hasOwnProperty('inviteGameType')) {
           dispatch(friendActions.invitedGame(data));
         } else if (data.hasOwnProperty('msg')) {
+          setMsgId(data.id);
           if (data.from === userInfo.id) {
             dispatch(
-              friendActions.recieveChat({ chatItem: data, id: data.to }),
+              friendActions.recieveChat({
+                chatItem: data,
+                id: data.to,
+                isChatOpen,
+              }),
             );
           } else {
             dispatch(
-              friendActions.recieveChat({ chatItem: data, id: data.from }),
+              friendActions.recieveChat({
+                chatItem: data,
+                id: data.from,
+                isChatOpen,
+              }),
             );
           }
         } else {
@@ -93,6 +103,13 @@ function FriendSocket() {
       );
     }
   }, [sendContent]);
+
+  useEffect(() => {
+    if (msgId) {
+      dispatch(friendActions.postChatStart({ msgIds: [msgId] }));
+      setMsgId(null);
+    }
+  }, [msgId]);
 
   return <></>;
 }

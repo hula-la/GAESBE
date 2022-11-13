@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
@@ -167,6 +169,17 @@ const FriendListItemBlock = styled.div`
 
 function FriendListItem({ friend, type, category, chatCnt }: any) {
   const dispatch = useDispatch();
+  const { uncheckedChatList } = useSelector((state: any) => state.friend);
+  const [uncheckedMsgIds, setUncheckedMsgIds] = useState<any>(null);
+
+  useEffect(() => {
+    if (uncheckedChatList && uncheckedChatList.hasOwnProperty(friend.id)) {
+      const tmp = uncheckedChatList[friend.id].map((chatList: any) => {
+        return chatList.id;
+      });
+      setUncheckedMsgIds(tmp);
+    }
+  }, [uncheckedChatList]);
 
   const handleDeleteFriend = async () => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
@@ -187,6 +200,17 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
 
   const openChat = () => {
     dispatch(friendActions.openChatRoom(friend.id));
+    if (
+      uncheckedChatList.hasOwnProperty(friend.id) &&
+      uncheckedChatList[friend.id].length !== 0
+    ) {
+      dispatch(
+        friendActions.postChatStart({
+          msgIds: uncheckedMsgIds,
+          friendId: friend.id,
+        }),
+      );
+    }
   };
 
   return (
@@ -225,7 +249,7 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
               <div className="nickname">{friend.nickname}</div>
             </div>
           </div>
-          {category === 'noInvite' && <div>{chatCnt}</div>}
+          {category === 'noInvite' && chatCnt !== 0 && <div>{chatCnt}</div>}
           {category === 'invite' && <button onClick={invite}>초대하기</button>}
         </div>
       </div>
