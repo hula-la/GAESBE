@@ -39,7 +39,7 @@ public class ItemController {
         return ResponseEntity.ok().body(itemService.buyOffice(user.getId(),officeId));
     }
 
-    @PostMapping("/character/{officeId}")
+    @PostMapping("/character/{characterId}")
     public ResponseEntity<List<CharacterDto>> buyCharacter(@AuthenticationPrincipal CustomUserDetails user,
                                                      @PathVariable Long characterId) {
         return ResponseEntity.ok().body(itemService.buyCharacter(user.getId(),characterId));
