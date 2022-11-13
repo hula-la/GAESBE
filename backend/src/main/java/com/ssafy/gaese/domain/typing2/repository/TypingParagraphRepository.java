@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface TypingParagraphRepository extends JpaRepository<TypingParagraph, Long> {
     @Query(value = "SELECT * FROM gaese.typing_paragraph WHERE lang_type=:langType order by RAND() limit :ProblemNum",nativeQuery = true)
-    List<TypingParagraph> findRandomProblem(@Param("ProblemNum") int problemNum, String langType);
+    List<TypingParagraph> findRandomProblem(@Param("ProblemNum") int problemNum, @Param("langType")String langType);
 
 }

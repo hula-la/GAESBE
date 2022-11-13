@@ -1,10 +1,8 @@
 package com.ssafy.gaese.domain.chat.dto;
 
 import com.ssafy.gaese.domain.chat.entity.Chat;
+import com.ssafy.gaese.domain.user.entity.User;
 import lombok.*;
-import org.junit.Before;
-
-import javax.persistence.Column;
 import java.util.Date;
 
 @Builder
@@ -19,15 +17,19 @@ public class ChatDto {
     private Long to;
     private String msg;
     private Date date;
+    private boolean checked;
 
-    public Chat toEntity(){
+    public Chat newChat(User fromUser, User toUser){
         return Chat.builder()
-                .to(this.to)
-                .from(this.from)
+                .id(this.id)
+                .fromUser(fromUser)
+                .toUser(toUser)
                 .msg(this.msg)
-                .date(this.date)
-                .date(this.date)
+                .date(new Date())
+                .checked(false)
                 .build();
     }
+
+
 
 }
