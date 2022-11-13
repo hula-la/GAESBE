@@ -3,14 +3,17 @@ package com.ssafy.gaese.domain.typing2.application;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
 import com.ssafy.gaese.domain.typing2.dto.TypingRecordDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
+import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSubmitDto;
 import com.ssafy.gaese.domain.typing2.entity.TypingParagraph;
 import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.typing2.repository.TypingParagraphRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRecordRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
+import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
+import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +38,8 @@ public class TypingService {
     private final TypingRoomRedisRepository typingRoomRedisRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
+
+    private final AbilityRepository abilityRepository;
 
     public Page<TypingRecordDto> findTypingRecord(Long userId, Pageable pageable){
         Page<TypingRecord> TypingRecords = typingRecordRepository
@@ -109,8 +116,65 @@ public class TypingService {
         roomDto.setEnd(true);
 
         typingRoomRedisRepository.save(roomDto);
+
+        if(roomDto.getRoomType()== TypingSocketDto.RoomType.RANDOM)
+        {
+            rankUpdate(roomDto);
+        }
+
         deleteRoom(roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
+    }
+
+    public void rankUpdate(TypingRoomDto roomDto)
+    {
+        LocalDateTime now = LocalDateTime.now();
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
+        int rank =1;
+
+
+        while(roomDto.getPlayers().size()>0)
+        {
+            final long[] maxId = new long[1];
+            final float[] maxProgress = {0};
+            //높은 순위 찾기
+            roomDto.getPlayers().values().forEach(v->{
+                if(maxProgress[0] <=roomDto.getProgressByPlayer().get(v))
+                {
+                    maxProgress[0] =roomDto.getProgressByPlayer().get(v);
+                    maxId[0] =v;
+                }
+            });
+
+            //레코드 기록
+            TypingRecord typingRecord = new TypingRecord();
+            typingRecord.setRanks(rank);
+            typingRecord.setDate(formatedNow);
+            typingRecord.setId(maxId[0]);
+            typingRecord.setLangType(roomDto.getLangType());
+            typingRecord.setUser(userRepository.findById(maxId[0]).get());
+            typingRecordRepository.save(typingRecord);
+
+            Ability ability = abilityRepository.findByUser_Id(maxId[0]).get();
+
+            if(ability.getTypingExp()+(5-rank)*10>=100)
+            {
+                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10)-100);
+                ability.setTypingLv(ability.getTypingLv()+1);
+            }
+            else
+            {
+                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10));
+            }
+
+            abilityRepository.save(ability);
+
+            roomDto.getPlayers().remove(maxId[0]);
+
+            maxProgress[0] = 0;
+            rank++;
+        }
+
     }
 
     // 방 삭제 (게임 끝나면 방 삭제)
