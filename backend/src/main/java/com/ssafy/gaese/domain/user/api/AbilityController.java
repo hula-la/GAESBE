@@ -3,6 +3,7 @@ package com.ssafy.gaese.domain.user.api;
 import com.ssafy.gaese.domain.user.application.AbilityService;
 import com.ssafy.gaese.domain.user.application.UserService;
 import com.ssafy.gaese.domain.user.dto.AbilityDto;
+import com.ssafy.gaese.domain.user.dto.RankDto;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.security.model.CustomUserDetails;
@@ -27,9 +28,9 @@ public class AbilityController {
     }
 
     @GetMapping("/rank")
-    public ResponseEntity<AbilityDto> getRank(@AuthenticationPrincipal CustomUserDetails user) {
-        AbilityDto abilityDto = abilityService.getAbility(user.getId());
-        return ResponseEntity.ok().body(abilityDto);
+    public ResponseEntity<RankDto> getRank(@AuthenticationPrincipal CustomUserDetails user) {
+        RankDto rankDto = abilityService.getRank(user.getId());
+        return ResponseEntity.ok().body(rankDto);
     }
 
 }

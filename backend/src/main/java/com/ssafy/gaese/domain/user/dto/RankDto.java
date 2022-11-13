@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RankDto {
     private Long id;
-    private String nickname;
+//    private String nickname;
 
     private Long myAlgoRank;
     private Long myCsRank;
