@@ -178,9 +178,11 @@ button{
 `;
 function TypingMainPage() {
   const [gameType, setGameType] = useState<String>('PYTHON');
+  const [isOpen, setIsOpen] = useState<Boolean>(false);
   const navigate = useNavigate();
-  const handleEnterGame = () => {
-    navigate('enter', { state: { lang: gameType } });
+  const [shareCode, setShareCode] = useState<String>('');
+  const handleFriendGame = () => {
+    setIsOpen((prev) => !prev)
   };
   const handleRandomGame = () => {
     navigate('enter', { state: { lang: gameType } });
@@ -193,7 +195,19 @@ function TypingMainPage() {
     setGameType('JAVA');
     console.log('자바 선택');
   };
-  console.log(gameType);
+  const onClickCreateRoom = () => {
+    navigate('friend', { state: { shareCode: null } });
+  };
+
+  // 코드 치고 들어가기
+  const onClickEnterFriend = () => {
+    navigate('friend', { state: { shareCode: shareCode } });
+  };
+
+  const onChangeCode = (e: any) => {
+    setShareCode(e.target.value);
+  };
+  // console.log(gameType);
   return (
     <TypingMain>
       <div className='aniToDown'>
@@ -261,8 +275,16 @@ function TypingMainPage() {
         <a href="javascript:void(0)" className="eightbit-btn" onClick={handleRandomGame}>랜덤매칭</a>
         </SelectTypeBox>
         <SelectTypeBox>
-        <a href="javascript:void(0)" className="eightbit-btn eightbit-btn--proceed" onClick={handleEnterGame}>솔로게임</a>
+        <a href="javascript:void(0)" className="eightbit-btn eightbit-btn--proceed" onClick={handleFriendGame}>친구 매칭</a>
         </SelectTypeBox>
+        {isOpen && (
+          <div>
+            <div onClick={onClickCreateRoom}>방 만들기</div>
+            <div>친구 코드</div>
+            <input onChange={onChangeCode} />
+            <button onClick={onClickEnterFriend}>방 들어가기</button>
+          </div>
+        )}
       </SelectGameType>
     </TypingMain>
   );
