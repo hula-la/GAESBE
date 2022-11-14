@@ -26,12 +26,12 @@ function FriendSocket() {
 
   useEffect(() => {
     client.current = Stomp.over(socket);
+    // 개발 버전에서만 콘솔 뜨게 하기
+    if (process.env.NODE_ENV !== 'development') {
+      client.current.debug = function () {};
+    }
   }, []);
 
-  // 개발 버전에서만 콘솔 뜨게 하기
-  if (process.env.NODE_ENV !== 'development') {
-    client.current.debug = function () {};
-  }
   // 최초 입장시 소켓 뚫고, 백준id보내기
   useEffect(() => {
     // 입장할때 소켓 뚫기
