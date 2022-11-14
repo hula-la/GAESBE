@@ -22,14 +22,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/";
-    }
     @PostMapping("/refresh")
     public ResponseEntity refreshToken(HttpServletRequest request,
                                        HttpServletResponse response,
