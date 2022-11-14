@@ -240,6 +240,7 @@ const SideBar = () => {
           />
           <p className="foldername">MINI</p>
         </div>
+        <button>로그 아웃</button>
       </div>
     </Side>
   );

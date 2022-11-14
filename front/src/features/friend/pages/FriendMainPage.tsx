@@ -95,6 +95,8 @@ const FriendSide = styled.div`
     }
     .chatContent {
       overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
       height: 92%;
       ::-webkit-scrollbar {
         width: 10px;
@@ -202,6 +204,14 @@ function FriendMainPage() {
 
   const onSubmitChat = () => {
     dispatch(friendActions.sendChat(content));
+    setContent('');
+  };
+
+  const onSubmitChat2 = (e: any) => {
+    if (e.key === 'Enter') {
+      dispatch(friendActions.sendChat(content));
+      setContent('');
+    }
   };
 
   return (
@@ -261,7 +271,9 @@ function FriendMainPage() {
             <div className="chatInputs">
               <input
                 onChange={onChangeContent}
+                onKeyDown={onSubmitChat2}
                 className="chatInput"
+                value={content}
                 type="text"
               />
               <button onClick={onSubmitChat} className="chatButton">
