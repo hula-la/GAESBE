@@ -8,6 +8,7 @@ import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -160,4 +161,19 @@ public class AlgorithmController {
         System.out.println(algoSocketService.getCurrentRank(roomCode));
 
     }
+
+    @GetMapping("/record/rank")
+    @ApiOperation(value="알고리즘 게임 1 등 횟수 반환 ")
+    public ResponseEntity<Integer>  getFirstCnt(@AuthenticationPrincipal CustomUserDetails userDetails) throws IOException, ExecutionException, InterruptedException {
+        return ResponseEntity.ok().body(algoService.getFirstCnt(userDetails.getId()));
+    }
+
+    @GetMapping("/record/code/{roomCode}")
+    @ApiOperation(value="알고리즘 게임 코드들 반환 ([{userID:Long, code:Str},{userID:Long, code:Str}])")
+    public ResponseEntity<List<AlgoRecordCodeDto>>  getCodes(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                @PathVariable String roomCode) throws IOException, ExecutionException, InterruptedException {
+        return ResponseEntity.ok().body(algoService.getAllCodes(roomCode));
+    }
+
+
 }

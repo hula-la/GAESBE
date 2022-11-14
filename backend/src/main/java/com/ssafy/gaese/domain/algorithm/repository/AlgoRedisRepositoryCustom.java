@@ -79,7 +79,9 @@ public class AlgoRedisRepositoryCustom {
     public void leaveRoom(AlgoSocketDto algoSocketDto) {
         // roomCode-user 에 사용자 정보 제거
         HashOperations<String, String, String> hashOperations = stringRedisTemplate.opsForHash();
+        System.out.println("삭제 할꺼임");
         hashOperations.delete(algoSocketDto.getRoomCode() + "-user", algoSocketDto.getSessionId());
+        
         // algoRoom:roomCode 정보에 인원 수 정보 -1
         hashOperations.increment("algoRoom:" + algoSocketDto.getRoomCode(), "algoRoomDto.num", -1);
     }

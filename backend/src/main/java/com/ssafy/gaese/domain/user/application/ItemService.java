@@ -71,6 +71,12 @@ public class ItemService {
 
         if(mnLv<office.getMinLv()) throw new RuntimeException("최소 레벨이 충족되지 않았습니다.");
 
+        //이미 유저 오피스 레벨이 더 높다면 오히려 더 낮아지므로 조건문 넣었음, 같은경우도 의미는 없음
+        else if(user.getOfficeLv()<officeId)
+        {
+            user.setOfficeLv(officeId.intValue());
+            userRepository.save(user);
+        }
         UserOffice save = userOfficeRepository.save(UserOffice.builder()
                 .office(office)
                 .user(user)
