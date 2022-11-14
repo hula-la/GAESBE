@@ -8,6 +8,7 @@ import algoReducer from '../features/algorithm/algorithmSlice';
 // import typingReducer from '../features/typing/typingSlice';
 import friendReducer from '../features/friend/friendSlice';
 import coinReducer from '../features/coinflip/coinFlipSlice';
+import itemReduer from '../features/game/itemSlice';
 // rootReducers by using combineReducers
 const rootReducers = combineReducers({
   auth: authReducer,
@@ -16,6 +17,7 @@ const rootReducers = combineReducers({
   // typing: typingReducer,
   friend: friendReducer,
   coin: coinReducer,
+  item: itemReduer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

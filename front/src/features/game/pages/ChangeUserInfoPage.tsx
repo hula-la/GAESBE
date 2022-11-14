@@ -26,6 +26,7 @@ const MyCharacter = styled.div`
   }
 `;
 const SelectCharacter = styled.div`
+  color: white;
   border: 2px solid yellow;
   width: 50%;
   display: flex;
@@ -38,14 +39,19 @@ const CharacterList = styled.div`
   margin: 1%;
   text-align: center;
 `;
+const UnLockedCharacter = styled.img``;
+const LockedCharacter = styled.img`
+  opacity: 0.7;
+`;
 const ChangeUserInfoPage = () => {
   const dispatch = useDispatch();
   const { isDuplicate } = useSelector((state: any) => state.auth);
   const { userInfo } = useSelector((state: any) => state.auth);
   const [nickname, setNickname] = useState<string>(userInfo.nickname);
   const [profilechar, setProfilechar] = useState<string>(userInfo.profileChar);
-  console.log(nickname, '이게?');
-  console.log(userInfo.nickname, '이거는?');
+  const { characters } = useSelector((state: any) => state.item);
+
+  let characterList = characters;
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
     dispatch(authActions.checkNicknameStart(e.target.value));
@@ -60,32 +66,7 @@ const ChangeUserInfoPage = () => {
     setChangeNickName(false);
   };
   const [changeNickName, setChangeNickName] = useState<boolean>(false);
-  const imageNo = [
-    { value: '1' },
-    { value: '2' },
-    { value: '3' },
-    { value: '4' },
-    { value: '5' },
-    { value: '6' },
-    { value: '7' },
-    { value: '8' },
-    { value: '9' },
-    { value: '10' },
-    { value: '11' },
-    { value: '12' },
-    { value: '13' },
-    { value: '14' },
-    { value: '15' },
-    { value: '16' },
-    { value: '17' },
-    { value: '18' },
-    { value: '19' },
-    // { value: '20' },
-    { value: '21' },
-    { value: '22' },
-    // { value: '23' },
-    { value: '24' },
-  ];
+
   const handleInput = () => {
     setChangeNickName(true);
   };
@@ -121,18 +102,33 @@ const ChangeUserInfoPage = () => {
         />
       </MyCharacter>
       <SelectCharacter>
-        <h1>당신의 캐릭터를 변경하세요!!!!!!!!!!!!</h1>
-        {imageNo.map((item) => (
-          <CharacterList
-            key={item.value}
-            onClick={(e) => handleSelectCharacter(item.value)}
-          >
-            <img
-              src={`${process.env.REACT_APP_S3_URL}/profile/${item.value}_normal.gif`}
-              alt="프로필 이미지"
-            />
-          </CharacterList>
-        ))}
+        <h1>당신의 캐릭터를 변경하세요</h1>
+
+        {characterList.map((character: any) => {
+          return (
+            <CharacterList
+              key={character.characterId}
+              onClick={(e) => handleSelectCharacter(character.characterId)}
+            >
+              {character.own ? (
+                <div>
+                  <UnLockedCharacter
+                    src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                    alt="프로필 이미지"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <LockedCharacter
+                    src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                    alt="프로필 이미지"
+                  />
+                  <p>{character.need}</p>
+                </div>
+              )}
+            </CharacterList>
+          );
+        })}
         <button onClick={handleChangeCharacter}>변경</button>
       </SelectCharacter>
     </ChangeUserInfo>
