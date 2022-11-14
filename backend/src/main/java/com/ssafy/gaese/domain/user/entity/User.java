@@ -6,6 +6,7 @@ import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.entity.FriendRequest;
 import com.ssafy.gaese.domain.friends.entity.Friends;
+import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.user.dto.UserDto;
 import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.entity.item.UserOffice;
@@ -62,9 +63,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<CsRecord> csRecordList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<TypingRecord> typingRecordList = new ArrayList<>();
 
-    @ColumnDefault("0")
-    private int profileChar;
+
+    @Builder.Default
+    private int profileChar=0;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Attendance> attendanceList;
@@ -96,18 +100,18 @@ public class User {
     private List<UserCharacter> userCharacterList;
 
     //싸피게임에 필요하여 추가한 재화 POINT와 연승정보 winning_streak
-    @ColumnDefault("0")
+    @Builder.Default
 //    @Column(nullable = false, columnDefinition = "default 0")
-    private Long point;
+    private Long point=0L;
 
-    @ColumnDefault("0")
-    private int winningStreak;
+    @Builder.Default
+    private int winningStreak=0;
 
-    @ColumnDefault("0")
-    private int maxWinStreak;
+    @Builder.Default
+    private int maxWinStreak=0;
 
-    @ColumnDefault("1")
-    private int officeLv;
+    @Builder.Default
+    private int officeLv=1;
 
 
     public User update(String nickname, int profileChar) {
