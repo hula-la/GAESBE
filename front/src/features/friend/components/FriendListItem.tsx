@@ -199,7 +199,7 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
   };
 
   const openChat = () => {
-    dispatch(friendActions.openChatRoom(friend.id));
+    dispatch(friendActions.openChatRoom(friend));
     if (
       uncheckedChatList.hasOwnProperty(friend.id) &&
       uncheckedChatList[friend.id].length !== 0
@@ -250,6 +250,7 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
             </div>
           </div>
           {category === 'noInvite' && chatCnt !== 0 && <div>{chatCnt}</div>}
+          {category === 'noInvite' && chatCnt === 0 && <div></div>}
           {category === 'invite' && <button onClick={invite}>초대하기</button>}
         </div>
       </div>

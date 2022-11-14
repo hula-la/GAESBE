@@ -14,7 +14,7 @@ function FriendSocket() {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: any) => state.auth);
-  const { chatFriendId } = useSelector((state: any) => state.friend);
+  const { chatFriend } = useSelector((state: any) => state.friend);
   const { sendContent } = useSelector((state: any) => state.friend);
   const { isChatOpen } = useSelector((state: any) => state.friend);
   const [msgId, setMsgId] = useState<any>(null);
@@ -42,7 +42,6 @@ function FriendSocket() {
         if (data.hasOwnProperty('inviteGameType')) {
           dispatch(friendActions.invitedGame(data));
         } else if (data.hasOwnProperty('msg')) {
-          setMsgId(data.id);
           if (data.from === userInfo.id) {
             dispatch(
               friendActions.recieveChat({
@@ -52,6 +51,7 @@ function FriendSocket() {
               }),
             );
           } else {
+            setMsgId(data.id);
             dispatch(
               friendActions.recieveChat({
                 chatItem: data,
@@ -97,7 +97,7 @@ function FriendSocket() {
         {},
         JSON.stringify({
           from: userInfo.id,
-          to: chatFriendId,
+          to: chatFriend.id,
           msg: sendContent,
         }),
       );
