@@ -32,9 +32,6 @@ const TypingPersonalResult = styled.div`
   color: white;
   height: 7vh;
   margin-bottom: 1px;
-
-  
-  
 `;
 const Personal = styled.div`
   display: flex;
@@ -52,10 +49,8 @@ const PersonalId = styled.div`
 
   padding-top: 0.5rem;
 
-  div{
-
+  div {
   }
-  
 `;
 const PersonalCharacter = styled.div`
   background: #deb36d;
@@ -67,30 +62,26 @@ const PersonalCharacter = styled.div`
 
   position: relative;
 
-  .imgNormal{
+  .imgNormal {
     transform: scaleX(-1);
   }
-  
-  &::after{
+
+  &::after {
     content: '';
     position: absolute;
     border-right: 3rem solid #d50303;
     height: calc(100% + 1rem);
-    right:-3rem;
-    top:-0.5rem;
-    
+    right: -3rem;
+    top: -0.5rem;
   }
-  &::Before{
+  &::before {
     content: '';
     position: absolute;
     border-right: 2rem solid white;
     height: calc(100% + 1rem);
     /* left:-2rem; */
-    top:-0.5rem;
-    
+    top: -0.5rem;
   }
-
-  
 `;
 const CharacterImg = styled('img')<{ progress: string }>`
   padding-left: ${(props) => props.progress};
@@ -123,7 +114,6 @@ const TypingResult = styled.div`
   width: 90%;
   color: white;
   margin-bottom: 3rem;
-
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -273,12 +263,6 @@ const TypingGame = () => {
   }, [userInfo]);
 
   useEffect(() => {
-    return () => {
-      client.disconnect(() => {});
-    }
-  },[] )
-
-  useEffect(() => {
     if (roomCode) {
       client2.connect({}, (frame) => {
         console.log('*****************177**************************');
@@ -328,11 +312,17 @@ const TypingGame = () => {
     );
   }
 
+  useEffect(() => {
+    return () => {
+      client.disconnect(() => {});
+    };
+  }, []);
+
   const exapmleitem = `${paragraph}`;
   const example = exapmleitem.split(' ');
   const item = example.map((e) => e);
   let totalLength = 0;
-  const arr = [0, 1, 2, 3]
+  const arr = [0, 1, 2, 3];
   item.map((e) => (totalLength += e.length));
   const [charState, setCharState] = useState<CharStateType>({
     index: 0,
@@ -453,76 +443,82 @@ const TypingGame = () => {
 
       <Typing>
         {players && (
-                    <TypingResult>
-                    {arr.map((a: any, idx: number) => {
-                      return (
-                        <div key={idx}>
-                          <TypingPersonalResult>
-                        <Personal>
-                          <PersonalId>
-                                {idx<players.length&& (<div>{players[idx].nickname}</div> )}
-                          </PersonalId>
-                              <PersonalCharacter>
-                                {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                                {isLoading&&idx < players.length && (
-                                  <CharacterImg
-                                    progress={
-                                      testProgress
-                                        ? testProgress.progressByPlayer[`${players[idx].id}`] +
-                                          '%'
-                                        : '0%'
-                                    }
-                                    className="imgNormal"
-                                    src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
-                                    alt="playerImg"
-                                  />)}
-                                
-                                {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                                {!isLoading && idx < players.length && (
-                                  <CharacterImg
-                                    progress={
-                                      testProgress
-                                        ? testProgress.progressByPlayer[`${players[idx].id}`] +
-                                          '%'
-                                        : '0%'
-                                    }
-                                    className="img"
-                                    src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
-                                    alt="playerImg"
-                                  /> )}
-                          </PersonalCharacter>
-                              <PersonalResult>
-                                {idx < players.length && testProgress&&(
-                                  <div>
-                                    {testProgress.progressByPlayer[`${players[idx].id}`]}
-                                  </div>
-                                )}
-                          </PersonalResult>
-                        </Personal>
-                          </TypingPersonalResult>
-                        </div>
-                      )
-                    })}
-          
-                    </TypingResult>
-        )
+          <TypingResult>
+            {arr.map((a: any, idx: number) => {
+              return (
+                <div key={idx}>
+                  <TypingPersonalResult>
+                    <Personal>
+                      <PersonalId>
+                        {idx < players.length && (
+                          <div>{players[idx].nickname}</div>
+                        )}
+                      </PersonalId>
+                      <PersonalCharacter>
+                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                        {isLoading && idx < players.length && (
+                          <CharacterImg
+                            progress={
+                              testProgress
+                                ? testProgress.progressByPlayer[
+                                    `${players[idx].id}`
+                                  ] + '%'
+                                : '0%'
+                            }
+                            className="imgNormal"
+                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
+                            alt="playerImg"
+                          />
+                        )}
 
-        }
+                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                        {!isLoading && idx < players.length && (
+                          <CharacterImg
+                            progress={
+                              testProgress
+                                ? testProgress.progressByPlayer[
+                                    `${players[idx].id}`
+                                  ] + '%'
+                                : '0%'
+                            }
+                            className="img"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
+                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
+                            alt="playerImg"
+                          />
+                        )}
+                      </PersonalCharacter>
+                      <PersonalResult>
+                        {idx < players.length && testProgress && (
+                          <div>
+                            {
+                              testProgress.progressByPlayer[
+                                `${players[idx].id}`
+                              ]
+                            }
+                          </div>
+                        )}
+                      </PersonalResult>
+                    </Personal>
+                  </TypingPersonalResult>
+                </div>
+              );
+            })}
+          </TypingResult>
+        )}
 
-
-      {/* 대기하고 있을때 */}
+        {/* 대기하고 있을때 */}
         {isLoading && players && (
           <WaitingTypingGameBox>
             {!isReady && <p>4명의 인원이 모이면 시작합니다</p>}
             {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
-            </WaitingTypingGameBox>
-      )}
+          </WaitingTypingGameBox>
+        )}
 
-      {/* 게임 시작했을 때 */}
+        {/* 게임 시작했을 때 */}
 
-      
-
-      {!isLoading && (
+        {!isLoading && (
           <TypingGameBox
             onKeyDown={(event) => handleSetKey(event)}
             tabIndex={1}
@@ -570,8 +566,7 @@ const TypingGame = () => {
             })}
           </TypingGameBox>
         )}
-        
-        </Typing>
+      </Typing>
     </div>
   );
 };

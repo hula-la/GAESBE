@@ -59,7 +59,8 @@ const MyPage = () => {
         <MyCharacter>
           <h1>{userInfo.nickname}</h1>
           <img
-            src={`/img/rank/character${userInfo.profileChar}.png`}
+            // src={`/img/rank/character${userInfo.profileChar}.png`}
+            src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
             alt="asdf"
           />
           <button onClick={handleChange}>정보 수정</button>

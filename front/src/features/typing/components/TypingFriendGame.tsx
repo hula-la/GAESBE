@@ -1,13 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
-import { setMaxListeners } from 'events';
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
@@ -35,9 +34,6 @@ const TypingPersonalResult = styled.div`
   color: white;
   height: 7vh;
   margin-bottom: 1px;
-
-  
-  
 `;
 const Personal = styled.div`
   display: flex;
@@ -55,10 +51,8 @@ const PersonalId = styled.div`
 
   padding-top: 0.5rem;
 
-  div{
-
+  div {
   }
-  
 `;
 const PersonalCharacter = styled.div`
   background: #deb36d;
@@ -70,30 +64,26 @@ const PersonalCharacter = styled.div`
 
   position: relative;
 
-  .imgNormal{
+  .imgNormal {
     transform: scaleX(-1);
   }
-  
-  &::after{
+
+  &::after {
     content: '';
     position: absolute;
     border-right: 3rem solid #d50303;
     height: calc(100% + 1rem);
-    right:-3rem;
-    top:-0.5rem;
-    
+    right: -3rem;
+    top: -0.5rem;
   }
-  &::Before{
+  &::before {
     content: '';
     position: absolute;
     border-right: 2rem solid white;
     height: calc(100% + 1rem);
     /* left:-2rem; */
-    top:-0.5rem;
-    
+    top: -0.5rem;
   }
-
-  
 `;
 const CharacterImg = styled('img')<{ progress: string }>`
   padding-left: ${(props) => props.progress};
@@ -126,7 +116,6 @@ const TypingResult = styled.div`
   width: 90%;
   color: white;
   margin-bottom: 3rem;
-
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -137,6 +126,8 @@ const WaitingTypingGameBox = styled.div`
   color: black;
   background-color: white;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
 `;
 const TypingGameBox = styled.div`
   width: 90%;
@@ -201,7 +192,12 @@ const TypingFriendGame = () => {
   );
 
   const client = Stomp.over(socket);
+  // const client = useRef<any>(null);
   const client2 = Stomp.over(socket);
+  // useEffect(() => {
+  //   client.current = Stomp.over(socket);
+  // }, []);
+
   useEffect(() => {
     if (isEnd && resultId && resultNickName && resultProfile) {
       console.log('끄읕');
@@ -214,20 +210,16 @@ const TypingFriendGame = () => {
       });
     }
   }, [isEnd, resultId, resultNickName, resultProfile]);
-  // useEffect(() => {
-  //   if (isReady) {
-  //     interval.current = setInterval(() => {
-  //       setSec(initialTime.current % 60);
-  //       initialTime.current -= 1;
-  //     }, 1000);
-  //     return () => clearInterval(interval.current);
-  //   }
-  // }, [isReady]);
+  useEffect(() => {
+    return () => setIsLoading(true);
+  }, []);
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
+        // client.current.connect({}, (frame: any) => {
         console.log('*****************121**************************');
         client.subscribe(`/typing2/${userInfo.id}`, (res) => {
+          // client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
@@ -236,6 +228,7 @@ const TypingFriendGame = () => {
           if (data.hasOwnProperty('isLast')) {
             if (data.isLast === true) {
               client.send(
+                // client.current.send(
                 '/api/typing2/start',
                 {},
                 JSON.stringify({
@@ -258,6 +251,7 @@ const TypingFriendGame = () => {
         });
         const enterRoom = () => {
           client.send(
+            // client.current.send(
             '/api/typing2',
             {},
             JSON.stringify({
@@ -266,13 +260,14 @@ const TypingFriendGame = () => {
               sessionId: socket._transport.url.slice(-18, -10),
               userId: userInfo.id,
               roomType: 'FRIEND',
-              roomCode: shareCode
+              roomCode: shareCode,
             }),
           );
         };
         enterRoom();
         const fetchMemberInfo = () => {
           client.send(
+            // client.current.send(
             '/api/typing2/memberInfo',
             {},
             JSON.stringify({
@@ -290,8 +285,9 @@ const TypingFriendGame = () => {
   useEffect(() => {
     return () => {
       client.disconnect(() => {});
-    }
-  },[] )
+      // client.current.disconnect(() => {});
+    };
+  }, []);
 
   useEffect(() => {
     if (roomCode) {
@@ -307,7 +303,7 @@ const TypingFriendGame = () => {
           } else if (testdata.hasOwnProperty('msg')) {
             if (testdata.msg === 'start') {
               setIsReady(true);
-              setIsLoading(false)
+              setIsLoading(false);
               // setTimeout(() => {
               //   setIsLoading(false);
               // }, 5000);
@@ -348,7 +344,7 @@ const TypingFriendGame = () => {
   const example = exapmleitem.split(' ');
   const item = example.map((e) => e);
   let totalLength = 0;
-  const arr = [0, 1, 2, 3]
+  const arr = [0, 1, 2, 3];
   item.map((e) => (totalLength += e.length));
   const [charState, setCharState] = useState<CharStateType>({
     index: 0,
@@ -371,8 +367,22 @@ const TypingFriendGame = () => {
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
         console.log('****************보냄********************');
+
+        // client.send(
+        // // client.current.send(
+        //   '/api/typing2/submit',
+        //   {},
+        //   JSON.stringify({
+        //     roomCode: roomCode,
+        //     sessionId: socket._transport.url.slice(-18, -10),
+        //     isCorrect: true,
+        //     userId: userInfo.id,
+        //   }),
+        // );
+
         waitForConnection(client, function () {
           client.send(
+            // client.current.send(
             '/api/typing2/submit',
             {},
             JSON.stringify({
@@ -430,6 +440,7 @@ const TypingFriendGame = () => {
         console.log('****************보냄********************');
         waitForConnection(client, function () {
           client.send(
+            // client.current.send(
             '/api/typing2/submit',
             {},
             JSON.stringify({
@@ -466,6 +477,7 @@ const TypingFriendGame = () => {
   };
   const onClickStart = () => {
     client.send(
+      // client.current.send(
       '/api/typing2/start',
       {},
       JSON.stringify({
@@ -473,24 +485,25 @@ const TypingFriendGame = () => {
         roomCode: roomCode,
       }),
     );
-    setIsLoading(false)
+    setIsLoading(false);
   };
   useEffect(() => {
     if (friendId) {
-        waitForConnection(client, function () {
-            client.send(
-                '/api/friend/invite',
-                {},
-                JSON.stringify({
-                  userId: friendId,
-                  gameType: 'typing',
-                  roomCode: roomCode,
-                }),
-              );
-          });
+      waitForConnection(client, function () {
+        client.send(
+          // client.current.send(
+          '/api/friend/invite',
+          {},
+          JSON.stringify({
+            userId: friendId,
+            gameType: 'typing',
+            roomCode: roomCode,
+          }),
+        );
+      });
     }
   }, [friendId]);
-  const invite = () => {};
+  // const invite = () => {};
   return (
     <div>
       {isLoading && !players && (
@@ -501,83 +514,95 @@ const TypingFriendGame = () => {
       )}
 
       <Typing>
-        
+        {modal === 'invite' && (
+          <FriendModal handleModal={closeModal} type="invite" />
+        )}
         {players && (
-            <TypingResult>
-                                            {modal === 'invite' && (
-                            <FriendModal handleModal={closeModal} type="invite" />
-                          )}
-                          <button onClick={handleModal}>친구 초대</button>
-                          {master && <button onClick={onClickStart}>게임시작</button>}
-                    {arr.map((a: any, idx: number) => {
-                      return (
-                        <div key={idx}>
-                          <TypingPersonalResult>
-                        <Personal>
-                          <PersonalId>
-                                {idx<players.length&& (<div>{players[idx].nickname}</div> )}
-                          </PersonalId>
-                              <PersonalCharacter>
-                                {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                                {isLoading&&idx < players.length && (
-                                  <CharacterImg
-                                    progress={
-                                      testProgress
-                                        ? testProgress.progressByPlayer[`${players[idx].id}`] +
-                                          '%'
-                                        : '0%'
-                                    }
-                                    className="imgNormal"
-                                    src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
-                                    alt="playerImg"
-                                  />)}
-                                
-                                {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                                {!isLoading && idx < players.length && (
-                                  <CharacterImg
-                                    progress={
-                                      testProgress
-                                        ? testProgress.progressByPlayer[`${players[idx].id}`] +
-                                          '%'
-                                        : '0%'
-                                    }
-                                    className="img"
-                                    src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
-                                    alt="playerImg"
-                                  /> )}
-                          </PersonalCharacter>
-                              <PersonalResult>
-                                {idx < players.length && testProgress&&(
-                                  <div>
-                                    {testProgress.progressByPlayer[`${players[idx].id}`]}
-                                  </div>
-                                )}
-                          </PersonalResult>
-                        </Personal>
-                          </TypingPersonalResult>
-                        </div>
-                      )
-                    })}
-          
-                    </TypingResult>
-        )
+          <TypingResult>
+            {arr.map((a: any, idx: number) => {
+              return (
+                <div key={idx}>
+                  <TypingPersonalResult>
+                    <Personal>
+                      <PersonalId>
+                        {idx < players.length && (
+                          <div>{players[idx].nickname}</div>
+                        )}
+                      </PersonalId>
+                      <PersonalCharacter>
+                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                        {isLoading && idx < players.length && (
+                          <CharacterImg
+                            progress={
+                              testProgress
+                                ? testProgress.progressByPlayer[
+                                    `${players[idx].id}`
+                                  ] + '%'
+                                : '0%'
+                            }
+                            className="imgNormal"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
+                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+                            alt="playerImg"
+                          />
+                        )}
 
-        }
+                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                        {!isLoading && idx < players.length && (
+                          <CharacterImg
+                            progress={
+                              testProgress
+                                ? testProgress.progressByPlayer[
+                                    `${players[idx].id}`
+                                  ] + '%'
+                                : '0%'
+                            }
+                            className="img"
+                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
+                            alt="playerImg"
+                          />
+                        )}
+                      </PersonalCharacter>
+                      <PersonalResult>
+                        {idx < players.length && testProgress && (
+                          <div>
+                            {
+                              testProgress.progressByPlayer[
+                                `${players[idx].id}`
+                              ]
+                            }
+                          </div>
+                        )}
+                      </PersonalResult>
+                    </Personal>
+                  </TypingPersonalResult>
+                </div>
+              );
+            })}
+          </TypingResult>
+        )}
 
-
-      {/* 대기하고 있을때 */}
+        {/* 대기하고 있을때 */}
         {isLoading && players && (
-          
           <WaitingTypingGameBox>
-            <p>방장이 시작하기를 기다리세요</p>
-            </WaitingTypingGameBox>
-      )}
+            {master && <div>시작하기를 눌러 게임을 시작하세요</div>}
+            {!master && <div>방장이 시작하기를 기다리세요</div>}
+            {modal === 'invite' && (
+              <FriendModal handleModal={closeModal} type="invite" />
+            )}
+            <div>
+              <button onClick={handleModal}>친구 초대</button>
+            </div>
+            <div>
+              {master && <button onClick={onClickStart}>게임시작</button>}
+            </div>
+          </WaitingTypingGameBox>
+        )}
 
-      {/* 게임 시작했을 때 */}
+        {/* 게임 시작했을 때 */}
 
-      
-
-      {!isLoading && (
+        {!isLoading && (
           <TypingGameBox
             onKeyDown={(event) => handleSetKey(event)}
             tabIndex={1}
@@ -625,8 +650,7 @@ const TypingFriendGame = () => {
             })}
           </TypingGameBox>
         )}
-        
-        </Typing>
+      </Typing>
     </div>
   );
 };
