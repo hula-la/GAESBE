@@ -103,6 +103,8 @@ public class User {
     @ColumnDefault("0")
     private int winningStreak;
 
+    @ColumnDefault("0")
+    private int maxWinStreak;
 
     public User update(String nickname, int profileChar) {
         this.nickname = nickname;
