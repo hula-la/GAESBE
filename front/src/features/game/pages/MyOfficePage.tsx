@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Level0 from '../components/Level0';
 import Level1 from '../components/Level1';
@@ -8,7 +8,8 @@ import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
 import { attendanceRequest } from '../../../api/mypageApi';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { itemActions } from '../itemSlice';
 
 const Wrapper = styled.div`
   width: 66%;
@@ -41,7 +42,16 @@ const Wrapper = styled.div`
 `;
 
 const MyOfficePage = () => {
+  const dispatch = useDispatch();
   const { userAbility } = useSelector((state: any) => state.auth);
+
+  // useEffect(() => {
+  //   dispatch(itemActions.fetchCharacterStart);
+  //   dispatch(itemActions.fetchOfficeStart);
+  // }, []);
+
+
+
   const attendance = async () => {
     try {
       const res = await attendanceRequest();

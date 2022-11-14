@@ -6,6 +6,7 @@ import FriendSecondModal from '../components/FriendSecondModal';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../../../components/Common/retroBtn.css';
 
 const FriendSide = styled.div`
   width: 18vw;
@@ -67,10 +68,8 @@ const FriendSide = styled.div`
     justify-content: center;
     margin-bottom: 1rem;
     .friendButton {
-      background: #ffc02d;
-      border-radius: 15px;
-      font-size: 20px;
-      margin-left: 0.5rem;
+
+      margin: 0 1rem;
     }
   }
 `;
@@ -136,12 +135,15 @@ function FriendMainPage() {
         )}
         {friends ? <FriendList /> : <div>친구창이 조용합니다...</div>}
         <div className="friendButtons">
-          <button className="friendButton" onClick={handleModal}>
+          <a href="javascript:void(0)" className="friendButton eightbit-btn eightbit-btn--proceed" onClick={handleModal}>친구신청</a>
+          <a href="javascript:void(0)" className="friendButton eightbit-btn eightbit-btn--proceed" onClick={handleSecondModal}>대기목록</a>
+
+          {/* <button className="friendButton" onClick={handleModal}>
             친구신청
           </button>
           <button className="friendButton" onClick={handleSecondModal}>
             대기목록
-          </button>
+          </button> */}
         </div>
       </div>
     </FriendSide>

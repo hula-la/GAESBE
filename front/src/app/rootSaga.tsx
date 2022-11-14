@@ -6,6 +6,7 @@ import { typingSagas } from '../features/typing/typingSaga';
 import { friendSagas } from '../features/friend/friendSaga';
 import { coinSagas } from '../features/coinflip/coinFlipSaga';
 import { gameSagas } from '../features/game/gameSaga';
+import { itemSagas } from '../features/game/itemSaga';
 // rootSaga
 export default function* rootSaga() {
   yield all([
@@ -15,5 +16,6 @@ export default function* rootSaga() {
     ...friendSagas,
     ...coinSagas,
     ...gameSagas,
+    ...itemSagas,
   ]);
 }

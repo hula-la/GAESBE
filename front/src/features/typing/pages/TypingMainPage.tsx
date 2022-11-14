@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './retroBtn.css';
+import '../../../components/Common/retroBtn.css';
+
+// import "src/components/retroBtn.css";
 
 const TypingMain = styled.div`
   .aniToDown{
@@ -28,8 +30,10 @@ const TypingMain = styled.div`
   .title {
     text-align: center;
     height: 25%;
+    width: 100%;
+    margin: 2rem 0;
     img {
-      height: 80%;
+      width: 60%;
     }
   }
 `;
