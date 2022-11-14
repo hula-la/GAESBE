@@ -49,11 +49,11 @@
     box-shadow: inset 4px 4px 0px 0px #8c2022;
   }
   .eightbit-btn--proceed {
-    background: #f7d51d;
-    box-shadow: inset -4px -4px 0px 0px #e8c400;
+    background: #ffc02d;
+    box-shadow: inset -4px -4px 0px 0px rgb(236, 153, 0);
   }
   .eightbit-btn--proceed:hover, .eightbit-btn--proceed:focus {
-    background: #f2c409;
+    background: #e2b708;
     box-shadow: inset -6px -6px 0px 0px #e59400;
   }
   .eightbit-btn--proceed:active {
