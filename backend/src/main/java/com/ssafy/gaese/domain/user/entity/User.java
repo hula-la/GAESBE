@@ -106,6 +106,10 @@ public class User {
     @ColumnDefault("0")
     private int maxWinStreak;
 
+    @ColumnDefault("1")
+    private int officeLv;
+
+
     public User update(String nickname, int profileChar) {
         this.nickname = nickname;
         this.profileChar = profileChar;

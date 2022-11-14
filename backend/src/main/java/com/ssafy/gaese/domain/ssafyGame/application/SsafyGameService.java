@@ -43,7 +43,7 @@ public class SsafyGameService {
             user.setWinningStreak(user.getWinningStreak()+1);
             if(user.getWinningStreak()>user.getMaxWinStreak())
                 user.setMaxWinStreak(user.getWinningStreak());
-            
+
             Ability ability = abilityRepository.findByUser_Id(userId).get();
 
             ability.addExp("luck", (int) Math.pow(2,user.getWinningStreak()));
