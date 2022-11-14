@@ -26,7 +26,7 @@ public class AuthLogOutController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/";
+        return "redirect:https://k7e104.p.ssafy.io/";
     }
 
 }
