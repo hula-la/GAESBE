@@ -53,6 +53,12 @@ const algoSlice = createSlice({
     },
     setGameResult(state, action: Action<string>) {
       state.gameResultMsg = action.payload
+    },
+    bjConnectRequestStart(state, action:Action<string>) {
+      state.loadingMsg = 'BJCONNECT'
+    },
+    bjConnectRequestEnd(state) {
+      state.loadingMsg = ''
     }
   }
 })
