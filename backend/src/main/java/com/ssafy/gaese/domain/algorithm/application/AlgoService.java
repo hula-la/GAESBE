@@ -181,12 +181,12 @@ public class AlgoService {
             }
 
         }
-        System.out.println("떠날꺼임");
+        System.out.println("떠날꺼임 > "+algoSocketDto.getUserId());
 
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
 
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
-
+        // 방장이 나갔는지 확인
         if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
             
             if(changeMaster(algoSocketDto.getRoomCode())){
@@ -292,6 +292,12 @@ public class AlgoService {
         hashOperations.put("bjCodes",userId+"",code);
 
         return code;
+    }
+
+    public int getFirstCnt(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
+        int cnt = algoRepository.countFirstRank(user);
+        return cnt;
     }
 
     public Boolean confirmCode(Long userId, String bjId){

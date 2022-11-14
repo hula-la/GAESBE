@@ -160,4 +160,10 @@ public class AlgorithmController {
         System.out.println(algoSocketService.getCurrentRank(roomCode));
 
     }
+
+    @GetMapping("/record/rank")
+    public void test(@AuthenticationPrincipal CustomUserDetails userDetails) throws IOException, ExecutionException, InterruptedException {
+        System.out.println(algoService.getFirstCnt(userDetails.getId()));
+    }
+
 }
