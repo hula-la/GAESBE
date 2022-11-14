@@ -4,7 +4,7 @@ import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.dto.item.OfficeDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
-import com.ssafy.gaese.domain.user.entity.item.Character;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
 import com.ssafy.gaese.domain.user.entity.item.Office;
 import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.entity.item.UserOffice;
@@ -35,7 +35,7 @@ public class ItemService {
     public List<CharacterDto> getCharacters(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
 
-        Set<Long> characterIdList = user.getUserCharacterList().stream().map(uc -> uc.getCharacter().getId()).collect(Collectors.toSet());
+        Set<Long> characterIdList = user.getUserCharacterList().stream().map(uc -> uc.getCharacters().getId()).collect(Collectors.toSet());
         List<CharacterDto> characters = characterRepository.findAll().stream()
                 .map(c -> c.toDto(characterIdList.contains(c.getId())))
                 .collect(Collectors.toList());
@@ -83,13 +83,13 @@ public class ItemService {
     @Transactional
     public List<CharacterDto> buyCharacter(Long userId, Long characterId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
-        Character character = characterRepository.findById(characterId).orElseThrow(() -> new RuntimeException("캐릭터가 없습니다"));
+        Characters character = characterRepository.findById(characterId).orElseThrow(() -> new RuntimeException("캐릭터가 없습니다"));
 
         // 조건 확인
 
 
         userCharacterRepository.save(UserCharacter.builder()
-                .character(character)
+                .characters(character)
                 .user(user)
                 .build());
 

@@ -47,39 +47,29 @@ public class Ability {
     public Ability(User user) {
         this.user = user;
     }
-
-    public void levelUp(String field){
-        switch (field){
-            case "algorithm":
-                this.algorithmLv++;
-                break;
-            case "cs":
-                this.csLv++;
-                break;
-            case "typing":
-                this.typingLv++;
-                break;
-            case "luck":
-                this.luckLv++;
-                break;
-            default:
-                throw new RuntimeException();
-        }
-    }
+    
 
     public void addExp(String field, int plus){
         switch (field){
             case "algorithm":
                 this.algorithmExp+=plus;
+                this.algorithmLv+=this.algorithmExp/7;
+                this.algorithmExp%=7;
                 break;
             case "cs":
                 this.csExp+=plus;
+                this.csLv+=this.csExp/7;
+                this.csExp%=7;
                 break;
             case "typing":
                 this.typingExp+=plus;
+                this.typingLv+=this.typingExp/7;
+                this.typingExp%=7;
                 break;
             case "luck":
                 this.luckExp+=plus;
+                this.luckLv+=this.luckExp/7;
+                this.luckExp%=7;
                 break;
             default:
                 throw new RuntimeException();
