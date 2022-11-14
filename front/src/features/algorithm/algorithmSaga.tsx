@@ -2,7 +2,8 @@ import {all, takeEvery, takeLatest, put, call, take, fork, delay} from 'redux-sa
 import { AxiosResponse } from 'axios'
 import { Action, AlgoRoomInterface, RecordSendInterface } from '../../models/algo'
 import { algoActions } from './algorithmSlice'
-import { confirmAlgoRoom, makeAlgoRoom, checkMyAnswerRequest, roomMakePlaying, endGame } from '../../api/algoApi'
+import { confirmAlgoRoom, makeAlgoRoom, checkMyAnswerRequest, roomMakePlaying, endGame, BjConnectCheck } from '../../api/algoApi'
+import { authActions } from '../auth/authSlice'
 
 
 function* enterAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
@@ -64,11 +65,29 @@ function* sendMyRankSaga(action: Action<RecordSendInterface>) {
   }
 }
 
+function* bjConnectRequestSaga(action: Action<string>) {
+  try {
+    const res: AxiosResponse = yield call(BjConnectCheck, action.payload)
+    if (res.status===200) {
+      if (res.data) {
+        alert('연동되었습니다!')
+        yield put(authActions.fetchUserInfoStart())
+      } else {
+        alert('연동에 실패했습니다 다시 시도해 주세요')
+      }
+      yield put(algoActions.bjConnectRequestEnd())
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 function* algoSaga() {
   yield takeLatest(algoActions.enterAlgoRoom, enterAlgoRoomSaga)
   yield takeLatest(algoActions.creatAlgoRoom, creatAlgoRoomSaga)
   yield takeLatest(algoActions.checkMyAnswerRequestStart, checkMyAnswerRequestSaga)
   yield takeLatest(algoActions.sendMyRank, sendMyRankSaga)
+  yield takeLatest(algoActions.bjConnectRequestStart, bjConnectRequestSaga)
 }
 
 export const algoSagas = [fork(algoSaga)];

@@ -45,3 +45,15 @@ export const roomMakePlaying = async () => {
   const res = await client.get('/algo/play')
   return res
 }
+
+// 백준 연동 코드 request
+export const BjConnectCodeRequest = async () => {
+  const res = await client.get('/algo/bj/code')
+  return res
+}
+
+// 백준 연동 확인
+export const BjConnectCheck = async (payload:string) => {
+  const res = await client.get(`/algo/bj/code/confirm/${payload}`)
+  return res
+}

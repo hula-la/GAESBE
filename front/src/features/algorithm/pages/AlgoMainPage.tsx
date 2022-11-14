@@ -7,6 +7,7 @@ import { algoActions } from '../algorithmSlice';
 import { AlgoRoomInterface } from '../../../models/algo';
 
 import AlgoRoom from '../components/AlgoRoom';
+import AlgoModal from '../components/AlgoModal';
 import styled from 'styled-components';
 import '../../../components/Common/retroBtn.css';
 const Wrapper = styled.div`
@@ -86,6 +87,11 @@ function AlgoMainPage() {
     start: AlgoRoomInterface[];
     wait: AlgoRoomInterface[];
   }>({ start: [], wait: [] });
+  const [bjConnectModal, setBjConnectModal] = useState<boolean>(false)
+
+  const handleConnectModal = () => {
+    setBjConnectModal(!bjConnectModal)
+  }
 
   const handleMakeRoom = () => {
     navigate('make');
@@ -118,6 +124,7 @@ function AlgoMainPage() {
   return (
     <Wrapper>
       <Content>
+        {bjConnectModal && <AlgoModal handleModal={handleConnectModal} />}
         <h1 className="title">
           <img src={`/img/gametitle/gametitle4.png`}></img>
         </h1>
@@ -126,7 +133,7 @@ function AlgoMainPage() {
             새로고침
           </a>
           <a
-            onClick={handleReload}
+            onClick={handleConnectModal}
             className="eightbit-btn eightbit-btn--proceed"
           >
             백준연동
