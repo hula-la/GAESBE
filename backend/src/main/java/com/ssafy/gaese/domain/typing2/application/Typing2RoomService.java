@@ -54,20 +54,21 @@ public class Typing2RoomService {
             {
 //                반려하는 부분 만들어 줘야함
                 simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-                 return;
+                return;
             }
-
+            System.out.println("typingSocketDto 방 들어올때 체크");
+            System.out.println(typingSocketDto);
             // 랜덤방 들어가기
-            if (typingSocketDto.getRoomType()!= TypingSocketDto.RoomType.FRIEND)
+            if (typingSocketDto.getRoomType() != TypingSocketDto.RoomType.FRIEND)
                 roomDto = enterRandomRoom(typingSocketDto);
-            // 친선전 들어가기
+                // 친선전 들어가기
             else {
                 // 방만들기
                 if (typingSocketDto.getRoomCode()==null){
                     roomDto = enterMyRoom(typingSocketDto);
                 }
                 // 만들어져있는 방 들어가기기
-               else{
+                else{
                     roomDto = enterRoom(typingSocketDto);
                 }
             }
@@ -101,6 +102,7 @@ public class Typing2RoomService {
         System.out.println("방코드를 개인에게 전달"+roomDto);
         System.out.println("방코드를 개인에게 전달"+roomDto.getCode());
         roomResByUser.put("room",roomDto.getCode());
+        roomResByUser.put("masterId",roomDto.getMasterId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
 
         Thread.sleep(1*1000);
@@ -114,9 +116,10 @@ public class Typing2RoomService {
         res.put("isLast", isLast);
         res.put("isMaster", roomDto.getMasterId()==typingSocketDto.getUserId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),res);
-        
+
 
     }
+
 
     public void gameProcess(TypingSocketDto typingSocketDto) throws InterruptedException {
         TypingRoomDto roomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
@@ -146,13 +149,13 @@ public class Typing2RoomService {
 
     // 방 생성
     // 해시로 저장
-    public TypingRoomDto createRoom(String waitRoomKey){
+    public TypingRoomDto createRoom(String waitRoomKey, TypingSocketDto.RoomType roomType){
 
         TypingRoomDto typingRoomDto = new TypingRoomDto();
         if(waitRoomKey==JavaWaitRoomKey) typingRoomDto.setLangType(TypingRecord.LangType.JAVA);
         else typingRoomDto.setLangType(TypingRecord.LangType.PYTHON);
 
-
+        typingRoomDto.setRoomType(roomType);
         TypingRoomDto savedRoom = typingRoomRedisRepository.save(typingRoomDto);
 
 
@@ -181,7 +184,9 @@ public class Typing2RoomService {
             Optional<TypingRoomDto> roomInfoOpt = typingRoomRedisRepository.findById(room);
 
             // 방이 안찾아지면 다음으로
-            if (roomInfoOpt.isEmpty()) continue;
+            if (roomInfoOpt.isEmpty() ||
+                    roomInfoOpt.get().getRoomType()!= TypingSocketDto.RoomType.RANDOM)
+                continue;
             // 인원이 가득차면 다음으로
 
             TypingRoomDto typingRoom = roomInfoOpt.get();
@@ -198,7 +203,7 @@ public class Typing2RoomService {
 
         // 들어갈 곳이 없으면 새로운 방 생성
         if (roomIdToEnter==null){
-            roomIdToEnter = createRoom(waitRoomKey).getCode();
+            roomIdToEnter = createRoom(waitRoomKey,TypingSocketDto.RoomType.RANDOM).getCode();
         }
 
         System.out.println("이 방으로 들어가요~"+roomIdToEnter);
@@ -219,7 +224,7 @@ public class Typing2RoomService {
 
         }
         // 들어갈 곳이 없으면 새로운 방 생성
-        String newRoomCode = createRoom(waitRoomKey).getCode();
+        String newRoomCode = createRoom(waitRoomKey,TypingSocketDto.RoomType.FRIEND).getCode();
 
         typingSocketDto.setRoomCode(newRoomCode);
         TypingRoomDto typingRoomDto = enterRoom(typingSocketDto);
@@ -284,10 +289,11 @@ public class Typing2RoomService {
         //게임이 시작한 상태라면 정보를 지우지 말고 둿다가 나중에 기록할때 사용해야함
         if(typingRoomDto.isStart())
         {
+            System.out.println("typingRoomDto.isStart() 인 상태");
         }
         else {
             //방 내부 유저 정보 삭제
-            players.remove(typingSocketDto.getUserId());
+            players.remove(typingSocketDto.getSessionId());
             //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
             if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
                     typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
@@ -296,6 +302,13 @@ public class Typing2RoomService {
                     typingRoomDto.setMasterId(players.get(strKey));
                     break;
                 }
+
+
+                    Map<String,Object> res = new HashMap<>();
+                    res.put("isMaster", true);
+                    simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
+
+
             }
 
             typingRoomDto.setPlayers(players);
@@ -342,15 +355,20 @@ public class Typing2RoomService {
         HashMap<String, Long> players = typingRoomDto.getPlayers();
 
         // 인원 안차면 시작 안함
-        if (players.size()!=maxPlayer) return false;
-        // 게임 시작하면 list에서 삭제
-        redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
-        //필요없긴 하지만 혹시 모르니 추가
-        typingRoomDto.setRealPlayerCount(players.size());
-        //게임 시작으로 바꿈
-        typingRoomDto.setStart(true);
-        typingRoomRedisRepository.save(typingRoomDto);
-        return true;
+        if (players.size()!=maxPlayer)
+            return false;
+        else
+        {
+            // 게임 시작하면 list에서 삭제
+            redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
+            //필요없긴 하지만 혹시 모르니 추가
+            typingRoomDto.setRealPlayerCount(players.size());
+            //게임 시작으로 바꿈
+            typingRoomDto.setStart(true);
+            typingRoomRedisRepository.save(typingRoomDto);
+            return true;
+        }
+
     }
 
 }
