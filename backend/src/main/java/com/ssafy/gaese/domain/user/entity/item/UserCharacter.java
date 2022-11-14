@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Character")
+@Table(name = "UserCharacter")
 public class UserCharacter {
 
     @Id
@@ -24,6 +24,6 @@ public class UserCharacter {
 
     @ManyToOne
     @JoinColumn(name = "CharacterId")
-    private Character character;
+    private Characters characters;
 
 }
