@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .logout()
                 .deleteCookies("refresh")
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/auth/logout");
 
         http.cors()                     // CORS on
                 .and()
