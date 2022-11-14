@@ -288,7 +288,7 @@ public class Typing2RoomService {
         }
         else {
             //방 내부 유저 정보 삭제
-            players.remove(typingSocketDto.getUserId());
+            players.remove(typingSocketDto.getSessionId());
             //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
             if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
                     typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
