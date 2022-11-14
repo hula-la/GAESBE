@@ -15,7 +15,6 @@ import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
-import com.ssafy.gaese.global.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -118,62 +118,66 @@ public class TypingService {
 
         typingRoomRedisRepository.save(roomDto);
 
+        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
+
         if(roomDto.getRoomType()== TypingSocketDto.RoomType.RANDOM)
         {
             rankUpdate(roomDto);
         }
 
-        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
         deleteRoom(roomDto.getCode());
     }
 
     public void rankUpdate(TypingRoomDto roomDto)
     {
-
-        String now = TimeUtil.getNowDateTime();
+        LocalDateTime now = LocalDateTime.now();
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
         int rank =1;
 
 
         while(roomDto.getPlayers().size()>0)
         {
-            final long[] maxId = new long[1];
-            final float[] maxProgress = {0};
+            long maxId=0;
+            float maxProgress=0;
+            String maxKey="";
             //높은 순위 찾기
-            roomDto.getPlayers().values().forEach(v->{
-                if(maxProgress[0] <=roomDto.getProgressByPlayer().get(v))
+            Iterator<String> keys = roomDto.getPlayers().keySet().iterator();
+            while( keys.hasNext() ){
+
+                String Key = keys.next();
+                Long id = roomDto.getPlayers().get(Key);
+                float progress = roomDto.getProgressByPlayer().get(id);
+                if(maxProgress <=progress)
                 {
-                    maxProgress[0] =roomDto.getProgressByPlayer().get(v);
-                    maxId[0] =v;
+                    maxKey=Key;
+                    maxProgress =progress;
+                    maxId =id;
                 }
-            });
+            }
 
             //레코드 기록
             TypingRecord typingRecord = new TypingRecord();
             typingRecord.setRanks(rank);
-            typingRecord.setDate(now);
-            typingRecord.setId(maxId[0]);
+            typingRecord.setDate(formatedNow);
+            typingRecord.setId(maxId);
             typingRecord.setLangType(roomDto.getLangType());
-            typingRecord.setUser(userRepository.findById(maxId[0]).get());
+            typingRecord.setUser(userRepository.findById(maxId).get());
             typingRecordRepository.save(typingRecord);
 
-            Ability ability = abilityRepository.findByUser_Id(maxId[0]).get();
-
+            Ability ability = abilityRepository.findByUser_Id(maxId).get();
+            System.out.println("변화 전 어빌리티");
+            System.out.println(maxId);
+            System.out.println(ability.getTypingLv());
+            System.out.println(ability.getTypingExp());
             ability.addExp("typing",5-rank);
-//            if(ability.getTypingExp()+(5-rank)*10>=100)
-//            {
-//                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10)-100);
-//                ability.setTypingLv(ability.getTypingLv()+1);
-//            }
-//            else
-//            {
-//                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10));
-//            }
-
+            System.out.println("변화 후 어빌리티");
+            System.out.println(ability.getTypingLv());
+            System.out.println(ability.getTypingExp());
             abilityRepository.save(ability);
 
-            roomDto.getPlayers().remove(maxId[0]);
+            roomDto.getPlayers().remove(maxKey);
 
-            maxProgress[0] = 0;
+            maxProgress = 0;
             rank++;
         }
 
