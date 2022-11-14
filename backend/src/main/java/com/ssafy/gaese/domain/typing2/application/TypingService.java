@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -117,12 +118,13 @@ public class TypingService {
 
         typingRoomRedisRepository.save(roomDto);
 
+        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
+
         if(roomDto.getRoomType()== TypingSocketDto.RoomType.RANDOM)
         {
             rankUpdate(roomDto);
         }
 
-        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
         deleteRoom(roomDto.getCode());
     }
 
@@ -135,43 +137,40 @@ public class TypingService {
 
         while(roomDto.getPlayers().size()>0)
         {
-            final long[] maxId = new long[1];
-            final float[] maxProgress = {0};
+            long maxId=0;
+            float maxProgress=0;
             //높은 순위 찾기
-            roomDto.getPlayers().values().forEach(v->{
-                if(maxProgress[0] <=roomDto.getProgressByPlayer().get(v))
+            Iterator<String> keys = roomDto.getPlayers().keySet().iterator();
+            while( keys.hasNext() ){
+
+                String Key = keys.next();
+                Long id = roomDto.getPlayers().get(Key);
+                float progress = roomDto.getProgressByPlayer().get(id);
+                if(maxProgress <=progress)
                 {
-                    maxProgress[0] =roomDto.getProgressByPlayer().get(v);
-                    maxId[0] =v;
+                    maxProgress =progress;
+                    maxId =id;
                 }
-            });
+            }
 
             //레코드 기록
             TypingRecord typingRecord = new TypingRecord();
             typingRecord.setRanks(rank);
             typingRecord.setDate(formatedNow);
-            typingRecord.setId(maxId[0]);
+            typingRecord.setId(maxId);
             typingRecord.setLangType(roomDto.getLangType());
-            typingRecord.setUser(userRepository.findById(maxId[0]).get());
+            typingRecord.setUser(userRepository.findById(maxId).get());
             typingRecordRepository.save(typingRecord);
 
-            Ability ability = abilityRepository.findByUser_Id(maxId[0]).get();
+            Ability ability = abilityRepository.findByUser_Id(maxId).get();
 
-            if(ability.getTypingExp()+(5-rank)*10>=100)
-            {
-                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10)-100);
-                ability.setTypingLv(ability.getTypingLv()+1);
-            }
-            else
-            {
-                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10));
-            }
+            ability.addExp("typing",5-rank);
 
             abilityRepository.save(ability);
 
-            roomDto.getPlayers().remove(maxId[0]);
+            roomDto.getPlayers().remove(maxId);
 
-            maxProgress[0] = 0;
+            maxProgress = 0;
             rank++;
         }
 
