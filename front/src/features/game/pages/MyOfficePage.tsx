@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Level0 from '../components/Level0';
 import Level1 from '../components/Level1';
@@ -9,9 +10,10 @@ import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
 import { useSelector } from 'react-redux';
 
-import { attendanceRequest } from '../../../api/mypageApi'
+import { attendanceRequest } from '../../../api/mypageApi';
 import AttendanceComponent from '../components/AttendanceComponent';
-
+import { gameActions } from '../gameSlice';
+import { itemActions } from '../itemSlice';
 const Wrapper = styled.div`
   width: 66%;
   height: 97%;
@@ -42,21 +44,22 @@ const Wrapper = styled.div`
   }
 `;
 const MyOfficePage = () => {
+  const dispatch = useDispatch();
   const { userAbility } = useSelector((state: any) => state.auth);
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [needReload, setNeedReload] = useState<boolean>(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [needReload, setNeedReload] = useState<boolean>(false);
   const handleModal = () => {
-    setModalOpen(!modalOpen)
-  }
-  const handleReload = (e:boolean) => {
-    setNeedReload(e)
-  }
+    setModalOpen(!modalOpen);
+  };
+  const handleReload = (e: boolean) => {
+    setNeedReload(e);
+  };
   const attendance = async () => {
     try {
       const res = await attendanceRequest();
       if (res.status === 200) {
         alert('출석체크 되었습니다');
-        handleReload(true)
+        handleReload(true);
       }
     } catch (error: any) {
       if (error.response.status === 446) {
@@ -64,9 +67,20 @@ const MyOfficePage = () => {
       }
     }
   };
+  // useEffect(() => {
+  //   // dispatch(itemActions.fetchCharacterStart());
+  //   dispatch(gameActions.fetchRecordStart());
+  // }, []);
   return (
     <Wrapper>
-      {modalOpen && <AttendanceComponent needReload={needReload} handleReload={handleReload} attendance={attendance} handleModal={handleModal} />}
+      {modalOpen && (
+        <AttendanceComponent
+          needReload={needReload}
+          handleReload={handleReload}
+          attendance={attendance}
+          handleModal={handleModal}
+        />
+      )}
       <Level0 handleModal={handleModal} />
       {/* <Level1 /> */}
       {/* <Level2 /> */}
