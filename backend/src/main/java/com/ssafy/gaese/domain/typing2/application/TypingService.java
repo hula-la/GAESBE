@@ -139,6 +139,7 @@ public class TypingService {
         {
             long maxId=0;
             float maxProgress=0;
+            String maxKey="";
             //높은 순위 찾기
             Iterator<String> keys = roomDto.getPlayers().keySet().iterator();
             while( keys.hasNext() ){
@@ -148,6 +149,7 @@ public class TypingService {
                 float progress = roomDto.getProgressByPlayer().get(id);
                 if(maxProgress <=progress)
                 {
+                    maxKey=Key;
                     maxProgress =progress;
                     maxId =id;
                 }
@@ -163,12 +165,17 @@ public class TypingService {
             typingRecordRepository.save(typingRecord);
 
             Ability ability = abilityRepository.findByUser_Id(maxId).get();
-
+            System.out.println("변화 전 어빌리티");
+            System.out.println(maxId);
+            System.out.println(ability.getTypingLv());
+            System.out.println(ability.getTypingExp());
             ability.addExp("typing",5-rank);
-
+            System.out.println("변화 후 어빌리티");
+            System.out.println(ability.getTypingLv());
+            System.out.println(ability.getTypingExp());
             abilityRepository.save(ability);
 
-            roomDto.getPlayers().remove(maxId);
+            roomDto.getPlayers().remove(maxKey);
 
             maxProgress = 0;
             rank++;
