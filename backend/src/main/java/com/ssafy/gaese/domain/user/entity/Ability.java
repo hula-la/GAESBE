@@ -47,7 +47,7 @@ public class Ability {
     public Ability(User user) {
         this.user = user;
     }
-    
+
 
     public void addExp(String field, int plus){
         switch (field){
