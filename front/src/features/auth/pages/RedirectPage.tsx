@@ -27,7 +27,7 @@ const RedirectPage = () => {
       navigate('/nickname');
     }
     if (userInfo) {
-      navigate('/');
+      navigate('/game');
     }
   }, [userInfo, error, navigate]);
 

@@ -56,6 +56,11 @@ const authSlice = createSlice({
     deleteUserInfoError(state, action) {
       state.error = action.payload.status;
     },
+    logout(state) {
+      localStorage.removeItem('accessToken');
+      state.userInfo = null;
+      state.userAbility = null;
+    },
   },
 });
 
