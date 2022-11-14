@@ -104,7 +104,8 @@ public class Typing2RoomService {
         roomResByUser.put("room",roomDto.getCode());
         roomResByUser.put("masterId",roomDto.getMasterId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-
+        if(roomDto.getMasterId()!=typingSocketDto.getUserId())
+            simpMessagingTemplate.convertAndSend("/typing2/"+roomDto.getMasterId(),roomResByUser);
         Thread.sleep(1*1000);
 
 
