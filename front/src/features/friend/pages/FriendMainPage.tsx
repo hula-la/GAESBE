@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../components/Common/retroBtn.css';
+import { algoActions } from '../../algorithm/algorithmSlice';
 
 const FriendSide = styled.div`
   width: 18vw;
@@ -184,6 +185,16 @@ function FriendMainPage() {
 
   const acceptInvite = () => {
     setIsInvite(false);
+    if (invitedGameInfo.inviteGameType==='algo') {
+      if (!userInfo.bjId) {
+        alert('백준아이디를 연동해야지만 게임을 할 수 있습니다')
+        return
+      }
+      const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode)
+      dispatch(algoActions.enterAlgoRoom(InGameInfo))
+      navigate('/game/algo/battle');
+      return
+    }
     navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
       state: { shareCode: invitedGameInfo.inviteRoomCode },
     });
