@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import MyPage from './features/game/pages/MyPage';
 import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
 import FriendSocket from './features/friend/pages/FriendSocket';
+import OnlyNoLogin from './private/OnlyNoLogin';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -38,8 +39,10 @@ const App = () => {
           <Route path="" element={<IntroPage />} />
           <Route path="oauth2/redirect" element={<RedirectPage />} />
           <Route path="" element={<Background />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="nickname" element={<SetNicknamePage />} />
+            <Route element={<OnlyNoLogin userInfo={userInfo} />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="nickname" element={<SetNicknamePage />} />
+            </Route>
           </Route>
           <Route path="game/*" element={<GamePage />}>
             <Route path="mypage" element={<MyPage />} />
