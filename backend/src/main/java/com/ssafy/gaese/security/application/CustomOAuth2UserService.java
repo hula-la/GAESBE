@@ -91,7 +91,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
         Characters characters = characterRepository.findById(0L).orElseThrow(()->new RuntimeException("캐릭터X"));
-        Office office = officeRepository.findById(0L).orElseThrow(() -> new RuntimeException("오피스X"));
+        Office office = officeRepository.findById(1L).orElseThrow(() -> new RuntimeException("오피스X"));
 
         userCharacterRepository.save(UserCharacter.builder()
                 .characters(characters)
