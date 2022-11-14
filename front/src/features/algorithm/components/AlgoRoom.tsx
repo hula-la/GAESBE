@@ -21,8 +21,8 @@ const Wrapper = styled.div`
   display: flex;
   /* align-items: center; */
   .content {
-    margin: 2% auto;
-    height: 83%;
+    margin: auto;
+    height: 95%;
     width: 79%;
     display: grid;
     grid-template-rows: 1fr 2fr;

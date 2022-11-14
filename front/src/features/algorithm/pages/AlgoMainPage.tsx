@@ -18,18 +18,20 @@ const Wrapper = styled.div`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 90%;
   width: 80%;
   margin: 0 auto;
   .title {
     text-align: center;
     height: 15%;
     img {
-      width: 80%;
+      width: 60%;
+      height: 100%;
     }
   }
   .btn-top {
     height: 7%;
+    margin-bottom: 3%;
     text-align: right;
     a {
       margin-right: 2%;
@@ -37,7 +39,7 @@ const Content = styled.div`
   }
   .btn-bottom {
     height: 12%;
-    margin: auto 0;
+    margin-top: 2%;
     text-align: center;
     display: grid;
     a {
@@ -70,7 +72,7 @@ const Content = styled.div`
   }
 
   .room-list {
-    height: 88%;
+    height: 83%;
     overflow-y: auto;
     border-top: 5px solid black;
   }

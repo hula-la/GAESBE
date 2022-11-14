@@ -52,6 +52,7 @@ function AlgoBeforeStart({ handleLeaveRoom, startGame, inGameUsers }: any) {
       )}
       <div className="user">
         <BeforeSolveUsers inGameUsers={inGameUsers} />
+        
       </div>
       <div className="btn-bottom">
         {InGameInfo.master == userInfo.id && (

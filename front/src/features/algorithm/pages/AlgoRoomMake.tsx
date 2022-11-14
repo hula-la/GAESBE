@@ -14,8 +14,9 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* border : 1px solid white; */
   .title {
-    height: 10%;
+    /* border : 1px solid white; */
     font-size: 5rem;
     span {
       margin: auto 0;
@@ -23,6 +24,7 @@ const Wrapper = styled.div`
     }
   }
   .content {
+    /* border : 1px solid white; */
     height: 65%;
     width: 100%;
     display: flex;
@@ -140,9 +142,9 @@ function AlgoRoomMake() {
 
   return (
     <Wrapper>
-      <p className="title">
+      <div className="title">
         <span className="strokeme">방 만들기</span>
-      </p>
+      </div>
       <form className="content">
         <div className="tier">
           <p>티어</p>
