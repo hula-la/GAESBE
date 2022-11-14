@@ -1,7 +1,9 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { authActions } from '../../features/auth/authSlice';
 
 const Side = styled.div`
   width: 18vw;
@@ -149,11 +151,17 @@ const Side = styled.div`
 
 const SideBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: any) => state.auth);
 
   const handleOnClick = (path: string) => {
     navigate(path);
+  };
+
+  const onClickLogout = () => {
+    dispatch(authActions.logout());
+    navigate('/');
   };
   return (
     <Side>
@@ -240,7 +248,7 @@ const SideBar = () => {
           />
           <p className="foldername">MINI</p>
         </div>
-        <button>로그 아웃</button>
+        <button onClick={onClickLogout}>로그 아웃</button>
       </div>
     </Side>
   );

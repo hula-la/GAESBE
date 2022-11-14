@@ -44,7 +44,7 @@ function FriendList() {
                   friend={offlineFriend}
                   category="noInvite"
                   chatCnt={
-                    uncheckedChatList[offlineFriend.id]
+                    uncheckedChatList && uncheckedChatList[offlineFriend.id]
                       ? uncheckedChatList[offlineFriend.id].length
                       : ''
                   }
