@@ -4,8 +4,16 @@ import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.AuthProvider;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.entity.UserRole;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
+import com.ssafy.gaese.domain.user.entity.item.Office;
+import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
+import com.ssafy.gaese.domain.user.entity.item.UserOffice;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
+import com.ssafy.gaese.domain.user.repository.item.OfficeRepository;
+import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
+import com.ssafy.gaese.domain.user.repository.item.UserOfficeRepository;
 import com.ssafy.gaese.security.error.OAuthProcessingException;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import com.ssafy.gaese.security.model.account.OAuth2UserInfo;
@@ -30,7 +38,10 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final AbilityRepository abilityRepository;
+    private final UserCharacterRepository userCharacterRepository;
+    private final UserOfficeRepository userOfficeRepository;
+    private final CharacterRepository characterRepository;
+    private final OfficeRepository officeRepository;
 
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
     @Override
@@ -76,11 +87,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .authProvider(authProvider)
                 .build();
 
-//        Ability ability = Ability.builder()
-//                .user(user)
-//                .build();
-//
-//        abilityRepository.save(ability);
-        return userRepository.save(user);
+        User save = userRepository.save(user);
+
+
+        Characters characters = characterRepository.findById(0L).orElseThrow(()->new RuntimeException("캐릭터X"));
+        Office office = officeRepository.findById(0L).orElseThrow(() -> new RuntimeException("오피스X"));
+
+        userCharacterRepository.save(UserCharacter.builder()
+                .characters(characters)
+                .user(user)
+                .build());
+
+        userOfficeRepository.save(UserOffice.builder()
+                .office(office)
+                .user(user)
+                .build());
+
+
+        return save;
     }
 }
