@@ -8,9 +8,13 @@ const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
-    fetchRecordStart(state) {},
+    fetchRecordStart(state) {
+      // console.log('이건 시작했지 ㅋㅋ');
+    },
     fetchRecordSuccess(state, action) {
-      console.log(action);
+      // console.log(action);
+      state.record = action.payload;
+      console.log(state.record);
     },
     fetchRecordError(state, action) {},
   },

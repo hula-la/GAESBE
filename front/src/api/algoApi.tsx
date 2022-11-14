@@ -35,7 +35,6 @@ export const checkMyAnswerRequest = async (meta:{roomCode:string, problemId: num
 }
 
 export const endGame = async (body:RecordSendInterface) => {
-  console.log('기록요청 여러번')
   const res = await client.post('/algo/record', body)
   return res
 }
@@ -43,5 +42,17 @@ export const endGame = async (body:RecordSendInterface) => {
 // 내가 게임중인지 판단하는 요청(게임중이면 방 생성 불가능)
 export const roomMakePlaying = async () => {
   const res = await client.get('/algo/play')
+  return res
+}
+
+// 백준 연동 코드 request
+export const BjConnectCodeRequest = async () => {
+  const res = await client.get('/algo/bj/code')
+  return res
+}
+
+// 백준 연동 확인
+export const BjConnectCheck = async (payload:string) => {
+  const res = await client.get(`/algo/bj/code/confirm/${payload}`)
   return res
 }

@@ -11,7 +11,7 @@ interface FriendStateInterface {
   needReload: boolean;
   isInvite: boolean;
   friendId: number | null;
-  chatFriendId: number | null;
+  chatFriend: number | null;
   invitedGameInfo: any;
   alarmList: any;
   waitFriendList: any;
@@ -31,7 +31,7 @@ const initialState: FriendStateInterface = {
   needReload: false,
   isInvite: false,
   friendId: null,
-  chatFriendId: null,
+  chatFriend: null,
   invitedGameInfo: null,
   alarmList: [],
   waitFriendList: [],
@@ -83,7 +83,7 @@ const friendSlice = createSlice({
       console.log(action);
     },
     openChatRoom(state, action) {
-      state.chatFriendId = action.payload;
+      state.chatFriend = action.payload;
       state.isChatOpen = true;
     },
     closeChatRoom(state) {
@@ -125,8 +125,15 @@ const friendSlice = createSlice({
     // 채팅 받기
     recieveChat(state, action) {
       const tmp = [action.payload.chatItem];
-      const newArr = tmp.concat(state.uncheckedChatList[action.payload.id]);
-      const newArr2 = tmp.concat(state.chatList[action.payload.id]);
+      let newArr;
+      let newArr2;
+      if (state.uncheckedChatList[action.payload.id]) {
+        newArr = tmp.concat(state.uncheckedChatList[action.payload.id]);
+        newArr2 = tmp.concat(state.chatList[action.payload.id]);
+      } else {
+        newArr = tmp;
+        newArr2 = tmp;
+      }
       if (!state.isChatOpen) {
         state.uncheckedChatList[action.payload.id] = newArr;
       }

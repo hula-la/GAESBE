@@ -1,14 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { Action, OfficesInterface, CharacterInterface } from '../../models/user';
+import {
+  Action,
+  OfficesInterface,
+  CharacterInterface,
+} from '../../models/user';
 
 interface ItemStateInterface {
   offices: OfficesInterface | null;
   characters: CharacterInterface | null;
-  error: String|null,
-
+  error: String | null;
 }
-
 
 const initialState: ItemStateInterface = {
   offices: null,
@@ -21,11 +23,15 @@ const itemSlice = createSlice({
   initialState,
   reducers: {
     // 캐릭터 불러오기
-    fetchCharacterStart(state) {},
+    fetchCharacterStart(state) {
+      // console.log('시작');
+    },
     fetchCharacterSuccess(state, action) {
+      // console.log('성공', action);
       state.characters = action.payload;
     },
     fetchCharacterError(state, action) {
+      // console.log('에러', action);
       state.error = action.payload.status;
     },
     // 오피스 불러오기
@@ -36,10 +42,8 @@ const itemSlice = createSlice({
     fetchOfficeError(state, action) {
       state.error = action.payload.status;
     },
-    requestBuyCharacterStart(state,action) {},
-    requestBuyOfficeStart(state,action) {},
-
-
+    requestBuyCharacterStart(state, action) {},
+    requestBuyOfficeStart(state, action) {},
   },
 });
 

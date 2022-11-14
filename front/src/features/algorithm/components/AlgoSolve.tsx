@@ -65,9 +65,9 @@ function AlgoSolve({
       return
     }
     if (myRank !== 5 && !timeOut) {
-      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code}))
+      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code, lanId:form.lanId}))
     } else if (timeOut && myRank === 5) {
-      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code}))
+      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code, lanId:form.lanId}))
     }
   }, [myRank, timeOut])
 

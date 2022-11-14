@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../components/Common/retroBtn.css';
+import { algoActions } from '../../algorithm/algorithmSlice';
 
 const FriendSide = styled.div`
   width: 18vw;
@@ -70,7 +71,6 @@ const FriendSide = styled.div`
     justify-content: center;
     margin-bottom: 1rem;
     .friendButton {
-
       margin: 0 1rem;
     }
   }
@@ -113,6 +113,57 @@ const FriendSide = styled.div`
         border-radius: 10px;
         box-shadow: inset 0px 0px 5px white;
       }
+      .meBlock {
+        display: flex;
+        align-items: flex-end;
+        margin-left: auto;
+        flex-direction: column-reverse;
+        margin-right: 0.5rem;
+        max-width: 70%;
+
+        .date {
+          font-size: smaller;
+        }
+      }
+      .me {
+        background: #6f43ff;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+        padding: 0.4rem;
+        border-radius: 10px;
+        word-break: break-all;
+      }
+      .you {
+        max-width: 70%;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+        margin-left: 0.5rem;
+        display: flex;
+      }
+      .youProfile {
+        height: 2rem;
+        width: 2rem;
+      }
+      .youBlock {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .youName {
+          color: #000000;
+        }
+        .youMsg {
+          background: #ffffff;
+          color: #000000;
+          padding: 0.4rem;
+          border-radius: 10px;
+          width: 100%;
+          word-break: break-all;
+        }
+      }
+      .youDate {
+        font-size: smaller;
+        margin-left: 2.5rem;
+      }
     }
 
     .chatInputs {
@@ -151,14 +202,16 @@ function FriendMainPage() {
   const { secondModal } = useSelector((state: any) => state.friend);
   const { invitedGameInfo } = useSelector((state: any) => state.friend);
   const { isChatOpen } = useSelector((state: any) => state.friend);
-  const { chatFriendId } = useSelector((state: any) => state.friend);
+  const { chatFriend } = useSelector((state: any) => state.friend);
   const { chatList } = useSelector((state: any) => state.friend);
 
   useEffect(() => {
-    if (chatFriendId && chatList.hasOwnProperty(chatFriendId)) {
-      setShowChatList(chatList[chatFriendId]);
+    if (chatFriend && chatList.hasOwnProperty(chatFriend.id)) {
+      setShowChatList(chatList[chatFriend.id]);
+    } else {
+      setShowChatList(null);
     }
-  }, [chatFriendId, chatList]);
+  }, [chatFriend, chatList]);
 
   useEffect(() => {
     if (invitedGameInfo) {
@@ -186,6 +239,16 @@ function FriendMainPage() {
 
   const acceptInvite = () => {
     setIsInvite(false);
+    if (invitedGameInfo.inviteGameType==='algo') {
+      if (!userInfo.bjId) {
+        alert('백준아이디를 연동해야지만 게임을 할 수 있습니다')
+        return
+      }
+      const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode)
+      dispatch(algoActions.enterAlgoRoom(InGameInfo))
+      navigate('/game/algo/battle');
+      return
+    }
     navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
       state: { shareCode: invitedGameInfo.inviteRoomCode },
     });
@@ -242,8 +305,20 @@ function FriendMainPage() {
         )}
         {friends ? <FriendList /> : <div>친구창이 조용합니다...</div>}
         <div className="friendButtons">
-          <a href="javascript:void(0)" className="friendButton eightbit-btn eightbit-btn--proceed" onClick={handleModal}>친구신청</a>
-          <a href="javascript:void(0)" className="friendButton eightbit-btn eightbit-btn--proceed" onClick={handleSecondModal}>대기목록</a>
+          <a
+            href="javascript:void(0)"
+            className="friendButton eightbit-btn eightbit-btn--proceed"
+            onClick={handleModal}
+          >
+            친구신청
+          </a>
+          <a
+            href="javascript:void(0)"
+            className="friendButton eightbit-btn eightbit-btn--proceed"
+            onClick={handleSecondModal}
+          >
+            대기목록
+          </a>
 
           {/* <button className="friendButton" onClick={handleModal}>
             친구신청
@@ -264,13 +339,29 @@ function FriendMainPage() {
             />
             <div className="chatContent">
               {showChatList &&
-                showChatList.map((chat: any, idx: number) => {
-                  return (
-                    <div key={idx}>
-                      <p>{chat.msg}</p>
+                userInfo &&
+                showChatList.map((chat: any, idx: number) =>
+                  chat.from === userInfo.id ? (
+                    <div key={idx} className="meBlock">
+                      <div className="date">{chat.date.slice(11, 16)}</div>
+                      <div className="me">{chat.msg}</div>
                     </div>
-                  );
-                })}
+                  ) : (
+                    <div key={idx}>
+                      <div className="you">
+                        <img
+                          className="youProfile"
+                          src={`${process.env.REACT_APP_S3_URL}/profile/${chatFriend.profileChar}_normal.gif`}
+                        />
+                        <div className="youBlock">
+                          <div className="youName">{chatFriend.nickname}</div>
+                          <div className="youMsg">{chat.msg}</div>
+                        </div>
+                      </div>
+                      <div className="youDate">{chat.date.slice(11, 16)}</div>
+                    </div>
+                  ),
+                )}
             </div>
             <div className="chatInputs">
               <input

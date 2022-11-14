@@ -153,7 +153,7 @@ const CoinFlipPage = () => {
         <p id="tails-count">Tails: 0</p>
       </div> */}
       <div className="title">
-        <img src="/img/gametitle/gametitle1.png" alt="title" />
+        <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>
       <div ref={coinRef} className="coin">
         <div className="heads">

@@ -94,11 +94,9 @@ function* deleteUserInfo() {
 }
 function* deleteUserInfoSaga(action: any) {
   const { deleteUserInfoSuccess, deleteUserInfoError } = authActions;
-  console.log('사가 실행됨');
   try {
     const response: AxiosResponse = yield call(deleteUserInfoApi);
     yield put(deleteUserInfoSuccess(response.data));
-    console.log('성공인가?');
   } catch (error: any) {
     yield put(deleteUserInfoError(error.response));
     console.log(error.response);

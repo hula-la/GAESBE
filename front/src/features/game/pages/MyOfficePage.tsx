@@ -1,4 +1,4 @@
-import React, { useEffect,useRef,useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import Level0 from '../components/Level0';
 import Level1 from '../components/Level1';
@@ -7,10 +7,13 @@ import Level3 from '../components/Level3';
 import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
+import { useSelector } from 'react-redux';
+
 import { attendanceRequest } from '../../../api/mypageApi';
-import { useSelector,useDispatch } from 'react-redux';
+import AttendanceComponent from '../components/AttendanceComponent';
+import { gameActions } from '../gameSlice';
 import { itemActions } from '../itemSlice';
-import AttendanceComponent from '../components/AttendanceComponent'
+import { useSelector,useDispatch } from 'react-redux';
 const Wrapper = styled.div`
   width: 66%;
   height: 97%;
@@ -148,6 +151,10 @@ const MyOfficePage = () => {
       }
     }
   };
+  // useEffect(() => {
+  //   // dispatch(itemActions.fetchCharacterStart());
+  //   dispatch(gameActions.fetchRecordStart());
+  // }, []);
   return (
     <Wrapper>
       

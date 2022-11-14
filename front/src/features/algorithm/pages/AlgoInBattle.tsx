@@ -75,6 +75,9 @@ function AlgoInBattle() {
   );
   const client = useRef<any>(null);
   useEffect(() => {
+    if (!InGameInfo) {
+      navigate('/game/algo')
+    }
     client.current = Stomp.over(socket);
     // 개발 버전에서만 콘솔 뜨게 하기
     if (process.env.NODE_ENV !== 'development') {
@@ -238,6 +241,7 @@ function AlgoInBattle() {
           <div>
             {progress === 'before' && (
               <AlgoBeforeStart
+                client={client}
                 handleLeaveRoom={handleLeaveRoom}
                 startGame={startGame}
                 inGameUsers={inGameUsers}

@@ -45,15 +45,18 @@ function* fetchOfficeSaga(action: any) {
 }
 
 function* onFetchOfficeSaga() {
-  const { fetchCharacterStart } = itemActions;
-  yield takeLatest(fetchCharacterStart, fetchOfficeSaga);
+  const { fetchOfficeStart } = itemActions;
+  yield takeLatest(fetchOfficeStart, fetchOfficeSaga);
 }
 
 // 오피스 사기
 function* requestBuyOfficeSage(action: any) {
   const { fetchOfficeSuccess, fetchOfficeError } = itemActions;
   try {
-    const response: AxiosResponse = yield call(requestBuyOfficeApi,action.payload);
+    const response: AxiosResponse = yield call(
+      requestBuyOfficeApi,
+      action.payload,
+    );
     yield put(fetchOfficeSuccess(response.data));
   } catch (e: any) {
     yield put(fetchOfficeError(e.response));
@@ -69,7 +72,10 @@ function* onRequestBuyOfficeSage() {
 function* requestBuyCharacterSaga(action: any) {
   const { fetchCharacterSuccess, fetchCharacterError } = itemActions;
   try {
-    const response: AxiosResponse = yield call(requestBuyCharacterApi,action.payload);
+    const response: AxiosResponse = yield call(
+      requestBuyCharacterApi,
+      action.payload,
+    );
     yield put(fetchCharacterSuccess(response.data));
   } catch (e: any) {
     yield put(fetchCharacterError(e.response));
@@ -80,7 +86,6 @@ function* onRequestBuyCharacterSaga() {
   const { requestBuyCharacterStart } = itemActions;
   yield takeLatest(requestBuyCharacterStart, requestBuyCharacterSaga);
 }
-
 
 export const itemSagas = [
   fork(onFetchCharacterSaga),
