@@ -92,6 +92,7 @@ public class AlgoService {
     }
 
     public Page<AlgoRecordDto> recordList(Pageable pageable, Long userId){
+        System.out.println("서비스");
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
         Page<AlgoRecord> algoRecords = algoRepository.findByUser(user, pageable);
         return algoRecords.map(algoRecord -> algoRecord.toDto());
@@ -181,12 +182,12 @@ public class AlgoService {
             }
 
         }
-        System.out.println("떠날꺼임");
+        System.out.println("떠날꺼임 > "+algoSocketDto.getUserId());
 
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
 
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
-
+        // 방장이 나갔는지 확인
         if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
             
             if(changeMaster(algoSocketDto.getRoomCode())){
@@ -292,6 +293,19 @@ public class AlgoService {
         hashOperations.put("bjCodes",userId+"",code);
 
         return code;
+    }
+
+    public int getFirstCnt(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
+        int cnt = algoRepository.countFirstRank(user);
+        return cnt;
+    }
+
+    public List<AlgoRecordCodeDto> getAllCodes(String roomCode){
+        return algoRepository.getAllCode(roomCode).stream().map(
+                                        record -> record.toCodeDto()
+                                ).collect(Collectors.toList());
+
     }
 
     public Boolean confirmCode(Long userId, String bjId){
