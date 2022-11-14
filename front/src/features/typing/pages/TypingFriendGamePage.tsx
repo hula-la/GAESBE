@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import TypingFriendGame from '../components/TypingFriendGame';
 import styled from 'styled-components';
-import Stomp from 'stompjs';
-import SockJS from 'sockjs-client';
-interface CustomWebSocket extends WebSocket {
-  _transport?: any;
-}
 const Container = styled.div`
   width: 82%;
   background-color: #232323;
@@ -38,7 +31,7 @@ function TypingFriendGamePage() {
     <Container>
       <div className="title">
         <img src="/img/gametitle/gametitle2.png" alt="title" />
-        여기가 친구 페이지
+        {/* 여기가 친구 페이지 */}
       </div>
       <TypingFriendGame />
     </Container>

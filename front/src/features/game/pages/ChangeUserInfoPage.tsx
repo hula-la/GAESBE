@@ -16,15 +16,27 @@ const ChangeUserInfo = styled.div`
 `;
 const MyCharacter = styled.div`
   border: 2px solid blue;
-  width: 40rem;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .img {
+    width: 50%;
+  }
 `;
 const SelectCharacter = styled.div`
   border: 2px solid yellow;
-  width: 41rem;
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow: auto;
+`;
+const CharacterList = styled.div`
+  width: 30%;
+  margin: 1%;
+  text-align: center;
 `;
 const ChangeUserInfoPage = () => {
   const dispatch = useDispatch();
@@ -49,10 +61,30 @@ const ChangeUserInfoPage = () => {
   };
   const [changeNickName, setChangeNickName] = useState<boolean>(false);
   const imageNo = [
-    { name: '첫번째', value: '1' },
-    { name: '두번째', value: '2' },
-    { name: '세번째', value: '3' },
-    { name: '네번째', value: '4' },
+    { value: '1' },
+    { value: '2' },
+    { value: '3' },
+    { value: '4' },
+    { value: '5' },
+    { value: '6' },
+    { value: '7' },
+    { value: '8' },
+    { value: '9' },
+    { value: '10' },
+    { value: '11' },
+    { value: '12' },
+    { value: '13' },
+    { value: '14' },
+    { value: '15' },
+    { value: '16' },
+    { value: '17' },
+    { value: '18' },
+    { value: '19' },
+    // { value: '20' },
+    { value: '21' },
+    { value: '22' },
+    // { value: '23' },
+    { value: '24' },
   ];
   const handleInput = () => {
     setChangeNickName(true);
@@ -83,22 +115,23 @@ const ChangeUserInfoPage = () => {
           </h1>
         )}
         <img
-          src={`/img/rank/character${userInfo.profileChar}.png`}
+          className="img"
+          src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
           alt="캐릭터 없음"
         />
       </MyCharacter>
       <SelectCharacter>
-        <h1>당신의 캐릭터를 변경하세요</h1>
+        <h1>당신의 캐릭터를 변경하세요!!!!!!!!!!!!</h1>
         {imageNo.map((item) => (
-          <p
+          <CharacterList
             key={item.value}
             onClick={(e) => handleSelectCharacter(item.value)}
           >
             <img
-              src={`/img/rank/character${item.value}.png`}
+              src={`${process.env.REACT_APP_S3_URL}/profile/${item.value}_normal.gif`}
               alt="프로필 이미지"
             />
-          </p>
+          </CharacterList>
         ))}
         <button onClick={handleChangeCharacter}>변경</button>
       </SelectCharacter>

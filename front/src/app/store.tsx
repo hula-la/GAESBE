@@ -5,7 +5,7 @@ import rootSaga from './rootSaga';
 import authReducer from '../features/auth/authSlice';
 import gameReducer from '../features/game/gameSlice';
 import algoReducer from '../features/algorithm/algorithmSlice';
-import typingReducer from '../features/typing/typingSlice';
+// import typingReducer from '../features/typing/typingSlice';
 import friendReducer from '../features/friend/friendSlice';
 import coinReducer from '../features/coinflip/coinFlipSlice';
 // rootReducers by using combineReducers
@@ -13,7 +13,7 @@ const rootReducers = combineReducers({
   auth: authReducer,
   game: gameReducer,
   algo: algoReducer,
-  typing: typingReducer,
+  // typing: typingReducer,
   friend: friendReducer,
   coin: coinReducer,
 });
