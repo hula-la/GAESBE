@@ -56,9 +56,10 @@ public class Typing2RoomService {
                 simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
                  return;
             }
-
+            System.out.println("typingSocketDto 방 들어올때 체크");
+            System.out.println(typingSocketDto);
             // 랜덤방 들어가기
-            if (typingSocketDto.getRoomType()!= TypingSocketDto.RoomType.FRIEND)
+            if (typingSocketDto.getRoomType() != TypingSocketDto.RoomType.FRIEND)
                 roomDto = enterRandomRoom(typingSocketDto);
             // 친선전 들어가기
             else {
@@ -101,6 +102,7 @@ public class Typing2RoomService {
         System.out.println("방코드를 개인에게 전달"+roomDto);
         System.out.println("방코드를 개인에게 전달"+roomDto.getCode());
         roomResByUser.put("room",roomDto.getCode());
+        roomResByUser.put("masterId",roomDto.getMasterId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
 
         Thread.sleep(1*1000);
@@ -117,6 +119,7 @@ public class Typing2RoomService {
         
 
     }
+
 
     public void gameProcess(TypingSocketDto typingSocketDto) throws InterruptedException {
         TypingRoomDto roomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
@@ -146,13 +149,13 @@ public class Typing2RoomService {
 
     // 방 생성
     // 해시로 저장
-    public TypingRoomDto createRoom(String waitRoomKey){
+    public TypingRoomDto createRoom(String waitRoomKey, TypingSocketDto.RoomType roomType){
 
         TypingRoomDto typingRoomDto = new TypingRoomDto();
         if(waitRoomKey==JavaWaitRoomKey) typingRoomDto.setLangType(TypingRecord.LangType.JAVA);
         else typingRoomDto.setLangType(TypingRecord.LangType.PYTHON);
 
-
+        typingRoomDto.setRoomType(roomType);
         TypingRoomDto savedRoom = typingRoomRedisRepository.save(typingRoomDto);
 
 
@@ -181,7 +184,9 @@ public class Typing2RoomService {
             Optional<TypingRoomDto> roomInfoOpt = typingRoomRedisRepository.findById(room);
 
             // 방이 안찾아지면 다음으로
-            if (roomInfoOpt.isEmpty()) continue;
+            if (roomInfoOpt.isEmpty() ||
+                    roomInfoOpt.get().getRoomType()!= TypingSocketDto.RoomType.RANDOM)
+                continue;
             // 인원이 가득차면 다음으로
 
             TypingRoomDto typingRoom = roomInfoOpt.get();
@@ -198,7 +203,7 @@ public class Typing2RoomService {
 
         // 들어갈 곳이 없으면 새로운 방 생성
         if (roomIdToEnter==null){
-            roomIdToEnter = createRoom(waitRoomKey).getCode();
+            roomIdToEnter = createRoom(waitRoomKey,TypingSocketDto.RoomType.RANDOM).getCode();
         }
 
         System.out.println("이 방으로 들어가요~"+roomIdToEnter);
@@ -219,7 +224,7 @@ public class Typing2RoomService {
 
         }
         // 들어갈 곳이 없으면 새로운 방 생성
-        String newRoomCode = createRoom(waitRoomKey).getCode();
+        String newRoomCode = createRoom(waitRoomKey,TypingSocketDto.RoomType.FRIEND).getCode();
 
         typingSocketDto.setRoomCode(newRoomCode);
         TypingRoomDto typingRoomDto = enterRoom(typingSocketDto);
