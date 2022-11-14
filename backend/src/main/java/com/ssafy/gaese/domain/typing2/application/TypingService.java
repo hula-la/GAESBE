@@ -122,8 +122,8 @@ public class TypingService {
             rankUpdate(roomDto);
         }
 
-        deleteRoom(roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
+        deleteRoom(roomDto.getCode());
     }
 
     public void rankUpdate(TypingRoomDto roomDto)

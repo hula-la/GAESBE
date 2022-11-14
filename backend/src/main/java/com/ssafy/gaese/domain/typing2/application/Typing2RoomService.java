@@ -281,7 +281,7 @@ public class Typing2RoomService {
             //사람이 0명이면 어차피 보내줘야할 사람도 없으니 여기서 null로 끝내는게 로직상 맞을거 같아요.
             return null;
         }
-        //게임이 시작한 상태라면 정보를 둿다가 나중에 기록할때 사용해야함
+        //게임이 시작한 상태라면 정보를 지우지 말고 둿다가 나중에 기록할때 사용해야함
         if(typingRoomDto.isStart())
         {
         }
@@ -289,13 +289,16 @@ public class Typing2RoomService {
             //방 내부 유저 정보 삭제
             players.remove(typingSocketDto.getUserId());
             //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
-            if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
+            if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
+                    typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
             {
                 for( String strKey : players.keySet() ){
                     typingRoomDto.setMasterId(players.get(strKey));
                     break;
                 }
             }
+
+            typingRoomDto.setPlayers(players);
         }
         // 바뀐 방 정보로 저장
         TypingRoomDto saved = typingRoomRedisRepository.save(typingRoomDto);
