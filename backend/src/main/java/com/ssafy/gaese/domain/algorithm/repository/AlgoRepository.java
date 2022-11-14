@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AlgoRepository extends JpaRepository<AlgoRecord, Long> {
 
@@ -17,4 +19,8 @@ public interface AlgoRepository extends JpaRepository<AlgoRecord, Long> {
      */
     @Query("SELECT count(a) from AlgoRecord a WHERE a.user=:user AND a.ranking = 1")
     int countFirstRank(User user);
+    @Query("SELECT a from AlgoRecord a WHERE a.roomCode=:roomCode")
+    List<AlgoRecord> getAllCode (String roomCode);
+
+
 }

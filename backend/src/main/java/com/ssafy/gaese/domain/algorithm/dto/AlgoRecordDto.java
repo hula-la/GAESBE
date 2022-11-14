@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Getter
@@ -22,8 +23,10 @@ public class AlgoRecordDto {
     private Boolean isSolve;
     private String solveTime;
     private Integer ranking;
+    private String lan;
     private String code;
     private Boolean isRetry;
+
 
     public AlgoRecord toEntity(User user){
         return AlgoRecord.builder()

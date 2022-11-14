@@ -9,4 +9,5 @@ public class AlgoRecordReq {
     private Long problemId;
     private int ranking;
     private String code;
+    private int lanId;
 }
