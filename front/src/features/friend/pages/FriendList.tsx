@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { FriendInterface } from '../../../models/friend';
@@ -10,6 +10,7 @@ const FriendListBlock = styled.div`
 
 function FriendList() {
   const { friends } = useSelector((state: any) => state.friend);
+  const { uncheckedChatList } = useSelector((state: any) => state.friend);
 
   return (
     <FriendListBlock>
@@ -22,6 +23,11 @@ function FriendList() {
                 type="online"
                 friend={onlineFriend}
                 category="noInvite"
+                chatCnt={
+                  uncheckedChatList[onlineFriend.id]
+                    ? uncheckedChatList[onlineFriend.id].length
+                    : ''
+                }
               />
             );
           })}
@@ -37,6 +43,11 @@ function FriendList() {
                   type="offline"
                   friend={offlineFriend}
                   category="noInvite"
+                  chatCnt={
+                    uncheckedChatList && uncheckedChatList[offlineFriend.id]
+                      ? uncheckedChatList[offlineFriend.id].length
+                      : ''
+                  }
                 />
               );
             },

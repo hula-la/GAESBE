@@ -1,10 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import FriendModal from '../../friend/components/FriendModal';
+import { friendActions } from '../../friend/friendSlice';
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
@@ -124,6 +126,8 @@ const WaitingTypingGameBox = styled.div`
   color: black;
   background-color: white;
   border-radius: 20px;
+  display: flex;
+  flex-direction: column;
 `;
 const TypingGameBox = styled.div`
   width: 90%;
@@ -156,12 +160,13 @@ const This = styled.div`
   display: inline;
   color: ${(props) => props.color};
 `;
-const TypingGame = () => {
+const TypingFriendGame = () => {
   let roomcode: string;
   let testtest: number;
   let testprogress: any;
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { lang } = location.state;
   const [players, setPlayers] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -177,13 +182,22 @@ const TypingGame = () => {
   const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
   const [sec, setSec] = useState(3);
+  const { modal } = useSelector((state: any) => state.friend);
+  const { shareCode } = location.state;
+  const { friendId } = useSelector((state: any) => state.friend);
+  const [master, setMaster] = useState<Boolean>(false);
 
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
 
   const client = Stomp.over(socket);
+  // const client = useRef<any>(null);
   const client2 = Stomp.over(socket);
+  // useEffect(() => {
+  //   client.current = Stomp.over(socket);
+  // }, []);
+
   useEffect(() => {
     if (isEnd && resultId && resultNickName && resultProfile) {
       console.log('끄읕');
@@ -197,19 +211,15 @@ const TypingGame = () => {
     }
   }, [isEnd, resultId, resultNickName, resultProfile]);
   useEffect(() => {
-    if (isReady) {
-      interval.current = setInterval(() => {
-        setSec(initialTime.current % 60);
-        initialTime.current -= 1;
-      }, 1000);
-      return () => clearInterval(interval.current);
-    }
-  }, [isReady]);
+    return () => setIsLoading(true);
+  }, []);
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
+        // client.current.connect({}, (frame: any) => {
         console.log('*****************121**************************');
         client.subscribe(`/typing2/${userInfo.id}`, (res) => {
+          // client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
@@ -218,6 +228,7 @@ const TypingGame = () => {
           if (data.hasOwnProperty('isLast')) {
             if (data.isLast === true) {
               client.send(
+                // client.current.send(
                 '/api/typing2/start',
                 {},
                 JSON.stringify({
@@ -226,14 +237,21 @@ const TypingGame = () => {
                 }),
               );
               setIsReady(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 5000);
+              setIsLoading(false);
+              // setTimeout(() => {
+              //   setIsLoading(false);
+              // }, 5000);
+            }
+          }
+          if (data.hasOwnProperty('isMaster')) {
+            if (data.isMaster === true) {
+              setMaster(true);
             }
           }
         });
         const enterRoom = () => {
           client.send(
+            // client.current.send(
             '/api/typing2',
             {},
             JSON.stringify({
@@ -241,13 +259,15 @@ const TypingGame = () => {
               type: 'ENTER',
               sessionId: socket._transport.url.slice(-18, -10),
               userId: userInfo.id,
-              roomType: 'RANDOM',
+              roomType: 'FRIEND',
+              roomCode: shareCode,
             }),
           );
         };
         enterRoom();
         const fetchMemberInfo = () => {
           client.send(
+            // client.current.send(
             '/api/typing2/memberInfo',
             {},
             JSON.stringify({
@@ -263,6 +283,13 @@ const TypingGame = () => {
   }, [userInfo]);
 
   useEffect(() => {
+    return () => {
+      client.disconnect(() => {});
+      // client.current.disconnect(() => {});
+    };
+  }, []);
+
+  useEffect(() => {
     if (roomCode) {
       client2.connect({}, (frame) => {
         console.log('*****************177**************************');
@@ -276,9 +303,10 @@ const TypingGame = () => {
           } else if (testdata.hasOwnProperty('msg')) {
             if (testdata.msg === 'start') {
               setIsReady(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 5000);
+              setIsLoading(false);
+              // setTimeout(() => {
+              //   setIsLoading(false);
+              // }, 5000);
             } else if (testdata.msg === 'end') {
               setResultId(testdata.winUserId);
               setResultNickName(testdata.winUserNickName);
@@ -312,12 +340,6 @@ const TypingGame = () => {
     );
   }
 
-  useEffect(() => {
-    return () => {
-      client.disconnect(() => {});
-    };
-  }, []);
-
   const exapmleitem = `${paragraph}`;
   const example = exapmleitem.split(' ');
   const item = example.map((e) => e);
@@ -345,8 +367,22 @@ const TypingGame = () => {
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
         console.log('****************보냄********************');
+
+        // client.send(
+        // // client.current.send(
+        //   '/api/typing2/submit',
+        //   {},
+        //   JSON.stringify({
+        //     roomCode: roomCode,
+        //     sessionId: socket._transport.url.slice(-18, -10),
+        //     isCorrect: true,
+        //     userId: userInfo.id,
+        //   }),
+        // );
+
         waitForConnection(client, function () {
           client.send(
+            // client.current.send(
             '/api/typing2/submit',
             {},
             JSON.stringify({
@@ -404,6 +440,7 @@ const TypingGame = () => {
         console.log('****************보냄********************');
         waitForConnection(client, function () {
           client.send(
+            // client.current.send(
             '/api/typing2/submit',
             {},
             JSON.stringify({
@@ -432,6 +469,41 @@ const TypingGame = () => {
     } else {
     }
   };
+  const handleModal = () => {
+    dispatch(friendActions.handleModal('invite'));
+  };
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
+  };
+  const onClickStart = () => {
+    client.send(
+      // client.current.send(
+      '/api/typing2/start',
+      {},
+      JSON.stringify({
+        langType: lang,
+        roomCode: roomCode,
+      }),
+    );
+    setIsLoading(false);
+  };
+  useEffect(() => {
+    if (friendId) {
+      waitForConnection(client, function () {
+        client.send(
+          // client.current.send(
+          '/api/friend/invite',
+          {},
+          JSON.stringify({
+            userId: friendId,
+            gameType: 'typing',
+            roomCode: roomCode,
+          }),
+        );
+      });
+    }
+  }, [friendId]);
+  // const invite = () => {};
   return (
     <div>
       {isLoading && !players && (
@@ -442,6 +514,9 @@ const TypingGame = () => {
       )}
 
       <Typing>
+        {modal === 'invite' && (
+          <FriendModal handleModal={closeModal} type="invite" />
+        )}
         {players && (
           <TypingResult>
             {arr.map((a: any, idx: number) => {
@@ -466,8 +541,8 @@ const TypingGame = () => {
                                 : '0%'
                             }
                             className="imgNormal"
-                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
                             src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
+                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
                             alt="playerImg"
                           />
                         )}
@@ -483,8 +558,8 @@ const TypingGame = () => {
                                 : '0%'
                             }
                             className="img"
-                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
                             // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
                             alt="playerImg"
                           />
                         )}
@@ -511,8 +586,17 @@ const TypingGame = () => {
         {/* 대기하고 있을때 */}
         {isLoading && players && (
           <WaitingTypingGameBox>
-            {!isReady && <p>4명의 인원이 모이면 시작합니다</p>}
-            {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+            {master && <div>시작하기를 눌러 게임을 시작하세요</div>}
+            {!master && <div>방장이 시작하기를 기다리세요</div>}
+            {modal === 'invite' && (
+              <FriendModal handleModal={closeModal} type="invite" />
+            )}
+            <div>
+              <button onClick={handleModal}>친구 초대</button>
+            </div>
+            <div>
+              {master && <button onClick={onClickStart}>게임시작</button>}
+            </div>
           </WaitingTypingGameBox>
         )}
 
@@ -571,4 +655,4 @@ const TypingGame = () => {
   );
 };
 
-export default TypingGame;
+export default TypingFriendGame;

@@ -28,7 +28,10 @@ const TypingResultPage = () => {
       <h1>축하합니다 우승입니다.</h1>
       {/* <div>{resultId}</div> */}
       <div>{resultNickName}</div>
-      <img src={`/img/rank/character${resultProfile}.png`} alt="" />
+      <img
+        src={`${process.env.REACT_APP_S3_URL}/profile/${resultProfile}_normal.gif`}
+        alt=""
+      />
       <button onClick={handleHome}>나가기</button>
     </Result>
   );

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -178,6 +179,7 @@ const Wrapper = styled.div`
 `;
 
 const IntroPage = () => {
+  const navigate = useNavigate();
   const IntroImgRef = useRef<HTMLDivElement>(null);
   const fixMotionRef = useRef<HTMLDivElement>(null);
   const imgBoxRef = useRef<HTMLDivElement>(null);
@@ -319,6 +321,10 @@ const IntroPage = () => {
     window.scrollTo({ top: 20, behavior: 'smooth' });
   };
 
+  const goLogin = () => {
+    navigate('login');
+  };
+
   return (
     <Wrapper>
       <div className="Intro" ref={IntroImgRef}>
@@ -326,7 +332,9 @@ const IntroPage = () => {
         <div className="introContent">
           개츠비와 함께 각종 역량을 키와 보세요!
         </div>
-        <div className="goOffice">Go To Office</div>
+        <div className="goOffice" onClick={goLogin}>
+          Go To Office
+        </div>
         <img
           onClick={onClickArrow}
           className="pointerDown"

@@ -6,6 +6,7 @@ import FriendSecondModal from '../components/FriendSecondModal';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../../../components/Common/retroBtn.css';
 
 const FriendSide = styled.div`
   width: 18vw;
@@ -67,10 +68,71 @@ const FriendSide = styled.div`
     justify-content: center;
     margin-bottom: 1rem;
     .friendButton {
-      background: #ffc02d;
-      border-radius: 15px;
-      font-size: 20px;
-      margin-left: 0.5rem;
+
+      margin: 0 1rem;
+    }
+  }
+  .chatRoomWrapper {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    box-sizing: border-box;
+    width: 25%;
+    height: 40%;
+    background: #ffc02d;
+    border: 3px solid #000000;
+    border-radius: 10px;
+  }
+  .chatRoom {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .close {
+      position: absolute;
+      right: 0.8rem;
+      top: 0.5rem;
+    }
+    .chatContent {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+      height: 92%;
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #2f3542;
+        border-radius: 10px;
+        background-clip: padding-box;
+        border: 2px solid transparent;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: grey;
+        border-radius: 10px;
+        box-shadow: inset 0px 0px 5px white;
+      }
+    }
+
+    .chatInputs {
+      width: 100%;
+      height: 9%;
+      display: flex;
+      flex-direction: row;
+      .chatInput {
+        width: 82%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 3px solid #000000;
+        border-radius: 10px;
+      }
+      .chatButton {
+        width: 22%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 3px solid #000000;
+        border-radius: 10px;
+        background: #f0568c;
+      }
     }
   }
 `;
@@ -79,10 +141,22 @@ function FriendMainPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isInvite, setIsInvite] = useState<boolean>(false);
+  const [showChatList, setShowChatList] = useState<any>(null);
+  const [content, setContent] = useState<string>('');
+  const { userInfo } = useSelector((state: any) => state.auth);
   const { friends } = useSelector((state: any) => state.friend);
   const { modal } = useSelector((state: any) => state.friend);
   const { secondModal } = useSelector((state: any) => state.friend);
   const { invitedGameInfo } = useSelector((state: any) => state.friend);
+  const { isChatOpen } = useSelector((state: any) => state.friend);
+  const { chatFriendId } = useSelector((state: any) => state.friend);
+  const { chatList } = useSelector((state: any) => state.friend);
+
+  useEffect(() => {
+    if (chatFriendId && chatList.hasOwnProperty(chatFriendId)) {
+      setShowChatList(chatList[chatFriendId]);
+    }
+  }, [chatFriendId, chatList]);
 
   useEffect(() => {
     if (invitedGameInfo) {
@@ -90,23 +164,53 @@ function FriendMainPage() {
     }
   }, [invitedGameInfo]);
 
+  useEffect(() => {
+    if (userInfo) {
+      dispatch(friendActions.fetchChatStart());
+    }
+  }, [userInfo]);
+
   const handleModal = () => {
     dispatch(friendActions.handleModal('request'));
   };
+
   const handleSecondModal = () => {
     dispatch(friendActions.handleSecondModal());
   };
+
   const closeModal = () => {
     dispatch(friendActions.handleModal(null));
   };
+
   const acceptInvite = () => {
     setIsInvite(false);
     navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
       state: { shareCode: invitedGameInfo.inviteRoomCode },
     });
   };
+
   const rejectInvite = () => {
     setIsInvite(false);
+  };
+
+  const onClickClose = () => {
+    dispatch(friendActions.closeChatRoom());
+  };
+
+  const onChangeContent = (e: any) => {
+    setContent(e.target.value);
+  };
+
+  const onSubmitChat = () => {
+    dispatch(friendActions.sendChat(content));
+    setContent('');
+  };
+
+  const onSubmitChat2 = (e: any) => {
+    if (e.key === 'Enter') {
+      dispatch(friendActions.sendChat(content));
+      setContent('');
+    }
   };
 
   return (
@@ -136,14 +240,51 @@ function FriendMainPage() {
         )}
         {friends ? <FriendList /> : <div>친구창이 조용합니다...</div>}
         <div className="friendButtons">
-          <button className="friendButton" onClick={handleModal}>
+          <a href="javascript:void(0)" className="friendButton eightbit-btn eightbit-btn--proceed" onClick={handleModal}>친구신청</a>
+          <a href="javascript:void(0)" className="friendButton eightbit-btn eightbit-btn--proceed" onClick={handleSecondModal}>대기목록</a>
+
+          {/* <button className="friendButton" onClick={handleModal}>
             친구신청
           </button>
           <button className="friendButton" onClick={handleSecondModal}>
             대기목록
-          </button>
+          </button> */}
         </div>
       </div>
+      {isChatOpen && (
+        <div className="chatRoomWrapper">
+          <div className="chatRoom">
+            <img
+              src="/img/close.png"
+              onClick={onClickClose}
+              className="close"
+              alt="close"
+            />
+            <div className="chatContent">
+              {showChatList &&
+                showChatList.map((chat: any, idx: number) => {
+                  return (
+                    <div key={idx}>
+                      <p>{chat.msg}</p>
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="chatInputs">
+              <input
+                onChange={onChangeContent}
+                onKeyDown={onSubmitChat2}
+                className="chatInput"
+                value={content}
+                type="text"
+              />
+              <button onClick={onSubmitChat} className="chatButton">
+                전송
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </FriendSide>
   );
 }

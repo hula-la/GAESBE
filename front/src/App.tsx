@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import MyPage from './features/game/pages/MyPage';
 import ChangeUserInfoPage from './features/game/pages/ChangeUserInfoPage';
 import FriendSocket from './features/friend/pages/FriendSocket';
+import OnlyNoLogin from './private/OnlyNoLogin';
+import OnlyLogin from './private/OnlyLogin';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -30,31 +32,36 @@ const App = () => {
   }, []);
   const { userInfo } = useSelector((state: any) => state.auth);
 
-  return (<>
-    {userInfo && <FriendSocket />}
-    <BrowserRouter>
-      <Routes>
-        <Route path="" element={<IntroPage />} />
-        <Route path="oauth2/redirect" element={<RedirectPage />} />
-        <Route path="" element={<Background />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="nickname" element={<SetNicknamePage />} />
-        </Route>
-        <Route path="game/*" element={<GamePage />}>
-          <Route path="mypage" element={<MyPage />} />
-          <Route path="mypage/change" element={<ChangeUserInfoPage />} />
-          <Route path="" element={<MyOfficePage />} />
-          <Route path="typing/*" element={<TypingPage />} />
-          <Route path="algo/*" element={<AlgoPage />} />
-          <Route path="casino" element={<CoinFlipPage />} />
-          <Route path="CS" element={<CSgamePage />} />
-          <Route path="CS/random" element={<CSRandomPage />} />
-          <Route path="CS/friend" element={<CSFriendPage />} />
-          <Route path="CS/result" element={<CSResultPage />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </>
+  return (
+    <>
+      {userInfo && <FriendSocket />}
+      <BrowserRouter>
+        <Routes>
+          <Route path="" element={<IntroPage />} />
+          <Route path="oauth2/redirect" element={<RedirectPage />} />
+          <Route path="" element={<Background />}>
+            <Route element={<OnlyNoLogin userInfo={userInfo} />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="nickname" element={<SetNicknamePage />} />
+            </Route>
+          </Route>
+          <Route element={<OnlyLogin />}>
+            <Route path="game/*" element={<GamePage />}>
+              <Route path="mypage" element={<MyPage />} />
+              <Route path="mypage/change" element={<ChangeUserInfoPage />} />
+              <Route path="" element={<MyOfficePage />} />
+              <Route path="typing/*" element={<TypingPage />} />
+              <Route path="algo/*" element={<AlgoPage />} />
+              <Route path="casino" element={<CoinFlipPage />} />
+              <Route path="CS" element={<CSgamePage />} />
+              <Route path="CS/random" element={<CSRandomPage />} />
+              <Route path="CS/friend" element={<CSFriendPage />} />
+              <Route path="CS/result" element={<CSResultPage />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 };
 

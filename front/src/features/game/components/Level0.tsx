@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 const Unity = styled.div`
   display: flex;
@@ -18,10 +19,19 @@ const Unity = styled.div`
     zoom: 1;
   }
 `;
+
 const MyRoom = styled.img`
   width: 100%;
   height: 15%;
   margin-bottom: 15%;
+`;
+
+const MyCharacter = styled.img`
+      width: 9%;
+    position: absolute;
+    bottom: 33%;
+    left: 43%;
+    z-index: 4;
 `;
 const MyComputer = styled.img`
       width: 17%;
@@ -92,6 +102,9 @@ const Calender = styled.img`
   `;
 const Level0 = ({ handleModal }: any) => {
   const navigate = useNavigate();
+
+  
+  const { userInfo } = useSelector((state: any) => state.auth);
   const handleCoin = () => {
     navigate('/game/casino');
   };
@@ -102,6 +115,14 @@ const Level0 = ({ handleModal }: any) => {
   return (
     <Unity>
       <div className="imageContainer">
+        {userInfo && <MyCharacter
+              src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+              className="profileImg"
+              alt="profileImg"
+            />}
+        
+
+
         <MyRoom src="/img/MyOffice/level00.gif" alt="lv0 room" />
 
         <MyComputer
