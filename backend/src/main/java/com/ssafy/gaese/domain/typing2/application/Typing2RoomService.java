@@ -288,7 +288,6 @@ public class Typing2RoomService {
         }
         else {
             //방 내부 유저 정보 삭제
-            System.out.println("타이핑 멤버 지우러 들어옴");
             players.remove(typingSocketDto.getUserId());
             //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
             if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
@@ -344,15 +343,20 @@ public class Typing2RoomService {
         HashMap<String, Long> players = typingRoomDto.getPlayers();
 
         // 인원 안차면 시작 안함
-        if (players.size()!=maxPlayer) return false;
-        // 게임 시작하면 list에서 삭제
-        redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
-        //필요없긴 하지만 혹시 모르니 추가
-        typingRoomDto.setRealPlayerCount(players.size());
-        //게임 시작으로 바꿈
-        typingRoomDto.setStart(true);
-        typingRoomRedisRepository.save(typingRoomDto);
-        return true;
+        if (players.size()!=maxPlayer)
+            return false;
+        else
+        {
+            // 게임 시작하면 list에서 삭제
+            redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
+            //필요없긴 하지만 혹시 모르니 추가
+            typingRoomDto.setRealPlayerCount(players.size());
+            //게임 시작으로 바꿈
+            typingRoomDto.setStart(true);
+            typingRoomRedisRepository.save(typingRoomDto);
+            return true;
+        }
+
     }
 
 }
