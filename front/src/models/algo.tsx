@@ -72,10 +72,16 @@ export interface RankingUserInfo {
  problemId: 문제번호 string
  ranking: 내 순위 number
  code: 내 코드 string
+ lanId: 언어코드
+ (1001 : c++
+ 1002 : java
+ 1003 : python
+ 1004 : c)
  */
 export interface RecordSendInterface {
   roomCode: string
   problemId: string
   ranking: number
   code: string
+  lanId: number
 }

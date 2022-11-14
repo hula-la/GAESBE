@@ -35,7 +35,6 @@ export const checkMyAnswerRequest = async (meta:{roomCode:string, problemId: num
 }
 
 export const endGame = async (body:RecordSendInterface) => {
-  console.log('기록요청 여러번')
   const res = await client.post('/algo/record', body)
   return res
 }
