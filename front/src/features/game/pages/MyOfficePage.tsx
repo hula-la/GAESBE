@@ -42,7 +42,6 @@ const Wrapper = styled.div`
   }
 `;
 const MyOfficePage = () => {
-  const dispatch = useDispatch();
   const { userAbility } = useSelector((state: any) => state.auth);
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [needReload, setNeedReload] = useState<boolean>(false)
