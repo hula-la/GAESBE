@@ -51,7 +51,9 @@ const authSlice = createSlice({
     // 유저 삭제
     deleteUserInfoStart(state) {},
     deleteUserInfoSuccess(state, action) {
-      state.userInfo = action.payload;
+      localStorage.removeItem('accessToken');
+      state.userAbility = null;
+      state.userInfo = null;
     },
     deleteUserInfoError(state, action) {
       state.error = action.payload.status;
