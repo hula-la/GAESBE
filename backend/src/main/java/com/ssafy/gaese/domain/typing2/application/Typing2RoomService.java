@@ -54,21 +54,21 @@ public class Typing2RoomService {
             {
 //                반려하는 부분 만들어 줘야함
                 simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-                 return;
+                return;
             }
             System.out.println("typingSocketDto 방 들어올때 체크");
             System.out.println(typingSocketDto);
             // 랜덤방 들어가기
             if (typingSocketDto.getRoomType() != TypingSocketDto.RoomType.FRIEND)
                 roomDto = enterRandomRoom(typingSocketDto);
-            // 친선전 들어가기
+                // 친선전 들어가기
             else {
                 // 방만들기
                 if (typingSocketDto.getRoomCode()==null){
                     roomDto = enterMyRoom(typingSocketDto);
                 }
                 // 만들어져있는 방 들어가기기
-               else{
+                else{
                     roomDto = enterRoom(typingSocketDto);
                 }
             }
@@ -104,8 +104,7 @@ public class Typing2RoomService {
         roomResByUser.put("room",roomDto.getCode());
         roomResByUser.put("masterId",roomDto.getMasterId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-        if(roomDto.getMasterId()!=typingSocketDto.getUserId())
-            simpMessagingTemplate.convertAndSend("/typing2/"+roomDto.getMasterId(),roomResByUser);
+
         Thread.sleep(1*1000);
 
 
@@ -117,7 +116,7 @@ public class Typing2RoomService {
         res.put("isLast", isLast);
         res.put("isMaster", roomDto.getMasterId()==typingSocketDto.getUserId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),res);
-        
+
 
     }
 
@@ -303,6 +302,13 @@ public class Typing2RoomService {
                     typingRoomDto.setMasterId(players.get(strKey));
                     break;
                 }
+
+
+                    Map<String,Object> res = new HashMap<>();
+                    res.put("isMaster", true);
+                    simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
+
+
             }
 
             typingRoomDto.setPlayers(players);
