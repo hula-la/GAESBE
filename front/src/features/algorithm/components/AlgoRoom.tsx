@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { algoActions } from '../algorithmSlice';
 import { AlgoRoomInterface } from '../../../models/algo';
 import styled from 'styled-components';
-import '../../typing/pages/retroBtn.css';
-
+import '../../../components/Common/retroBtn.css';
 interface Props {
   roomInfo: AlgoRoomInterface;
 }

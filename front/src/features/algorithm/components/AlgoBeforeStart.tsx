@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 
 import BeforeSolveUsers from './BeforeSolveUsers';
 import LoadingSpinner from './LoadingSpinner';
-import '../../typing/pages/retroBtn.css';
+import '../../../components/Common/retroBtn.css';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`

@@ -8,8 +8,7 @@ import { AlgoRoomInterface } from '../../../models/algo';
 
 import AlgoRoom from '../components/AlgoRoom';
 import styled from 'styled-components';
-import '../../typing/pages/retroBtn.css';
-
+import '../../../components/Common/retroBtn.css';
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;

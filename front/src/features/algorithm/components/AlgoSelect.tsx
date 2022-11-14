@@ -4,7 +4,7 @@ import { ProblemInterface } from '../../../models/algo'
 import BeforeSolveUsers from './BeforeSolveUsers'
 import ProblemInfo from './ProblemInfo'
 import styled from 'styled-components'
-import '../../typing/pages/retroBtn.css';
+import '../../../components/Common/retroBtn.css';
 const Wrapper = styled.div`
   border: 1px solid yellow;
   height: 10%;

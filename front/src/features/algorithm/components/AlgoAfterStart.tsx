@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import AlgoSelect from "./AlgoSelect"
 import AlgoSolve from "./AlgoSolve"
 
-import '../../typing/pages/retroBtn.css';
+import '../../../components/Common/retroBtn.css';
 import styled from "styled-components";
 
 const Wrapper = styled.div`
