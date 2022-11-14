@@ -7,6 +7,7 @@ import { authActions } from '../../auth/authSlice';
 import { authSagas } from '../../auth/authSaga';
 import { useNavigate } from 'react-router-dom';
 import { gameActions } from '../gameSlice';
+
 const MyPageContainer = styled.div`
   width: 66%;
   color: white;
