@@ -5,30 +5,36 @@ import styled from 'styled-components';
 const UserProfiles = styled.div`
   display: flex;
   flex-direction: row;
-  border : 1px solid white;
   justify-content: space-around;
+
+
   .user-item{
     display: flex;
     flex-direction: column;
-    border : 1px solid white;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    height: fit-content;
+    margin: auto 0;
+    position: relative;
   }
   p{
     color:#2e2e2e;
-    border : 1px solid white;
     font-size: 1.3rem;
-
+    margin: 0;
   }
 
   .profile{
-    border : 1px solid white;
-    height:50%; 
+    height:150px;
+    width: 90%;
+    z-index: 1;
 
   }
   .stand {
     width: 8rem;
     margin: 0 auto; 
     border : 1px solid white;
+    position: absolute;
+    top:80%
   }
 
 `;
