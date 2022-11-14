@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { algoActions } from '../algorithmSlice';
@@ -121,13 +121,23 @@ function AlgoRoomMake() {
     }
   }, []);
 
-  const handeOnChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setForm({
-      ...form,
-      [e.currentTarget.name]: e.currentTarget.value,
-    });
-  };
-
+  const handleTime = (e:string) => {
+    const newForm = JSON.parse(JSON.stringify(form))
+    if (e==='minus') {
+      if (newForm.time==='30') {
+        alert('30분보다 적게는 설정할 수 없습니다')
+        return
+      }
+      newForm.time = String(Number(newForm.time) - 10)
+    } else {
+      if (newForm.time==='120') {
+        alert('120분보다 많게는 설정할 수 없습니다')
+        return
+      }
+      newForm.time = String(Number(newForm.time) + 10)
+    }
+    setForm(newForm)
+  }
   const handleOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(algoActions.creatAlgoRoom(form));
@@ -138,6 +148,32 @@ function AlgoRoomMake() {
       navigate('/game/algo/battle');
     }
   }, [InGameInfo]);
+  
+  const handleTier = (e:{type:string, num:number}) => {
+    const newForm = JSON.parse(JSON.stringify(form))
+    if (e.type==='plus') {
+      const newTier = String((Number(newForm.tier) + e.num) % 20)
+      if (newTier === '0') {
+        newForm.tier = '20'
+      } else {
+        newForm.tier = newTier
+      }
+    } else {
+      let newTier = (Number(newForm.tier) - e.num) % 20
+      if (newTier <= 0) {
+        newTier += 20
+      }
+      newForm.tier = String(newTier)
+    }
+    setForm(newForm)
+  }
+
+  const [tierString, setTierString] = useState<string>('브론즈 5')
+
+  useEffect(() => {
+    const tier = String((Number(form.tier) - 1) / 5)
+    console.log(tier)
+  }, [form.tier])
 
   return (
     <Wrapper>
@@ -151,26 +187,34 @@ function AlgoRoomMake() {
             <img
               className="arrow-icon"
               src={`/img/arrow/pink-small-arrow-up.png`}
-            ></img>
+              alt='티어업'
+              onClick={()=>{handleTier({type:'plus', num:5})}}
+              ></img>
           </div>
           <div className="tier-select">
             <img
               className="arrow-icon"
               src={`/img/arrow/yellow-small-arrow-left.png`}
-            ></img>
+              alt='티어레프트'
+              onClick={()=>{handleTier({type:'minus', num:1})}}
+              ></img>
             <img
               className="tier-icon"
-              src={`/img/tier/${tierList[0].value}.svg`}
-            ></img>
+              src={`/img/tier/${form.tier}.svg`}
+              ></img>
             <img
               className="arrow-icon"
               src={`/img/arrow/yellow-small-arrow-right.png`}
-            ></img>
+              alt='티어롸이트'
+              onClick={()=>{handleTier({type:'plus', num:1})}}
+              ></img>
           </div>
           <div>
             <img
               className="arrow-icon"
               src={`/img/arrow/pink-small-arrow-down.png`}
+              alt='티어다운'
+              onClick={()=>{handleTier({type:'minus', num:5})}}
             ></img>
           </div>
           {/* {tierList.map((tier) => (
@@ -199,26 +243,25 @@ function AlgoRoomMake() {
             <img
               className="arrow-icon"
               src={`/img/arrow/pink-small-arrow-up.png`}
-            ></img>
+              alt='시간+버튼'
+              onClick={()=>{handleTime('plus')}}
+              ></img>
           </div>
-          <input
-            type="number"
-            name="time"
-            id="time"
-            defaultValue={'30'}
-            min={'30'}
-            max={'120'}
-            step={10}
-            onChange={handeOnChange}
-          />
+          <div>
+            {form.time}
+          </div>
           <div>
             <img
               className="arrow-icon"
               src={`/img/arrow/pink-small-arrow-down.png`}
+              alt='시간-버튼'
+              onClick={()=>{handleTime('minus')}}
             ></img>
           </div>
         </div>
       </form>
+      <p>{}</p>
+      <p>{form.time} 분</p>
       <div className="btn-div">
         <a
           onClick={handleOnSubmit}

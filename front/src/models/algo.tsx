@@ -4,9 +4,8 @@ export interface Action<T> {
 }
 
 /**
-AlgoRoomInterface
 roomCode : 방 코드 string
-time : 푼제 풀 시간 string
+time : 문제 풀 시간 string
 tier : 문제 티어 string
 num : 입장한 사람 수 string
 no : 현재 문제 index번호 string
@@ -73,10 +72,16 @@ export interface RankingUserInfo {
  problemId: 문제번호 string
  ranking: 내 순위 number
  code: 내 코드 string
+ lanId: 언어코드
+ (1001 : c++
+ 1002 : java
+ 1003 : python
+ 1004 : c)
  */
 export interface RecordSendInterface {
   roomCode: string
   problemId: string
   ranking: number
   code: string
+  lanId: number
 }
