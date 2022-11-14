@@ -16,8 +16,8 @@ import static javax.persistence.FetchType.LAZY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Character")
-public class Character {
+@Table(name = "Characters")
+public class Characters {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Character {
 
     private String need;
 
-    @OneToMany(mappedBy = "character", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "characters", cascade = CascadeType.REMOVE)
     private List<UserCharacter> userCharacterList;
 
     public CharacterDto toDto(boolean own){
