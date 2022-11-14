@@ -2,7 +2,9 @@ package com.ssafy.gaese.domain.ssafyGame.application;
 
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipParamDto;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipResultDto;
+import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class SsafyGameService {
 
     private final UserRepository userRepository;
+
+    private final AbilityRepository abilityRepository;
 
     public FlipResultDto flipStart(FlipParamDto param, Long userId)
     {
@@ -37,6 +41,13 @@ public class SsafyGameService {
         {
             user.setPoint(user.getPoint()+(multiple* param.getPoint()));
             user.setWinningStreak(user.getWinningStreak()+1);
+
+            Ability ability = abilityRepository.findByUser_Id(userId).get();
+
+            ability.addExp("luck", (int) Math.pow(2,user.getWinningStreak()));
+
+            abilityRepository.save(ability);
+
             resultDto.setCorrect(true);
         }
         else

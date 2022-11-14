@@ -15,6 +15,7 @@ import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.global.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -128,8 +129,8 @@ public class TypingService {
 
     public void rankUpdate(TypingRoomDto roomDto)
     {
-        LocalDateTime now = LocalDateTime.now();
-        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
+
+        String now = TimeUtil.getNowDateTime();
         int rank =1;
 
 
@@ -149,7 +150,7 @@ public class TypingService {
             //레코드 기록
             TypingRecord typingRecord = new TypingRecord();
             typingRecord.setRanks(rank);
-            typingRecord.setDate(formatedNow);
+            typingRecord.setDate(now);
             typingRecord.setId(maxId[0]);
             typingRecord.setLangType(roomDto.getLangType());
             typingRecord.setUser(userRepository.findById(maxId[0]).get());
@@ -157,15 +158,16 @@ public class TypingService {
 
             Ability ability = abilityRepository.findByUser_Id(maxId[0]).get();
 
-            if(ability.getTypingExp()+(5-rank)*10>=100)
-            {
-                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10)-100);
-                ability.setTypingLv(ability.getTypingLv()+1);
-            }
-            else
-            {
-                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10));
-            }
+            ability.addExp("typing",5-rank);
+//            if(ability.getTypingExp()+(5-rank)*10>=100)
+//            {
+//                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10)-100);
+//                ability.setTypingLv(ability.getTypingLv()+1);
+//            }
+//            else
+//            {
+//                ability.setTypingExp((ability.getTypingExp()+(5-rank)*10));
+//            }
 
             abilityRepository.save(ability);
 
