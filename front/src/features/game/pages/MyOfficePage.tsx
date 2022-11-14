@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Level0 from '../components/Level0';
 import Level1 from '../components/Level1';
@@ -7,8 +7,10 @@ import Level3 from '../components/Level3';
 import Level4 from '../components/Level4';
 import Level5 from '../components/Level5';
 import Level6 from '../components/Level6';
-import { attendanceRequest } from '../../../api/mypageApi';
 import { useSelector } from 'react-redux';
+
+import { attendanceRequest } from '../../../api/mypageApi'
+import AttendanceComponent from '../components/AttendanceComponent';
 
 const Wrapper = styled.div`
   width: 66%;
@@ -39,14 +41,22 @@ const Wrapper = styled.div`
     }
   }
 `;
-
 const MyOfficePage = () => {
   const { userAbility } = useSelector((state: any) => state.auth);
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [needReload, setNeedReload] = useState<boolean>(false)
+  const handleModal = () => {
+    setModalOpen(!modalOpen)
+  }
+  const handleReload = (e:boolean) => {
+    setNeedReload(e)
+  }
   const attendance = async () => {
     try {
       const res = await attendanceRequest();
       if (res.status === 200) {
         alert('출석체크 되었습니다');
+        handleReload(true)
       }
     } catch (error: any) {
       if (error.response.status === 446) {
@@ -56,7 +66,8 @@ const MyOfficePage = () => {
   };
   return (
     <Wrapper>
-      <Level0 attendance={attendance} />
+      {modalOpen && <AttendanceComponent needReload={needReload} handleReload={handleReload} attendance={attendance} handleModal={handleModal} />}
+      <Level0 handleModal={handleModal} />
       {/* <Level1 /> */}
       {/* <Level2 /> */}
       {/* <Level3 /> */}

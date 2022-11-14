@@ -90,7 +90,7 @@ const Calender = styled.img`
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;
-const Level0 = ({ attendance }: any) => {
+const Level0 = ({ handleModal }: any) => {
   const navigate = useNavigate();
   const handleCoin = () => {
     navigate('/game/casino');
@@ -112,7 +112,7 @@ const Level0 = ({ attendance }: any) => {
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
         <Note src="/img/MyOffice/level0note.png" />
         <Spider src="/img/roomGif/spider.gif" />
-        <Calender onClick={attendance} src="/img/MyOffice/level0calender.png" />
+        <Calender onClick={handleModal} src="/img/MyOffice/level0calender.png" />
       </div>
     </Unity>
   );
