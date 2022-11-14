@@ -15,6 +15,8 @@ const FriendSide = styled.div`
   background-color: #232323;
   color: white;
 
+  z-index:10;
+
   animation-name: showToLeft;
   animation-duration: 1s;
 

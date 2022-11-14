@@ -29,10 +29,10 @@ const TypingGameMain = styled.div`
 function TypingFriendGamePage() {
   return (
     <Container>
-      <div className="title">
-        <img src="/img/gametitle/gametitle2.png" alt="title" />
+      {/* <div className="title"> */}
+        {/* <img src="/img/gametitle/gametitle2.png" alt="title" /> */}
         {/* 여기가 친구 페이지 */}
-      </div>
+      {/* </div> */}
       <TypingFriendGame />
     </Container>
   );

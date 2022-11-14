@@ -37,7 +37,7 @@ function* onFetchCharacterSaga() {
 function* fetchOfficeSaga(action: any) {
   const { fetchOfficeSuccess, fetchOfficeError } = itemActions;
   try {
-    const response: AxiosResponse = yield call(fetchCharacterApi);
+    const response: AxiosResponse = yield call(fetchOfficeApi);
     yield put(fetchOfficeSuccess(response.data));
   } catch (e: any) {
     yield put(fetchOfficeError(e.response));
@@ -46,7 +46,7 @@ function* fetchOfficeSaga(action: any) {
 
 function* onFetchOfficeSaga() {
   const { fetchCharacterStart } = itemActions;
-  yield takeLatest(fetchCharacterStart, fetchCharacterSaga);
+  yield takeLatest(fetchCharacterStart, fetchOfficeSaga);
 }
 
 // 오피스 사기

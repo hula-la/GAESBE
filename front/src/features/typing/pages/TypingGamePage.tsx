@@ -36,9 +36,9 @@ const TypingGameMain = styled.div`
 function TypingGamePage() {
   return (
     <Container>
-      <div className="title">
+      {/* <div className="title">
         <img src="/img/gametitle/gametitle2.png" alt="title" />
-      </div>
+      </div> */}
       <TypingGame />
     </Container>
   );

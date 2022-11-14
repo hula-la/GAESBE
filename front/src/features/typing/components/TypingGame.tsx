@@ -15,6 +15,21 @@ interface CharStateType {
   type: number;
 }
 
+const TypingBg = styled.img`
+  height: 100%;
+  position: absolute;
+
+  width: 100%;
+
+  text-align: left;
+`;
+const TrackLine = styled.div`
+  height: 25%;
+`;
+const Track = styled.div`
+  height: 20vh;
+    margin-top: 23.5vh;
+`;
 const LoadingBlock = styled.div`
   display: flex;
   height: 100%;
@@ -30,74 +45,67 @@ const TypingPersonalResult = styled.div`
   border-radius: 5px; */
   width: 100%;
   color: white;
-  height: 7vh;
+  height: 100%;
+  /* height: 7vh; */
   margin-bottom: 1px;
 `;
 const Personal = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
+  height: 100%;
 `;
 const PersonalId = styled.div`
-  width: 15%;
-  height: 7vh;
+  width: 3%;
+  height: 100%;
+  /* height: 7vh; */
   /* border: 2px solid blue; */
   /* border: 2px solid white; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
 
-  padding-top: 0.5rem;
+  /* padding-top: 0.5rem; */
 
-  div {
-  }
 `;
 const PersonalCharacter = styled.div`
-  background: #deb36d;
+  /* background: #deb36d; */
 
-  width: 70%;
-  height: 7vh;
-  border-top: 0.5rem solid white;
-  border-bottom: 0.5rem solid white;
+  width: 87%;
+  /* height: 7vh; */
+  /* border-top: 0.5rem solid white; */
+  /* border-bottom: 0.5rem solid white; */
 
   position: relative;
+
+  &::after{
+    content: "";
+    border-right: 1rem solid #bf0909;
+    position: absolute;
+    right: 0;
+    height: 100%;
+  }
 
   .imgNormal {
     transform: scaleX(-1);
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    border-right: 3rem solid #d50303;
-    height: calc(100% + 1rem);
-    right: -3rem;
-    top: -0.5rem;
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    border-right: 2rem solid white;
-    height: calc(100% + 1rem);
-    /* left:-2rem; */
-    top: -0.5rem;
-  }
 `;
 const CharacterImg = styled('img')<{ progress: string }>`
   padding-left: ${(props) => props.progress};
   // 부드럽게 움직이도록
   transition: all 0.4s;
-  height: 130%;
+  height: 200%;
   bottom: 20%;
   position: absolute;
 
   z-index: 1;
 `;
 const PersonalResult = styled.div`
-  width: 15%;
-  height: 7vh;
+  width: 10%;
+  /* height: 7vh; */
   border-radius: 5px;
-  border: 2px solid white;
+  /* border: 2px solid white; */
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -111,9 +119,21 @@ const Typing = styled.div`
   align-items: center;
 `;
 const TypingResult = styled.div`
-  width: 90%;
+  /* padding-top: 20%; */
+  width: 100%;
+  /* max-height: 50vh; */
   color: white;
   margin-bottom: 3rem;
+  box-sizing: border-box;
+
+  min-height: 50vh;
+    max-height: 50vh;
+
+  position: relative;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -434,6 +454,7 @@ const TypingGame = () => {
   };
   return (
     <div>
+
       {isLoading && !players && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
@@ -444,9 +465,11 @@ const TypingGame = () => {
       <Typing>
         {players && (
           <TypingResult>
+            <TypingBg className='typingBg' src="/img/typing/typingTrack2.png" alt="타이핑 트랙"/>
+            <Track>
             {arr.map((a: any, idx: number) => {
               return (
-                <div key={idx}>
+                <TrackLine key={idx}>
                   <TypingPersonalResult>
                     <Personal>
                       <PersonalId>
@@ -502,9 +525,10 @@ const TypingGame = () => {
                       </PersonalResult>
                     </Personal>
                   </TypingPersonalResult>
-                </div>
+                </TrackLine>
               );
             })}
+            </Track>
           </TypingResult>
         )}
 

@@ -1,95 +1,140 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 const Unity = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 100%;
+  height: 100%;
   background-color: #232323;
-  background-image: url(/img/MyOffice/level6.png);
-  background-repeat: no-repeat;
-  background-size: 105%;
-  /* background-size: 70%; */
-  background-position-x: 50%;
-  background-position-y: 40%;
+  position: relative;
+
+  .imageContainer {
+    width: 73%;
+    position: relative;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+  }
+`;
+
+const MyRoom = styled.img`
+  width: 100%;
+  height: 15%;
+  margin-bottom: 15%;
+`;
+
+const MyCharacter = styled.img`
+      width: 9%;
+    position: absolute;
+    bottom: 33%;
+    left: 43%;
+    z-index: 4;
 `;
 const MyComputer = styled.img`
-  position: absolute;
-  bottom: 45vh;
-  left: 31vw;
+      width: 17%;
+    position: absolute;
+    bottom: 45%;
+    left: 28%;
   :hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
+    content: url("/img/roomGif/level0computer.gif");
     transition: 0.4s ease-in-out;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
-`;
+  `;
 const Coin = styled.img`
-  width: 10%;
-  height: 10%;
+  width: 4%;
+  height: 3%;
   position: absolute;
-  top: 20vh;
-  right: 47vw;
+  bottom: 56%;
+  left: 50%;
+  animation: motion 1.4s linear 0s infinite ; margin-top: 0;
+  
+  @keyframes motion {
+	0% {margin-bottom: 0px;}
+	50% {margin-bottom: 1%;}
+	100% {margin-bottom: 0px;}
+}
+
   :hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
     transition: 0.4s ease-in-out;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
-`;
+  `;
 const Note = styled.img`
-  width: 5%;
-  height: 7%;
+  width: 9%;
   position: absolute;
-  bottom: 20vh;
-  left: 40vw;
+  bottom: 38%;
+  right: 61%;
   :hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
     transition: 0.4s ease-in-out;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
-`;
-const WallCalender = styled.img`
+  `;
+const Spider = styled.img`
+  width: 13%;
+  left: 44%;
+  position: absolute;
+  top: 4%;
+  
+  `;
+const Calender = styled.img`
   /* width: 5%;
   height: 12%; */
   position: absolute;
-  bottom: 50vh;
-  left: 25vw;
+  bottom: 61%;
+  right: 15%;
+  width: 7%;
+  height: 12%;
   /* bottom: 24vh;
   right: 31vw; */
   :hover {
-    transform: scale(1.3);
+    transform: scale(1.2);
     transition: 0.4s ease-in-out;
+    content: url("/img/roomGif/level0calender.gif");
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
-`;
-// const Calender = styled.img`
-//   width: 5%;
-//   height: 12%;
-//   position: absolute;
-//   bottom: 44vh;
-//   left: 38vw;
-//   /* bottom: 24vh;
-//   right: 31vw; */
-//   :hover {
-//     transform: scale(1.3);
-//     transition: 0.4s ease-in-out;
-//   }
-// `;
-const Level6 = () => {
+  `;
+const Level6 = ({ handleModal,officeIdx }: any) => {
   const navigate = useNavigate();
+
+  
+  const { userInfo } = useSelector((state: any) => state.auth);
   const handleCoin = () => {
     navigate('/game/casino');
   };
   const handleAlert = () => {
-    alert('마이페이지로');
+    navigate('/game/mypage');
+    // alert('마이페이지로');
   };
   return (
     <Unity>
-      {/* <MyComputer
-        onClick={handleAlert}
-        src="/img/MyOffice/level3computer.png"
-        alt="내 컴퓨터"
-      />
-      <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-      <Note src="/img/MyOffice/note.png" />
-      <WallCalender src="/img/MyOffice/level3calender.png" /> */}
-      {/* <Calender src="/img/MyOffice/calender.png" /> */}
+      <div className="imageContainer">
+        {userInfo && <MyCharacter
+              src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+              className="profileImg"
+              alt="profileImg"
+            />}
+        
+
+
+        <MyRoom src="/img/MyOffice/level00.gif" alt="lv2 room" />
+
+        <MyComputer
+          onClick={handleAlert}
+          src="/img/MyOffice/level2computer.png"
+          alt="내 컴퓨터"
+        />
+        <Coin onClick={handleCoin} src="/img/coin/coin.png" />
+        <Note src="/img/MyOffice/level0note.png" />
+        <Spider src="/img/roomGif/spider.gif" />
+        <Calender onClick={handleModal} src="/img/MyOffice/level0calender.png" />
+      </div>
     </Unity>
   );
 };

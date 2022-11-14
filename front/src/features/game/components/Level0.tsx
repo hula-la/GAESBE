@@ -100,7 +100,7 @@ const Calender = styled.img`
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;
-const Level0 = ({ handleModal }: any) => {
+const Level0 = ({ handleModal,officeIdx }: any) => {
   const navigate = useNavigate();
 
   
