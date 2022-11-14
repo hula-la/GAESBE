@@ -41,6 +41,7 @@ public class SessionDisconnectConfig {
 
         String[] info = s.split(",");
 
+        System.out.println("나가는 세션 : "+ info);
         //각자 처리가 필요한 곳으로 보냄
         switch (info[2])
         {
@@ -66,6 +67,7 @@ public class SessionDisconnectConfig {
                 socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
             case "Typing2":
+                System.out.println("타이핑에서 나감 : "+ sessionId);
                 TypingSocketDto typingSocketDto = TypingSocketDto.builder()
                         .type(TypingSocketDto.Type.LEAVE)
                         .userId(Long.parseLong(info[0]))
