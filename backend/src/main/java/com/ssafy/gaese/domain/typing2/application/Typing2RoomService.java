@@ -284,10 +284,11 @@ public class Typing2RoomService {
         //게임이 시작한 상태라면 정보를 지우지 말고 둿다가 나중에 기록할때 사용해야함
         if(typingRoomDto.isStart())
         {
+            System.out.println("typingRoomDto.isStart() 인 상태");
         }
         else {
             //방 내부 유저 정보 삭제
-            players.remove(typingSocketDto.getSessionId());
+            players.remove(typingSocketDto.getUserId());
             //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
             if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
                     typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
