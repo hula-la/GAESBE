@@ -46,7 +46,7 @@ public class SsafyGameService {
 
             Ability ability = abilityRepository.findByUser_Id(userId).get();
 
-            ability.addExp("luck", (int) Math.pow(2,user.getWinningStreak()));
+            ability.addExp("luck", user.getWinningStreak()/3);
 
             abilityRepository.save(ability);
 

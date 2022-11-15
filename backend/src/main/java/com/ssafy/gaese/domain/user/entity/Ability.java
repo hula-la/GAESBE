@@ -75,8 +75,8 @@ public class Ability {
                 break;
             case "luck":
                 this.luckExp+=plus;
-                this.luckLv+=this.luckExp/777;
-                this.luckExp%=777;
+                this.luckLv+=this.luckExp/7;
+                this.luckExp%=7;
                 break;
             default:
                 throw new RuntimeException();

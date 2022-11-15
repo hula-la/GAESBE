@@ -54,7 +54,6 @@ public class AbilityService {
             count++;
             Long id=ab.getUser().getId();
             String nick =ab.getUser().getNickname();
-            ab.getId();
             //알고 순위 기록
             if(id==userId)
                 rankDto.setMyAlgoRank(count);
