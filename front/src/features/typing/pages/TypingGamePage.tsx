@@ -9,7 +9,9 @@ interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
 const Container = styled.div`
-  width: 82%;
+  height: 100%;
+  width: 100%;
+  
   background-color: #232323;
   justify-content: center;
   /* text-align: center; */

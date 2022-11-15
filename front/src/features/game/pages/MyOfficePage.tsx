@@ -14,8 +14,9 @@ import { gameActions } from '../gameSlice';
 import { itemActions } from '../itemSlice';
 import { useSelector,useDispatch } from 'react-redux';
 const Wrapper = styled.div`
-  width: 66%;
-  height: 97%;
+  height: 100%;
+    width: 100%;
+    
   position: relative;
 
   overflow: hidden;
