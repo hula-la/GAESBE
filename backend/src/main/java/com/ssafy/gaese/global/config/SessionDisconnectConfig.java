@@ -5,6 +5,8 @@ import com.ssafy.gaese.domain.algorithm.dto.AlgoSocketDto;
 import com.ssafy.gaese.domain.chat.application.ChatService;
 import com.ssafy.gaese.domain.cs.application.CsRoomService;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
+import com.ssafy.gaese.domain.cs.dto.redis.CsRoomDto;
+import com.ssafy.gaese.domain.cs.repository.CsRoomRedisRepository;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.domain.typing2.application.Typing2RoomService;
@@ -21,6 +23,8 @@ import org.springframework.messaging.support.NativeMessageHeaderAccessor;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.Optional;
+
 @Configuration
 @RequiredArgsConstructor
 @Log4j2
@@ -34,6 +38,8 @@ public class SessionDisconnectConfig {
     private final FriendSocketService friendSocketService;
     private final ChatService chatService;
     private final AlgoService algoService;
+
+    private final CsRoomRedisRepository csRoomRedisRepository;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -75,13 +81,17 @@ public class SessionDisconnectConfig {
                         .sessionId(sessionId)
                         .build();
 
-                System.out.println("******************방 나감"+info[0]);
-                csRoomService.enterOrLeave(csSocketDto);
                 System.out.println("******************기록지움"+info[0]);
                 csRoomService.deleteRecord(info[1],Long.parseLong(info[0]));
-                // 게임을 하고 있다는 기록 지움
+
                 System.out.println("******************나간다"+info[0]);
                 socketInfo.stopPlayGame(Long.parseLong(info[0]));
+
+                System.out.println("******************방 나감"+info[0]);
+                // 게임이 끝난건지 확인, 끝나서 방이 삭제된거면 생략 , 그냥 중간에 나간거면 leave
+                Optional<CsRoomDto> csRoomOpt = csRoomRedisRepository.findById(csSocketDto.getRoomCode());
+                if (csRoomOpt.isPresent()) csRoomService.enterOrLeave(csSocketDto);
+                // 게임을 하고 있다는 기록 지움
                 break;
             case "Typing2":
                 System.out.println("타이핑에서 나감 sessionId: "+ sessionId);
