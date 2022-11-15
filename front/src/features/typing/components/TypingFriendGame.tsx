@@ -169,7 +169,7 @@ const TypingFriendGame = () => {
   const { userInfo } = useSelector((state: any) => state.auth);
   const [testProgress, setTestProgress] = useState<any>(null);
   const [paragraph, setPargraph] = useState<any>(null);
-  const [isReady, setIsReady] = useState<Boolean>(false);
+  // const [isReady, setIsReady] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<Boolean>(false);
   const [resultId, setResultId] = useState<any>(null);
   const [resultNickName, setResultNickName] = useState<any>(null);
@@ -182,21 +182,24 @@ const TypingFriendGame = () => {
   const { friendId } = useSelector((state: any) => state.friend);
   const [master, setMaster] = useState<Boolean>(false);
 
-  const socket: CustomWebSocket = new SockJS(
-    'https://k7e104.p.ssafy.io:8081/api/ws',
-  );
+  // const socket: CustomWebSocket = new SockJS(
+  //   'https://k7e104.p.ssafy.io:8081/api/ws',
+  // );
   const client = useRef<any>(null);
-  useEffect(() => {
-    client.current = Stomp.over(socket);
-  }, []);
-  const client2 = Stomp.over(socket);
-
-  useEffect(() => {
-    if (isEnd && resultId && resultNickName) {
-      console.log('끄읕');
-      navigate('/game/typing/result', {
-        state: {
-          resultId: resultId,
+  // client.current = Stomp.over(socket);
+  // useEffect(() => {
+    // }, []);
+    
+    // const socket: CustomWebSocket = new SockJS(
+    //   'https://k7e104.p.ssafy.io:8081/api/ws',
+    // );
+    // const client2 = Stomp.over(socket);
+    useEffect(() => {
+      if (isEnd && resultId && resultNickName) {
+        console.log('끄읕');
+        navigate('/game/typing/result', {
+          state: {
+            resultId: resultId,
           resultNickName: resultNickName,
           resultProfile: resultProfile,
         },
@@ -208,49 +211,54 @@ const TypingFriendGame = () => {
   }, []);
   // 뒤로가기 막는 useEffect
   // useEffect(() => {
-  //   const preventGoBack = () => {
-  //     // change start
-  //     window.history.pushState(null, '', window.location.href);
-  //     // change end
-  //     alert('게임중에는 나갈 수 없습니다');
-  //   };
-  //   window.history.pushState(null, '', window.location.href);
-  //   window.addEventListener('popstate', preventGoBack);
-  //   return () => window.removeEventListener('popstate', preventGoBack);
-  // }, []);
-  // // 뒤로가기 막는 useEffect
-  // // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  // usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
-  useEffect(() => {
-    if (userInfo) {
-      client.current.connect({}, (frame: any) => {
-        // client.current.connect({}, (frame: any) => {
-        console.log('*****************121**************************');
-        client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
-          // client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
-          var data = JSON.parse(res.body);
-          if (data.hasOwnProperty('room')) {
-            setRoomCode(data.room);
-            roomcode = data.room;
-          }
-          if (data.hasOwnProperty('isLast')) {
-            if (data.isLast === true) {
-              client.current.send(
+    //   const preventGoBack = () => {
+      //     // change start
+      //     window.history.pushState(null, '', window.location.href);
+      //     // change end
+      //     alert('게임중에는 나갈 수 없습니다');
+      //   };
+      //   window.history.pushState(null, '', window.location.href);
+      //   window.addEventListener('popstate', preventGoBack);
+      //   return () => window.removeEventListener('popstate', preventGoBack);
+      // }, []);
+      // // 뒤로가기 막는 useEffect
+      // // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
+      // usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
+      useEffect(() => {
+        if (userInfo) {
+          const socket: CustomWebSocket = new SockJS(
+            'https://k7e104.p.ssafy.io:8081/api/ws',
+            );
+            client.current = Stomp.over(socket);
+            client.current.connect({}, (frame: any) => {
+              console.log(client.current,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+              // client.current.connect({}, (frame: any) => {
+                console.log('*****************121**************************');
+                client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
+                  // client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
+                    var data = JSON.parse(res.body);
+                    if (data.hasOwnProperty('room')) {
+                      setRoomCode(data.room);
+                      roomcode = data.room;
+                    }
+                    if (data.hasOwnProperty('isLast')) {
+                      if (data.isLast === true) {
+                        client.current.send(
                 // client.current.send(
-                '/api/typing2/start',
-                {},
+                  '/api/typing2/start',
+                  {},
                 JSON.stringify({
                   langType: lang,
                   roomCode: roomcode,
                 }),
-              );
-              setIsReady(true);
-              setIsLoading(false);
-              // setTimeout(() => {
-              //   setIsLoading(false);
-              // }, 5000);
-            }
-          }
+                );
+                // setIsReady(true);
+                setIsLoading(false);
+                // setTimeout(() => {
+                  //   setIsLoading(false);
+                  // }, 5000);
+                }
+              }
           if (data.hasOwnProperty('isMaster')) {
             if (data.isMaster === true) {
               setMaster(true);
@@ -269,33 +277,37 @@ const TypingFriendGame = () => {
               roomType: 'FRIEND',
               roomCode: shareCode,
             }),
-          );
-        };
-        enterRoom();
-        const fetchMemberInfo = () => {
-          client.current.send(
+            );
+          };
+          enterRoom();
+          const fetchMemberInfo = () => {
+            client.current.send(
             '/api/typing2/memberInfo',
             {},
             JSON.stringify({
               roomCode: roomcode,
             }),
-          );
-        };
-        setTimeout(() => {
-          fetchMemberInfo();
-        }, 2000);
-      });
-    }
-  }, [userInfo]);
-
-  useEffect(() => {
-    return () => {
-      client.current.disconnect(() => {});
-    };
-  }, []);
-
-  useEffect(() => {
+            );
+          };
+          setTimeout(() => {
+            fetchMemberInfo();
+          }, 2000);
+        });
+      }
+    }, [userInfo]);
+    
+    useEffect(() => {
+      return () => {
+        client.current.disconnect(() => {});
+      };
+    }, []);
+    
+    useEffect(() => {
     if (roomCode) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      const client2 = Stomp.over(socket);
       client2.connect({}, (frame) => {
         console.log('*****************177**************************');
         client2.subscribe('/typing2/room/' + roomCode, (res) => {
@@ -307,7 +319,7 @@ const TypingFriendGame = () => {
             testtest = testdata.progressByPlayer[`${userInfo.id}`];
           } else if (testdata.hasOwnProperty('msg')) {
             if (testdata.msg === 'start') {
-              setIsReady(true);
+              // setIsReady(true);
               setIsLoading(false);
             } else if (testdata.msg === 'end') {
               setResultId(testdata.winUserId);
@@ -326,6 +338,21 @@ const TypingFriendGame = () => {
       });
     }
   }, [roomCode]);
+
+  function waitForConnection(client: any, callback: any) {
+    setTimeout(
+      function () {
+        // 연결되었을 때 콜백함수 실행
+        if (client.current.ws.readyState === 1) {
+          callback();
+          // 연결이 안 되었으면 재호출
+        } else {
+          waitForConnection(client, callback);
+        }
+      },
+      10, // 밀리초 간격으로 실행
+    );
+  }
 
   const exapmleitem = `${paragraph}`;
   const example = exapmleitem.split(' ');
@@ -354,7 +381,7 @@ const TypingFriendGame = () => {
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
         console.log('****************보냄********************');
-
+        waitForConnection(client, function () {
         client.current.send(
           '/api/typing2/submit',
           {},
@@ -364,7 +391,7 @@ const TypingFriendGame = () => {
             userId: userInfo.id,
           }),
         );
-
+        });
         setProgress(progress + 1);
         setIndex(index + 1);
         const changedState = JSON.parse(
@@ -410,16 +437,18 @@ const TypingFriendGame = () => {
       // 내가 친거랑 쳐야하는게 똑같다면
       if (example[sentence][index] === event.key) {
         console.log('****************보냄********************');
-
-        client.current.send(
-          '/api/typing2/submit',
-          {},
-          JSON.stringify({
-            roomCode: roomCode,
-            isCorrect: true,
-            userId: userInfo.id,
-          }),
-        );
+        waitForConnection(client, function () {
+          client.current.send(
+            '/api/typing2/submit',
+            {},
+            JSON.stringify({
+              roomCode: roomCode,
+              isCorrect: true,
+              userId: userInfo.id,
+            })
+            
+            );
+          })
 
         setProgress(progress + 1);
         setIndex(index + 1);
