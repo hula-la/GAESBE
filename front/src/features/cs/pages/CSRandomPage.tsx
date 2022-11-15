@@ -153,6 +153,7 @@ const CSIngamePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [isLast, setIsLast] = useState<Boolean>(false);
+  const [isReady, setIsReady] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
@@ -167,9 +168,9 @@ const CSIngamePage = () => {
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
 
-  const initialTime = useRef<number>(5);
+  const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
-  const [sec, setSec] = useState(5);
+  const [sec, setSec] = useState(3);
   let roomcode: string;
   let playerList: Array<any>;
 
@@ -250,21 +251,24 @@ const CSIngamePage = () => {
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
-  const client = Stomp.over(socket);
+  const client = useRef<any>(null);
+  useEffect(() => {
+    client.current = Stomp.over(socket);
+  }, []);
   // client.debug = () => {};
 
   const client2 = Stomp.over(socket);
 
   // 게임 시작 전 자동 시작 타이머
   useEffect(() => {
-    if (isLast) {
+    if (isReady) {
       interval.current = setInterval(() => {
         setSec(initialTime.current % 60);
         initialTime.current -= 1;
       }, 1000);
       return () => clearInterval(interval.current);
     }
-  }, [isLast]);
+  }, [isReady]);
 
   useEffect(() => {
     if (initialTime.current < 0) {
@@ -276,9 +280,9 @@ const CSIngamePage = () => {
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
-      client.connect({}, (frame) => {
+      client.current.connect({}, (frame: any) => {
         // 내 개인 정보 구독
-        client.subscribe(`/cs/${userInfo.id}`, (res) => {
+        client.current.subscribe(`/cs/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
@@ -300,20 +304,14 @@ const CSIngamePage = () => {
           }
           if (data.hasOwnProperty('isLast')) {
             if (data.isLast === true) {
-              client.send(
-                '/api/cs/start',
-                {},
-                JSON.stringify({
-                  roomCode: roomcode,
-                }),
-              );
+              setIsLast(true);
             }
           }
         });
 
         // 방에 들어가기
         const enterRoom = () => {
-          client.send(
+          client.current.send(
             '/api/cs',
             {},
             JSON.stringify({
@@ -325,20 +323,6 @@ const CSIngamePage = () => {
           );
         };
         enterRoom();
-
-        // 들어오는 순간 방의 사람들 정보를 받음
-        const fetchMemberInfo = () => {
-          client.send(
-            '/api/cs/memberInfo',
-            {},
-            JSON.stringify({
-              roomCode: roomcode,
-            }),
-          );
-        };
-        setTimeout(() => {
-          fetchMemberInfo();
-        }, 2000);
       });
     }
   }, [userInfo]);
@@ -350,13 +334,14 @@ const CSIngamePage = () => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
-            if (data1.msg === 'ready') {
-              setIsLast(true);
-            } else if (data1.msg === 'end') {
+            if (data1.msg === 'end') {
               setIsEnd(true);
               setResult(data1.result);
+            } else if (data1.msg === 'ready') {
+              setIsReady(true);
             } else {
               setIsStart(true);
+              setIsReady(false);
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
             setIsCorrect(null);
@@ -392,15 +377,34 @@ const CSIngamePage = () => {
             playerList = data1;
           }
         });
+        client2.send(
+          '/api/cs/memberInfo',
+          {},
+          JSON.stringify({
+            roomCode: roomCode,
+          }),
+        );
       });
     }
   }, [roomCode]);
 
   useEffect(() => {
     return () => {
-      client.disconnect(() => {});
+      client.current.disconnect(() => {});
     };
   }, []);
+
+  useEffect(() => {
+    if (players && isLast) {
+      client.current.send(
+        '/api/cs/start',
+        {},
+        JSON.stringify({
+          roomCode: roomCode,
+        }),
+      );
+    }
+  }, [isLast, players]);
 
   // 로딩 & 끝 제어
   useEffect(() => {
@@ -417,7 +421,7 @@ const CSIngamePage = () => {
 
   // 정답 유무 확인
   const handleAnswerSend = (e: any, number: any) => {
-    client.send(
+    client.current.send(
       '/api/cs/submit',
       {},
       JSON.stringify({
@@ -438,7 +442,7 @@ const CSIngamePage = () => {
           <div className="subtitle">
             10명의 인원이 모이면 자동으로 게임이 시작합니다
           </div>
-          {isLast && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
           <div className="waitingContent">
             <div className="imgBox">
               <img src="/img/rank/waitingroom.png" className="waitingroom" />
