@@ -86,11 +86,8 @@ public class Typing2RoomService {
         // 방 나가기
         else if(typingSocketDto.getType() == TypingSocketDto.Type.LEAVE){
             //서순 조심
-            socketInfo.stopPlayGame(typingSocketDto.getUserId());
-            socketInfo.delSocketInfo(typingSocketDto.getSessionId());
-            roomDto = leaveRoom(typingSocketDto);
-            log.debug(typingSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에서 나갔습니다.");
-            res.put("exit",typingSocketDto.getUserId());
+            leaveRoom(typingSocketDto);
+            return;
 
         }
 

@@ -76,6 +76,7 @@ public class SessionDisconnectConfig {
                         .build();
 
                 typingRoomService2.enterOrLeave(typingSocketDto);
+                socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
             case "Algo" :
                 AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
