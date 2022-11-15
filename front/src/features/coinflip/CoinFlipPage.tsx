@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { coinActions } from './coinFlipSlice';
+import CoinModal from './components/CoinModal';
 
 const Container = styled.div`
   /* width: 82%; */
@@ -113,31 +114,56 @@ const CoinFlipPage = () => {
   const dispatch = useDispatch();
   const coinRef = useRef<HTMLDivElement | null>(null);
   const { result } = useSelector((state: any) => state.coin);
+  const [isBeting, setIsBeting] = useState<boolean>(false);
   const [flagment, setFlagment] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onClickBet = () => {
-    dispatch(coinActions.requestCoinFlipStart({ patten: 6, point: 0 }));
+    setIsBeting(true);
+  };
+  const onClickBetSSa = () => {
+    dispatch(coinActions.requestCoinFlipStart({ patten: 6 }));
+  };
+  const onClickBetFy = () => {
+    dispatch(coinActions.requestCoinFlipStart({ patten: 7 }));
+  };
+  const onClickRun = () => {
+    setIsBeting(false);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const handleModal = () => {
+    setIsOpen(true);
   };
 
   const coinFlip = () => {
     coinRef.current!.style.animation = 'none';
-    if (result.patten === 7) {
-      if (flagment) {
-        coinRef.current!.style.animation = 'bk-spin-bk 3s forwards';
-        setFlagment(true);
+    setTimeout(() => {
+      if (result.patten === 7) {
+        if (flagment) {
+          coinRef.current!.style.animation = 'bk-spin-bk 3s forwards';
+          setFlagment(true);
+          dispatch(coinActions.resetResult());
+        } else {
+          coinRef.current!.style.animation = 'fr-spin-bk 3s forwards';
+          setFlagment(true);
+          dispatch(coinActions.resetResult());
+        }
       } else {
-        coinRef.current!.style.animation = 'fr-spin-bk 3s forwards';
-        setFlagment(true);
+        if (flagment) {
+          coinRef.current!.style.animation = 'bk-spin-fr 3s forwards';
+          setFlagment(false);
+          dispatch(coinActions.resetResult());
+        } else {
+          coinRef.current!.style.animation = 'fr-spin-fr 3s forwards';
+          setFlagment(false);
+          dispatch(coinActions.resetResult());
+        }
       }
-    } else {
-      if (flagment) {
-        coinRef.current!.style.animation = 'bk-spin-fr 3s forwards';
-        setFlagment(false);
-      } else {
-        coinRef.current!.style.animation = 'fr-spin-fr 3s forwards';
-        setFlagment(false);
-      }
-    }
+    }, 10);
   };
 
   useEffect(() => {
@@ -148,10 +174,7 @@ const CoinFlipPage = () => {
 
   return (
     <Container>
-      {/* <div className="stats">
-        <p id="heads-count">Heads: 0</p>
-        <p id="tails-count">Tails: 0</p>
-      </div> */}
+      {isOpen && <CoinModal handleModal={closeModal} />}
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>
@@ -165,9 +188,24 @@ const CoinFlipPage = () => {
         <div className="tails"></div>
       </div>
       <div className="buttons">
-        <button onClick={onClickBet} id="flip-button">
-          베팅!
-        </button>
+        {!isBeting && (
+          <button onClick={onClickBet} id="flip-button">
+            베팅!
+          </button>
+        )}
+        {isBeting && (
+          <div className="buttons">
+            <button onClick={onClickBetSSa} id="flip-button">
+              이번엔 싸다!
+            </button>
+            <button onClick={onClickRun} id="flip-button">
+              돔황챠
+            </button>
+            <button onClick={onClickBetFy} id="flip-button">
+              아니지 피다!
+            </button>
+          </div>
+        )}
       </div>
     </Container>
   );
