@@ -244,6 +244,7 @@ public class CsService {
             // 방 전원에게 ranking을 보내줌
             res.clear();
             res.put("ranking", rankList);
+            res.put("solveOrder", isSolvedByPlayer1);
             simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,res);
 
             //            게임 시작하고 60초 타이머
