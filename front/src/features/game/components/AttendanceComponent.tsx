@@ -50,7 +50,7 @@ function AttendanceComponent({handleModal, attendance, handleReload, needReload}
   const fetchMyAttendanceInfo = async () => {
     const res = await fetchMyAttendance()
     const attendanceInfo = res.data.map(((date:string) => {
-      return {date: date.split(' ')[0], display: 'background', color: '#577CEF'}
+      return {date: date.replaceAll('.', '-'), display: 'background', color: '#577CEF'}
     }))
     setAttendanceInfo(attendanceInfo)
   }
