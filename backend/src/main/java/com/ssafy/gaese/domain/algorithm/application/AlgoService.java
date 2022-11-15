@@ -85,7 +85,6 @@ public class AlgoService {
                     .build();
         }
 
-
         algoRepository.save(algoRecordDto.toEntity(user));
 
         return algoRecordDto;

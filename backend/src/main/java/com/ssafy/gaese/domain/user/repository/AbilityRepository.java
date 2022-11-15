@@ -1,12 +1,8 @@
 package com.ssafy.gaese.domain.user.repository;
 
-import com.ssafy.gaese.domain.typing2.entity.TypingParagraph;
 import com.ssafy.gaese.domain.user.entity.Ability;
-import com.ssafy.gaese.domain.user.entity.Attendance;
-import com.ssafy.gaese.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;

@@ -32,13 +32,13 @@ public class SessionDisconnectConfig {
     public void onDisconnectEvent(SessionDisconnectEvent event) throws Exception
     {
         String sessionId=event.getSessionId();
-        System.out.println("나가는 세션 : "+ sessionId);
+        System.out.println("나가려고 들어온 세션 : "+ sessionId);
 
         String s = socketInfo.geSocketInfo(sessionId);
-        if (s==null) return;
+        if (s==null){
+            return;
+        }
         //순서 : {id},{roomCode},{gameType},{nickName}
-
-
         String[] info = s.split(",");
 
         System.out.println("나가는 세션 : "+ info);
@@ -51,6 +51,7 @@ public class SessionDisconnectConfig {
 // //                socketInfo.delSocketInfo(sessionId);
 //                 break;
             case "Cs":
+                System.out.println("cs에서 나감 : "+ sessionId);
                 CsSocketDto csSocketDto = CsSocketDto.builder()
                         .type(CsSocketDto.Type.LEAVE)
                         .userId(Long.parseLong(info[0]))
@@ -78,6 +79,7 @@ public class SessionDisconnectConfig {
                 typingRoomService2.enterOrLeave(typingSocketDto);
                 break;
             case "Algo" :
+                System.out.println("알고에서 나감 : "+ sessionId);
                 AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
                         .sessionId(sessionId)
                         .roomCode(info[1])
@@ -89,6 +91,7 @@ public class SessionDisconnectConfig {
                 break;
 
             case "Friend" :
+                System.out.println("friend에서 나감 : "+ sessionId);
                 FriendSocketDto friendSocketDto = FriendSocketDto.builder()
                         .sessionId(sessionId)
                         .userId(Long.parseLong(info[0])).build();
