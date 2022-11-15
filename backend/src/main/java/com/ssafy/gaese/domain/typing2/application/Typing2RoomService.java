@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.typing2.application;
 
 import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
+import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
@@ -52,9 +53,11 @@ public class Typing2RoomService {
             //이미 방에 참여중인지 체크
             if(socketInfo.isPlayGame(typingSocketDto.getUserId()))
             {
+                res.clear();
+                res.put("playAnotherGame", true);
 //                반려하는 부분 만들어 줘야함
                 simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-                return;
+                throw new PlayAnotherGameException();
             }
             System.out.println("typingSocketDto 방 들어올때 체크");
             System.out.println(typingSocketDto);
@@ -86,11 +89,8 @@ public class Typing2RoomService {
         // 방 나가기
         else if(typingSocketDto.getType() == TypingSocketDto.Type.LEAVE){
             //서순 조심
-            socketInfo.stopPlayGame(typingSocketDto.getUserId());
-            socketInfo.delSocketInfo(typingSocketDto.getSessionId());
-            roomDto = leaveRoom(typingSocketDto);
-            log.debug(typingSocketDto.getUserId()+"님이"+roomDto.getCode()+"방에서 나갔습니다.");
-            res.put("exit",typingSocketDto.getUserId());
+            leaveRoom(typingSocketDto);
+            return;
 
         }
 
