@@ -105,7 +105,7 @@ public class Typing2RoomService {
         roomResByUser.put("masterId",roomDto.getMasterId());
         simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
 
-        Thread.sleep(1*1000);
+//        Thread.sleep(1*1000);
 
 
         // 플레이어가 꽉 차면 게임 시작
