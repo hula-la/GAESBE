@@ -22,10 +22,10 @@ public class SsafyGameService {
         User user = userRepository.findById(userId).get();
 
         //가진 포인트 보다 많은걸 배팅한 경우
-        if(user.getPoint()< param.getPoint())
-        {
-            return null;
-        }
+//        if(user.getPoint()< param.getPoint())
+//        {
+//            return null;
+//        }
 
         FlipResultDto resultDto = new FlipResultDto();
 
@@ -39,7 +39,7 @@ public class SsafyGameService {
         //맞춘 경우
         if(rand== param.getPatten())
         {
-            user.setPoint(user.getPoint()+(multiple* param.getPoint()));
+//            user.setPoint(user.getPoint()+(multiple* param.getPoint()));
             user.setWinningStreak(user.getWinningStreak()+1);
             if(user.getWinningStreak()>user.getMaxWinStreak())
                 user.setMaxWinStreak(user.getWinningStreak());
@@ -54,12 +54,12 @@ public class SsafyGameService {
         }
         else
         {
-            user.setPoint(user.getPoint()-(param.getPoint()));
+//            user.setPoint(user.getPoint()-(param.getPoint()));
             user.setWinningStreak(0);
             resultDto.setCorrect(false);
         }
 
-        resultDto.setPoint(user.getPoint());
+//        resultDto.setPoint(user.getPoint());
         resultDto.setPatten(rand);
         resultDto.setWinningStreak(user.getWinningStreak());
 

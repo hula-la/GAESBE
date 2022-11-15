@@ -59,16 +59,11 @@ public class AlgoRecord {
         return AlgoRecordCodeDto.builder()
                 .userId(this.user.getId())
                 .code(this.code)
-                .lan(getLanStr(this.lanId))
+                .lan(this.lanId)
                 .build();
     }
 
-    public String getLanStr(int lanId) {
-        String[] lanList = {"C++","Java","Python", "C"};
-        if(((lanId % 1000) - 1) < 0) throw new ArrayIndexOutOfBoundsException();
-        String lan = lanList[(lanId % 1000) - 1];
-        return lan;
-    }
+
     public AlgoRecordDto toDto(){
         return AlgoRecordDto.builder()
                 .date(this.date)
@@ -79,8 +74,9 @@ public class AlgoRecord {
                 .ranking(this.ranking)
                 .solveTime(this.solveTime)
                 .userId(this.user.getId())
-                .lan(getLanStr(lanId))
+                .lan(this.lanId)
                 .code(this.code)
+                .roomCode(this.roomCode)
                 .build();
     }
 

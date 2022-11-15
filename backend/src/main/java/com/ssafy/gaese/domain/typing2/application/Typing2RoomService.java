@@ -76,6 +76,11 @@ public class Typing2RoomService {
                 }
             }
 
+            System.out.println("방 참여할때 sessionId, userId");
+            System.out.println(typingSocketDto.getSessionId());
+            System.out.println(typingSocketDto.getUserId());
+
+
             socketInfo.setSocketInfo(typingSocketDto.getSessionId(),
                     typingSocketDto.getUserId().toString(),
                     typingSocketDto.getRoomCode(),
