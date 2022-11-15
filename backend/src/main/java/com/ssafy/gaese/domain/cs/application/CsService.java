@@ -292,7 +292,6 @@ public class CsService {
 //        마지막 결과 보내기
 //        res.put("result", roomDto);
 
-        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
 
 
@@ -313,6 +312,8 @@ public class CsService {
         }
 
 
+        res.put("rankByPlayer", rankByPlayer);
+        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
         // 기록
         roomDto.getPlayers().forEach((k,v)->{
             CsRecord csRecord = CsRecord.builder()
@@ -321,6 +322,7 @@ public class CsService {
                     .date(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                     .build();
             CsRecord saved = csRecordRepository.save(csRecord);
+
 
 
             // 레디스에 저장되어잇는 기록 db에 저장
