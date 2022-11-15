@@ -12,7 +12,7 @@ import { attendanceRequest } from '../../../api/mypageApi';
 import AttendanceComponent from '../components/AttendanceComponent';
 import { gameActions } from '../gameSlice';
 import { itemActions } from '../itemSlice';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 const Wrapper = styled.div`
   height: 100%;
     width: 100%;
@@ -20,8 +20,6 @@ const Wrapper = styled.div`
   position: relative;
 
   overflow: hidden;
-
-
 
   .abilitys {
     position: absolute;
@@ -50,11 +48,11 @@ const Wrapper = styled.div`
 `;
 
 const Office = styled.div`
-width: 100%;
+  width: 100%;
   height: 100%;
   position: relative;
 
-  .officeName{
+  .officeName {
     z-index: 5;
     position: absolute;
     left: 3rem;
@@ -62,81 +60,82 @@ width: 100%;
     font-size: 2rem;
     color: white;
     /* font-weight: bold; */
-
   }
-`
+`;
 
 const OfficeBtn = styled.img`
-      position: absolute;
-    width: 50px;
-    height: 50px;
-    z-index: 5;
-    top: calc(50% - 25px);
-    
-    transition: 0.3s transform;
-  :hover{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  z-index: 5;
+  top: calc(50% - 25px);
+
+  transition: 0.3s transform;
+  :hover {
     transform: scale(1.2);
   }
-    
-  &.prevBtn{
+
+  &.prevBtn {
     left: 2rem;
   }
-  &.nextBtn{
+  &.nextBtn {
     right: 2rem;
   }
-`
+`;
 
 const Offices = styled('div')<{ officeIdx: number }>`
-/* overflow: hidden; */
-/* border: 5px solid white; */
-height:100%;
-/* width: 100%; */
-display: flex;
+  /* overflow: hidden; */
+  /* border: 5px solid white; */
+  height: 100%;
+  /* width: 100%; */
+  display: flex;
 
-flex-wrap: wrap;
-flex-direction: column;
+  flex-wrap: wrap;
+  flex-direction: column;
 
-
-transform: translateX(calc(-100 * ${(props) => props.officeIdx}%));
-transition: transform 1s;
-
-`
+  transform: translateX(calc(-100 * ${(props) => props.officeIdx}%));
+  transition: transform 1s;
+`;
 
 const MyOfficePage = () => {
   const dispatch = useDispatch();
-  const [officeIdx, setOfficeIdx] = useState(0)
-  const idxRef = useRef(0)
+  const [officeIdx, setOfficeIdx] = useState(0);
+  const idxRef = useRef(0);
   const { userAbility } = useSelector((state: any) => state.auth);
   const { offices } = useSelector((state: any) => state.item);
 
+  const officeComponents = [
+    Level0,
+    Level1,
+    Level2,
+    Level3,
+    Level4,
+    Level5,
+    Level6,
+  ];
 
-  const officeComponents = [Level0,Level1,Level2,Level3,Level4,Level5,Level6];
-
-
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const [needReload, setNeedReload] = useState<boolean>(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [needReload, setNeedReload] = useState<boolean>(false);
   const handleModal = () => {
-    setModalOpen(!modalOpen)
-  }
-  const handleReload = (e:boolean) => {
-    setNeedReload(e)
-  }
+    setModalOpen(!modalOpen);
+  };
+  const handleReload = (e: boolean) => {
+    setNeedReload(e);
+  };
 
   useEffect(() => {
     dispatch(itemActions.fetchCharacterStart());
     dispatch(itemActions.fetchOfficeStart());
   }, []);
 
-
-
   const officePrev = () => {
-    idxRef.current -= 1 
-    setOfficeIdx(idxRef.current)
-  }
+    idxRef.current -= 1;
+    setOfficeIdx(idxRef.current);
+  };
   const officeNext = () => {
-    idxRef.current += 1 
-    setOfficeIdx(idxRef.current)
-  }
+    idxRef.current += 1;
+    setOfficeIdx(idxRef.current);
+  };
 
   const attendance = async () => {
     try {
@@ -157,39 +156,45 @@ const MyOfficePage = () => {
   // }, []);
   return (
     <Wrapper>
-      
-
-      {offices && (officeIdx > 0) &&
-        <OfficeBtn className='prevBtn'
-        src="/img/arrow/pink-small-arrow-right.png"
-          onClick={officePrev} />}
-      {offices && (officeIdx < offices.length - 1) &&
-        <OfficeBtn className='nextBtn'
+      {offices && officeIdx > 0 && (
+        <OfficeBtn
+          className="prevBtn"
+          src="/img/arrow/pink-small-arrow-right.png"
+          onClick={officePrev}
+        />
+      )}
+      {offices && officeIdx < offices.length - 1 && (
+        <OfficeBtn
+          className="nextBtn"
           onClick={officeNext}
           src="/img/arrow/pink-small-arrow-left.png"
-        />}
-      
-      {offices && <Offices
-        officeIdx={officeIdx}
-        >
+        />
+      )}
 
-        
+      {offices && (
+        <Offices officeIdx={officeIdx}>
+          {offices.map((v: any, idx: number) => {
+            const Component: any = officeComponents[idx];
+            return (
+              <Office>
+                <div className="officeName">{v.name}</div>
 
-        {offices.map((v: any, idx: number) => {
-          const Component:any = officeComponents[idx];
-          return (
-            <Office>
-              <div className='officeName'>{v.name}</div>
-            
-            {v.own&&<Component officeIdx={v} handleModal={handleModal} />}  
-            </Office>
-          )
-        })}
+                {v.own && <Component officeIdx={v} handleModal={handleModal} />}
+              </Office>
+            );
+          })}
 
-        {modalOpen && <AttendanceComponent needReload={needReload} handleReload={handleReload} attendance={attendance} handleModal={handleModal} />}
+          {modalOpen && (
+            <AttendanceComponent
+              needReload={needReload}
+              handleReload={handleReload}
+              attendance={attendance}
+              handleModal={handleModal}
+            />
+          )}
+        </Offices>
+      )}
 
-      </Offices>}
-      
       {userAbility && (
         <div className="abilitys">
           <div className="ability">

@@ -7,6 +7,7 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
+import { usePrompt } from '../../../utils/block';
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
@@ -29,10 +30,9 @@ const TrackLine = styled.div`
   height: 25%;
 `;
 const Track = styled.div`
-      height: calc(20vh - 1rem);
-    margin-top: 21.5vh;
+  height: calc(20vh - 1rem);
+  margin-top: 21.5vh;
 `;
-
 
 const LoadingBlock = styled.div`
   display: flex;
@@ -70,7 +70,6 @@ const PersonalId = styled.div`
   /* align-items: center; */
 
   /* padding-top: 0.5rem; */
-
 `;
 const PersonalCharacter = styled.div`
   /* background: #deb36d; */
@@ -82,20 +81,19 @@ const PersonalCharacter = styled.div`
 
   position: relative;
 
-  &::after{
-    content: "";
+  &::after {
+    content: '';
     border-right: 1rem solid #bf0909;
     position: absolute;
     right: 0;
     height: 100%;
 
-    box-shadow: 1px 1px 2px 1px #bf0909
+    box-shadow: 1px 1px 2px 1px #bf0909;
   }
 
   .imgNormal {
     transform: scaleX(-1);
   }
-
 `;
 const CharacterImg = styled('img')<{ progress: string }>`
   padding-left: ${(props) => props.progress};
@@ -133,18 +131,17 @@ const TypingResult = styled.div`
   box-sizing: border-box;
 
   min-height: 50vh;
-    max-height: 50vh;
+  max-height: 50vh;
 
   position: relative;
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
 
-    border: 1rem solid #232323;
-    box-sizing: border-box;
-    border-radius: 2rem;
-    overflow: hidden;
-
+  border: 1rem solid #232323;
+  box-sizing: border-box;
+  border-radius: 2rem;
+  overflow: hidden;
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -241,6 +238,21 @@ const TypingFriendGame = () => {
   useEffect(() => {
     return () => setIsLoading(true);
   }, []);
+  // 뒤로가기 막는 useEffect
+  useEffect(() => {
+    const preventGoBack = () => {
+      // change start
+      window.history.pushState(null, '', window.location.href);
+      // change end
+      alert('게임중에는 나갈 수 없습니다');
+    };
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', preventGoBack);
+    return () => window.removeEventListener('popstate', preventGoBack);
+  }, []);
+  // 뒤로가기 막는 useEffect
+  // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
+  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
@@ -547,69 +559,73 @@ const TypingFriendGame = () => {
         )}
         {players && (
           <TypingResult>
-              <TypingBg className='typingBg' src="/img/typing/typingTrack2.png" alt="타이핑 트랙"/>
+            <TypingBg
+              className="typingBg"
+              src="/img/typing/typingTrack2.png"
+              alt="타이핑 트랙"
+            />
             <Track>
-            {arr.map((a: any, idx: number) => {
-              return (
-                <TrackLine key={idx}>
-                  <TypingPersonalResult>
-                    <Personal>
-                      <PersonalId>
-                        {idx < players.length && (
-                          <div>{players[idx].nickname}</div>
-                        )}
-                      </PersonalId>
-                      <PersonalCharacter>
-                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                        {isLoading && idx < players.length && (
-                          <CharacterImg
-                            progress={
-                              testProgress
-                                ? testProgress.progressByPlayer[
-                                    `${players[idx].id}`
-                                  ] + '%'
-                                : '0%'
-                            }
-                            className="imgNormal"
-                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
-                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
-                            alt="playerImg"
-                          />
-                        )}
+              {arr.map((a: any, idx: number) => {
+                return (
+                  <TrackLine key={idx}>
+                    <TypingPersonalResult>
+                      <Personal>
+                        <PersonalId>
+                          {idx < players.length && (
+                            <div>{players[idx].nickname}</div>
+                          )}
+                        </PersonalId>
+                        <PersonalCharacter>
+                          {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                          {isLoading && idx < players.length && (
+                            <CharacterImg
+                              progress={
+                                testProgress
+                                  ? testProgress.progressByPlayer[
+                                      `${players[idx].id}`
+                                    ] + '%'
+                                  : '0%'
+                              }
+                              className="imgNormal"
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
+                              // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+                              alt="playerImg"
+                            />
+                          )}
 
-                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                        {!isLoading && idx < players.length && (
-                          <CharacterImg
-                            progress={
-                              testProgress
-                                ? testProgress.progressByPlayer[
-                                    `${players[idx].id}`
-                                  ] + '%'
-                                : '0%'
-                            }
-                            className="img"
-                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
-                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
-                            alt="playerImg"
-                          />
-                        )}
-                      </PersonalCharacter>
-                      <PersonalResult>
-                        {idx < players.length && testProgress && (
-                          <div>
-                            {
-                              testProgress.progressByPlayer[
-                                `${players[idx].id}`
-                              ]
-                            }
-                          </div>
-                        )}
-                      </PersonalResult>
-                    </Personal>
-                  </TypingPersonalResult>
-                </TrackLine>
-              );
-            })}
+                          {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                          {!isLoading && idx < players.length && (
+                            <CharacterImg
+                              progress={
+                                testProgress
+                                  ? testProgress.progressByPlayer[
+                                      `${players[idx].id}`
+                                    ] + '%'
+                                  : '0%'
+                              }
+                              className="img"
+                              // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
+                              alt="playerImg"
+                            />
+                          )}
+                        </PersonalCharacter>
+                        <PersonalResult>
+                          {idx < players.length && testProgress && (
+                            <div>
+                              {
+                                testProgress.progressByPlayer[
+                                  `${players[idx].id}`
+                                ]
+                              }
+                            </div>
+                          )}
+                        </PersonalResult>
+                      </Personal>
+                    </TypingPersonalResult>
+                  </TrackLine>
+                );
+              })}
             </Track>
           </TypingResult>
         )}
