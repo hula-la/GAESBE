@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { client } from 'stompjs';
 import styled from 'styled-components';
+import Confetti from 'react-confetti'
 
 const Result = styled.div`
   width: 100%;
@@ -11,6 +11,7 @@ const Result = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
 `;
 const TypingResultPage = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const TypingResultPage = () => {
   }, [resultId, resultNickName]);
   return (
     <Result>
+      <Confetti></Confetti>
       <h1>축하합니다 우승입니다.</h1>
       {/* <div>{resultId}</div> */}
       <div>{resultNickName}</div>

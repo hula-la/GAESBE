@@ -168,28 +168,27 @@ const TypingGame = () => {
   const interval = useRef<any>(null);
   const [sec, setSec] = useState(3);
 
-  const socket: CustomWebSocket = new SockJS(
-    'https://k7e104.p.ssafy.io:8081/api/ws',
-  );
-  const client = useRef<any>(null);
-  useEffect(() => {
-    client.current = Stomp.over(socket);
-  }, []);
-  const client2 = Stomp.over(socket);
-  useEffect(() => {
-    if (isEnd && resultId && resultNickName) {
-      console.log('끄읕');
-      navigate('/game/typing/result', {
-        state: {
-          resultId: resultId,
-          resultNickName: resultNickName,
-          resultProfile: resultProfile,
-        },
-      });
-    }
-  }, [isEnd, resultId, resultNickName]);
-  useEffect(() => {
-    if (isReady) {
+  // const socket: CustomWebSocket = new SockJS(
+    //   'https://k7e104.p.ssafy.io:8081/api/ws',
+    // );
+    const client = useRef<any>(null);
+    // useEffect(() => {
+      // }, []);
+      // const client2 = Stomp.over(socket);
+      useEffect(() => {
+        if (isEnd && resultId && resultNickName) {
+          console.log('끄읕');
+          navigate('/game/typing/result', {
+            state: {
+              resultId: resultId,
+              resultNickName: resultNickName,
+              resultProfile: resultProfile,
+            },
+          });
+        }
+      }, [isEnd, resultId, resultNickName]);
+      useEffect(() => {
+        if (isReady) {
       interval.current = setInterval(() => {
         setSec(initialTime.current % 60);
         initialTime.current -= 1;
@@ -199,27 +198,31 @@ const TypingGame = () => {
   }, [isReady]);
   useEffect(() => {
     if (userInfo) {
-      client.current.connect({}, (frame: any) => {
-        console.log('*****************121**************************');
-        client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
-          var data = JSON.parse(res.body);
-          if (data.hasOwnProperty('room')) {
-            setRoomCode(data.room);
-            roomcode = data.room;
-          }
-          if (data.hasOwnProperty('isLast')) {
-            if (data.isLast === true) {
-              client.current.send(
-                '/api/typing2/start',
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+        );
+        client.current = Stomp.over(socket);
+        client.current.connect({}, (frame: any) => {
+          console.log('*****************121**************************');
+          client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
+            var data = JSON.parse(res.body);
+            if (data.hasOwnProperty('room')) {
+              setRoomCode(data.room);
+              roomcode = data.room;
+            }
+            if (data.hasOwnProperty('isLast')) {
+              if (data.isLast === true) {
+                client.current.send(
+                  '/api/typing2/start',
                 {},
                 JSON.stringify({
                   langType: lang,
                   roomCode: roomcode,
                 }),
-              );
-              setIsReady(true);
-              setTimeout(() => {
-                setIsLoading(false);
+                );
+                setIsReady(true);
+                setTimeout(() => {
+                  setIsLoading(false);
               }, 5000);
             }
           }
@@ -235,27 +238,31 @@ const TypingGame = () => {
               userId: userInfo.id,
               roomType: 'RANDOM',
             }),
-          );
-        };
-        enterRoom();
-        const fetchMemberInfo = () => {
-          client.current.send(
-            '/api/typing2/memberInfo',
-            {},
-            JSON.stringify({
-              roomCode: roomcode,
-            }),
-          );
-        };
-        setTimeout(() => {
-          fetchMemberInfo();
-        }, 2000);
-      });
-    }
-  }, [userInfo]);
-
+            );
+          };
+          enterRoom();
+          const fetchMemberInfo = () => {
+            client.current.send(
+              '/api/typing2/memberInfo',
+              {},
+              JSON.stringify({
+                roomCode: roomcode,
+              }),
+              );
+            };
+            setTimeout(() => {
+              fetchMemberInfo();
+            }, 2000);
+          });
+        }
+      }, [userInfo]);
+      
   useEffect(() => {
     if (roomCode) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+    const client2 = Stomp.over(socket);
       client2.connect({}, (frame) => {
         console.log('*****************177**************************');
         client2.subscribe('/typing2/room/' + roomCode, (res) => {
