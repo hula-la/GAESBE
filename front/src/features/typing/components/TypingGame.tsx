@@ -14,12 +14,16 @@ interface CharStateType {
   sentence: number;
   type: number;
 }
+const Wrapper = styled.div`
+  height: 100%;
+  width: 100%;
+`;
 
 const TypingBg = styled.img`
   height: 100%;
-  position: absolute;
-
   width: 100%;
+
+  position: absolute;
 
   text-align: left;
 `;
@@ -453,7 +457,7 @@ const TypingGame = () => {
     }
   };
   return (
-    <div>
+    <Wrapper>
 
       {isLoading && !players && (
         <LoadingBlock>
@@ -591,7 +595,7 @@ const TypingGame = () => {
           </TypingGameBox>
         )}
       </Typing>
-    </div>
+    </Wrapper>
   );
 };
 
