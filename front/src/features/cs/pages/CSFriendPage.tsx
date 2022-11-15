@@ -167,12 +167,14 @@ const CSFriendPage = () => {
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
-  const [isCorrect, setIsCorrect] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [cntPerNum, setCntPerNum] = useState<any>(null);
+  const [solveOrder, setSolveOrder] = useState<any>(null);
+  const [answer, setAnswer] = useState<number | null>(null);
   const [isNext, setIsNext] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<any>(null);
-  const [result, setResult] = useState<any>(null);
+  const [rankByPlayer, setRankByPlayer] = useState<any>(null);
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
   const { modal } = useSelector((state: any) => state.friend);
@@ -286,7 +288,6 @@ const CSFriendPage = () => {
 
   useEffect(() => {
     if (initialTime.current < 0) {
-      console.log('타임 아웃');
       clearInterval(interval.current);
     }
   }, [sec]);
@@ -306,7 +307,6 @@ const CSFriendPage = () => {
               setIsSubmit(true);
             }
           } else if (data.hasOwnProperty('isSolved')) {
-            setIsCorrect(data.isCorrect);
             setIsSolved(data.isSolved);
             setIsSubmit(false);
             setProblem('a');
@@ -315,8 +315,6 @@ const CSFriendPage = () => {
             }, 7000);
           } else if (data.hasOwnProperty('master')) {
             setIsMaster(true);
-          } else {
-            setIsCorrect(data.isCorrect);
           }
         });
 
@@ -348,7 +346,7 @@ const CSFriendPage = () => {
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
               setIsEnd(true);
-              setResult(data1.result);
+              setRankByPlayer(data1.rankByPlayer);
             } else if (data1.msg === 'ready') {
               setIsReady(true);
             } else {
@@ -356,12 +354,14 @@ const CSFriendPage = () => {
               setIsStart(true);
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
-            setIsCorrect(null);
             setIsSolved(null);
             setProblem(data1.currentProblem);
             setIsNext(false);
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
+            setCntPerNum(data1.cntPerNum);
+            setSolveOrder(data1.solveOrder);
+            setAnswer(data1.answer);
           } else {
             if (!playerList) {
               for (let i = 0; i < data1.length; i++) {
@@ -410,11 +410,13 @@ const CSFriendPage = () => {
     if (players) {
       setIsLoading(false);
     }
-    if (isEnd && result) {
+    if (isEnd && rankByPlayer) {
       console.log('끝');
-      navigate('/game/CS/result', { state: { result: result } });
+      navigate('/game/CS/result', {
+        state: { ranking: ranking, rankByPlayer: rankByPlayer },
+      });
     }
-  }, [players, result, isEnd]);
+  }, [players, isEnd, rankByPlayer]);
 
   const onClickStart = () => {
     client.current.send(
@@ -459,8 +461,6 @@ const CSFriendPage = () => {
       );
     }
   }, [friendId]);
-
-  const invite = () => {};
 
   return (
     <Container>
@@ -529,7 +529,7 @@ const CSFriendPage = () => {
               <p className="loadingText">문제를 불러오고 있습니다</p>
             </div>
           )}
-          {problem && !isSubmit && isCorrect === null && (
+          {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
               <div className="problem">
                 <div className="progressContainer">
@@ -557,26 +557,26 @@ const CSFriendPage = () => {
                   );
                 })}
               </div>
-              {ranking &&
-                ranking.map((rank: any, idx: number) => {
-                  return (
-                    <div key={idx} className="rankBlock">
-                      <div className="rankwrapper">
+              <div className="rankBlock">
+                {ranking &&
+                  ranking.slice(0, 3).map((rank: any, idx: number) => {
+                    return (
+                      <div key={idx} className="rankwrapper">
                         <div>
                           <img src={`/img/rank/medal${idx}.png`} />
                           <div>
                             <img
                               className="character"
-                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[0]}_normal.gif`}
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
                             />
                             <div>{rank[1]}</div>
-                            <div>{rank[2]}</div>
+                            <div>{rank[3]}</div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+              </div>
             </div>
           )}
           {isSubmit && (
@@ -585,14 +585,11 @@ const CSFriendPage = () => {
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
-          {isCorrect !== null &&
-            isSolved !== null &&
-            problem === 'a' &&
-            !isNext && (
-              <div>
-                <p>중간결과 페이지</p>
-              </div>
-            )}
+          {isSolved !== null && problem === 'a' && !isNext && (
+            <div>
+              <p>중간결과 페이지</p>
+            </div>
+          )}
         </IngameBlock>
       )}
     </Container>

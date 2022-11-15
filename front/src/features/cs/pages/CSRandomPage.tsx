@@ -509,11 +509,12 @@ const CSIngamePage = () => {
                   );
                 })}
               </div>
-              {ranking &&
-                ranking.map((rank: any, idx: number) => {
-                  return (
-                    <div key={idx} className="rankBlock">
-                      <div className="rankwrapper">
+
+              <div className="rankBlock">
+                {ranking &&
+                  ranking.map((rank: any, idx: number) => {
+                    return (
+                      <div key={idx} className="rankwrapper">
                         <div>
                           <img src={`/img/rank/medal${idx}.png`} />
                           <div>
@@ -526,9 +527,9 @@ const CSIngamePage = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+              </div>
             </div>
           )}
           {isSubmit && (
