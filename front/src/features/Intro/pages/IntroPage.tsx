@@ -83,7 +83,7 @@ const Wrapper = styled.div`
   .inner {
     max-width: 1100px;
     height: 100%;
-    margin: 0 0;
+    margin: 0 auto;
   }
   .introBox {
     position: relative;
@@ -100,106 +100,120 @@ const Wrapper = styled.div`
 
   .fix_motion {
     background-color: #232323;
-    .fix_wrap {
-      position: relative;
-      .textBox {
-        float: left;
-        width: 50%;
-        padding-top: 200px;
-        .title {
-          font-size: 36px;
-          margin-bottom: 1rem;
-        }
-        .content {
-          font-size: 42px;
-        }
-        div {
-          max-width: 80%;
-          font-size: 36px;
-          margin-left: 10rem;
 
-          color: #333;
-          transition: color 0.5s;
-          text-align: start;
-        }
-        div.active {
-          color: #fff;
-        }
-        div.txt02 {
-          margin-top: 300px;
-        }
-        div.txt03 {
-          margin-top: 300px;
-        }
-        div.txt04 {
-          margin-top: 300px;
-          margin-bottom: 500px;
-        }
-      }
-      .imgFix {
-        position: sticky;
-        position: -webkit-sticky;
-        top: calc(50vh - 350px);
-        left: 0;
-        z-index: 40;
-        float: left;
-        width: 50%;
-        .officeImg {
-          position: relative;
-          width: 240px;
-          height: 409px;
-          margin: 0 auto;
-          .imgOffice {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 20;
-            opacity: 0;
-            transform: translateY(-40px);
-            transition: opacity 0.5s, transform 0.5s;
-            .img {
-              transition: transform 0.5s ease;
-            }
-          }
-          .imgOffice2 {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 50;
-            opacity: 0;
-            transform: translateY(-40px);
-            transition: opacity 0.5s, transform 0.5s;
-            .img {
-              transition: transform 0.5s ease;
-            }
-          }
-        }
-      }
-      .active {
-        .officeImg {
-          .imgOffice {
-            opacity: 1;
-            transform: translateY(0px);
-            transition-delay: 0.3s;
-            .active {
-              opacity: 0;
-            }
-          }
-          .imgOffice2.active {
-            opacity: 1;
-          }
+    .title {
+      font-size: 36px;
+      margin-bottom: 1rem;
+    }
+    .content {
+      font-size: 50px;
+    }
+    /* div {
+      max-width: 80%;
+      font-size: 36px;
+      margin-left: 10rem;
+
+      color: #333;
+      transition: color 0.5s;
+      text-align: start;
+    } */
+
+    /* .img {
+      transition: transform 0.5s ease;
+    } */
+
+    .active {
+      .officeImg {
+        .imgOffice2.active {
+          opacity: 1;
         }
       }
     }
-    .fix_wrap:after {
-      clear: both;
-      display: block;
-      content: '';
+  }
+  .fix_motion .fix_wrap {
+    position: relative;
+  }
+  .fix_motion .fix_wrap:after {
+    clear: both;
+    display: block;
+    content: '';
+  }
+  .fix_motion .fix_wrap .textBox {
+    float: left;
+    width: 50%;
+    padding-top: 300px;
+  }
+  .fix_motion .fix_wrap .textBox div {
+    color: #333;
+    transition: color 0.5s;
+  }
+  .fix_motion .fix_wrap .textBox div.active {
+    color: #fff;
+  }
+  .fix_motion .fix_wrap .textBox div.txt02 {
+    margin-top: 400px;
+  }
+  .fix_motion .fix_wrap .textBox div.txt03 {
+    margin-top: 400px;
+  }
+  .fix_motion .fix_wrap .textBox div.txt04 {
+    margin-top: 400px;
+    margin-bottom: 500px;
+  }
+  .fix_motion .fix_wrap .imgFix {
+    position: sticky;
+    position: -webkit-sticky;
+    top: calc(50vh - 200px);
+    left: 0;
+    z-index: 40;
+    float: left;
+    width: 50%;
+    height: 100%;
+  }
+  .fix_motion .fix_wrap .imgFix .officeImg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+  }
+  .fix_motion .fix_wrap .imgFix .officeImg .imgOffice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .fix_motion .fix_wrap .imgFix .imgOffice2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity 0.5s, transform 0.5s;
+    .img {
+      transition: transform 0.5s ease;
     }
+  }
+
+  .fix_motion .fix_wrap .active .officeImg .imgOffice {
+    opacity: 1;
+    transform: translateY(0px);
+    transition-delay: 0.1s;
+  }
+  .fix_motion .fix_wrap .active .officeImg .imgOffice .active {
+    opacity: 0;
+  }
+  .fix_motion .fix_wrap .active .active {
+    opacity: 1;
+    transform: translateY(0px);
+    transition-delay: 0.1s;
   }
 `;
 
@@ -389,7 +403,11 @@ const IntroPage = () => {
               <p className="content">퀴즈로 배우며</p>
             </div>
             <div ref={txt03ref} className="txt03">
-              박정현!
+              <p className="title">타이핑 배틀</p>
+              <p className="content">
+                타이핑으로 <br />
+                친숙해지자!
+              </p>
             </div>
             <div ref={txt04ref} className="txt04">
               홍성목!
@@ -399,38 +417,13 @@ const IntroPage = () => {
             <div className="officeImg">
               <figure className="imgOffice">
                 <img ref={officeImgRef} src="/img/Intro/computer.png" />
+                {/* <img src="/img/Intro/computer.png" /> */}
               </figure>
-              <div className="slide_wrap">
-                <div className="slide">
-                  <figure>
-                    <img src="" alt="" />
-                  </figure>
-                  <figure>
-                    <img src="" alt="" />
-                  </figure>
-                  <figure>
-                    <img src="" alt="" />
-                  </figure>
-                </div>
-              </div>
-              {/* <div ref={officeImg2Ref} className="imgOffice2">
-                <figure>
-                  <img src="/img/MyOffice/level3.png" />
-                </figure>
-                <div className="object_wrap">
-                  <div className="object">
-                    <figure>
-                      <img src="" />
-                    </figure>
-                    <figure>
-                      <img src="" />
-                    </figure>
-                    <figure>
-                      <img src="" />
-                    </figure>
-                  </div>
-                </div>
-              </div> */}
+            </div>
+            <div ref={officeImg2Ref} className="imgOffice2">
+              <figure>
+                <img src="/img/Intro/computer.png" />
+              </figure>
             </div>
           </div>
         </article>

@@ -12,7 +12,7 @@ interface CustomWebSocket extends WebSocket {
 }
 
 const Container = styled.div`
-  /* width: 82%; */
+  width: 82%;
   height: 100%;
   background-color: #232323;
   color: #ffffff;
@@ -517,73 +517,26 @@ const CSIngamePage = () => {
                   src="/img/selectbutton/fourbutton.png"
                 />
               </div>
-              {ranking && (
-                <div className="rankBlock">
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/goldmedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[0][1]}</div>
-                        <div>{ranking[0][2]}</div>
+              {ranking &&
+                ranking.map((rank: any, idx: number) => {
+                  return (
+                    <div className="rankBlock">
+                      <div className="rankwrapper">
+                        <div>
+                          <img src={`/img/rank/medal${idx}.png`} />
+                          <div>
+                            <img
+                              className="character"
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[0]}_normal.gif`}
+                            />
+                            <div>{rank[1]}</div>
+                            <div>{rank[2]}</div>
+                          </div>
+                        </div>
                       </div>
-                      {}
                     </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/silvermedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[1][1]}</div>
-                        <div>{ranking[1][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/bronzemedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        {/* <div>{ranking[2][1]}</div>
-                        <div>{ranking[2][2]}</div> */}
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div>
-                    <img
-                      className="character"
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}.png`}
-                    />
-                  </div>
-                </div>
-              )}
+                  );
+                })}
             </div>
           )}
           {isSubmit && (
