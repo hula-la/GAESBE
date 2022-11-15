@@ -10,7 +10,9 @@ import com.ssafy.gaese.domain.cs.repository.CsRoomRedisRepository;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.domain.typing2.application.Typing2RoomService;
+import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
+import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -40,6 +42,7 @@ public class SessionDisconnectConfig {
     private final AlgoService algoService;
 
     private final CsRoomRedisRepository csRoomRedisRepository;
+    private final TypingRoomRedisRepository typingRoomRedisRepository;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -103,11 +106,10 @@ public class SessionDisconnectConfig {
                         .sessionId(sessionId)
                         .build();
 
-                Long tmp =Long.parseLong(info[0]);
-                String tmpStr= typingSocketDto.getSessionId();
-                socketInfo.stopPlayGame(tmp);
-                socketInfo.delSocketInfo(tmpStr);
-                typingRoomService2.enterOrLeave(typingSocketDto);
+                socketInfo.stopPlayGame(Long.parseLong(info[0]));
+
+                Optional<TypingRoomDto> typingRoomOpt = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode());
+                if (typingRoomOpt.isPresent()) typingRoomService2.enterOrLeave(typingSocketDto);
                 break;
             case "Algo" :
                 System.out.println("알고에서 나감 : "+ sessionId);
