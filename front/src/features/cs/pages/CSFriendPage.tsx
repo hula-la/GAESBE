@@ -554,81 +554,26 @@ const CSFriendPage = () => {
                   alt="button"
                 />
               </div>
-              {ranking && (
-                <div className="rankBlock">
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/goldmedal.png" alt="medal" />
-                      {/* <img
-                        alt='character
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          alt="character"
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[0][1]}</div>
-                        <div>{ranking[0][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/silvermedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[1][1]}</div>
-                        <div>{ranking[1][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/bronzemedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      {/* <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
+              {ranking &&
+                ranking.map((rank: any, idx: number) => {
+                  return (
+                    <div className="rankBlock">
+                      <div className="rankwrapper">
                         <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[2])[0];
-                            })[0].nickname
-                          }
+                          <img src={`/img/rank/medal${idx}.png`} />
+                          <div>
+                            <img
+                              className="character"
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[0]}_normal.gif`}
+                            />
+                            <div>{rank[1]}</div>
+                            <div>{rank[2]}</div>
+                          </div>
                         </div>
-                        <div>{ranking[2][Object.keys(ranking[2])[0]]}</div>
-                      </div> */}
-                      {}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <img
-                      className="character"
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}.png`}
-                    />
-                  </div>
-                </div>
-              )}
+                  );
+                })}
             </div>
           )}
           {isSubmit && (

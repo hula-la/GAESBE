@@ -317,10 +317,6 @@ const TypingGame = () => {
       });
     }
   }, [roomCode]);
-  console.log(isEnd);
-  console.log(resultId);
-  console.log(resultNickName);
-  console.log(resultProfile);
   function waitForConnection(client: any, callback: any) {
     setTimeout(
       function () {
