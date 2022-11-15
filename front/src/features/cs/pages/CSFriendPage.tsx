@@ -160,6 +160,7 @@ const CSFriendPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [isMaster, setIsMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
@@ -176,11 +177,14 @@ const CSFriendPage = () => {
   const { userInfo } = useSelector((state: any) => state.auth);
   const { modal } = useSelector((state: any) => state.friend);
   const { friendId } = useSelector((state: any) => state.friend);
+
+  const answerButton = [1, 2, 3, 4];
+
   const { shareCode } = location.state;
 
-  const initialTime = useRef<number>(5);
+  const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
-  const [sec, setSec] = useState(5);
+  const [sec, setSec] = useState(3);
   let roomcode: string;
   let playerList: Array<any>;
 
@@ -269,6 +273,24 @@ const CSFriendPage = () => {
     client.current = Stomp.over(socket);
   }, []);
 
+  // 게임 시작 전 자동 시작 타이머
+  useEffect(() => {
+    if (isReady) {
+      interval.current = setInterval(() => {
+        setSec(initialTime.current % 60);
+        initialTime.current -= 1;
+      }, 1000);
+      return () => clearInterval(interval.current);
+    }
+  }, [isReady]);
+
+  useEffect(() => {
+    if (initialTime.current < 0) {
+      console.log('타임 아웃');
+      clearInterval(interval.current);
+    }
+  }, [sec]);
+
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
@@ -313,20 +335,6 @@ const CSFriendPage = () => {
           );
         };
         enterRoom();
-
-        // 들어오는 순간 방의 사람들 정보를 받음
-        const fetchMemberInfo = () => {
-          client.current.send(
-            '/api/cs/memberInfo',
-            {},
-            JSON.stringify({
-              roomCode: roomcode,
-            }),
-          );
-        };
-        setTimeout(() => {
-          fetchMemberInfo();
-        }, 2000);
       });
     }
   }, [userInfo]);
@@ -341,7 +349,10 @@ const CSFriendPage = () => {
             if (data1.msg === 'end') {
               setIsEnd(true);
               setResult(data1.result);
+            } else if (data1.msg === 'ready') {
+              setIsReady(true);
             } else {
+              setIsReady(false);
               setIsStart(true);
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
@@ -378,6 +389,13 @@ const CSFriendPage = () => {
             playerList = data1;
           }
         });
+        client2.send(
+          '/api/cs/memberInfo',
+          {},
+          JSON.stringify({
+            roomCode: roomCode,
+          }),
+        );
       });
     }
   }, [roomCode]);
@@ -408,13 +426,12 @@ const CSFriendPage = () => {
     );
   };
 
-  // 정답 유무 확인
-  const handleAnswerSend = () => {
+  const handleAnswerSend = (e: any, number: any) => {
     client.current.send(
       '/api/cs/submit',
       {},
       JSON.stringify({
-        answer: '3',
+        answer: number,
         problemId: problem.id,
         userId: userInfo.id,
         roomCode: roomCode,
@@ -466,7 +483,7 @@ const CSFriendPage = () => {
           />
           <div className="subtitle">친선전</div>
           {isMaster && <button onClick={onClickStart}>게임시작</button>}
-          {/* {isLast && <p>{sec}초 후 게임이 시작됩니다!</p>} */}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -529,35 +546,21 @@ const CSFriendPage = () => {
                 })} */}
               </div>
               <div className="selectbuttons">
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/onebutton.png"
-                  alt="button"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/twobutton.png"
-                  alt="button"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/threebutton.png"
-                  alt="button"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/fourbutton.png"
-                  alt="button"
-                />
+                {answerButton.map((answer, idx) => {
+                  return (
+                    <img
+                      key={idx}
+                      className="selectbutton"
+                      onClick={(e) => handleAnswerSend(e, answer)}
+                      src={`/img/selectbutton/button${answer}.png`}
+                    />
+                  );
+                })}
               </div>
               {ranking &&
                 ranking.map((rank: any, idx: number) => {
                   return (
-                    <div className="rankBlock">
+                    <div key={idx} className="rankBlock">
                       <div className="rankwrapper">
                         <div>
                           <img src={`/img/rank/medal${idx}.png`} />

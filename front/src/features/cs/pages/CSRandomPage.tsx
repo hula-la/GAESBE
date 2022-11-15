@@ -168,6 +168,8 @@ const CSIngamePage = () => {
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
 
+  const answerButton = [1, 2, 3, 4];
+
   const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
   const [sec, setSec] = useState(3);
@@ -496,31 +498,21 @@ const CSIngamePage = () => {
                 })} */}
               </div>
               <div className="selectbuttons">
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 1)}
-                  src="/img/selectbutton/onebutton.png"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 2)}
-                  src="/img/selectbutton/twobutton.png"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 3)}
-                  src="/img/selectbutton/threebutton.png"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 4)}
-                  src="/img/selectbutton/fourbutton.png"
-                />
+                {answerButton.map((answer, idx) => {
+                  return (
+                    <img
+                      key={idx}
+                      className="selectbutton"
+                      onClick={(e) => handleAnswerSend(e, answer)}
+                      src={`/img/selectbutton/button${answer}.png`}
+                    />
+                  );
+                })}
               </div>
               {ranking &&
                 ranking.map((rank: any, idx: number) => {
                   return (
-                    <div className="rankBlock">
+                    <div key={idx} className="rankBlock">
                       <div className="rankwrapper">
                         <div>
                           <img src={`/img/rank/medal${idx}.png`} />
