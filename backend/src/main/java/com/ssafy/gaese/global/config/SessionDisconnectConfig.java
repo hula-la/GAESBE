@@ -11,12 +11,16 @@ import com.ssafy.gaese.domain.typing2.application.Typing2RoomService;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Configuration
 @RequiredArgsConstructor
+@Log4j2
 public class SessionDisconnectConfig {
 
 
@@ -41,15 +45,11 @@ public class SessionDisconnectConfig {
 
         String[] info = s.split(",");
 
-        System.out.println("나가는 세션 : "+ info);
+        System.out.println("나가는 세션 정보 : "+ s);
         //각자 처리가 필요한 곳으로 보냄
         switch (info[2])
         {
             
-//             case "Typing":
-//                 typingRoomService.exitRoom(info[3]);
-// //                socketInfo.delSocketInfo(sessionId);
-//                 break;
             case "Cs":
                 CsSocketDto csSocketDto = CsSocketDto.builder()
                         .type(CsSocketDto.Type.LEAVE)
