@@ -17,6 +17,13 @@ const UserProfiles = styled.div`
     margin: auto 0;
     position: relative;
   }
+  .nickname{
+    background-color: #2e2e2e;
+    color: white;
+    padding: 7px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
   p{
     color:#2e2e2e;
     font-size: 1.3rem;
@@ -24,7 +31,7 @@ const UserProfiles = styled.div`
   }
 
   .profile{
-    height:150px;
+    height:120px;
     width: 90%;
     z-index: 1;
 
@@ -32,7 +39,6 @@ const UserProfiles = styled.div`
   .stand {
     width: 8rem;
     margin: 0 auto; 
-    border : 1px solid white;
     position: absolute;
     top:80%
   }
@@ -46,7 +52,7 @@ function BeforeSolveUsers({ inGameUsers }: any) {
         return (
 
           <div className='user-item' key={user.id}>
-            <p>{user.nickname}</p>
+            <p className='nickname'>{user.nickname}</p>
             <img
               src={`${process.env.REACT_APP_S3_URL}/profile/${user.profileChar}_normal.gif`}
               alt="프로필이미지"
@@ -54,8 +60,6 @@ function BeforeSolveUsers({ inGameUsers }: any) {
             />
             <img className="stand" src={`/img/stand.png`}></img>
           </div>
-          
-
         );
       })}
     </UserProfiles>
