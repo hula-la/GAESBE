@@ -56,3 +56,9 @@ export const BjConnectCheck = async (payload:string) => {
   const res = await client.get(`/algo/bj/code/confirm/${payload}`)
   return res
 }
+
+// 배틀 상세정보(코드) 받아오기
+export const resultCodeRequest = async (roomCode:string) => {
+  const res = await client.get(`/algo/record/code/${roomCode}`)
+  return res
+}

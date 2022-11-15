@@ -85,3 +85,31 @@ export interface RecordSendInterface {
   code: string
   lanId: number
 }
+
+
+/**
+ code: string 제출한 코드
+ date: string 배틀 날짜시간
+ id: number 배틀아이디
+ isRetry: false 몰라
+ isSolve: false 풀었는지
+ lan: number 언어아이디
+ problemId: number 문제번호
+ ranking: number 순위
+ roomCode: string 방코드
+ solveTime: string 푼 시간
+ userId: number 유저아이디
+ */
+export interface MyRecordInterface {
+  code: string
+  date: string
+  id: number
+  isRetry: false
+  isSolve: false
+  lan: number
+  problemId: number
+  ranking: number
+  roomCode: string
+  solveTime: string
+  userId: number
+}
