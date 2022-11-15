@@ -70,8 +70,6 @@ function AlgoInBattle() {
 
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
-    // 'http://localhost:8080/api/ws',
-
   );
   const client = useRef<any>(null);
   useEffect(() => {
@@ -114,11 +112,11 @@ function AlgoInBattle() {
             } else {
               setProblemList(JSON.parse(res.body).problems);
               if (JSON.parse(res.body).master == userInfo.id) {
-                // client.current.send(
-                //   `/api/algo/timer`,
-                //   {},
-                //   JSON.stringify({ roomCode: InGameInfo.roomCode }),
-                // );
+                client.current.send(
+                  `/api/algo/timer`,
+                  {},
+                  JSON.stringify({ roomCode: InGameInfo.roomCode }),
+                );
               }
               dispatch(algoActions.setLoadingMsg(''));
               setProgress('after');

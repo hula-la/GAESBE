@@ -5,6 +5,9 @@ import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
+import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
+import AlgoRecordListItem from '../components/AlgoRecordListItem';
+
 const MyPageContainer = styled.div`
   width: 66%;
   color: white;
@@ -70,8 +73,7 @@ const MyPage = () => {
   const { record } = useSelector((state: any) => state.game);
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
-  // const [csrecord, setCsRecord] = useState<any>(record.cs.content);
-  // const [typingrecord, setTypingRecord] = useState<any>(record.typing.content);
+  const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
 
   useEffect(() => {
     if (record) {
@@ -79,6 +81,33 @@ const MyPage = () => {
       setTypingRecord(record.typing.content);
     }
   }, [record]);
+
+  useEffect(() => {
+    fetchAlgoRecordRank();
+    fetchAlgoRecord();
+  }, []);
+
+  const fetchAlgoRecord = async () => {
+    try {
+      const res = await myRecordRequest();
+      if (res.status === 200) {
+        setAlgoRecord({ ...algoRecord, records: res.data.content });
+      }
+    } catch (error) {
+      alert('알고리즘 배틀 정보를 못가져왔습니다');
+    }
+  };
+
+  const fetchAlgoRecordRank = async () => {
+    try {
+      const res = await myRecordRankRequest();
+      if (res.status === 200) {
+        setAlgoRecord({ ...algoRecord, rank: res.data });
+      }
+    } catch (error) {
+      alert('알고리즘 배틀 정보를 못가져왔습니다');
+    }
+  };
 
   let csList: Array<any> = csrecord;
   let typingList: Array<any> = typingrecord;
@@ -131,7 +160,7 @@ const MyPage = () => {
               </UserBotton>
             </MyCharacter>
             <MyRecord>
-              <div className="gametype">알고리즘 1등</div>
+              <div className="gametype">알고리즘 1등 {algoRecord.rank} 회</div>
               <div className="gametype">CS게임 1등</div>
               <div className="gametype">타자게임 1등</div>
               <div className="gametype">싸피게임 최대연승</div>
@@ -154,7 +183,16 @@ const MyPage = () => {
           <MyPower>
             <div>
               <h1>{userInfo.nickname}님의 최근 전적</h1>
-              {gameType === 'algo' && <div>알고리즘</div>}
+              {gameType === 'algo' && (
+                <div>
+                  <h1>알고리즘</h1>
+                  {algoRecord.records.map((record: any) => {
+                    return (
+                      <AlgoRecordListItem key={record.id} record={record} />
+                    );
+                  })}
+                </div>
+              )}
               {gameType === 'cs' && (
                 <div>
                   <h1>CS</h1>
