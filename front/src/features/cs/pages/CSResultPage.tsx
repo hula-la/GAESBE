@@ -10,60 +10,37 @@ const Container = styled.div`
   color: #ffffff;
   border: 1px solid #fc0303;
   text-align: center;
-  .user-list{
+  .user-list {
     display: flex;
   }
-  .user-item{
+  .user-item {
     border: 1px solid #ffffff;
   }
-  .header{
+  .header {
     margin: 10% 0 0 0;
-    font-size : 5rem;
+    font-size: 5rem;
   }
-  img{
+  img {
     background-color: white;
-    width:100%;
+    width: 100%;
   }
 `;
 
 const CSResultPage = () => {
   const location = useLocation();
-  const { result, players } = location.state;
-  const [data, setData] = useState<any>();
-  let results: any = [];
+  const { ranking, rankByPlayer } = location.state;
   useEffect(() => {
-    if (result && players) {
-      const tempId = Object.keys(result.score);
-      const tempScore = Object.values(result.score);
-
-      for (let i = 0; i < tempId.length; i++) {
-        const a = players.filter((player: any) => {
-          return player.id == tempId[i];
-        });
-        results.push([a[0].nickname, tempId[i], tempScore[i]]);
-      }
-      setData(results);
+    if (ranking && rankByPlayer) {
+      console.log(ranking);
+      console.log(rankByPlayer);
     }
-  }, [result, players]);
+  }, [ranking, rankByPlayer]);
   return (
     <Container>
-      <div className='header'>
-        CS 게임 결과
-      </div>
-      <div className='rank'>
-        <div className='user-list'>
-            {data &&
-              data.map((res: any, idx: number) => {
-                return (
-                  <div className='user-item' key={idx}>
-                    <p>{res[0]}</p>
-                    <p>{res[1]}</p>
-                    <p>{res[2]}</p>
-                  </div>
-                );
-              })}
-          </div>
-        <img src='/img/csResultBackground.png'></img>
+      <div className="header">CS 게임 결과</div>
+      <div className="rank">
+        <div className="user-list"></div>
+        <img src="/img/csResultBackground.png"></img>
       </div>
     </Container>
   );
