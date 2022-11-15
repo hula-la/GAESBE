@@ -56,7 +56,6 @@ public class CsService {
                 .findById(csSubmitDto.getRoomCode())
                 .orElseThrow(()->new RoomNotFoundException());
 
-        System.out.println("제출하고 나서"+roomDto);
 
 
         // 사용자의 문제와 서버의 문제가 다르면 시간초과 에러 발생

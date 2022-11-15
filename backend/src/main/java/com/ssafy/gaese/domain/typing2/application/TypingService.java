@@ -197,7 +197,6 @@ public class TypingService {
                 .findById(typingSubmitDto.getRoomCode())
                 .orElseThrow(()->new RoomNotFoundException());
 
-        System.out.println("제출하고 나서"+roomDto);
 
         Long userId = typingSubmitDto.getUserId();
         HashMap<Long, Float> progressByPlayer = roomDto.getProgressByPlayer();
