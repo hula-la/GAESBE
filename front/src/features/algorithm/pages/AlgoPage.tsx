@@ -7,7 +7,8 @@ import styled from 'styled-components'
 
 const AlgoPageDiv = styled.div`
   background-color: #232323;
-  width: 82%;
+  height: 100%;
+  width: 100%;
   color: white;
 `
 

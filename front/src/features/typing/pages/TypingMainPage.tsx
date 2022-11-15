@@ -20,7 +20,9 @@ const TypingMain = styled.div`
     }
   }
 
-  width: 66%;
+  height: 100%;
+  width: 100%;
+  
   background-color: #232323;
   justify-content: center;
   text-align: center;

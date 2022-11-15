@@ -3,71 +3,166 @@ import { useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  font-family: 'NeoDunggeunmo';
-  width: 82%;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const CsMain = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #232323;
+  justify-content: center;
+  text-align: center;
+  color: white;
+
+  position: relative;
   .title {
-    margin-top: 2rem;
-    height: 15%;
-    width: 25%;
-  }
-  .back {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
+    text-align: center;
+    /* height: 25%; */
     width: 100%;
-    height: 100vh;
-    filter: blur(3px);
+    padding: 10% 0 20% 0;
+    img {
+      width: 40%;
+    }
   }
-  .content {
-    margin-top: 10rem;
-    font-size: 35px;
+`;
+
+const SelectGameType = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  /* height: 10rem; */
+  /* border: 2px solid red; */
+  margin-bottom: 10%;
+
+  position: absolute;
+    width: 100%;
+    bottom: 0;
+`;
+
+const SelectGameTypeBox = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 10rem;
+  height: 10rem;
+  align-items: center;
+
+  overflow-y:hidden;
+  overflow-x:auto;
+  padding:2rem 2rem;
+
+
+  /* position: relative; */
+  /* border: 2px solid blue; */
+
+  /* :active {
+    background-color: white;
+  } */
+  :hover {
+    transform: translateY(-5%);
+    transition: all 0.2s linear;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
-  .buttons {
+
+  .relative{
+    position:relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .imgBox{
+    /* background: white; */
+    width: 100%;
+    height: 100%;
     display: flex;
-    width: 40%;
-    margin-top: 7rem;
-    justify-content: space-around;
+
+    &.random{
+      background-color: #ffc02d57;
+    }
+    &.friend{
+      background-color: #b468da46;
+    }
+
+    
+
+    :hover {
+          background: #ececec2b;
+      }
+
+    /* box-shadow: 0px 0px 9px 1px #6f43ff; */
+
+    
+    border-radius: 0.4rem;
+    
+    animation-name: showToIconBg;
+    animation-duration: 2s;
+    @keyframes showToIconBg {
+      0% {
+        transform: translateY(-100%); 
+      }
+      50% {
+        transform: translateX(0);
+      }
+    }
+    img{
+        width: 80%;
+        padding: 10%;
+  
+        animation-name: showToIcon;
+      animation-duration: 2s;
+        @keyframes showToIcon {
+        0% {
+          transform: translateY(-100%); 
+        }
+        100% {
+          transform: translateY(0); 
+        }
+      }
+    }
   }
-  .random {
-    background-color: #f0568c;
-    width: 20vh;
-    height: 20vh;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    filter: drop-shadow(0px 4px 18px rgba(255, 255, 255, 0.25));
-    border: 5px solid #232323;
-  }
-  .questionMark {
-    width: 60%;
-    height: 60%;
-    margin-bottom: 1rem;
-  }
-  .friend {
-    background-color: #ffd219;
-    width: 20vh;
-    height: 20vh;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    filter: drop-shadow(0px 4px 18px rgba(255, 255, 255, 0.25));
-    border: 5px solid #232323;
-  }
-  .friendMark {
-    width: 60%;
-    height: 40%;
-    margin-bottom: 2rem;
-  }
+
+  .langName{
+    position: absolute;
+    /* background: #4e4e4e; */
+    
+    font-weight: bold;
+    
+    top: 70%;
+    right: -2rem;
+    overflow: hidden;
+    
+    div{
+      width:100%;
+      height:100%;
+      background: #4e4e4e;
+      padding: 0.4rem;
+      box-sizing: border-box;
+      
+      animation-name: showToLangName;
+      animation-duration: 2s;
+
+        @keyframes showToLangName {
+        0% {
+          transform: translateX(-130%);
+          opacity: 0;
+        }
+        50%{
+          transform: translateX(-130%);
+          opacity: 0;
+          /* display: none; */
+        }
+        50% {
+          transform: translateX(-50%);
+          color: #4e4e4e;
+        }
+        100% {
+          transform: translateX(0);
+          color: white;
+        }
+      }
+      }
+
+      }
+
+
+
+
 `;
 
 const CSgamePage = () => {
@@ -99,19 +194,54 @@ const CSgamePage = () => {
     setShareCode(e.target.value);
   };
   return (
-    <Wrapper>
-      <img src="/img/background/background3.jpg" className="back" />
-      <img src="/img/gametitle/gametitle3.png" alt="title" className="title" />
-      <div className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</div>
-      <div className="buttons">
-        <div onClick={onClickRandom} className="random">
-          <img className="questionMark" src="/img/questionMark.png" />
-          랜덤 매칭
+    <CsMain>
+      <div className="title">
+
+        <img src="/img/gametitle/gametitle3.png" alt="title" />
+      </div>
+
+      <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>
+      
+      <SelectGameType>
+
+        <SelectGameTypeBox onClick={onClickRandom} className="random">
+          <div className="relative">
+          <div className="imgBox random">
+
+              <img className="questionMark" src="/img/questionMark.png" />
+              <div className="langName">
+                <div>
+                랜덤 매칭
+
+                </div>
+
+              </div>
+
+          </div>
+
         </div>
-        <div onClick={onClickFriend} className="friend">
-          <img className="friendMark" src="/img/friendMark.png" />
-          <div>친구 매칭</div>
+          
+        </SelectGameTypeBox>
+
+        <SelectGameTypeBox onClick={onClickFriend} className="friend">
+          <div className="relative">
+          <div className="imgBox friend">
+
+              <img className="questionMark" src="/img/friendMark.png" />
+              <div className="langName">
+                <div>
+                친구 매칭
+
+                </div>
+
+              </div>
+
+          </div>
+
         </div>
+          
+        </SelectGameTypeBox>
+
         {isOpen && (
           <div>
             <div onClick={onClickCreateRoom}>방 만들기</div>
@@ -120,8 +250,9 @@ const CSgamePage = () => {
             <button onClick={onClickEnterFriend}></button>
           </div>
         )}
-      </div>
-    </Wrapper>
+      </SelectGameType>
+      
+    </CsMain>
   );
 };
 

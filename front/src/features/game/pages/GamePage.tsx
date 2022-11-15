@@ -9,12 +9,20 @@ const Wrapper = styled.div`
   height: 100vh;
   background-color: #232323;
   overflow: hidden;
+
+  .outlet{
+    width: 64vw;
+  }
 `;
+
 const CombinePage = () => {
   return (
     <Wrapper>
       <SideBar />
+      <div className='outlet'>
       <Outlet />
+
+      </div>
       <FriendMainPage />
     </Wrapper>
   );

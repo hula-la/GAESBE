@@ -75,10 +75,12 @@ function* bjConnectRequestSaga(action: Action<string>) {
       } else {
         alert('연동에 실패했습니다 다시 시도해 주세요')
       }
-      yield put(algoActions.bjConnectRequestEnd())
     }
   } catch (error) {
     console.log(error)
+    yield alert('연동하는데 문제가 생겼습니다/n잠시 후 다시 시도해 주세요')
+  } finally {
+    yield put(algoActions.bjConnectRequestEnd())
   }
 }
 

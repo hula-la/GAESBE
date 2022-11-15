@@ -20,6 +20,8 @@ const Content = styled.div`
   flex-direction: column;
   height: 90%;
   width: 80%;
+
+  
   margin: 0 auto;
   .title {
     text-align: center;
