@@ -16,7 +16,7 @@ const FriendSide = styled.div`
   background-color: #232323;
   color: white;
 
-  z-index:10;
+  z-index: 10;
 
   animation-name: showToLeft;
   animation-duration: 1s;
@@ -239,15 +239,15 @@ function FriendMainPage() {
 
   const acceptInvite = () => {
     setIsInvite(false);
-    if (invitedGameInfo.inviteGameType==='algo') {
+    if (invitedGameInfo.inviteGameType === 'algo') {
       if (!userInfo.bjId) {
-        alert('백준아이디를 연동해야지만 게임을 할 수 있습니다')
-        return
+        alert('백준아이디를 연동해야지만 게임을 할 수 있습니다');
+        return;
       }
-      const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode)
-      dispatch(algoActions.enterAlgoRoom(InGameInfo))
+      const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode);
+      dispatch(algoActions.enterAlgoRoom(InGameInfo));
       navigate('/game/algo/battle');
-      return
+      return;
     }
     navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
       state: { shareCode: invitedGameInfo.inviteRoomCode },
@@ -305,20 +305,18 @@ function FriendMainPage() {
         )}
         {friends ? <FriendList /> : <div>친구창이 조용합니다...</div>}
         <div className="friendButtons">
-          <a
-            href="javascript:void(0)"
+          <div
             className="friendButton eightbit-btn eightbit-btn--proceed"
             onClick={handleModal}
           >
             친구신청
-          </a>
-          <a
-            href="javascript:void(0)"
+          </div>
+          <div
             className="friendButton eightbit-btn eightbit-btn--proceed"
             onClick={handleSecondModal}
           >
             대기목록
-          </a>
+          </div>
 
           {/* <button className="friendButton" onClick={handleModal}>
             친구신청
