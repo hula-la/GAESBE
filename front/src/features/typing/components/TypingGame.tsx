@@ -28,7 +28,7 @@ const TrackLine = styled.div`
 `;
 const Track = styled.div`
   height: 20vh;
-    margin-top: 23.5vh;
+  margin-top: 23.5vh;
 `;
 const LoadingBlock = styled.div`
   display: flex;
@@ -66,7 +66,6 @@ const PersonalId = styled.div`
   /* align-items: center; */
 
   /* padding-top: 0.5rem; */
-
 `;
 const PersonalCharacter = styled.div`
   /* background: #deb36d; */
@@ -78,8 +77,8 @@ const PersonalCharacter = styled.div`
 
   position: relative;
 
-  &::after{
-    content: "";
+  &::after {
+    content: '';
     border-right: 1rem solid #bf0909;
     position: absolute;
     right: 0;
@@ -89,7 +88,6 @@ const PersonalCharacter = styled.div`
   .imgNormal {
     transform: scaleX(-1);
   }
-
 `;
 const CharacterImg = styled('img')<{ progress: string }>`
   padding-left: ${(props) => props.progress};
@@ -127,13 +125,12 @@ const TypingResult = styled.div`
   box-sizing: border-box;
 
   min-height: 50vh;
-    max-height: 50vh;
+  max-height: 50vh;
 
   position: relative;
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
-
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -454,7 +451,6 @@ const TypingGame = () => {
   };
   return (
     <div>
-
       {isLoading && !players && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
@@ -465,69 +461,73 @@ const TypingGame = () => {
       <Typing>
         {players && (
           <TypingResult>
-            <TypingBg className='typingBg' src="/img/typing/typingTrack2.png" alt="타이핑 트랙"/>
+            <TypingBg
+              className="typingBg"
+              src="/img/typing/typingTrack2.png"
+              alt="타이핑 트랙"
+            />
             <Track>
-            {arr.map((a: any, idx: number) => {
-              return (
-                <TrackLine key={idx}>
-                  <TypingPersonalResult>
-                    <Personal>
-                      <PersonalId>
-                        {idx < players.length && (
-                          <div>{players[idx].nickname}</div>
-                        )}
-                      </PersonalId>
-                      <PersonalCharacter>
-                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                        {isLoading && idx < players.length && (
-                          <CharacterImg
-                            progress={
-                              testProgress
-                                ? testProgress.progressByPlayer[
-                                    `${players[idx].id}`
-                                  ] + '%'
-                                : '0%'
-                            }
-                            className="imgNormal"
-                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
-                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
-                            alt="playerImg"
-                          />
-                        )}
+              {arr.map((a: any, idx: number) => {
+                return (
+                  <TrackLine key={idx}>
+                    <TypingPersonalResult>
+                      <Personal>
+                        <PersonalId>
+                          {idx < players.length && (
+                            <div>{players[idx].nickname}</div>
+                          )}
+                        </PersonalId>
+                        <PersonalCharacter>
+                          {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                          {isLoading && idx < players.length && (
+                            <CharacterImg
+                              progress={
+                                testProgress
+                                  ? testProgress.progressByPlayer[
+                                      `${players[idx].id}`
+                                    ] + '%'
+                                  : '0%'
+                              }
+                              className="imgNormal"
+                              // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_normal.gif`}
+                              alt="playerImg"
+                            />
+                          )}
 
-                        {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
-                        {!isLoading && idx < players.length && (
-                          <CharacterImg
-                            progress={
-                              testProgress
-                                ? testProgress.progressByPlayer[
-                                    `${players[idx].id}`
-                                  ] + '%'
-                                : '0%'
-                            }
-                            className="img"
-                            src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
-                            // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
-                            alt="playerImg"
-                          />
-                        )}
-                      </PersonalCharacter>
-                      <PersonalResult>
-                        {idx < players.length && testProgress && (
-                          <div>
-                            {
-                              testProgress.progressByPlayer[
-                                `${players[idx].id}`
-                              ]
-                            }
-                          </div>
-                        )}
-                      </PersonalResult>
-                    </Personal>
-                  </TypingPersonalResult>
-                </TrackLine>
-              );
-            })}
+                          {/* 로딩되고 있을 땐 가만히 서있는걸로 */}
+                          {!isLoading && idx < players.length && (
+                            <CharacterImg
+                              progress={
+                                testProgress
+                                  ? testProgress.progressByPlayer[
+                                      `${players[idx].id}`
+                                    ] + '%'
+                                  : '0%'
+                              }
+                              className="img"
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${players[idx].profileChar}_walk.gif`}
+                              // src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_walk.gif`}
+                              alt="playerImg"
+                            />
+                          )}
+                        </PersonalCharacter>
+                        <PersonalResult>
+                          {idx < players.length && testProgress && (
+                            <div>
+                              {
+                                testProgress.progressByPlayer[
+                                  `${players[idx].id}`
+                                ]
+                              }
+                            </div>
+                          )}
+                        </PersonalResult>
+                      </Personal>
+                    </TypingPersonalResult>
+                  </TrackLine>
+                );
+              })}
             </Track>
           </TypingResult>
         )}
@@ -545,7 +545,7 @@ const TypingGame = () => {
         {!isLoading && (
           <TypingGameBox
             onKeyDown={(event) => handleSetKey(event)}
-            tabIndex={1}
+            tabIndex={0}
           >
             {item.map((e, idx) => {
               return (
