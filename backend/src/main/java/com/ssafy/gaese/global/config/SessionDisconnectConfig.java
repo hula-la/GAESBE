@@ -84,7 +84,8 @@ public class SessionDisconnectConfig {
                 socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
             case "Typing2":
-                System.out.println("타이핑에서 나감 : "+ sessionId);
+                System.out.println("타이핑에서 나감 sessionId: "+ sessionId);
+                System.out.println("타이핑에서 나감 userId: "+ Long.parseLong(info[0]));
                 TypingSocketDto typingSocketDto = TypingSocketDto.builder()
                         .type(TypingSocketDto.Type.LEAVE)
                         .userId(Long.parseLong(info[0]))
@@ -92,8 +93,11 @@ public class SessionDisconnectConfig {
                         .sessionId(sessionId)
                         .build();
 
+                Long tmp =Long.parseLong(info[0]);
+                String tmpStr= typingSocketDto.getSessionId();
+                socketInfo.stopPlayGame(tmp);
+                socketInfo.delSocketInfo(tmpStr);
                 typingRoomService2.enterOrLeave(typingSocketDto);
-                socketInfo.stopPlayGame(Long.parseLong(info[0]));
                 break;
             case "Algo" :
                 System.out.println("알고에서 나감 : "+ sessionId);
