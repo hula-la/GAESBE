@@ -10,18 +10,18 @@ import InviteFriend from './InviteFriend';
 
 const StyledModal = styled.div`
   padding: 3vmin;
-  width: 40vw;
+  width: 25vw;
   height: 80vh;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* background-color: gray; */
-  /* border: 1px solid black; */
+  border: 5px solid #000;
   border-radius: 20px;
-  background-color: white;
+  background-color: #f0568c;
   z-index: 1000;
-  color: black;
+  color: #fff;
+
 `;
 const StyledModalDiv = styled.div`
   top: 0%;
@@ -30,7 +30,7 @@ const StyledModalDiv = styled.div`
   width: 1000%;
   height: 1000%;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(142, 142, 142, 0.4);
 `;
 
 function FriendModal({ handleModal, type, client }: any) {
