@@ -36,8 +36,8 @@ const Wrapper = styled.div`
       width: 60%;
     }
   }
-  div {
-    height: 90%;
+  .content {
+    height: 100%;
   }
 `;
 
@@ -69,8 +69,8 @@ function AlgoInBattle() {
   }, [ranking]);
 
   const socket: CustomWebSocket = new SockJS(
-    'https://k7e104.p.ssafy.io:8081/api/ws',
-    // 'http://localhost:8080/api/ws',
+    // 'https://k7e104.p.ssafy.io:8081/api/ws',
+    'http://localhost:8080/api/ws',
 
   );
   const client = useRef<any>(null);
@@ -91,7 +91,7 @@ function AlgoInBattle() {
       navigate('/game/algo');
     } else {
       // 입장할때 소켓 뚫기
-      client.current.connect({}, (frame: any) => {
+      client.current.connect({"userId" :  userInfo.id}, (frame: any) => {
         // 입장, 퇴장 관련 메세지 받을 위치
         client.current.subscribe(
           `/algo/room/${InGameInfo.roomCode}`,
@@ -114,11 +114,11 @@ function AlgoInBattle() {
             } else {
               setProblemList(JSON.parse(res.body).problems);
               if (JSON.parse(res.body).master == userInfo.id) {
-                // client.current.send(
-                //   `/api/algo/timer`,
-                //   {},
-                //   JSON.stringify({ roomCode: InGameInfo.roomCode }),
-                // );
+                client.current.send(
+                  `/api/algo/timer`,
+                  {},
+                  JSON.stringify({ roomCode: InGameInfo.roomCode }),
+                );
               }
               dispatch(algoActions.setLoadingMsg(''));
               setProgress('after');
@@ -238,7 +238,7 @@ function AlgoInBattle() {
           <h1 className="title">
             <img src={`/img/gametitle/gametitle4.png`}></img>
           </h1>
-          <div>
+          <div className='content'>
             {progress === 'before' && (
               <AlgoBeforeStart
                 client={client}
