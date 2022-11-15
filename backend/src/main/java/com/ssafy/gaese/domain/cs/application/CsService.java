@@ -81,6 +81,10 @@ public class CsService {
         Long userId = csSubmitDto.getUserId();
         res.put("msg","submit");
 
+        // 몇 번 선택했는지 기록
+        HashMap<Integer, Integer> cntPerNum = roomDto.getCntPerNum();
+        cntPerNum.put(csSubmitDto.getAnswer(),cntPerNum.get(csSubmitDto.getAnswer())+1);
+
         if(isCorrected){
             // 정답이라는 response를 보냄.
 
@@ -149,10 +153,15 @@ public class CsService {
 
         // numCorrectByRound 초기화
         HashMap<Integer, Integer> numCorrectByRound = new HashMap<>();
+        HashMap<Integer, Integer> cntPerNum = new HashMap<>();
+        for (int i = 1; i <= 4; i++) {
+            cntPerNum.put(i,0);
+        }
         for (int i = 0; i < numProblem; i++) {
             numCorrectByRound.put(i,0);
         }
         roomDto.setNumCorrectByRound(numCorrectByRound);
+        roomDto.setCntPerNum(cntPerNum);
 
 //        점수 0점으로 초기화
         // 맞춘 문제 리스트 초기화
@@ -191,6 +200,11 @@ public class CsService {
             roomDto.setCurrentIdx(currentCsProblem.getId());
             roomDto.setRound(i);
 
+            cntPerNum = roomDto.getCntPerNum();
+            for (int j = 1; j <= 4; j++) {
+                cntPerNum.put(j,0);
+            }
+
             csRoomRedisRepository.save(roomDto);
 
             //            게임 시작하고 60초 타이머
@@ -206,7 +220,7 @@ public class CsService {
             List<Map.Entry<Long, Long>> rankEntryList = new LinkedList<>(currentScore.entrySet());
             rankEntryList.sort((o1, o2) -> -o1.getValue().compareTo(o2.getValue()));
 
-            Object[][] rankList = new Object[rankEntryList.size()][3];
+            Object[][] rankList = new Object[rankEntryList.size()][4];
 
             for (int j = 0; j < rankEntryList.size(); j++) {
                 Long userId = rankEntryList.get(j).getKey();
@@ -245,6 +259,17 @@ public class CsService {
             res.clear();
             res.put("ranking", rankList);
             res.put("solveOrder", isSolvedByPlayer1);
+
+            // 답 보내 줌
+            Integer answer = csProblemRepository
+                    .findById(roomDto.getCurrentIdx())
+                    .orElseThrow(() -> new ProblemNotFoundException()).getAnswer();
+            res.put("answer", answer);
+
+            // 답마다 cnt 보내 줌
+            cntPerNum = roomDto.getCntPerNum();
+            res.put("cntPerNum", cntPerNum);
+
             simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,res);
 
             //            게임 시작하고 60초 타이머

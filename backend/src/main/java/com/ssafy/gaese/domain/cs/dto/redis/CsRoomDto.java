@@ -34,6 +34,7 @@ public class CsRoomDto {
 
     private HashMap<Integer, Integer> numCorrectByRound;
     private HashMap<Long, Long> score;
+    private HashMap<Integer, Integer> cntPerNum;
 
 
     public static CsRoomDto create() {
