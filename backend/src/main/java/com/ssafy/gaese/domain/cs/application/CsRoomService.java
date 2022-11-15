@@ -96,7 +96,7 @@ public class CsRoomService {
         res.put("room",roomDto.getCode());
         simpMessagingTemplate.convertAndSend("/cs/"+ userId,res);
 
-        Thread.sleep(1*1000);
+//        Thread.sleep(1*1000);
 
 
         // 플레이어가 꽉 차면 게임 시작
@@ -120,7 +120,7 @@ public class CsRoomService {
         res.put("msg", "ready");
         simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
-        Thread.sleep(6*1000);
+        Thread.sleep(5*1000);
 
         // 게임 시작했다고 클라이언트에게 알리기
 
@@ -150,7 +150,7 @@ public class CsRoomService {
     }
 
     //  랜덤 방 입장
-    public synchronized CsRoomDto enterRandomRoom(CsSocketDto csSocketDto){
+    public CsRoomDto enterRandomRoom(CsSocketDto csSocketDto){
 //        if (!redisUtil.isExists(waitRoomKey))
         List<String> waitRooms = new ArrayList<>(redisUtil.getSetData(waitRoomKey));
         Collections.shuffle(waitRooms);
