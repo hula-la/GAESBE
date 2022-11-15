@@ -171,8 +171,17 @@ function AlgoRoomMake() {
   const [tierString, setTierString] = useState<string>('브론즈 5')
 
   useEffect(() => {
-    const tier = String((Number(form.tier) - 1) / 5)
-    console.log(tier)
+    const color = parseInt(String((Number(form.tier) - 1) / 5))
+    const tier = 5 - (Number(form.tier) - 1) % 5
+    if (color===0) {
+      setTierString(`브론즈 ${tier}`)
+    } else if (color===1) {
+      setTierString(`실버 ${tier}`)
+    } else if (color===2) {
+      setTierString(`골드 ${tier}`)
+    } else if (color===3) {
+      setTierString(`플레티넘 ${tier}`)
+    }
   }, [form.tier])
 
   return (
@@ -201,6 +210,7 @@ function AlgoRoomMake() {
             <img
               className="tier-icon"
               src={`/img/tier/${form.tier}.svg`}
+              alt='티어이미지'
               ></img>
             <img
               className="arrow-icon"
@@ -217,23 +227,6 @@ function AlgoRoomMake() {
               onClick={()=>{handleTier({type:'minus', num:5})}}
             ></img>
           </div>
-          {/* {tierList.map((tier) => (
-            <label key={tier.value} htmlFor={tier.value}>
-              <input
-                type="radio"
-                name="tier"
-                id={tier.value}
-                onChange={handeOnChange}
-                value={tier.value}
-                checked={tier.value === form.tier}
-              />
-              <img
-                style={{ width: '1.2em', height: '1.2em' }}
-                src={`/img/tier/${tier.value}.svg`}
-                alt={tier.alt}
-              />
-            </label>
-          ))} */}
         </div>
         <div className="time">
           <p>
@@ -260,7 +253,7 @@ function AlgoRoomMake() {
           </div>
         </div>
       </form>
-      <p>{}</p>
+      <p>{tierString}</p>
       <p>{form.time} 분</p>
       <div className="btn-div">
         <a
