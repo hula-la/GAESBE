@@ -4,6 +4,7 @@ import com.ssafy.gaese.domain.algorithm.application.AlgoProblemService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoService;
 import com.ssafy.gaese.domain.algorithm.application.AlgoSocketService;
 import com.ssafy.gaese.domain.algorithm.dto.*;
+import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import com.ssafy.gaese.security.model.CustomUserDetails;
 import io.swagger.annotations.Api;
@@ -63,7 +64,7 @@ public class AlgorithmController {
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
     public ResponseEntity<String> createRecord(@RequestBody AlgoRecordReq algoRecordReq,
                                                @AuthenticationPrincipal CustomUserDetails userDetails){
-
+        System.out.println("알고기록>>"+algoRecordReq.toString());
         algoService.createAlgoRecord(algoRecordReq, userDetails.getId());
 
         String msg = "";

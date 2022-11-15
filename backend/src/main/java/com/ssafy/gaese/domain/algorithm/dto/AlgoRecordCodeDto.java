@@ -9,5 +9,5 @@ import lombok.Data;
 public class AlgoRecordCodeDto {
     Long userId;
     String code;
-    String lan;
+    int lan;
 }

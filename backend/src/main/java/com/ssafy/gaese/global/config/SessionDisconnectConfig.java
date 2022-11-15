@@ -13,6 +13,11 @@ import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.messaging.support.NativeMessageHeaderAccessor;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Configuration
@@ -29,8 +34,21 @@ public class SessionDisconnectConfig {
     private final AlgoService algoService;
 
     @EventListener
+    public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+        System.out.println("=====================================");
+        MessageHeaderAccessor accessor = NativeMessageHeaderAccessor.getAccessor(event.getMessage(), SimpMessageHeaderAccessor.class);
+        System.out.println("socket header" + accessor.getMessageHeaders().toString());
+    }
+
+    @EventListener
     public void onDisconnectEvent(SessionDisconnectEvent event) throws Exception
     {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+
+        String sId = headerAccessor.getSessionId();
+
+        System.out.println("[Disconnected] websocket session id : "+ sId);
+
         String sessionId=event.getSessionId();
         System.out.println("나가려고 들어온 세션 : "+ sessionId);
 
@@ -103,4 +121,7 @@ public class SessionDisconnectConfig {
 
         socketInfo.delSocketInfo(sessionId);
     }
+
+
+
 }
