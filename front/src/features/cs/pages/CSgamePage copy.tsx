@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   font-family: 'NeoDunggeunmo';
-  width: 82%;
+  /* width: 82%; */
   color: #ffffff;
   display: flex;
   flex-direction: column;

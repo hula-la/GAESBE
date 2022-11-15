@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { coinActions } from './coinFlipSlice';
 
 const Container = styled.div`
-  width: 82%;
+  /* width: 82%; */
   background-color: #232323;
   color: aqua;
   .stats {

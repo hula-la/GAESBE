@@ -12,7 +12,7 @@ interface CustomWebSocket extends WebSocket {
 }
 
 const Container = styled.div`
-  width: 82%;
+  /* width: 82%; */
   height: 100%;
   background-color: #232323;
   color: #ffffff;
