@@ -37,7 +37,6 @@ function InModalBjConnect() {
       bjId: { value: string };
     };
     const bjId = target.bjId.value;
-    console.log(bjId)
     dispatch(algoActions.bjConnectRequestStart(bjId))
   }
 
