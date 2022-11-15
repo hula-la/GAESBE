@@ -30,7 +30,7 @@ public class CsRoomDto {
     private Long master;
 
     // 문제를 풀었는지
-    private HashMap<Long, Boolean> isSolvedByPlayer;
+    private HashMap<Long, Integer> isSolvedByPlayer;
 
     private HashMap<Integer, Integer> numCorrectByRound;
     private HashMap<Long, Long> score;

@@ -9,8 +9,10 @@ import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
 import com.ssafy.gaese.domain.cs.exception.*;
 import com.ssafy.gaese.domain.cs.repository.*;
+import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
+import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,8 @@ public class CsService {
     private final CsRecordRedisRepository csRecordRedisRepository;
     private final CsRecordProblemRepository csRecordProblemRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final AbilityRepository abilityRepository;
+
 
 
     private final int penaltyScore=60;
@@ -60,7 +64,7 @@ public class CsService {
 
         // 사용자의 문제와 서버의 문제가 다르면 시간초과 에러 발생
         // 한번더 제출하면 안됨
-        if(roomDto.getIsSolvedByPlayer().get(csSubmitDto.getUserId())) throw new DoubleSubmitException();
+        if(roomDto.getIsSolvedByPlayer().get(csSubmitDto.getUserId())!=-1) throw new DoubleSubmitException();
         if(roomDto.getCurrentIdx()!=csSubmitDto.getProblemId()) {
             System.out.println("문제가 지나침");
             System.out.println("찐 문제 번호"+roomDto.getCurrentIdx());
@@ -97,6 +101,9 @@ public class CsService {
 
             // 한명 맞췄으니 numCorrectByRound 카운팅
             numCorrectByRound.put(round,numCorrectByRound.get(round)+1);
+            roomDto.getIsSolvedByPlayer().put(csSubmitDto.getUserId(),numCorrectByRound.get(round));
+        } else{
+            roomDto.getIsSolvedByPlayer().put(csSubmitDto.getUserId(),0);
         }
 
 
@@ -111,7 +118,7 @@ public class CsService {
 //        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
         // 풀었다고 저장
-        roomDto.getIsSolvedByPlayer().put(csSubmitDto.getUserId(),true);
+
 
 
         // 바뀐 사항 저장
@@ -150,7 +157,7 @@ public class CsService {
 //        점수 0점으로 초기화
         // 맞춘 문제 리스트 초기화
         HashMap<Long, Long> score = new HashMap<>();
-        HashMap<Long, Boolean> isSolvedByPlayer = new HashMap<>();
+        HashMap<Long, Integer> isSolvedByPlayer = new HashMap<>();
 
         String roomId = roomDto.getCode();
 
@@ -159,14 +166,14 @@ public class CsService {
 
         roomDto.getPlayers().values().forEach(v->{
             score.put(v,0L);
-            isSolvedByPlayer.put(v,false);
+            isSolvedByPlayer.put(v,-1);
             csRecordRedisRepository.save(CsRecordRedisDto.create(roomId, v,numProblem));
         });
         roomDto.setScore(score);
         roomDto.setIsSolvedByPlayer(isSolvedByPlayer);
 
 
-        roomDto = csRoomRedisRepository.save(roomDto);
+        csRoomRedisRepository.save(roomDto);
 
         for (int i = 0; i < randomProblem.size(); i++) {
             System.out.println(i+"번째 문제");
@@ -206,12 +213,13 @@ public class CsService {
                 User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
                 rankList[j][0] = userId;
                 rankList[j][1] = user.getNickname();
-                rankList[j][2] = rankEntryList.get(j).getValue();
+                rankList[j][2] = user.getProfileChar();
+                rankList[j][3] = rankEntryList.get(j).getValue();
             }
 
 
             // 맞았는지
-            HashMap<Long, Boolean> isSolvedByPlayer1 = roomDto.getIsSolvedByPlayer();
+            HashMap<Long, Integer> isSolvedByPlayer1 = roomDto.getIsSolvedByPlayer();
 
 
 
@@ -222,11 +230,11 @@ public class CsService {
                 String recordFindKey = roomId+v;
                 CsRecordRedisDto csRecordRedisDto = csRecordRedisRepository.findById(recordFindKey).orElseThrow(() -> new RecordNotFoundException());
                 res.clear();
-                res.put("isCorrect", csRecordRedisDto.getIsCorrectList()[round]);
+
                 res.put("isSolved", isSolvedByPlayer1.get(v));
 
                 simpMessagingTemplate.convertAndSend("/cs/"+v,res);
-                isSolvedByPlayer1.put(v,false);
+                isSolvedByPlayer1.put(v,-1);
             });
 
             roomDto.setIsSolvedByPlayer(isSolvedByPlayer1);
@@ -256,7 +264,7 @@ public class CsService {
         res.put("msg", "end");
 
 //        마지막 결과 보내기
-        res.put("result", roomDto);
+//        res.put("result", roomDto);
 
         simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
@@ -279,9 +287,10 @@ public class CsService {
         }
 
 
+        // 기록
         roomDto.getPlayers().forEach((k,v)->{
             CsRecord csRecord = CsRecord.builder()
-                    .user(userRepository.findById(Long.valueOf(v)).orElseThrow(() -> new UserNotFoundException()))
+                    .user(userRepository.findById(v).orElseThrow(() -> new UserNotFoundException()))
                     .ranks(rankByPlayer.get(v))
                     .date(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                     .build();
@@ -291,14 +300,27 @@ public class CsService {
             // 레디스에 저장되어잇는 기록 db에 저장
             CsRecordRedisDto csRecordRedisDto = csRecordRedisRepository.findById(roomDto.getCode() + v).orElseThrow(() -> new RoomNotFoundException());
             Boolean[] isCorrectedList = csRecordRedisDto.getIsCorrectList();
+            int correctCnt = 0;
             for (int i = 0; i < numProblem; i++) {
                 CsRecordProblem csRecordProblem = CsRecordProblem.builder()
                         .csProblem(randomProblem.get(i))
                         .csRecord(saved)
                         .isCorrect(isCorrectedList[i])
                         .build();
+
+                if (isCorrectedList[i]) correctCnt++;
                 csRecordProblemRepository.save(csRecordProblem);
             }
+
+            // 맞은 갯수가 3분의 1이상이어야 함.
+            if (correctCnt>=numProblem/3){
+                Ability ability = abilityRepository.findByUser_Id(v).get();
+                ability.addExp("cs", 1);
+
+                if (rankByPlayer.get(v)==1) ability.addExp("cs", 2);
+                else if (rankByPlayer.get(v)>=3) ability.addExp("cs", 1);
+            }
+
             csRecordRedisRepository.deleteById(roomDto.getCode() + v);
         });
 
