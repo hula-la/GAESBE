@@ -317,7 +317,10 @@ const TypingGame = () => {
       });
     }
   }, [roomCode]);
-
+  console.log(isEnd);
+  console.log(resultId);
+  console.log(resultNickName);
+  console.log(resultProfile);
   function waitForConnection(client: any, callback: any) {
     setTimeout(
       function () {
@@ -372,7 +375,7 @@ const TypingGame = () => {
             {},
             JSON.stringify({
               roomCode: roomCode,
-              sessionId: socket._transport.url.slice(-18, -10),
+              // sessionId: socket._transport.url.slice(-18, -10),
               isCorrect: true,
               userId: userInfo.id,
             }),
@@ -429,7 +432,7 @@ const TypingGame = () => {
             {},
             JSON.stringify({
               roomCode: roomCode,
-              sessionId: socket._transport.url.slice(-18, -10),
+              // sessionId: socket._transport.url.slice(-18, -10),
               isCorrect: true,
               userId: userInfo.id,
             }),
@@ -455,7 +458,6 @@ const TypingGame = () => {
   };
   return (
     <Wrapper>
-
       {isLoading && !players && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />

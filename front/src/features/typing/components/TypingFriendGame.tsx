@@ -239,20 +239,20 @@ const TypingFriendGame = () => {
     return () => setIsLoading(true);
   }, []);
   // 뒤로가기 막는 useEffect
-  useEffect(() => {
-    const preventGoBack = () => {
-      // change start
-      window.history.pushState(null, '', window.location.href);
-      // change end
-      alert('게임중에는 나갈 수 없습니다');
-    };
-    window.history.pushState(null, '', window.location.href);
-    window.addEventListener('popstate', preventGoBack);
-    return () => window.removeEventListener('popstate', preventGoBack);
-  }, []);
-  // 뒤로가기 막는 useEffect
-  // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
+  // useEffect(() => {
+  //   const preventGoBack = () => {
+  //     // change start
+  //     window.history.pushState(null, '', window.location.href);
+  //     // change end
+  //     alert('게임중에는 나갈 수 없습니다');
+  //   };
+  //   window.history.pushState(null, '', window.location.href);
+  //   window.addEventListener('popstate', preventGoBack);
+  //   return () => window.removeEventListener('popstate', preventGoBack);
+  // }, []);
+  // // 뒤로가기 막는 useEffect
+  // // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
+  // usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
   useEffect(() => {
     if (userInfo) {
       client.connect({}, (frame) => {
@@ -364,7 +364,10 @@ const TypingFriendGame = () => {
       });
     }
   }, [roomCode]);
-
+  console.log(isEnd);
+  console.log(resultId);
+  console.log(resultNickName);
+  console.log(resultProfile);
   function waitForConnection(client: any, callback: any) {
     setTimeout(
       function () {
@@ -485,7 +488,7 @@ const TypingFriendGame = () => {
             {},
             JSON.stringify({
               roomCode: roomCode,
-              sessionId: socket._transport.url.slice(-18, -10),
+              // sessionId: socket._transport.url.slice(-18, -10),
               isCorrect: true,
               userId: userInfo.id,
             }),
