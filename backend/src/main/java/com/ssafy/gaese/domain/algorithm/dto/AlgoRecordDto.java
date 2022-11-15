@@ -23,7 +23,7 @@ public class AlgoRecordDto {
     private Boolean isSolve;
     private String solveTime;
     private Integer ranking;
-    private String lan;
+    private int lan;
     private String code;
     private Boolean isRetry;
 
@@ -40,6 +40,7 @@ public class AlgoRecordDto {
                 .ranking(this.getRanking())
                 .code(this.getCode())
                 .isRetry(false)
+                .lanId(this.lan)
                 .build();
     }
 

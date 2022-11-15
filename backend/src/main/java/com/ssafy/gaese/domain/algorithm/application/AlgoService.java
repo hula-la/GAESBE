@@ -54,7 +54,7 @@ public class AlgoService {
     public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
         Date date = new Date();
-        AlgoRecordDto algoRecordDto;
+        AlgoRecordDto algoRecordDto = null;
         // roomCode, min, nickName, userId
         Optional<AlgoRankDto> opt = algoRankRedisRepository.findById(userId);
         if(opt.isPresent()){
@@ -69,6 +69,7 @@ public class AlgoService {
                     .problemId(Long.parseLong(algoRankDto.getProblemId()))
                     .ranking(algoRecordReq.getRanking())
                     .solveTime(algoRankDto.getMin()+"")
+                    .lan(algoRecordReq.getLanId())
                     .build();
             algoRankRedisRepository.delete(algoRankDto);
         }else{
@@ -81,10 +82,10 @@ public class AlgoService {
                     .isRetry(false)
                     .problemId(algoRecordReq.getProblemId())
                     .ranking(algoRecordReq.getRanking())
+                    .lan(algoRecordReq.getLanId())
                     .solveTime("-")
                     .build();
         }
-
 
         algoRepository.save(algoRecordDto.toEntity(user));
 
