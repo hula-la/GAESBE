@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.typing2.application;
 
 import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
+import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
@@ -52,9 +53,11 @@ public class Typing2RoomService {
             //이미 방에 참여중인지 체크
             if(socketInfo.isPlayGame(typingSocketDto.getUserId()))
             {
+                res.clear();
+                res.put("playAnotherGame", true);
 //                반려하는 부분 만들어 줘야함
                 simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-                return;
+                throw new PlayAnotherGameException();
             }
             System.out.println("typingSocketDto 방 들어올때 체크");
             System.out.println(typingSocketDto);
