@@ -6,7 +6,7 @@ import { coinActions } from './coinFlipSlice';
 import CoinModal from './components/CoinModal';
 
 const Container = styled.div`
-  /* width: 82%; */
+  height: 100%;
   background-color: #232323;
   color: aqua;
   .stats {
@@ -185,7 +185,6 @@ const CoinFlipPage = () => {
         <div className="tails">
           <img src="/img/coin/tail.png" alt="tail" />
         </div>
-        <div className="tails"></div>
       </div>
       <div className="buttons">
         {!isBeting && (

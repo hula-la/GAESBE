@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import styled from 'styled-components';
+import { usePrompt } from '../../../utils/block';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
 
@@ -264,16 +265,8 @@ const CSFriendPage = () => {
   ];
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  const socket: CustomWebSocket = new SockJS(
-    'https://k7e104.p.ssafy.io:8081/api/ws',
-  );
   const client = useRef<any>(null);
   // client.debug = () => {};
-
-  const client2 = Stomp.over(socket);
-  useEffect(() => {
-    client.current = Stomp.over(socket);
-  }, []);
 
   // 게임 시작 전 자동 시작 타이머
   useEffect(() => {
@@ -295,6 +288,10 @@ const CSFriendPage = () => {
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
         // 내 개인 정보 구독
         client.current.subscribe(`/cs/${userInfo.id}`, (res: any) => {
@@ -309,7 +306,6 @@ const CSFriendPage = () => {
           } else if (data.hasOwnProperty('isSolved')) {
             setIsSolved(data.isSolved);
             setIsSubmit(false);
-            setProblem('a');
             setTimeout(() => {
               setIsNext(true);
             }, 7000);
@@ -339,6 +335,10 @@ const CSFriendPage = () => {
 
   useEffect(() => {
     if (roomCode) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      const client2 = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
       client2.connect({}, (frame) => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
@@ -461,6 +461,21 @@ const CSFriendPage = () => {
       );
     }
   }, [friendId]);
+
+  useEffect(() => {
+    const preventGoBack = () => {
+      // change start
+      window.history.pushState(null, '', window.location.href);
+      // change end
+      alert('게임중에는 나갈 수 없습니다');
+    };
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', preventGoBack);
+    return () => window.removeEventListener('popstate', preventGoBack);
+  }, []);
+  // 뒤로가기 막는 useEffect
+  // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
+  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
 
   return (
     <Container>
@@ -585,9 +600,20 @@ const CSFriendPage = () => {
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
-          {isSolved !== null && problem === 'a' && !isNext && (
+          {isSolved !== null && !isNext && (
             <div>
               <p>중간결과 페이지</p>
+              <div>
+                <div>{problem.question}</div>
+                <div>{problem.example}</div>
+                <div>답 : {answer}</div>
+                <div>고른 비율</div>
+                {cntPerNum &&
+                  Object.keys(cntPerNum).map((num: any, idx: number) => {
+                    return <div key={idx}>{cntPerNum[num]}</div>;
+                  })}
+                {}
+              </div>
             </div>
           )}
         </IngameBlock>

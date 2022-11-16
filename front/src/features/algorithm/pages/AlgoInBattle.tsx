@@ -83,7 +83,7 @@ function AlgoInBattle() {
         client.current.debug = function () {};
       }
       // 입장할때 소켓 뚫기
-      client.current.connect({"userId" :  userInfo.id}, (frame: any) => {
+      client.current.connect({ userId: userInfo.id }, (frame: any) => {
         // 입장, 퇴장 관련 메세지 받을 위치
         client.current.subscribe(
           `/algo/room/${InGameInfo.roomCode}`,
@@ -230,7 +230,7 @@ function AlgoInBattle() {
           <h1 className="title">
             <img src={`/img/gametitle/gametitle4.png`}></img>
           </h1>
-          <div className='content'>
+          <div className="content">
             {progress === 'before' && (
               <AlgoBeforeStart
                 client={client}
