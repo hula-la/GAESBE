@@ -9,8 +9,10 @@ import com.ssafy.gaese.domain.friends.repository.FriendRepository;
 import com.ssafy.gaese.domain.friends.repository.FriendRequestRepository;
 import com.ssafy.gaese.domain.friends.repository.OnlineUserRedisRepository;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -30,6 +32,8 @@ public class FriendSocketService {
     private final FriendRepository friendRepository;
     private final SocketInfo socketInfo;
     private final FriendRequestRepository friendRequestRepository;
+
+    private final CharacterRepository characterRepository;
 
 
     public void findFriendList(Long userId){
@@ -166,5 +170,18 @@ public class FriendSocketService {
         // 나갔다는 것을 알림
         refreshFriend(userId);
     }
+    public void sendCharacters(Long userId, Long charactersId)
+    {
+        HashMap<String, Object> res = new HashMap<>();
+        Characters characters =characterRepository.findById(charactersId).get();
 
+        if(characters==null)
+            return;
+
+
+        res.put("character",charactersId);
+        res.put("need",characters.getNeed());
+
+        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
+    }
 }

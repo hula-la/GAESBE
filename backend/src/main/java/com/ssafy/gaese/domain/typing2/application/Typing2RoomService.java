@@ -360,7 +360,7 @@ public class Typing2RoomService {
         HashMap<String, Long> players = typingRoomDto.getPlayers();
 
         // 인원 안차면 시작 안함
-        if (players.size()!=maxPlayer)
+        if (players.size()!=maxPlayer  || typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
             return false;
         else
         {

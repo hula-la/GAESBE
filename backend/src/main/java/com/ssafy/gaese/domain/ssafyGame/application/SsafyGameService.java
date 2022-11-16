@@ -1,13 +1,23 @@
 package com.ssafy.gaese.domain.ssafyGame.application;
 
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipParamDto;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipResultDto;
+import com.ssafy.gaese.domain.user.application.ItemService;
+import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
+import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
+import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +26,14 @@ public class SsafyGameService {
     private final UserRepository userRepository;
 
     private final AbilityRepository abilityRepository;
+
+    private final ItemService itemService;
+
+    private final FriendSocketService friendSocketService;
+
+    private final UserCharacterRepository userCharacterRepository;
+
+    private final CharacterRepository characterRepository;
 
     public FlipResultDto flipStart(FlipParamDto param, Long userId)
     {
@@ -50,6 +68,9 @@ public class SsafyGameService {
 
             abilityRepository.save(ability);
 
+            charChecker(user);
+
+
             resultDto.setCorrect(true);
         }
         else
@@ -66,6 +87,38 @@ public class SsafyGameService {
         userRepository.save(user);
 
         return  resultDto;
+    }
+
+    void charChecker(User user)
+    {
+        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
+        ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
+
+
+        if(user.getMaxWinStreak()>6 || !userCharacterRepository.findByUserAndCharacters(user,characters.get(24)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(24));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),24L);
+        }
+        if(user.getMaxWinStreak()>3 || !userCharacterRepository.findByUserAndCharacters(user,characters.get(23)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(23));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),23L);
+        }
+        if(user.getMaxWinStreak()>1 || !userCharacterRepository.findByUserAndCharacters(user,characters.get(22)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(22));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),22L);
+        }
     }
 
 }
