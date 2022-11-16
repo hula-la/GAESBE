@@ -71,12 +71,11 @@ function AlgoInBattle() {
   const socket: CustomWebSocket = new SockJS(
     // 'https://k7e104.p.ssafy.io:8081/api/ws',
     'http://localhost:8080/api/ws',
-
   );
   const client = useRef<any>(null);
   useEffect(() => {
     if (!InGameInfo) {
-      navigate('/game/algo')
+      navigate('/game/algo');
     }
     client.current = Stomp.over(socket);
     // 개발 버전에서만 콘솔 뜨게 하기
@@ -91,7 +90,7 @@ function AlgoInBattle() {
       navigate('/game/algo');
     } else {
       // 입장할때 소켓 뚫기
-      client.current.connect({"userId" :  userInfo.id}, (frame: any) => {
+      client.current.connect({ userId: userInfo.id }, (frame: any) => {
         // 입장, 퇴장 관련 메세지 받을 위치
         client.current.subscribe(
           `/algo/room/${InGameInfo.roomCode}`,
@@ -238,7 +237,7 @@ function AlgoInBattle() {
           <h1 className="title">
             <img src={`/img/gametitle/gametitle4.png`}></img>
           </h1>
-          <div className='content'>
+          <div className="content">
             {progress === 'before' && (
               <AlgoBeforeStart
                 client={client}
