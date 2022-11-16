@@ -20,20 +20,49 @@ const Container = styled.div`
   font-style: normal;
   position: relative;
   height:100vh;
-  .inviteBtn{
-    position: absolute;
-    top: 0;
-    right:0;
-  }
-  .startBtn{
+
+  .startBtnContainer{
     position: absolute;
     bottom: 3rem;
     right:3rem;
-    width: 9rem;
+    width: 10rem;
+
+    transition: transform 0.3s;
+
+    .inviteBtn{
+    width:100%;
     :hover{
-      transform: scale(1.1);
-      transition: transform 0.3s;
-      cursor: url('/img/cursor/hover_cursor.png'), auto;
+        transform: scale(1.1);
+        
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+
+    .inviteBtnBox{
+      padding-left: 1rem;
+      position: relative;
+      font-size: 1rem;
+      
+
+      :hover .inviteBtnToolTip{
+        display: block;
+      }
+      .inviteBtnToolTip{
+        display: none;
+        position: absolute;
+        bottom: 110%;
+
+      }
+    }
+
+    .startBtn{
+      width: 100%;
+
+      :hover{
+        transform: scale(1.1);
+        transition: transform 0.3s;
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
     }
   }
   .gameTitle {
@@ -66,10 +95,13 @@ const WaitingBlock = styled.div`
     width: 100%;
     height: 100%;
   }
-  .subtitle {
+  .friendNum {
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 2%;
+
+    display: flex;
+    align-items: center;
   }
   .waitingContent {
     display: flex;
@@ -503,7 +535,11 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <div className="subtitle">{players.length }/10</div>
+          <h3>
+            혼자 또는 친구와 함께 게임을 즐겨보세요
+          </h3>
+
+          
           
           <div className="waitingContent">
             <div className="imgBox">
@@ -528,14 +564,30 @@ const CSFriendPage = () => {
                   );
                 })}
             </div>
-            <button className='inviteBtn' onClick={handleModal}>친구 초대</button>
+            
+            {/* <button className='inviteBtn' onClick={handleModal}>친구 초대</button> */}
             {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
               })} */}
           </div>
+          <div className='startBtnContainer'>
 
-          {isMaster && <img className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+            <div className="friendNum">{players.length}/10
+              <div className="inviteBtnBox">
+                <div className="inviteBtnToolTip">친구 초대</div>
+                <img src='/img/cs/inviteBtn2.png' className='inviteBtn' onClick={handleModal} />
+
+              </div>
+            </div>
+            <div>
+              
+              {isMaster && <img  className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+            </div>
+
+          </div>
+
+
           {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
