@@ -19,18 +19,18 @@ const Container = styled.div`
   font-family: 'NeoDunggeunmo';
   font-style: normal;
   position: relative;
-  height:100vh;
-  .inviteBtn{
+  height: 100vh;
+  .inviteBtn {
     position: absolute;
     top: 0;
-    right:0;
+    right: 0;
   }
-  .startBtn{
+  .startBtn {
     position: absolute;
     bottom: 3rem;
-    right:3rem;
+    right: 3rem;
     width: 9rem;
-    :hover{
+    :hover {
       transform: scale(1.1);
       transition: transform 0.3s;
       cursor: url('/img/cursor/hover_cursor.png'), auto;
@@ -54,7 +54,6 @@ const LoadingBlock = styled.div`
     font-size: large;
   }
 `;
-
 
 const WaitingBlock = styled.div`
   display: flex;
@@ -165,30 +164,43 @@ const IngameBlock = styled.div`
   .rankBlock {
     margin-top: 1rem;
     display: flex;
+    width: 80%;
+    height: 20%;
   }
   .rankwrapper {
     margin-right: 1rem;
-    .character {
-      width: 30%;
-      height: 30%;
+    display: flex;
+    width: 25%;
+    .medal {
+      height: 70%;
+    }
+    .characterBox {
+      width: 50%;
+      .character {
+        width: 60%;
+      }
+      .playerNickName {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+      }
     }
   }
-  .character {
+  /* .character {
     width: 70%;
     height: 30%;
-  }
+  } */
 `;
 
 const PlayerCharacter = styled.div`
   position: absolute;
   height: 20%;
-  .playerNickName{
+  .playerNickName {
     text-align: center;
     height: 20%;
   }
-  img{
+  img {
     height: 80%;
-
   }
 `;
 
@@ -206,6 +218,7 @@ const CSFriendPage = () => {
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [myScore, setMyScore] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [solveOrder, setSolveOrder] = useState<any>(null);
   const [answer, setAnswer] = useState<number | null>(null);
@@ -470,6 +483,15 @@ const CSFriendPage = () => {
   }, [friendId]);
 
   useEffect(() => {
+    if (ranking) {
+      const tmp = ranking.filter((rank: any) => {
+        return rank[0] === userInfo.id;
+      });
+      setMyScore(tmp);
+    }
+  }, [ranking]);
+
+  useEffect(() => {
     const preventGoBack = () => {
       // change start
       window.history.pushState(null, '', window.location.href);
@@ -503,8 +525,8 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <div className="subtitle">{players.length }/10</div>
-          
+          <div className="subtitle">{players.length}/10</div>
+
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -519,7 +541,7 @@ const CSFriendPage = () => {
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div className='playerNickName'>{player.nickname}</div>
+                      <div className="playerNickName">{player.nickname}</div>
                       <img
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
@@ -528,14 +550,22 @@ const CSFriendPage = () => {
                   );
                 })}
             </div>
-            <button className='inviteBtn' onClick={handleModal}>친구 초대</button>
+            <button className="inviteBtn" onClick={handleModal}>
+              친구 초대
+            </button>
             {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
               })} */}
           </div>
 
-          {isMaster && <img className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+          {isMaster && (
+            <img
+              className="startBtn"
+              src="/img/cs/startBtn.png"
+              onClick={onClickStart}
+            />
+          )}
           {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
@@ -585,13 +615,16 @@ const CSFriendPage = () => {
                   ranking.slice(0, 3).map((rank: any, idx: number) => {
                     return (
                       <div key={idx} className="rankwrapper">
-                        <div>
-                          <img src={`/img/rank/medal${idx}.png`} />
-                          <div>
-                            <img
-                              className="character"
-                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
-                            />
+                        <img
+                          className="medal"
+                          src={`/img/rank/medal${idx}.png`}
+                        />
+                        <div className="characterBox">
+                          <img
+                            className="character"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
+                          />
+                          <div className="playerNickName">
                             <div>{rank[1]}</div>
                             <div>{rank[3]}</div>
                           </div>
@@ -599,6 +632,15 @@ const CSFriendPage = () => {
                       </div>
                     );
                   })}
+                {myScore && (
+                  <div>
+                    <div>15등</div>
+                    <img
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
+                      alt="profile"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
