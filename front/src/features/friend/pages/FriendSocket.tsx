@@ -107,6 +107,7 @@ function FriendSocket() {
           msg: sendContent,
         }),
       );
+      dispatch(friendActions.resetChat());
     }
   }, [sendContent]);
 
