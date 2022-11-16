@@ -65,7 +65,7 @@ public class AlgoSocketService {
         List<AlgoRankDto> res = new ArrayList<>();
         for(ZSetOperations.TypedTuple tuple : set){
             User user =   userRepository.findByNickname((String) tuple.getValue()).orElseThrow(()->new UserNotFoundException());
-            AlgoRankDto algoRankDto =AlgoRankDto.builder().roomCode(roomCode).nickName(user.getNickname()).profileChar(user.getProfileChar()).userId(user.getId()).min(tuple.getScore().intValue()+"").build();
+            AlgoRankDto algoRankDto =AlgoRankDto.builder().roomCode(roomCode).nickname(user.getNickname()).profileChar(user.getProfileChar()).userId(user.getId()).min(tuple.getScore().intValue()+"").build();
             if(algoRankDto.getMin().equals(algoRoomRedisDto.getAlgoRoomDto().getTime())){
                 algoRankDto.setMin("--");
             }
