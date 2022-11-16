@@ -87,10 +87,12 @@ const MyPage = () => {
   }, [record]);
 
   useEffect(() => {
-    fetchAlgoRecordRank();
-    fetchAlgoRecord();
+    algoRecordSetting();
   }, []);
-
+  const algoRecordSetting = async () => {
+    await fetchAlgoRecordRank();
+    await fetchAlgoRecord();
+  };
   const fetchAlgoRecord = async () => {
     try {
       const res = await myRecordRequest();

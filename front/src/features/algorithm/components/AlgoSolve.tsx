@@ -5,8 +5,8 @@ import { ProblemInterface, RankingUserInfo } from '../../../models/algo';
 import { algoActions } from '../algorithmSlice';
 
 import ProblemInfo from './ProblemInfo';
-import GameResultModal from './GameResultModal'
-import LoadingSpinner from './LoadingSpinner'
+import GameResultModal from './GameResultModal';
+import LoadingSpinner from './LoadingSpinner';
 
 interface LanguageInterface {
   lanId: number;
@@ -20,7 +20,7 @@ function AlgoSolve({
   ranking,
   problemIndex,
   myRank,
-  timeOut
+  timeOut,
 }: any) {
   const dispatch = useDispatch();
 
@@ -32,44 +32,62 @@ function AlgoSolve({
   ];
   const nowProblem: ProblemInterface = problemList[problemIndex];
 
-  const { InGameInfo, solve, gameResultMsg, loadingMsg } = useSelector((state: any) => state.algo);
+  const { InGameInfo, solve, gameResultMsg, loadingMsg } = useSelector(
+    (state: any) => state.algo,
+  );
   const { userInfo } = useSelector((state: any) => state.auth);
 
   const [form, setForm] = useState<{ lanId: number; code: string }>({
     lanId: 1003,
     code: '',
   });
-  const [firstLoading, setFirstLoading] = useState<boolean>(true)
-  const [firstModalLoading, setFirstModalLoading] = useState<boolean>(true)
+  const [firstLoading, setFirstLoading] = useState<boolean>(true);
+  const [firstModalLoading, setFirstModalLoading] = useState<boolean>(true);
   // 게임이 끝나면 모달을 열고
-  const [modal, setModal] = useState<boolean>(false)
+  const [modal, setModal] = useState<boolean>(false);
 
   // 결과 모달 자동으로 열기
   useEffect(() => {
     if (gameResultMsg && firstModalLoading) {
-      setModal(true)
-      setFirstModalLoading(false)
+      setModal(true);
+      setFirstModalLoading(false);
     }
-  }, [gameResultMsg])
+  }, [gameResultMsg]);
   // 컴포넌트 사라질때 문제 성공 리셋
   useEffect(() => {
     return () => {
       dispatch(algoActions.solveSuccess(false));
-      dispatch(algoActions.setGameResult(''))
+      dispatch(algoActions.setGameResult(''));
     };
   }, []);
 
   useEffect(() => {
     if (firstLoading) {
-      setFirstLoading(false)
-      return
+      setFirstLoading(false);
+      return;
     }
     if (myRank !== 5 && !timeOut) {
-      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code, lanId:form.lanId}))
+      dispatch(
+        algoActions.sendMyRank({
+          roomCode: InGameInfo.roomCode,
+          ranking: myRank,
+          problemId: nowProblem.problemId,
+          code: form.code,
+          lanId: form.lanId,
+        }),
+      );
     } else if (timeOut && myRank === 5) {
-      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code, lanId:form.lanId}))
+      dispatch(
+        algoActions.sendMyRank({
+          roomCode: InGameInfo.roomCode,
+          ranking: myRank,
+          problemId: nowProblem.problemId,
+          code: '타임 아웃!',
+          lanId: form.lanId,
+        }),
+      );
     }
-  }, [myRank, timeOut])
+  }, [myRank, timeOut]);
 
   const handleRadio = (e: React.SyntheticEvent<HTMLInputElement>) => {
     setForm({
@@ -123,26 +141,31 @@ function AlgoSolve({
     );
   };
   const handleModal = () => {
-    setModal(!modal)
-  }
+    setModal(!modal);
+  };
 
   return (
     <>
       <h2>문제 풀때 컴포넌트</h2>
-      {loadingMsg==='SUBMIT' && <LoadingSpinner loadingMsg='제출 확인 중' />}
+      {loadingMsg === 'SUBMIT' && <LoadingSpinner loadingMsg="제출 확인 중" />}
       {modal && <GameResultModal handleModal={handleModal} myRank={myRank} />}
-      {ranking.map((user:RankingUserInfo, index:number) => {
-        return <div key={index}>
-          <h2>{user.nickName}</h2>
-          <img src={`/img/rank/character${user.profileChar}.png`} alt="프로필이미지" />
-          <h3>걸린 시간 : {user.min} 분</h3>
-        </div>
+      {ranking.map((user: RankingUserInfo, index: number) => {
+        return (
+          <div key={index}>
+            <h2>{user.nickName}</h2>
+            <img
+              src={`/img/rank/character${user.profileChar}.png`}
+              alt="프로필이미지"
+            />
+            <h3>걸린 시간 : {user.min} 분</h3>
+          </div>
+        );
       })}
       <ProblemInfo nowProblem={nowProblem} />
       <button onClick={handleGoToSolve}>문제풀러가기</button>
       <br />
-      {gameResultMsg ? null
-      : <> 
+      {gameResultMsg ? null : (
+        <>
           {languageList.map((language) => (
             <label key={language.lanId} htmlFor={language.name}>
               <input
@@ -166,7 +189,7 @@ function AlgoSolve({
           />
           <button onClick={handleCheckSubmit}>정답 확인하기</button>
         </>
-      }
+      )}
     </>
   );
 }
