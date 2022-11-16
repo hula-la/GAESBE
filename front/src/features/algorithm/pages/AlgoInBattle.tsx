@@ -68,27 +68,20 @@ function AlgoInBattle() {
     }
   }, [ranking]);
 
-  const socket: CustomWebSocket = new SockJS(
-    // 'https://k7e104.p.ssafy.io:8081/api/ws',
-    'http://localhost:8080/api/ws',
-  );
   const client = useRef<any>(null);
-  useEffect(() => {
-    if (!InGameInfo) {
-      navigate('/game/algo');
-    }
-    client.current = Stomp.over(socket);
-    // 개발 버전에서만 콘솔 뜨게 하기
-    if (process.env.NODE_ENV !== 'development') {
-      client.current.debug = function () {};
-    }
-  }, []);
-
   // 최초 입장시 소켓 뚫고, 백준id보내기
   useEffect(() => {
     if (InGameInfo === null) {
       navigate('/game/algo');
     } else {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      client.current = Stomp.over(socket);
+      // 개발 버전에서만 콘솔 뜨게 하기
+      if (process.env.NODE_ENV !== 'development') {
+        client.current.debug = function () {};
+      }
       // 입장할때 소켓 뚫기
       client.current.connect({ userId: userInfo.id }, (frame: any) => {
         // 입장, 퇴장 관련 메세지 받을 위치
