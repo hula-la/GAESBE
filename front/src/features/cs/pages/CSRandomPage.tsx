@@ -153,6 +153,7 @@ const CSIngamePage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [isLast, setIsLast] = useState<Boolean>(false);
+  const [isReady, setIsReady] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
@@ -167,9 +168,11 @@ const CSIngamePage = () => {
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
 
-  const initialTime = useRef<number>(5);
+  const answerButton = [1, 2, 3, 4];
+
+  const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
-  const [sec, setSec] = useState(5);
+  const [sec, setSec] = useState(3);
   let roomcode: string;
   let playerList: Array<any>;
 
@@ -250,21 +253,24 @@ const CSIngamePage = () => {
   const socket: CustomWebSocket = new SockJS(
     'https://k7e104.p.ssafy.io:8081/api/ws',
   );
-  const client = Stomp.over(socket);
+  const client = useRef<any>(null);
+  useEffect(() => {
+    client.current = Stomp.over(socket);
+  }, []);
   // client.debug = () => {};
 
   const client2 = Stomp.over(socket);
 
   // 게임 시작 전 자동 시작 타이머
   useEffect(() => {
-    if (isLast) {
+    if (isReady) {
       interval.current = setInterval(() => {
         setSec(initialTime.current % 60);
         initialTime.current -= 1;
       }, 1000);
       return () => clearInterval(interval.current);
     }
-  }, [isLast]);
+  }, [isReady]);
 
   useEffect(() => {
     if (initialTime.current < 0) {
@@ -276,9 +282,9 @@ const CSIngamePage = () => {
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
-      client.connect({}, (frame) => {
+      client.current.connect({}, (frame: any) => {
         // 내 개인 정보 구독
-        client.subscribe(`/cs/${userInfo.id}`, (res) => {
+        client.current.subscribe(`/cs/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
@@ -300,20 +306,14 @@ const CSIngamePage = () => {
           }
           if (data.hasOwnProperty('isLast')) {
             if (data.isLast === true) {
-              client.send(
-                '/api/cs/start',
-                {},
-                JSON.stringify({
-                  roomCode: roomcode,
-                }),
-              );
+              setIsLast(true);
             }
           }
         });
 
         // 방에 들어가기
         const enterRoom = () => {
-          client.send(
+          client.current.send(
             '/api/cs',
             {},
             JSON.stringify({
@@ -325,20 +325,6 @@ const CSIngamePage = () => {
           );
         };
         enterRoom();
-
-        // 들어오는 순간 방의 사람들 정보를 받음
-        const fetchMemberInfo = () => {
-          client.send(
-            '/api/cs/memberInfo',
-            {},
-            JSON.stringify({
-              roomCode: roomcode,
-            }),
-          );
-        };
-        setTimeout(() => {
-          fetchMemberInfo();
-        }, 2000);
       });
     }
   }, [userInfo]);
@@ -350,13 +336,14 @@ const CSIngamePage = () => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
-            if (data1.msg === 'ready') {
-              setIsLast(true);
-            } else if (data1.msg === 'end') {
+            if (data1.msg === 'end') {
               setIsEnd(true);
               setResult(data1.result);
+            } else if (data1.msg === 'ready') {
+              setIsReady(true);
             } else {
               setIsStart(true);
+              setIsReady(false);
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
             setIsCorrect(null);
@@ -392,15 +379,34 @@ const CSIngamePage = () => {
             playerList = data1;
           }
         });
+        client2.send(
+          '/api/cs/memberInfo',
+          {},
+          JSON.stringify({
+            roomCode: roomCode,
+          }),
+        );
       });
     }
   }, [roomCode]);
 
   useEffect(() => {
     return () => {
-      client.disconnect(() => {});
+      client.current.disconnect(() => {});
     };
   }, []);
+
+  useEffect(() => {
+    if (players && isLast) {
+      client.current.send(
+        '/api/cs/start',
+        {},
+        JSON.stringify({
+          roomCode: roomCode,
+        }),
+      );
+    }
+  }, [isLast, players]);
 
   // 로딩 & 끝 제어
   useEffect(() => {
@@ -417,7 +423,7 @@ const CSIngamePage = () => {
 
   // 정답 유무 확인
   const handleAnswerSend = (e: any, number: any) => {
-    client.send(
+    client.current.send(
       '/api/cs/submit',
       {},
       JSON.stringify({
@@ -438,7 +444,7 @@ const CSIngamePage = () => {
           <div className="subtitle">
             10명의 인원이 모이면 자동으로 게임이 시작합니다
           </div>
-          {isLast && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
           <div className="waitingContent">
             <div className="imgBox">
               <img src="/img/rank/waitingroom.png" className="waitingroom" />
@@ -492,94 +498,38 @@ const CSIngamePage = () => {
                 })} */}
               </div>
               <div className="selectbuttons">
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 1)}
-                  src="/img/selectbutton/onebutton.png"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 2)}
-                  src="/img/selectbutton/twobutton.png"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 3)}
-                  src="/img/selectbutton/threebutton.png"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={(e) => handleAnswerSend(e, 4)}
-                  src="/img/selectbutton/fourbutton.png"
-                />
-              </div>
-              {ranking && (
-                <div className="rankBlock">
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/goldmedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[0][1]}</div>
-                        <div>{ranking[0][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/silvermedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[1][1]}</div>
-                        <div>{ranking[1][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/bronzemedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        {/* <div>{ranking[2][1]}</div>
-                        <div>{ranking[2][2]}</div> */}
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div>
+                {answerButton.map((answer, idx) => {
+                  return (
                     <img
-                      className="character"
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}.png`}
+                      key={idx}
+                      className="selectbutton"
+                      onClick={(e) => handleAnswerSend(e, answer)}
+                      src={`/img/selectbutton/button${answer}.png`}
                     />
-                  </div>
-                </div>
-              )}
+                  );
+                })}
+              </div>
+
+              <div className="rankBlock">
+                {ranking &&
+                  ranking.map((rank: any, idx: number) => {
+                    return (
+                      <div key={idx} className="rankwrapper">
+                        <div>
+                          <img src={`/img/rank/medal${idx}.png`} />
+                          <div>
+                            <img
+                              className="character"
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[0]}_normal.gif`}
+                            />
+                            <div>{rank[1]}</div>
+                            <div>{rank[2]}</div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           )}
           {isSubmit && (

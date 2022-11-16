@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TypingFriendGame from '../components/TypingFriendGame';
 import styled from 'styled-components';
 const Container = styled.div`
-  width: 82%;
+  /* width: 82%; */
   background-color: #232323;
   justify-content: center;
   /* text-align: center; */

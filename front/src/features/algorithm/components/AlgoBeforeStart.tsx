@@ -16,22 +16,24 @@ const Wrapper = styled.div`
   flex-direction: column;
   margin: 0 auto;
   text-align: center;
-
   .btn-top {
     text-align: left;
-    height: 10%;
+    height: 15%;
   }
   .user {
-    height: 70%;
+    height: 60%;
     background-image: url(/img/background/park.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 121%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    border: 1px solid #fff;
+
   }
   .btn-bottom {
-    height: 20%;
+    height: 25%;
     display: flex;
     justify-items: center;
     a {

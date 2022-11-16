@@ -11,10 +11,53 @@ const Wrapper = styled.div`
     position: relative;
     width: 100%;
     height: 100%;
+    .introImg {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      filter: blur(3px);
+    }
+    .introWrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .introTitle {
+      width: 50%;
+    }
+    .introContent {
+      color: #ffffff;
+      text-shadow: -5px 0 #000000, 0 5px #000000, 5px 0 #000000, 0 5px #000000;
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .introTextWrapper {
+      margin-top: 5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .introText {
+      color: #ffffff;
+      font-size: 30px;
+      font-weight: 700;
+    }
+    .goOffice {
+      color: #232323;
+      text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff;
+      font-size: 24px;
+      cursor: pointer;
+    }
     .pointerDown {
       position: absolute;
       bottom: 30px;
-      left: 50%;
+      left: 49%;
       width: 2rem;
       animation-name: move_arrow;
       animation-duration: 0.5s;
@@ -35,39 +78,12 @@ const Wrapper = styled.div`
         transform: translateY(0);
       }
     }
-    .goOffice {
-      position: absolute;
-      top: 65%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #232323;
-      text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff;
-      font-size: 24px;
-      cursor: pointer;
-    }
-  }
-  .introContent {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff;
-    text-shadow: -5px 0 #000000, 0 5px #000000, 5px 0 #000000, 0 5px #000000;
-    font-size: 55px;
-    font-weight: 700;
-    text-align: center;
   }
 
-  .introImg {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    filter: blur(3px);
-  }
   .inner {
     max-width: 1100px;
     height: 100%;
-    margin: 0 0;
+    margin: 0 auto;
   }
   .introBox {
     position: relative;
@@ -84,97 +100,120 @@ const Wrapper = styled.div`
 
   .fix_motion {
     background-color: #232323;
-    .fix_wrap {
-      position: relative;
-      .textBox {
-        float: left;
-        width: 50%;
-        padding-top: 300px;
-        p {
-          max-width: 80%;
-          font-size: 36px;
-          color: #333;
-          transition: color 0.5s;
-          text-align: center;
-        }
-        p.active {
-          color: #fff;
-        }
-        p.txt02 {
-          margin-top: 300px;
-        }
-        p.txt03 {
-          margin-top: 300px;
-        }
-        p.txt04 {
-          margin-top: 300px;
-          margin-bottom: 500px;
-        }
-      }
-      .imgFix {
-        position: sticky;
-        position: -webkit-sticky;
-        top: calc(50vh - 350px);
-        left: 0;
-        z-index: 40;
-        float: left;
-        width: 50%;
-        .officeImg {
-          position: relative;
-          width: 240px;
-          height: 409px;
-          margin: 0 auto;
-          .imgOffice {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 20;
-            opacity: 0;
-            transform: translateY(-40px);
-            transition: opacity 0.5s, transform 0.5s;
-            .img {
-              transition: transform 0.5s ease;
-            }
-          }
-          .imgOffice2 {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 50;
-            opacity: 0;
-            transform: translateY(-40px);
-            transition: opacity 0.5s, transform 0.5s;
-            .img {
-              transition: transform 0.5s ease;
-            }
-          }
-        }
-      }
-      .active {
-        .officeImg {
-          .imgOffice {
-            opacity: 1;
-            transform: translateY(0px);
-            transition-delay: 0.3s;
-            .active {
-              opacity: 0;
-            }
-          }
-          .imgOffice2.active {
-            opacity: 1;
-          }
+
+    .title {
+      font-size: 36px;
+      margin-bottom: 1rem;
+    }
+    .content {
+      font-size: 50px;
+    }
+    /* div {
+      max-width: 80%;
+      font-size: 36px;
+      margin-left: 10rem;
+
+      color: #333;
+      transition: color 0.5s;
+      text-align: start;
+    } */
+
+    /* .img {
+      transition: transform 0.5s ease;
+    } */
+
+    .active {
+      .officeImg {
+        .imgOffice2.active {
+          opacity: 1;
         }
       }
     }
-    .fix_wrap:after {
-      clear: both;
-      display: block;
-      content: '';
+  }
+  .fix_motion .fix_wrap {
+    position: relative;
+  }
+  .fix_motion .fix_wrap:after {
+    clear: both;
+    display: block;
+    content: '';
+  }
+  .fix_motion .fix_wrap .textBox {
+    float: left;
+    width: 50%;
+    padding-top: 300px;
+  }
+  .fix_motion .fix_wrap .textBox div {
+    color: #333;
+    transition: color 0.5s;
+  }
+  .fix_motion .fix_wrap .textBox div.active {
+    color: #fff;
+  }
+  .fix_motion .fix_wrap .textBox div.txt02 {
+    margin-top: 400px;
+  }
+  .fix_motion .fix_wrap .textBox div.txt03 {
+    margin-top: 400px;
+  }
+  .fix_motion .fix_wrap .textBox div.txt04 {
+    margin-top: 400px;
+    margin-bottom: 500px;
+  }
+  .fix_motion .fix_wrap .imgFix {
+    position: sticky;
+    position: -webkit-sticky;
+    top: calc(50vh - 200px);
+    left: 0;
+    z-index: 40;
+    float: left;
+    width: 50%;
+    height: 100%;
+  }
+  .fix_motion .fix_wrap .imgFix .officeImg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+  }
+  .fix_motion .fix_wrap .imgFix .officeImg .imgOffice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .fix_motion .fix_wrap .imgFix .imgOffice2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity 0.5s, transform 0.5s;
+    .img {
+      transition: transform 0.5s ease;
     }
+  }
+
+  .fix_motion .fix_wrap .active .officeImg .imgOffice {
+    opacity: 1;
+    transform: translateY(0px);
+    transition-delay: 0.1s;
+  }
+  .fix_motion .fix_wrap .active .officeImg .imgOffice .active {
+    opacity: 0;
+  }
+  .fix_motion .fix_wrap .active .active {
+    opacity: 1;
+    transform: translateY(0px);
+    transition-delay: 0.1s;
   }
 `;
 
@@ -329,11 +368,22 @@ const IntroPage = () => {
     <Wrapper>
       <div className="Intro" ref={IntroImgRef}>
         <img src="/img/Intro/Intro1.jpg" alt="Intro" className="introImg" />
-        <div className="introContent">
-          개츠비와 함께 각종 역량을 키와 보세요!
-        </div>
-        <div className="goOffice" onClick={goLogin}>
-          Go To Office
+        <div className="introWrapper">
+          <img
+            src="/img/Intro/IntroTitle.png"
+            alt="IntroTitle"
+            className="introTitle"
+          />
+          <div className="introContent">To Be a Developer</div>
+          <div className="introTextWrapper">
+            <div className="introText">개발자가 되기 위한 역량,</div>
+            <div className="introText">
+              개츠비에서 친구와 함께 재밌게 키워봐요!
+            </div>
+          </div>
+          <div className="goOffice" onClick={goLogin}>
+            Go Office
+          </div>
         </div>
         <img
           onClick={onClickArrow}
@@ -344,40 +394,36 @@ const IntroPage = () => {
       <div ref={fixMotionRef} className="fix_motion">
         <article className="fix_wrap inner">
           <div className="textBox">
-            <p ref={txt01ref}>오하민!</p>
-            <p ref={txt02ref} className="txt02">
-              서상균!
-            </p>
-            <p ref={txt03ref} className="txt03">
-              박정현!
-            </p>
-            <p ref={txt04ref} className="txt04">
+            <div ref={txt01ref}>
+              <p className="title">알고리즘 배틀</p>
+              <p className="content">친구와 함께 풀고</p>
+            </div>
+            <div ref={txt02ref} className="txt02">
+              <p className="title">CS 배틀</p>
+              <p className="content">퀴즈로 배우며</p>
+            </div>
+            <div ref={txt03ref} className="txt03">
+              <p className="title">타이핑 배틀</p>
+              <p className="content">
+                타이핑으로 <br />
+                친숙해지자!
+              </p>
+            </div>
+            <div ref={txt04ref} className="txt04">
               홍성목!
-            </p>
+            </div>
           </div>
           <div ref={imgBoxRef} className="imgFix">
             <div className="officeImg">
               <figure className="imgOffice">
-                <img ref={officeImgRef} src="/img/MyOffice/level2.png" />
+                <img ref={officeImgRef} src="/img/Intro/computer.png" />
+                {/* <img src="/img/Intro/computer.png" /> */}
               </figure>
-              <div ref={officeImg2Ref} className="imgOffice2">
-                <figure>
-                  <img src="/img/MyOffice/level3.png" />
-                </figure>
-                <div className="object_wrap">
-                  <div className="object">
-                    <figure>
-                      <img src="" />
-                    </figure>
-                    <figure>
-                      <img src="" />
-                    </figure>
-                    <figure>
-                      <img src="" />
-                    </figure>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div ref={officeImg2Ref} className="imgOffice2">
+              <figure>
+                <img src="/img/Intro/computer.png" />
+              </figure>
             </div>
           </div>
         </article>

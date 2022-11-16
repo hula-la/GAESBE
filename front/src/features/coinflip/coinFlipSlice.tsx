@@ -25,6 +25,10 @@ const coinSlice = createSlice({
       console.log(state.result);
     },
     requestCoinFlipError(state, action) {},
+    // 결과 리셋
+    resetResult(state) {
+      state.result = null;
+    },
   },
 });
 

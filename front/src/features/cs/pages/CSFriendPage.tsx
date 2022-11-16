@@ -12,7 +12,7 @@ interface CustomWebSocket extends WebSocket {
 }
 
 const Container = styled.div`
-  width: 82%;
+  /* width: 82%; */
   background-color: #232323;
   color: #ffffff;
   font-family: 'NeoDunggeunmo';
@@ -160,27 +160,33 @@ const CSFriendPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [isMaster, setIsMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
-  const [isCorrect, setIsCorrect] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [cntPerNum, setCntPerNum] = useState<any>(null);
+  const [solveOrder, setSolveOrder] = useState<any>(null);
+  const [answer, setAnswer] = useState<number | null>(null);
   const [isNext, setIsNext] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<any>(null);
-  const [result, setResult] = useState<any>(null);
+  const [rankByPlayer, setRankByPlayer] = useState<any>(null);
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
   const { modal } = useSelector((state: any) => state.friend);
   const { friendId } = useSelector((state: any) => state.friend);
+
+  const answerButton = [1, 2, 3, 4];
+
   const { shareCode } = location.state;
 
-  const initialTime = useRef<number>(5);
+  const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
-  const [sec, setSec] = useState(5);
+  const [sec, setSec] = useState(3);
   let roomcode: string;
   let playerList: Array<any>;
 
@@ -269,6 +275,23 @@ const CSFriendPage = () => {
     client.current = Stomp.over(socket);
   }, []);
 
+  // 게임 시작 전 자동 시작 타이머
+  useEffect(() => {
+    if (isReady) {
+      interval.current = setInterval(() => {
+        setSec(initialTime.current % 60);
+        initialTime.current -= 1;
+      }, 1000);
+      return () => clearInterval(interval.current);
+    }
+  }, [isReady]);
+
+  useEffect(() => {
+    if (initialTime.current < 0) {
+      clearInterval(interval.current);
+    }
+  }, [sec]);
+
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
@@ -284,7 +307,6 @@ const CSFriendPage = () => {
               setIsSubmit(true);
             }
           } else if (data.hasOwnProperty('isSolved')) {
-            setIsCorrect(data.isCorrect);
             setIsSolved(data.isSolved);
             setIsSubmit(false);
             setProblem('a');
@@ -293,8 +315,6 @@ const CSFriendPage = () => {
             }, 7000);
           } else if (data.hasOwnProperty('master')) {
             setIsMaster(true);
-          } else {
-            setIsCorrect(data.isCorrect);
           }
         });
 
@@ -313,20 +333,6 @@ const CSFriendPage = () => {
           );
         };
         enterRoom();
-
-        // 들어오는 순간 방의 사람들 정보를 받음
-        const fetchMemberInfo = () => {
-          client.current.send(
-            '/api/cs/memberInfo',
-            {},
-            JSON.stringify({
-              roomCode: roomcode,
-            }),
-          );
-        };
-        setTimeout(() => {
-          fetchMemberInfo();
-        }, 2000);
       });
     }
   }, [userInfo]);
@@ -340,17 +346,22 @@ const CSFriendPage = () => {
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
               setIsEnd(true);
-              setResult(data1.result);
+              setRankByPlayer(data1.rankByPlayer);
+            } else if (data1.msg === 'ready') {
+              setIsReady(true);
             } else {
+              setIsReady(false);
               setIsStart(true);
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
-            setIsCorrect(null);
             setIsSolved(null);
             setProblem(data1.currentProblem);
             setIsNext(false);
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
+            setCntPerNum(data1.cntPerNum);
+            setSolveOrder(data1.solveOrder);
+            setAnswer(data1.answer);
           } else {
             if (!playerList) {
               for (let i = 0; i < data1.length; i++) {
@@ -378,6 +389,13 @@ const CSFriendPage = () => {
             playerList = data1;
           }
         });
+        client2.send(
+          '/api/cs/memberInfo',
+          {},
+          JSON.stringify({
+            roomCode: roomCode,
+          }),
+        );
       });
     }
   }, [roomCode]);
@@ -392,11 +410,13 @@ const CSFriendPage = () => {
     if (players) {
       setIsLoading(false);
     }
-    if (isEnd && result) {
+    if (isEnd && rankByPlayer) {
       console.log('끝');
-      navigate('/game/CS/result', { state: { result: result } });
+      navigate('/game/CS/result', {
+        state: { ranking: ranking, rankByPlayer: rankByPlayer },
+      });
     }
-  }, [players, result, isEnd]);
+  }, [players, isEnd, rankByPlayer]);
 
   const onClickStart = () => {
     client.current.send(
@@ -408,13 +428,12 @@ const CSFriendPage = () => {
     );
   };
 
-  // 정답 유무 확인
-  const handleAnswerSend = () => {
+  const handleAnswerSend = (e: any, number: any) => {
     client.current.send(
       '/api/cs/submit',
       {},
       JSON.stringify({
-        answer: '3',
+        answer: number,
         problemId: problem.id,
         userId: userInfo.id,
         roomCode: roomCode,
@@ -443,8 +462,6 @@ const CSFriendPage = () => {
     }
   }, [friendId]);
 
-  const invite = () => {};
-
   return (
     <Container>
       {isLoading && (
@@ -466,7 +483,7 @@ const CSFriendPage = () => {
           />
           <div className="subtitle">친선전</div>
           {isMaster && <button onClick={onClickStart}>게임시작</button>}
-          {/* {isLast && <p>{sec}초 후 게임이 시작됩니다!</p>} */}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -512,7 +529,7 @@ const CSFriendPage = () => {
               <p className="loadingText">문제를 불러오고 있습니다</p>
             </div>
           )}
-          {problem && !isSubmit && isCorrect === null && (
+          {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
               <div className="problem">
                 <div className="progressContainer">
@@ -529,106 +546,37 @@ const CSFriendPage = () => {
                 })} */}
               </div>
               <div className="selectbuttons">
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/onebutton.png"
-                  alt="button"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/twobutton.png"
-                  alt="button"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/threebutton.png"
-                  alt="button"
-                />
-                <img
-                  className="selectbutton"
-                  onClick={handleAnswerSend}
-                  src="/img/selectbutton/fourbutton.png"
-                  alt="button"
-                />
-              </div>
-              {ranking && (
-                <div className="rankBlock">
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/goldmedal.png" alt="medal" />
-                      {/* <img
-                        alt='character
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          alt="character"
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[0][1]}</div>
-                        <div>{ranking[0][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/silvermedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>{ranking[1][1]}</div>
-                        <div>{ranking[1][2]}</div>
-                      </div>
-                      {}
-                    </div>
-                  </div>
-                  <div className="rankwrapper">
-                    <div>
-                      <img src="/img/rank/bronzemedal.png" />
-                      {/* <img
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${
-                          Object.keys(ranking[0])[0]
-                        }.png`}
-                      /> */}
-                      {/* <div>
-                        <img
-                          className="character"
-                          src={`${process.env.REACT_APP_S3_URL}/profile/0.png`}
-                        />
-                        <div>
-                          {
-                            players.filter((player: any) => {
-                              return player.id == Object.keys(ranking[2])[0];
-                            })[0].nickname
-                          }
-                        </div>
-                        <div>{ranking[2][Object.keys(ranking[2])[0]]}</div>
-                      </div> */}
-                      {}
-                    </div>
-                  </div>
-                  <div>
+                {answerButton.map((answer, idx) => {
+                  return (
                     <img
-                      className="character"
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}.png`}
+                      key={idx}
+                      className="selectbutton"
+                      onClick={(e) => handleAnswerSend(e, answer)}
+                      src={`/img/selectbutton/button${answer}.png`}
                     />
-                  </div>
-                </div>
-              )}
+                  );
+                })}
+              </div>
+              <div className="rankBlock">
+                {ranking &&
+                  ranking.slice(0, 3).map((rank: any, idx: number) => {
+                    return (
+                      <div key={idx} className="rankwrapper">
+                        <div>
+                          <img src={`/img/rank/medal${idx}.png`} />
+                          <div>
+                            <img
+                              className="character"
+                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
+                            />
+                            <div>{rank[1]}</div>
+                            <div>{rank[3]}</div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           )}
           {isSubmit && (
@@ -637,14 +585,11 @@ const CSFriendPage = () => {
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
-          {isCorrect !== null &&
-            isSolved !== null &&
-            problem === 'a' &&
-            !isNext && (
-              <div>
-                <p>중간결과 페이지</p>
-              </div>
-            )}
+          {isSolved !== null && problem === 'a' && !isNext && (
+            <div>
+              <p>중간결과 페이지</p>
+            </div>
+          )}
         </IngameBlock>
       )}
     </Container>
