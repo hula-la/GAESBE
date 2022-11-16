@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -215,7 +215,7 @@ const TypingGame = () => {
               setIsReady(true);
               setTimeout(() => {
                 setIsLoading(false);
-              }, 5000);
+              }, 4000);
             }
           }
         });
@@ -269,7 +269,7 @@ const TypingGame = () => {
               setIsReady(true);
               setTimeout(() => {
                 setIsLoading(false);
-              }, 5000);
+              }, 4000);
             } else if (testdata.msg === 'end') {
               setResultId(testdata.winUserId);
               setResultNickName(testdata.winUserNickName);
@@ -295,6 +295,9 @@ const TypingGame = () => {
   }, []);
 
   const typinggamebox = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    typinggamebox.current?.focus();
+  });
   function yscroll() {
     typinggamebox.current?.scrollBy({
       left: -10000,
@@ -514,6 +517,7 @@ const TypingGame = () => {
 
         {!isLoading && (
           <TypingGameBox
+            ref={typinggamebox}
             onKeyDown={(event) => handleSetKey(event)}
             tabIndex={0}
           >

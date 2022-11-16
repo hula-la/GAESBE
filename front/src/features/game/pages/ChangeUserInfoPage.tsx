@@ -8,15 +8,33 @@ import { useNavigate } from 'react-router-dom';
 
 const ChangeUserInfo = styled.div`
   width: 100%;
+  height: 98%;
   color: white;
   background-color: #232323;
   /* border: 2px solid red; */
   display: flex;
   flex-direction: row;
 `;
+const BackArrow = styled.img`
+  position: absolute;
+  width: 3%;
+  top: 5%;
+  left: 20%;
+  transform: scaleX(-1);
+`;
 const MyCharacter = styled.div`
   /* border: 2px solid blue; */
   width: 45%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const MyCharacterInfo = styled.div`
+  /* border: 2px solid blue; */
+  width: 45%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,10 +49,28 @@ const MyCharacter = styled.div`
   }
 `;
 const SelectCharacter = styled.div`
-  color: white;
-  padding-bottom: 1%;
-  /* border: 2px solid yellow; */
   width: 55%;
+  height: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 70px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 50px;
+    background-color: gray;
+  } */
+`;
+const AllCharacterList = styled.div`
+  width: 100%;
+  height: 70%;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,6 +110,7 @@ const ChangeUserInfoPage = () => {
   const { characters } = useSelector((state: any) => state.item);
 
   let characterList = characters;
+
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
     dispatch(authActions.checkNicknameStart(e.target.value));
@@ -111,68 +148,91 @@ const ChangeUserInfoPage = () => {
   return (
     <ChangeUserInfo>
       <MyCharacter>
-        {!changeNickName && (
-          <h1 className="h1">
-            {userInfo.nickname}
-            {/* <button onClick={handleInput}>변경</button> */}
-            <img
-              onClick={handleInput}
-              src="/img/selectbutton/setnicknamebutton.png"
-              alt=""
-            />
-          </h1>
-        )}
-        {changeNickName && (
-          <h1 className="h1">
-            <input onChange={onChangeNickname} />
-            {isDuplicate && <p>중복된 닉네임입니다.</p>}
-            {/* <button onClick={onClickHandler}>닉네임 변경</button> */}
-            <img
-              onClick={onClickHandler}
-              src="/img/selectbutton/setnicknamebutton.png"
-              alt=""
-            />
-          </h1>
-        )}
-        <img
-          className="img"
-          src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
-          alt="캐릭터 없음"
+        <BackArrow
+          onClick={handleMypage}
+          src="/img/arrow/back-arrow.png"
+          alt=""
         />
-        <button onClick={handleMypage}>나가기</button>
+        <MyCharacterInfo>
+          {!changeNickName && (
+            <h1 className="h1">
+              {userInfo.nickname}
+              {/* <button onClick={handleInput}>변경</button> */}
+              <img
+                onClick={handleInput}
+                src="/img/selectbutton/setnicknamebutton.png"
+                alt=""
+              />
+            </h1>
+          )}
+          {changeNickName && (
+            <h1 className="h1">
+              <input onChange={onChangeNickname} />
+              {isDuplicate && <p>중복된 닉네임입니다.</p>}
+              {/* <button onClick={onClickHandler}>닉네임 변경</button> */}
+              <img
+                onClick={onClickHandler}
+                src="/img/selectbutton/setnicknamebutton.png"
+                alt=""
+              />
+            </h1>
+          )}
+          <img
+            className="img"
+            src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
+            alt="캐릭터 없음"
+          />
+          {/* <a
+            href="javascript:void(0)"
+            className="eightbit-btn eightbit-btn--reset"
+            onClick={handleMypage}
+          >
+            나가기
+          </a> */}
+        </MyCharacterInfo>
       </MyCharacter>
       <SelectCharacter>
         <h1>당신의 캐릭터를 변경하세요</h1>
-
-        {characterList.map((character: any) => {
-          return (
-            <>
-              {character.own ? (
-                <CharacterList
-                  key={character.characterId}
-                  onClick={(e) => handleSelectCharacter(character.characterId)}
-                >
-                  <UnLockedCharacter
-                    src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
-                    alt="프로필 이미지"
-                  />
-                </CharacterList>
-              ) : (
-                <CharacterList
-                  key={character.characterId}
-                  onClick={(e) => handleUnLockSelectCharacter()}
-                >
-                  <LockedCharacter
-                    src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
-                    alt="프로필 이미지"
-                  />
-                  <p>{character.need}</p>
-                </CharacterList>
-              )}
-            </>
-          );
-        })}
-        <button onClick={handleChangeCharacter}>변경</button>
+        <AllCharacterList>
+          {characterList.map((character: any) => {
+            return (
+              <>
+                {character.own ? (
+                  <CharacterList
+                    key={character.characterId}
+                    onClick={(e) =>
+                      handleSelectCharacter(character.characterId)
+                    }
+                  >
+                    <UnLockedCharacter
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                      alt="프로필 이미지"
+                    />
+                  </CharacterList>
+                ) : (
+                  <CharacterList
+                    key={character.characterId}
+                    onClick={(e) => handleUnLockSelectCharacter()}
+                  >
+                    <LockedCharacter
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                      alt="프로필 이미지"
+                    />
+                    <p>{character.need}</p>
+                  </CharacterList>
+                )}
+              </>
+            );
+          })}
+        </AllCharacterList>
+        <a
+          href="javascript:void(0)"
+          className="eightbit-btn"
+          onClick={handleChangeCharacter}
+        >
+          캐릭터 변경
+        </a>
+        {/* <button onClick={handleChangeCharacter}>변경</button> */}
       </SelectCharacter>
     </ChangeUserInfo>
   );
