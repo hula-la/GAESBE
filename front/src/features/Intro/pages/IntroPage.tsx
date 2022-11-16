@@ -108,27 +108,6 @@ const Wrapper = styled.div`
     .content {
       font-size: 50px;
     }
-    /* div {
-      max-width: 80%;
-      font-size: 36px;
-      margin-left: 10rem;
-
-      color: #333;
-      transition: color 0.5s;
-      text-align: start;
-    } */
-
-    /* .img {
-      transition: transform 0.5s ease;
-    } */
-
-    .active {
-      .officeImg {
-        .imgOffice2.active {
-          opacity: 1;
-        }
-      }
-    }
   }
   .fix_motion .fix_wrap {
     position: relative;
@@ -201,7 +180,34 @@ const Wrapper = styled.div`
       transition: transform 0.5s ease;
     }
   }
-
+  .fix_motion .fix_wrap .imgFix .imgOffice3 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity 0.5s, transform 0.5s;
+    .img {
+      transition: transform 0.5s ease;
+    }
+  }
+  .fix_motion .fix_wrap .imgFix .imgOffice4 {
+    position: absolute;
+    left: -5rem;
+    top: -5rem;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    opacity: 0;
+    transform: translateY(-40px);
+    transition: opacity 0.5s, transform 0.5s;
+    .img {
+      transition: transform 0.5s ease;
+    }
+  }
   .fix_motion .fix_wrap .active .officeImg .imgOffice {
     opacity: 1;
     transform: translateY(0px);
@@ -224,6 +230,8 @@ const IntroPage = () => {
   const imgBoxRef = useRef<HTMLDivElement>(null);
   const officeImgRef = useRef<HTMLImageElement>(null);
   const officeImg2Ref = useRef<HTMLImageElement>(null);
+  const officeImg3Ref = useRef<HTMLImageElement>(null);
+  const officeImg4Ref = useRef<HTMLImageElement>(null);
   const txt01ref = useRef<HTMLDivElement>(null);
   const txt02ref = useRef<HTMLDivElement>(null);
   const txt03ref = useRef<HTMLDivElement>(null);
@@ -319,18 +327,24 @@ const IntroPage = () => {
   };
 
   const contentIn = () => {
-    if (percent >= 0 && percent < 31) {
+    if (percent >= 0 && percent < 29) {
       txt01ref.current?.classList.add('active');
       officeImgRef.current?.classList.remove('active');
       officeImg2Ref.current?.classList.remove('active');
-    } else if (percent >= 31 && percent < 63) {
+      officeImg3Ref.current?.classList.remove('active');
+    } else if (percent >= 29 && percent < 60) {
       txt02ref.current?.classList.add('active');
       officeImgRef.current?.classList.add('active');
       officeImg2Ref.current?.classList.add('active');
-    } else if (percent >= 63 && percent < 88) {
+    } else if (percent >= 60 && percent < 80) {
       txt03ref.current?.classList.add('active');
-    } else if (percent >= 88) {
+      officeImg2Ref.current?.classList.remove('active');
+      officeImg3Ref.current?.classList.add('active');
+      officeImg4Ref.current?.classList.remove('active');
+    } else if (percent >= 80) {
       txt04ref.current?.classList.add('active');
+      officeImg3Ref.current?.classList.remove('active');
+      officeImg4Ref.current?.classList.add('active');
     } else if (percent < 0) {
       txt01ref.current?.classList.remove('active');
       txt02ref.current?.classList.remove('active');
@@ -410,7 +424,10 @@ const IntroPage = () => {
               </p>
             </div>
             <div ref={txt04ref} className="txt04">
-              홍성목!
+              <p className="content">
+                역량을 강화할수록 <br />
+                달라지는 내 오피스
+              </p>
             </div>
           </div>
           <div ref={imgBoxRef} className="imgFix">
@@ -423,6 +440,16 @@ const IntroPage = () => {
             <div ref={officeImg2Ref} className="imgOffice2">
               <figure>
                 <img src="/img/Intro/computer.png" />
+              </figure>
+            </div>
+            <div ref={officeImg3Ref} className="imgOffice3">
+              <figure>
+                <img src="/img/Intro/computer.png" />
+              </figure>
+            </div>
+            <div ref={officeImg4Ref} className="imgOffice4">
+              <figure>
+                <img src="/img/Intro/IntroRoom.png" />
               </figure>
             </div>
           </div>

@@ -2,14 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Level0 from './Level0';
+import Level0 from './level/Level0';
 
 const Wrapper = styled.div``;
 
 const Office = ({ officeId, attendance }: any) => {
   const navigate = useNavigate();
 
-  
   const { userInfo } = useSelector((state: any) => state.auth);
   const handleCoin = () => {
     navigate('/game/casino');
@@ -20,14 +19,13 @@ const Office = ({ officeId, attendance }: any) => {
   };
   return (
     <Wrapper>
-      {officeId==0&&<Level0 attendance={attendance} />}
-      {officeId==1&&<Level0 attendance={attendance} />}
-      {officeId==2&&<Level0 attendance={attendance} />}
-      {officeId==3&&<Level0 attendance={attendance} />}
-      {officeId==4&&<Level0 attendance={attendance} />}
-      {officeId==5&&<Level0 attendance={attendance} />}
-      {officeId==6&&<Level0 attendance={attendance} />}
-
+      {officeId == 0 && <Level0 attendance={attendance} />}
+      {officeId == 1 && <Level0 attendance={attendance} />}
+      {officeId == 2 && <Level0 attendance={attendance} />}
+      {officeId == 3 && <Level0 attendance={attendance} />}
+      {officeId == 4 && <Level0 attendance={attendance} />}
+      {officeId == 5 && <Level0 attendance={attendance} />}
+      {officeId == 6 && <Level0 attendance={attendance} />}
     </Wrapper>
   );
 };

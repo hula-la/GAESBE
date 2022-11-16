@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import styled from 'styled-components';
+import { usePrompt } from '../../../utils/block';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
 
@@ -17,10 +18,29 @@ const Container = styled.div`
   color: #ffffff;
   font-family: 'NeoDunggeunmo';
   font-style: normal;
+  position: relative;
+  height:100vh;
+  .inviteBtn{
+    position: absolute;
+    top: 0;
+    right:0;
+  }
+  .startBtn{
+    position: absolute;
+    bottom: 3rem;
+    right:3rem;
+    width: 9rem;
+    :hover{
+      transform: scale(1.1);
+      transition: transform 0.3s;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .gameTitle {
     margin-top: 1rem;
     height: 10%;
-    width: 20%;
+    /* width: 20%; */
+    margin: 5% 0 2% 0;
   }
 `;
 
@@ -29,28 +49,32 @@ const LoadingBlock = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
   .loadingText {
     font-size: large;
   }
 `;
+
 
 const WaitingBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100%;
   .waitingroom {
     width: 100%;
     height: 100%;
   }
   .subtitle {
-    font-size: 30px;
+    font-size: 2rem;
     font-weight: 400;
+    margin-bottom: 2%;
   }
   .waitingContent {
     display: flex;
-    width: 100%;
-    height: 100%;
+    /* width: 100%; */
+    height: 70%;
   }
   .imgBox {
     position: relative;
@@ -155,6 +179,19 @@ const IngameBlock = styled.div`
   }
 `;
 
+const PlayerCharacter = styled.div`
+  position: absolute;
+  height: 20%;
+  .playerNickName{
+    text-align: center;
+    height: 20%;
+  }
+  img{
+    height: 80%;
+
+  }
+`;
+
 const CSFriendPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -192,71 +229,42 @@ const CSFriendPage = () => {
 
   const characterLocationArr: any = [
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '18%',
       top: '52%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '22%',
       top: '48%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
       height: '15%',
       left: '14%',
       top: '56%',
@@ -264,16 +272,8 @@ const CSFriendPage = () => {
   ];
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  const socket: CustomWebSocket = new SockJS(
-    'https://k7e104.p.ssafy.io:8081/api/ws',
-  );
   const client = useRef<any>(null);
   // client.debug = () => {};
-
-  const client2 = Stomp.over(socket);
-  useEffect(() => {
-    client.current = Stomp.over(socket);
-  }, []);
 
   // 게임 시작 전 자동 시작 타이머
   useEffect(() => {
@@ -295,6 +295,10 @@ const CSFriendPage = () => {
   // 소켓 연결 후 구독 및 요청
   useEffect(() => {
     if (userInfo) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
         // 내 개인 정보 구독
         client.current.subscribe(`/cs/${userInfo.id}`, (res: any) => {
@@ -309,7 +313,6 @@ const CSFriendPage = () => {
           } else if (data.hasOwnProperty('isSolved')) {
             setIsSolved(data.isSolved);
             setIsSubmit(false);
-            setProblem('a');
             setTimeout(() => {
               setIsNext(true);
             }, 7000);
@@ -339,6 +342,10 @@ const CSFriendPage = () => {
 
   useEffect(() => {
     if (roomCode) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      const client2 = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
       client2.connect({}, (frame) => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
@@ -462,6 +469,21 @@ const CSFriendPage = () => {
     }
   }, [friendId]);
 
+  useEffect(() => {
+    const preventGoBack = () => {
+      // change start
+      window.history.pushState(null, '', window.location.href);
+      // change end
+      alert('게임중에는 나갈 수 없습니다');
+    };
+    window.history.pushState(null, '', window.location.href);
+    window.addEventListener('popstate', preventGoBack);
+    return () => window.removeEventListener('popstate', preventGoBack);
+  }, []);
+  // 뒤로가기 막는 useEffect
+  // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
+  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
+
   return (
     <Container>
       {isLoading && (
@@ -481,9 +503,8 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <div className="subtitle">친선전</div>
-          {isMaster && <button onClick={onClickStart}>게임시작</button>}
-          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          <div className="subtitle">{players.length }/10</div>
+          
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -494,26 +515,28 @@ const CSFriendPage = () => {
               {players &&
                 players.map((player: any, idx: number) => {
                   return (
-                    <div
+                    <PlayerCharacter
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div>{player.nickname}</div>
+                      <div className='playerNickName'>{player.nickname}</div>
                       <img
-                        style={{ height: '100%', width: '100%' }}
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
                       />
-                    </div>
+                    </PlayerCharacter>
                   );
                 })}
             </div>
-            <button onClick={handleModal}>친구 초대</button>
-            {players &&
+            <button className='inviteBtn' onClick={handleModal}>친구 초대</button>
+            {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
-              })}
+              })} */}
           </div>
+
+          {isMaster && <img className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
       {isStart && (
@@ -585,9 +608,20 @@ const CSFriendPage = () => {
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
-          {isSolved !== null && problem === 'a' && !isNext && (
+          {isSolved !== null && !isNext && (
             <div>
               <p>중간결과 페이지</p>
+              <div>
+                <div>{problem.question}</div>
+                <div>{problem.example}</div>
+                <div>답 : {answer}</div>
+                <div>고른 비율</div>
+                {cntPerNum &&
+                  Object.keys(cntPerNum).map((num: any, idx: number) => {
+                    return <div key={idx}>{cntPerNum[num]}</div>;
+                  })}
+                {}
+              </div>
             </div>
           )}
         </IngameBlock>

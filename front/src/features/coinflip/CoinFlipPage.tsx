@@ -6,7 +6,7 @@ import { coinActions } from './coinFlipSlice';
 import CoinModal from './components/CoinModal';
 
 const Container = styled.div`
-  /* width: 82%; */
+  height: 100%;
   background-color: #232323;
   color: aqua;
   .stats {
@@ -17,9 +17,9 @@ const Container = styled.div`
   }
   .title {
     text-align: center;
-    height: 30%;
+    height: 15%;
     img {
-      height: 60%;
+      height: 100%;
     }
   }
   .coin {
@@ -114,6 +114,7 @@ const CoinFlipPage = () => {
   const dispatch = useDispatch();
   const coinRef = useRef<HTMLDivElement | null>(null);
   const { result } = useSelector((state: any) => state.coin);
+  const { isLoading } = useSelector((state: any) => state.coin);
   const [isBeting, setIsBeting] = useState<boolean>(false);
   const [flagment, setFlagment] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -185,7 +186,6 @@ const CoinFlipPage = () => {
         <div className="tails">
           <img src="/img/coin/tail.png" alt="tail" />
         </div>
-        <div className="tails"></div>
       </div>
       <div className="buttons">
         {!isBeting && (

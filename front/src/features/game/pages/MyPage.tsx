@@ -5,6 +5,13 @@ import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
+import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
+import { gameActions } from '../gameSlice';
+import AlgoRecordTable from '../components/algo/AlgoRecordTable';
+import DetailResultModal from '../components/DetailResultModal';
+import CSRecordTable from '../components/cs/CSRecordTable';
+import TypingRecordTable from '../components/typing/TypingRecordTable';
+
 const MyPageContainer = styled.div`
   width: 66%;
   color: white;
@@ -65,13 +72,16 @@ const MyPower = styled.div`
 const MyPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [gameType, setGameType] = useState<string>('algo');
+
   const { userInfo } = useSelector((state: any) => state.auth);
   const { record } = useSelector((state: any) => state.game);
+
+  const [gameType, setGameType] = useState<string>('algo');
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
-  // const [csrecord, setCsRecord] = useState<any>(record.cs.content);
-  // const [typingrecord, setTypingRecord] = useState<any>(record.typing.content);
+  const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
+  const [detailModal, setDetailModal] = useState<string>('');
+  const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
 
   useEffect(() => {
     if (record) {
@@ -79,6 +89,35 @@ const MyPage = () => {
       setTypingRecord(record.typing.content);
     }
   }, [record]);
+
+  useEffect(() => {
+    dispatch(gameActions.fetchRecordStart());
+    algoRecordSetting();
+  }, []);
+  const algoRecordSetting = async () => {
+    await fetchAlgoRecordRank();
+    await fetchAlgoRecord();
+  };
+  const fetchAlgoRecord = async () => {
+    try {
+      const res = await myRecordRequest();
+      if (res.status === 200) {
+        setAlgoRecord({ ...algoRecord, records: res.data.content });
+      }
+    } catch (error) {
+      alert('알고리즘 배틀 정보를 못가져왔습니다');
+    }
+  };
+  const fetchAlgoRecordRank = async () => {
+    try {
+      const res = await myRecordRankRequest();
+      if (res.status === 200) {
+        setAlgoRecord({ ...algoRecord, rank: res.data });
+      }
+    } catch (error) {
+      alert('알고리즘 배틀 정보를 못가져왔습니다');
+    }
+  };
 
   let csList: Array<any> = csrecord;
   let typingList: Array<any> = typingrecord;
@@ -110,9 +149,17 @@ const MyPage = () => {
   const clickSsafyGame = () => {
     setGameType('ssafy');
   };
-  // useEffect(() => {
-  //   dispatch(gameActions.fetchRecordStart());
-  // }, []);
+
+  const handleDetailAlgo = (roomCode: string) => {
+    setDetailModal('algo');
+    setAlgoDetailRoomCode(roomCode);
+  };
+
+  const handleCloseModal = () => {
+    setDetailModal('');
+    setAlgoDetailRoomCode('');
+  };
+
   return (
     <MyPageContainer>
       {userInfo && (
@@ -131,7 +178,7 @@ const MyPage = () => {
               </UserBotton>
             </MyCharacter>
             <MyRecord>
-              <div className="gametype">알고리즘 1등</div>
+              <div className="gametype">알고리즘 1등 {algoRecord.rank} 회</div>
               <div className="gametype">CS게임 1등</div>
               <div className="gametype">타자게임 1등</div>
               <div className="gametype">싸피게임 최대연승</div>
@@ -154,26 +201,33 @@ const MyPage = () => {
           <MyPower>
             <div>
               <h1>{userInfo.nickname}님의 최근 전적</h1>
-              {gameType === 'algo' && <div>알고리즘</div>}
+              {gameType === 'algo' && (
+                <div>
+                  <h1>알고리즘</h1>
+                  {detailModal === 'algo' && (
+                    <DetailResultModal
+                      handleModal={handleCloseModal}
+                      algoDetailRoomCode={algoDetailRoomCode}
+                    />
+                  )}
+                  <AlgoRecordTable
+                    records={algoRecord.records}
+                    handleDetail={(roomCode: string) => {
+                      handleDetailAlgo(roomCode);
+                    }}
+                  />
+                </div>
+              )}
               {gameType === 'cs' && (
                 <div>
                   <h1>CS</h1>
-                  {csList.map((e: any) => (
-                    <div>
-                      <div>{e.date}</div>
-                      <div>{e.ranks}등</div>
-                    </div>
-                  ))}
+                  <CSRecordTable csList={csList} />
                 </div>
               )}
               {gameType === 'typing' && (
                 <div>
                   <h1>TYPING</h1>
-                  {typingList.map((e: any) => (
-                    <div>
-                      <div>{e.ranks}</div>
-                    </div>
-                  ))}
+                  <TypingRecordTable typingList={typingList} />
                 </div>
               )}
               {gameType === 'ssafy' && <div>싸피</div>}

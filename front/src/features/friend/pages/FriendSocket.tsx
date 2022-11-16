@@ -5,6 +5,7 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 
 import { friendActions } from '../friendSlice';
+import { itemActions } from '../../game/itemSlice';
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -50,6 +51,11 @@ function FriendSocket() {
                 isChatOpen,
               }),
             );
+          } else if (data.hasOwnProperty('character')) {
+            alert(
+              `${data.need}의 조건을 가진 캐릭터를 획득했습니다.(모달이나 스윗얼럿으로 바꾸면 사진 넣어줄거임)`,
+            );
+            dispatch(itemActions.fetchCharacterStart());
           } else {
             setMsgId(data.id);
             dispatch(
@@ -101,6 +107,7 @@ function FriendSocket() {
           msg: sendContent,
         }),
       );
+      dispatch(friendActions.resetChat());
     }
   }, [sendContent]);
 

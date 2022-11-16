@@ -98,7 +98,7 @@ function AlgoRoomMake() {
 
   const [form, setForm] = useState<AlgoRoomInterface>({
     roomCode: '',
-    time: '30',
+    time: '1',
     tier: '1',
     num: '0',
     no: '0',

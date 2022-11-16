@@ -124,7 +124,7 @@ function AlgoSolve({
   ranking,
   problemIndex,
   myRank,
-  timeOut
+  timeOut,
 }: any) {
   const dispatch = useDispatch();
 
@@ -136,44 +136,62 @@ function AlgoSolve({
   ];
   const nowProblem: ProblemInterface = problemList[problemIndex];
 
-  const { InGameInfo, solve, gameResultMsg, loadingMsg } = useSelector((state: any) => state.algo);
+  const { InGameInfo, solve, gameResultMsg, loadingMsg } = useSelector(
+    (state: any) => state.algo,
+  );
   const { userInfo } = useSelector((state: any) => state.auth);
 
   const [form, setForm] = useState<{ lanId: number; code: string }>({
     lanId: 1003,
     code: '',
   });
-  const [firstLoading, setFirstLoading] = useState<boolean>(true)
-  const [firstModalLoading, setFirstModalLoading] = useState<boolean>(true)
+  const [firstLoading, setFirstLoading] = useState<boolean>(true);
+  const [firstModalLoading, setFirstModalLoading] = useState<boolean>(true);
   // 게임이 끝나면 모달을 열고
-  const [modal, setModal] = useState<boolean>(false)
+  const [modal, setModal] = useState<boolean>(false);
 
   // 결과 모달 자동으로 열기
   useEffect(() => {
     if (gameResultMsg && firstModalLoading) {
-      setModal(true)
-      setFirstModalLoading(false)
+      setModal(true);
+      setFirstModalLoading(false);
     }
-  }, [gameResultMsg])
+  }, [gameResultMsg]);
   // 컴포넌트 사라질때 문제 성공 리셋
   useEffect(() => {
     return () => {
       dispatch(algoActions.solveSuccess(false));
-      dispatch(algoActions.setGameResult(''))
+      dispatch(algoActions.setGameResult(''));
     };
   }, []);
 
   useEffect(() => {
     if (firstLoading) {
-      setFirstLoading(false)
-      return
+      setFirstLoading(false);
+      return;
     }
     if (myRank !== 5 && !timeOut) {
-      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code, lanId:form.lanId}))
+      dispatch(
+        algoActions.sendMyRank({
+          roomCode: InGameInfo.roomCode,
+          ranking: myRank,
+          problemId: nowProblem.problemId,
+          code: form.code,
+          lanId: form.lanId,
+        }),
+      );
     } else if (timeOut && myRank === 5) {
-      dispatch(algoActions.sendMyRank({roomCode:InGameInfo.roomCode, ranking:myRank, problemId:nowProblem.problemId, code:form.code, lanId:form.lanId}))
+      dispatch(
+        algoActions.sendMyRank({
+          roomCode: InGameInfo.roomCode,
+          ranking: myRank,
+          problemId: nowProblem.problemId,
+          code: '타임 아웃!',
+          lanId: form.lanId,
+        }),
+      );
     }
-  }, [myRank, timeOut])
+  }, [myRank, timeOut]);
 
   const handleRadio = (e: React.SyntheticEvent<HTMLInputElement>) => {
     setForm({
@@ -227,8 +245,8 @@ function AlgoSolve({
     );
   };
   const handleModal = () => {
-    setModal(!modal)
-  }
+    setModal(!modal);
+  };
 
   return (
     <Wrapper>
