@@ -17,10 +17,29 @@ const Container = styled.div`
   color: #ffffff;
   font-family: 'NeoDunggeunmo';
   font-style: normal;
+  position: relative;
+  height:100vh;
+  .inviteBtn{
+    position: absolute;
+    top: 0;
+    right:0;
+  }
+  .startBtn{
+    position: absolute;
+    bottom: 3rem;
+    right:3rem;
+    width: 9rem;
+    :hover{
+      transform: scale(1.1);
+      transition: transform 0.3s;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .gameTitle {
     margin-top: 1rem;
     height: 10%;
-    width: 20%;
+    /* width: 20%; */
+    margin: 5% 0 2% 0;
   }
 `;
 
@@ -29,28 +48,32 @@ const LoadingBlock = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
   .loadingText {
     font-size: large;
   }
 `;
+
 
 const WaitingBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100%;
   .waitingroom {
     width: 100%;
     height: 100%;
   }
   .subtitle {
-    font-size: 30px;
+    font-size: 2rem;
     font-weight: 400;
+    margin-bottom: 2%;
   }
   .waitingContent {
     display: flex;
-    width: 100%;
-    height: 100%;
+    /* width: 100%; */
+    height: 70%;
   }
   .imgBox {
     position: relative;
@@ -155,6 +178,19 @@ const IngameBlock = styled.div`
   }
 `;
 
+const PlayerCharacter = styled.div`
+  position: absolute;
+  height: 20%;
+  .playerNickName{
+    text-align: center;
+    height: 20%;
+  }
+  img{
+    height: 80%;
+
+  }
+`;
+
 const CSFriendPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -192,71 +228,42 @@ const CSFriendPage = () => {
 
   const characterLocationArr: any = [
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '18%',
       top: '52%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '22%',
       top: '48%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
       height: '15%',
       left: '14%',
       top: '56%',
@@ -481,9 +488,8 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <div className="subtitle">친선전</div>
-          {isMaster && <button onClick={onClickStart}>게임시작</button>}
-          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          <div className="subtitle">{players.length }/10</div>
+          
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -494,26 +500,28 @@ const CSFriendPage = () => {
               {players &&
                 players.map((player: any, idx: number) => {
                   return (
-                    <div
+                    <PlayerCharacter
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div>{player.nickname}</div>
+                      <div className='playerNickName'>{player.nickname}</div>
                       <img
-                        style={{ height: '100%', width: '100%' }}
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
                       />
-                    </div>
+                    </PlayerCharacter>
                   );
                 })}
             </div>
-            <button onClick={handleModal}>친구 초대</button>
-            {players &&
+            <button className='inviteBtn' onClick={handleModal}>친구 초대</button>
+            {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
-              })}
+              })} */}
           </div>
+
+          {isMaster && <img className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
       {isStart && (
