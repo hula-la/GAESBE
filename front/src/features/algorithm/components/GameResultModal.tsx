@@ -25,7 +25,7 @@ const StyledModal = styled.div`
   position: fixed;
   width: 1000%;
   height: 1000%;
-  z-index: 100;
+  z-index: 105;
   background-color: rgba(0, 0, 0, 0.4);
 `;
 

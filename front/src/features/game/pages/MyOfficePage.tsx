@@ -59,6 +59,10 @@ const Office = styled.div`
     top: 3rem;
     font-size: 2rem;
     color: white;
+
+    img{
+      width: 10rem;
+    }
     /* font-weight: bold; */
   }
 `;
@@ -177,7 +181,8 @@ const MyOfficePage = () => {
             const Component: any = officeComponents[idx];
             return (
               <Office>
-                <div className="officeName">{v.name}</div>
+                <div className="officeName"><img src={`/img/MyOffice/officeName/${idx}.png`}/></div>
+                {/* <div className="officeName">{v.name}</div> */}
 
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}
               </Office>

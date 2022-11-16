@@ -184,7 +184,10 @@ function AlgoInBattle() {
       // change start
       window.history.pushState(null, '', window.location.href);
       // change end
-      Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
+      Swal.fire({
+        icon: 'error',
+        text: '게임중에는 나갈 수 없습니다',
+      });
     };
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);
@@ -192,7 +195,10 @@ function AlgoInBattle() {
   }, []);
   // 뒤로가기 막는 useEffect
   // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
+  usePrompt(
+    '게임중에 나가면 등수가 기록되지 않습니다',
+    progress === 'after' && !timeOut && myRank === 5,
+  );
   // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
 
   // 방 떠나기

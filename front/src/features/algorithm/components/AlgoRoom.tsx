@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { algoActions } from '../algorithmSlice';
 import { AlgoRoomInterface } from '../../../models/algo';
 import Swal from 'sweetalert2';

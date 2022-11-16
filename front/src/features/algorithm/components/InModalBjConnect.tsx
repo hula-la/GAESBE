@@ -53,7 +53,10 @@ function InModalBjConnect() {
     tmp.select();
     document.execCommand('copy');
     document.body.removeChild(tmp);
-    Swal.fire({ icon: 'success', text: '복사되었습니다' });
+    Swal.fire({
+      icon: 'success',
+      text: '복사되었습니다',
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -33,6 +33,7 @@ export interface InGameUsersInterface {
   id: number
   nickname: string
   profileChar: number
+  min:number
 }
 
 /**

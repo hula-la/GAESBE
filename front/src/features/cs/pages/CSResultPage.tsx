@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { itemActions } from '../../game/itemSlice';
+import CSUser from '../components/CSUser';
 
 const Container = styled.div`
   width: 82%;
@@ -12,6 +14,15 @@ const Container = styled.div`
   text-align: center;
   .user-list {
     display: flex;
+    div:nth-child(1){
+      /* border: 1px solid #fc0303; */
+    }
+    div:nth-child(2){
+      /* border: 1px solid #fc0303; */
+    }
+    div:nth-child(3){
+      /* border: 1px solid #fc0303; */
+    }
   }
   .user-item {
     border: 1px solid #ffffff;
@@ -20,9 +31,9 @@ const Container = styled.div`
     margin: 10% 0 0 0;
     font-size: 5rem;
   }
-  img {
-    background-color: white;
-    width: 100%;
+  .bg {
+    /* background-color: white; */
+    width: 80%;
   }
 `;
 
@@ -39,8 +50,12 @@ const CSResultPage = () => {
     <Container>
       <div className="header">CS 게임 결과</div>
       <div className="rank">
-        <div className="user-list"></div>
-        <img src="/img/csResultBackground.png"></img>
+        <div className="user-list">
+          <CSUser user={ranking[0]}></CSUser>
+          <CSUser user={ranking[0]}></CSUser>
+          <CSUser user={ranking[0]}></CSUser>
+        </div>
+        <img className='bg' src="/img/csResultBackground.png"></img>
       </div>
     </Container>
   );

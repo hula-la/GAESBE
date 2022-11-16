@@ -122,6 +122,9 @@ const friendSlice = createSlice({
     sendChat(state, action) {
       state.sendContent = action.payload;
     },
+    resetChat(state) {
+      state.sendContent = '';
+    },
     // 채팅 받기
     recieveChat(state, action) {
       const tmp = [action.payload.chatItem];

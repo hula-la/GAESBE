@@ -35,7 +35,10 @@ function* enterAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
     if (ok.data.result === true) {
       yield put(algoActions.enterAlgoRoomSuccess(action.payload));
     } else {
-      Swal.fire({ icon: 'warning', text: ok.data.msg });
+      Swal.fire({
+        icon: 'warning',
+        text: ok.data.msg,
+      });
       yield put(algoActions.setNeedReload(true));
     }
   } catch (error) {
@@ -107,7 +110,10 @@ function* bjConnectRequestSaga(action: Action<string>) {
     const res: AxiosResponse = yield call(BjConnectCheck, action.payload);
     if (res.status === 200) {
       if (res.data) {
-        Swal.fire({ icon: 'success', text: '연동되었습니다!' });
+        Swal.fire({
+          icon: 'success',
+          text: '연동되었습니다!',
+        });
         yield put(authActions.fetchUserInfoStart());
       } else {
         Swal.fire({

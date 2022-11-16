@@ -19,10 +19,29 @@ const Container = styled.div`
   color: #ffffff;
   font-family: 'NeoDunggeunmo';
   font-style: normal;
+  position: relative;
+  height: 100vh;
+  .inviteBtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  .startBtn {
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+    width: 9rem;
+    :hover {
+      transform: scale(1.1);
+      transition: transform 0.3s;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .gameTitle {
     margin-top: 1rem;
     height: 10%;
-    width: 20%;
+    /* width: 20%; */
+    margin: 5% 0 2% 0;
   }
 `;
 
@@ -31,6 +50,7 @@ const LoadingBlock = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
   .loadingText {
     font-size: large;
   }
@@ -41,18 +61,20 @@ const WaitingBlock = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100%;
   .waitingroom {
     width: 100%;
     height: 100%;
   }
   .subtitle {
-    font-size: 30px;
+    font-size: 2rem;
     font-weight: 400;
+    margin-bottom: 2%;
   }
   .waitingContent {
     display: flex;
-    width: 100%;
-    height: 100%;
+    /* width: 100%; */
+    height: 70%;
   }
   .imgBox {
     position: relative;
@@ -143,17 +165,43 @@ const IngameBlock = styled.div`
   .rankBlock {
     margin-top: 1rem;
     display: flex;
+    width: 80%;
+    height: 20%;
   }
   .rankwrapper {
     margin-right: 1rem;
-    .character {
-      width: 30%;
-      height: 30%;
+    display: flex;
+    width: 25%;
+    .medal {
+      height: 70%;
+    }
+    .characterBox {
+      width: 50%;
+      .character {
+        width: 60%;
+      }
+      .playerNickName {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+      }
     }
   }
-  .character {
+  /* .character {
     width: 70%;
     height: 30%;
+  } */
+`;
+
+const PlayerCharacter = styled.div`
+  position: absolute;
+  height: 20%;
+  .playerNickName {
+    text-align: center;
+    height: 20%;
+  }
+  img {
+    height: 80%;
   }
 `;
 
@@ -171,6 +219,7 @@ const CSFriendPage = () => {
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [myScore, setMyScore] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [solveOrder, setSolveOrder] = useState<any>(null);
   const [answer, setAnswer] = useState<number | null>(null);
@@ -194,71 +243,42 @@ const CSFriendPage = () => {
 
   const characterLocationArr: any = [
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '18%',
       top: '52%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '22%',
       top: '48%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
-      height: '15%',
       left: '14%',
       top: '56%',
     },
     {
-      position: 'absolute',
-      width: '15%',
       height: '15%',
       left: '14%',
       top: '56%',
@@ -464,6 +484,15 @@ const CSFriendPage = () => {
   }, [friendId]);
 
   useEffect(() => {
+    if (ranking) {
+      const tmp = ranking.filter((rank: any) => {
+        return rank[0] === userInfo.id;
+      });
+      setMyScore(tmp);
+    }
+  }, [ranking]);
+
+  useEffect(() => {
     const preventGoBack = () => {
       // change start
       window.history.pushState(null, '', window.location.href);
@@ -497,9 +526,8 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <div className="subtitle">친선전</div>
-          {isMaster && <button onClick={onClickStart}>게임시작</button>}
-          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          <div className="subtitle">{players.length}/10</div>
+
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -510,26 +538,36 @@ const CSFriendPage = () => {
               {players &&
                 players.map((player: any, idx: number) => {
                   return (
-                    <div
+                    <PlayerCharacter
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div>{player.nickname}</div>
+                      <div className="playerNickName">{player.nickname}</div>
                       <img
-                        style={{ height: '100%', width: '100%' }}
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
                       />
-                    </div>
+                    </PlayerCharacter>
                   );
                 })}
             </div>
-            <button onClick={handleModal}>친구 초대</button>
-            {players &&
+            <button className="inviteBtn" onClick={handleModal}>
+              친구 초대
+            </button>
+            {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
-              })}
+              })} */}
           </div>
+
+          {isMaster && (
+            <img
+              className="startBtn"
+              src="/img/cs/startBtn.png"
+              onClick={onClickStart}
+            />
+          )}
+          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
       {isStart && (
@@ -578,13 +616,16 @@ const CSFriendPage = () => {
                   ranking.slice(0, 3).map((rank: any, idx: number) => {
                     return (
                       <div key={idx} className="rankwrapper">
-                        <div>
-                          <img src={`/img/rank/medal${idx}.png`} />
-                          <div>
-                            <img
-                              className="character"
-                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
-                            />
+                        <img
+                          className="medal"
+                          src={`/img/rank/medal${idx}.png`}
+                        />
+                        <div className="characterBox">
+                          <img
+                            className="character"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
+                          />
+                          <div className="playerNickName">
                             <div>{rank[1]}</div>
                             <div>{rank[3]}</div>
                           </div>
@@ -592,6 +633,15 @@ const CSFriendPage = () => {
                       </div>
                     );
                   })}
+                {myScore && (
+                  <div>
+                    <div>15등</div>
+                    <img
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
+                      alt="profile"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
