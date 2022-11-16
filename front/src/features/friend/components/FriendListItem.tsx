@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 import { deleteFriend } from '../../../api/friendApi';
 import { friendActions } from '../friendSlice';
@@ -181,17 +182,29 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
     }
   }, [uncheckedChatList]);
 
-  const handleDeleteFriend = async () => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      try {
-        const res = await deleteFriend(friend.id);
-        if (res.status === 200) {
-          dispatch(friendActions.setNeedReload(true));
+  const handleDeleteFriend = () => {
+    Swal.fire({
+      title: '정말로?',
+      text: '정말 삭제하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: '아니오',
+      focusCancel: true,
+      // confirmButtonColor: '#3085d6',
+      // cancelButtonColor: '#d33',
+      confirmButtonText: '네!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await deleteFriend(friend.id);
+          if (res.status === 200) {
+            dispatch(friendActions.setNeedReload(true));
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
       }
-    }
+    });
   };
 
   const invite = () => {

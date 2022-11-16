@@ -1,10 +1,9 @@
-import { format } from 'path';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { authActions } from '../../auth/authSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { authActions } from '../../auth/authSlice';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 const ChangeUserInfo = styled.div`
   width: 100%;
@@ -140,7 +139,7 @@ const ChangeUserInfoPage = () => {
     return setProfilechar(item);
   };
   const handleUnLockSelectCharacter = () => {
-    alert('아직 획득하지 못한 캐릭터 입니다.');
+    Swal.fire({icon:'warning', text:'아직 획득하지 못한 캐릭터 입니다.'});
   };
   const handleChangeCharacter = () => {
     dispatch(

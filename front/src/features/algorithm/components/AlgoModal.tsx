@@ -15,11 +15,15 @@ const StyledModal = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   /* background-color: gray; */
-  /* border: 1px solid black; */
+  border: 5px solid black;
   border-radius: 20px;
-  background-color: white;
+  background-color: #F0568C;
   z-index: 1000;
   color: black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
   `;
   const StyledModalDiv = styled.div`
   top: 0%;

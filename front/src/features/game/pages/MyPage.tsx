@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
@@ -7,30 +6,37 @@ import { useNavigate } from 'react-router-dom';
 
 import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
 import { gameActions } from '../gameSlice';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import AlgoRecordTable from '../components/algo/AlgoRecordTable';
 import DetailResultModal from '../components/DetailResultModal';
 import CSRecordTable from '../components/cs/CSRecordTable';
 import TypingRecordTable from '../components/typing/TypingRecordTable';
 
 const MyPageContainer = styled.div`
-  width: 66%;
+  width: 100%;
+  height: 99%;
   color: white;
   background-color: #232323;
-  border: 2px solid red;
-  // display: flex;
-  // flex-direction: row;
+  /* border: 2px solid red; */
 `;
 const Up = styled.div`
+  width: 100%;
+  height: 30%;
+  /* border: 2px solid blue; */
   display: flex;
   flex-direction: row;
 `;
 const MyCharacter = styled.div`
   // border: 2px solid blue;
-  width: 30%;
+  width: 25%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .img {
+    width: 35%;
+  }
 `;
 const UserBotton = styled.div`
   width: 100%;
@@ -39,12 +45,14 @@ const UserBotton = styled.div`
   justify-content: space-around;
 `;
 const MyRecord = styled.div`
-  width: 70%;
+  /* margin-top: %; */
+  width: 75%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 `;
 const Down = styled.div`
+  /* border: 2px solid yellow; */
   margin-top: 5%;
   margin-left: 7%;
   width: 70%;
@@ -62,11 +70,32 @@ const Down = styled.div`
     color: black;
   }
 `;
+const GameType = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+`;
 const MyPower = styled.div`
   width: 85%;
-  height: 50%;
+  height: 40%;
   margin-left: 7%;
   border: 5px solid orange;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;
+  }
   // background-color: orange;
 `;
 const MyPage = () => {
@@ -79,7 +108,8 @@ const MyPage = () => {
   const [gameType, setGameType] = useState<string>('algo');
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
-  const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
+  const [algoRecordRank, setAlgoRecordRank] = useState<number>(0);
+  const [algoRecords, setAlgoRecords] = useState([]);
   const [detailModal, setDetailModal] = useState<string>('');
   const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
 
@@ -92,30 +122,27 @@ const MyPage = () => {
 
   useEffect(() => {
     dispatch(gameActions.fetchRecordStart());
-    algoRecordSetting();
+    fetchAlgoRecordRank();
+    fetchAlgoRecord();
   }, []);
-  const algoRecordSetting = async () => {
-    await fetchAlgoRecordRank();
-    await fetchAlgoRecord();
-  };
   const fetchAlgoRecord = async () => {
     try {
       const res = await myRecordRequest();
       if (res.status === 200) {
-        setAlgoRecord({ ...algoRecord, records: res.data.content });
+        setAlgoRecords(res.data.content);
       }
     } catch (error) {
-      alert('알고리즘 배틀 정보를 못가져왔습니다');
+      Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
     }
   };
   const fetchAlgoRecordRank = async () => {
     try {
       const res = await myRecordRankRequest();
       if (res.status === 200) {
-        setAlgoRecord({ ...algoRecord, rank: res.data });
+        setAlgoRecordRank(res.data);
       }
     } catch (error) {
-      alert('알고리즘 배틀 정보를 못가져왔습니다');
+      Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
     }
   };
 
@@ -123,16 +150,27 @@ const MyPage = () => {
   let typingList: Array<any> = typingrecord;
 
   const handleDelete = () => {
-    var deleteConfirm = window.confirm('정말 삭제할거?');
-    if (deleteConfirm) {
-      dispatch(authActions.deleteUserInfoStart());
-      navigate('/login');
-      console.log('지금 유저 인포', userInfo);
-      // 유저 인포 널로 바꾸고
-      // 엑세스 토큰 지우고
-    } else {
-      alert('삭제 안함');
-    }
+    Swal.fire({
+      title: '진짜?',
+      text: '정말 삭제할거ㅂ니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: '아니오',
+      focusCancel: true,
+      // confirmButtonColor: '#3085d6',
+      // cancelButtonColor: '#d33',
+      confirmButtonText: '네!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(authActions.deleteUserInfoStart());
+        navigate('/login');
+        console.log('지금 유저 인포', userInfo);
+        // 유저 인포 널로 바꾸고
+        // 엑세스 토큰 지우고
+      } else {
+        Swal.fire({ icon: 'info', text: '삭제 안함' });
+      }
+    });
   };
   const handleChange = () => {
     navigate('change');
@@ -168,7 +206,7 @@ const MyPage = () => {
             <MyCharacter>
               <h1>{userInfo.nickname}</h1>
               <img
-                // src={`/img/rank/character${userInfo.profileChar}.png`}
+                className="img"
                 src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
                 alt="asdf"
               />
@@ -178,10 +216,34 @@ const MyPage = () => {
               </UserBotton>
             </MyCharacter>
             <MyRecord>
-              <div className="gametype">알고리즘 1등 {algoRecord.rank} 회</div>
-              <div className="gametype">CS게임 1등</div>
-              <div className="gametype">타자게임 1등</div>
-              <div className="gametype">싸피게임 최대연승</div>
+              <GameType>
+                <h2>알고리즘 1등</h2>
+                <br />
+                <br />
+                <br />
+                <div>{algoRecordRank} 회</div>
+              </GameType>
+              <GameType>
+                <h2>CS게임 1등</h2>
+                <br />
+                <br />
+                <br />
+                <div>회</div>
+              </GameType>
+              <GameType>
+                <h2>타자게임 1등</h2>
+                <br />
+                <br />
+                <br />
+                <div>회</div>
+              </GameType>
+              <GameType>
+                <h2>싸피게임 최대연승</h2>
+                <br />
+                <br />
+                <br />
+                <div>회</div>
+              </GameType>
             </MyRecord>
           </Up>
           <Down>
@@ -200,10 +262,10 @@ const MyPage = () => {
           </Down>
           <MyPower>
             <div>
-              <h1>{userInfo.nickname}님의 최근 전적</h1>
+              {/* <h1>{userInfo.nickname}님의 최근 전적</h1> */}
               {gameType === 'algo' && (
                 <div>
-                  <h1>알고리즘</h1>
+                  {/* <h1>알고리즘</h1> */}
                   {detailModal === 'algo' && (
                     <DetailResultModal
                       handleModal={handleCloseModal}
@@ -211,7 +273,7 @@ const MyPage = () => {
                     />
                   )}
                   <AlgoRecordTable
-                    records={algoRecord.records}
+                    records={algoRecords}
                     handleDetail={(roomCode: string) => {
                       handleDetailAlgo(roomCode);
                     }}

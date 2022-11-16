@@ -15,7 +15,7 @@ const CsMain = styled.div`
     text-align: center;
     /* height: 25%; */
     width: 100%;
-    padding: 10% 0 20% 0;
+    padding: 10% 0;
     img {
       width: 40%;
     }
@@ -69,12 +69,14 @@ const SelectGameTypeBox = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
+    align-items: center;
 
     &.random {
       background-color: #ffc02d57;
     }
     &.friend {
       background-color: #b468da46;
+
     }
 
     :hover {
