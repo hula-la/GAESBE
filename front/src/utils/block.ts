@@ -2,14 +2,12 @@
  * Prompts a user when they exit the page
  */
 
-import { useCallback, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-function useConfirmExit(
-  confirmExit: () => boolean | Promise<void>,
-  when = true,
-) {
+// function useConfirmExit(confirmExit: () => boolean, when = true) {
+function useConfirmExit(message: string, when = true) {
   const { navigator } = useContext(NavigationContext);
 
   useEffect(() => {
@@ -20,17 +18,24 @@ function useConfirmExit(
     const push = navigator.push;
 
     navigator.push = (...args: Parameters<typeof push>) => {
-      const result = confirmExit();
-      console.log(result);
-      if (result !== false) {
-        push(...args);
-      }
+      Swal.fire({
+        text: message,
+        icon: 'warning',
+        showCancelButton: true,
+        focusCancel: true,
+        cancelButtonText: '아니오 기록해줘요',
+        confirmButtonText: '네 나갈래요',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          push(...args);
+        }
+      });
     };
 
     return () => {
       navigator.push = push;
     };
-  }, [navigator, confirmExit, when]);
+  }, [navigator, when]);
 }
 
 export function usePrompt(message: string, when = true) {
@@ -46,26 +51,5 @@ export function usePrompt(message: string, when = true) {
     };
   }, [message, when]);
 
-  // const confirmExit = useCallback(() => {
-  //   const confirm = window.confirm('정말 나갈겁니까?');
-  //   return confirm;
-  // const confirmExit = useCallback(async () => {
-  const confirmExit = async () => {
-    await Swal.fire({
-      text: message,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    // }, [message]);
-  };
-  useConfirmExit(confirmExit, when);
+  useConfirmExit(message, when);
 }

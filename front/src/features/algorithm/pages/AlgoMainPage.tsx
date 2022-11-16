@@ -120,23 +120,7 @@ function AlgoMainPage() {
   };
 
   const handleReload = () => {
-    const res = customConfirm('asdfasdf');
-    console.log(res);
-    // fetchRooms();
-  };
-  const customConfirm = async (message: string) => {
-    await Swal.fire({
-      text: message,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
-    }).then((result) => {
-      console.log(typeof result.value);
-      console.log('yes', result.value);
-      return result.value;
-    });
+    fetchRooms();
   };
 
   return (
