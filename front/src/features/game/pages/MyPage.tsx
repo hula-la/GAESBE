@@ -13,7 +13,6 @@ import DetailResultModal from '../components/DetailResultModal';
 import CSRecordTable from '../components/cs/CSRecordTable';
 import TypingRecordTable from '../components/typing/TypingRecordTable';
 
-
 const MyPageContainer = styled.div`
   width: 100%;
   height: 99%;
@@ -109,7 +108,8 @@ const MyPage = () => {
   const [gameType, setGameType] = useState<string>('algo');
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
-  const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
+  const [algoRecordRank, setAlgoRecordRank] = useState<number>(0);
+  const [algoRecords, setAlgoRecords] = useState([]);
   const [detailModal, setDetailModal] = useState<string>('');
   const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
 
@@ -122,30 +122,27 @@ const MyPage = () => {
 
   useEffect(() => {
     dispatch(gameActions.fetchRecordStart());
-    algoRecordSetting();
+    fetchAlgoRecordRank();
+    fetchAlgoRecord();
   }, []);
-  const algoRecordSetting = async () => {
-    await fetchAlgoRecordRank();
-    await fetchAlgoRecord();
-  };
   const fetchAlgoRecord = async () => {
     try {
       const res = await myRecordRequest();
       if (res.status === 200) {
-        setAlgoRecord({ ...algoRecord, records: res.data.content });
+        setAlgoRecords(res.data.content);
       }
     } catch (error) {
-      Swal.fire({icon:'error', text:'알고리즘 배틀 정보를 못가져왔습니다'});
+      Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
     }
   };
   const fetchAlgoRecordRank = async () => {
     try {
       const res = await myRecordRankRequest();
       if (res.status === 200) {
-        setAlgoRecord({ ...algoRecord, rank: res.data });
+        setAlgoRecordRank(res.data);
       }
     } catch (error) {
-      Swal.fire({icon:'error', text:'알고리즘 배틀 정보를 못가져왔습니다'});
+      Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
     }
   };
 
@@ -153,16 +150,27 @@ const MyPage = () => {
   let typingList: Array<any> = typingrecord;
 
   const handleDelete = () => {
-    var deleteConfirm = window.confirm('정말 삭제할거?');
-    if (deleteConfirm) {
-      dispatch(authActions.deleteUserInfoStart());
-      navigate('/login');
-      console.log('지금 유저 인포', userInfo);
-      // 유저 인포 널로 바꾸고
-      // 엑세스 토큰 지우고
-    } else {
-      Swal.fire({icon:'info', text:'삭제 안함'});
-    }
+    Swal.fire({
+      title: '진짜?',
+      text: '정말 삭제할거ㅂ니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: '아니오',
+      focusCancel: true,
+      // confirmButtonColor: '#3085d6',
+      // cancelButtonColor: '#d33',
+      confirmButtonText: '네!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(authActions.deleteUserInfoStart());
+        navigate('/login');
+        console.log('지금 유저 인포', userInfo);
+        // 유저 인포 널로 바꾸고
+        // 엑세스 토큰 지우고
+      } else {
+        Swal.fire({ icon: 'info', text: '삭제 안함' });
+      }
+    });
   };
   const handleChange = () => {
     navigate('change');
@@ -213,7 +221,7 @@ const MyPage = () => {
                 <br />
                 <br />
                 <br />
-                <div>{algoRecord.rank} 회</div>
+                <div>{algoRecordRank} 회</div>
               </GameType>
               <GameType>
                 <h2>CS게임 1등</h2>
@@ -265,7 +273,7 @@ const MyPage = () => {
                     />
                   )}
                   <AlgoRecordTable
-                    records={algoRecord.records}
+                    records={algoRecords}
                     handleDetail={(roomCode: string) => {
                       handleDetailAlgo(roomCode);
                     }}
