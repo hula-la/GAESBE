@@ -22,6 +22,11 @@ const Container = styled.div`
   position: relative;
   height:100vh;
 
+  .timeOut{
+    position: absolute;
+    bottom: 1rem;
+  } 
+
   .startBtnContainer{
     position: absolute;
     bottom: 3rem;
@@ -166,6 +171,11 @@ const IngameBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+
+
+
+   
   }
   .problem {
     box-sizing: border-box;
@@ -178,47 +188,109 @@ const IngameBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* &:after{
+      content: "";
+      display: block;
+      height: 1rem;
+      width: 100%;
+    } */
+    .problemContent{
+      margin: 1rem;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #2f3542;
+      border-radius: 10px;
+      background-clip: padding-box;
+      border: 2px solid transparent;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: grey;
+      border-radius: 10px;
+      box-shadow: inset 0px 0px 5px white;
+    }
+    }
     /* justify-content: space-between; */
     .question {
-      margin-top: 2rem;
+      /* margin: 2rem 0; */
       font-size: larger;
       font-weight: bold;
+      /* margin-bottom: 2rem; */
+    }
+    .example {
+      margin: 0.5rem 0;
     }
   }
   .selectbuttons {
     display: flex;
     width: 60%;
     margin-top: 1rem;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   .selectbutton {
     cursor: pointer;
+
+    transition: transform 0.3s;
+
+    :hover{
+      transform: scale(1.05);
+      
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
   }
   .rankBlock {
     margin-top: 1rem;
     display: flex;
     width: 80%;
     height: 20%;
+    position:relative;
   }
   .rankwrapper {
     margin-right: 1rem;
     display: flex;
     width: 25%;
+
+    &.myRankWrapper{
+      position: absolute;
+      right:0;
+    }
     .medal {
       height: 70%;
     }
-    .characterBox {
+
+    .myRank{
+      font-size: 2rem;
+      padding-right:0 0.5rem;
+      span{
+        font-size: 1rem;
+      }
+    }
+    
+  }
+  .characterBox {
       width: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .myCharacter{
+        right: 0;
+        position: absolute;
+      }
+
+
       .character {
-        width: 60%;
+        width: 100%;
       }
       .playerNickName {
         display: flex;
         flex-direction: column;
-        margin-left: 1rem;
+        /* margin-left: 1rem; */
       }
     }
-  }
   /* .character {
     width: 70%;
     height: 30%;
@@ -279,41 +351,44 @@ const CSFriendPage = () => {
       top: '56%',
     },
     {
-      left: '18%',
+      left: '22%',
       top: '52%',
     },
     {
-      left: '22%',
-      top: '48%',
+      left: '35%',
+      top: '43%',
     },
     {
-      left: '14%',
+      left: '30%',
       top: '56%',
     },
     {
-      left: '14%',
+      left: '43%',
+      top: '52%',
+    },
+    {
+      left: '44%',
+      top: '65%',
+      zIndex: '2',
+    },
+    {
+      left: '53%',
       top: '56%',
     },
     {
-      left: '14%',
-      top: '56%',
+      left: '67%',
+      top: '49%',
+      zIndex: '2',
     },
     {
-      left: '14%',
-      top: '56%',
+      left: '65%',
+      top: '60%',
+      zIndex: '3',
     },
     {
-      left: '14%',
-      top: '56%',
-    },
-    {
-      left: '14%',
-      top: '56%',
-    },
-    {
-      height: '15%',
-      left: '14%',
-      top: '56%',
+      left: '47%',
+      top: '69%',
+      zIndex: '4',
     },
   ];
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -571,7 +646,7 @@ const CSFriendPage = () => {
                 className="waitingroom"
                 alt="room"
               />
-              {players &&
+              {players && 
                 players.map((player: any, idx: number) => {
                   return (
                     <PlayerCharacter
@@ -611,7 +686,7 @@ const CSFriendPage = () => {
           </div>
 
 
-          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          {isReady && <p className='timeOut'>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
       {isStart && (
@@ -631,10 +706,22 @@ const CSFriendPage = () => {
             <div className="problemBox">
               <div className="problem">
                 <div className="progressContainer">
-                  <div className="progress"></div>
+                  <div className="progress"> </div>
                 </div>
-                <div className="question">{problem.question}</div>
-                <div>{problem.example}</div>
+                <div className="problemContent">
+                  <div className="question">{problem.question}</div>
+                  {/* <div>{problem.example}</div> */}
+                  {/* <div>{problem.example.split('|')}</div> */}
+                  <div>{problem.example.split('|').map((k: String, v: number) => (
+                    <div className="example">{v + 1}. { k}</div>
+                  )
+                  )}</div>
+                </div>
+                {/* <div>{problem.example.split('|').map((k: String, v: number) => {
+                  return (
+                    <div>{v}. {k}</div>
+                  )
+                })}</div> */}
                 {/* {problem.examples.map((example: string, index: number) => {
                 return (
                   <span>
@@ -678,12 +765,21 @@ const CSFriendPage = () => {
                     );
                   })}
                 {myScore && (
-                  <div>
-                    <div>15등</div>
-                    <img
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
-                      alt="profile"
-                    />
+                  <div className="rankwrapper myRankWrapper">
+                    <div className='myRank'>15<span>th</span></div>
+
+                    <div  className="characterBox myCharacter">
+                      <img
+                        className="character"
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
+                        alt="profile"
+                      />
+                      <div className="playerNickName">
+                          <div>asz</div>
+                          <div>5000</div>
+                      </div>
+
+                    </div>
                   </div>
                 )}
               </div>
@@ -700,7 +796,11 @@ const CSFriendPage = () => {
               <p>중간결과 페이지</p>
               <div>
                 <div>{problem.question}</div>
-                <div>{problem.example}</div>
+                <div>{problem.example.split('|').map((k: String, v: number) => {
+                  (
+                    <div>{v}. {k}</div>
+                  )
+                })}</div>
                 <div>답 : {answer}</div>
                 <div>고른 비율</div>
                 {cntPerNum &&
