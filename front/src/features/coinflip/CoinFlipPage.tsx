@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { coinActions } from './coinFlipSlice';
 import CoinModal from './components/CoinModal';
 
@@ -179,6 +180,13 @@ const CoinFlipPage = () => {
   useEffect(() => {
     if (result) {
       coinFlip();
+      if (result.correct) {
+        setTimeout(() => {
+          Swal.fire({
+            icon: 'success',
+          });
+        }, 3500);
+      }
     }
   }, [result]);
 
