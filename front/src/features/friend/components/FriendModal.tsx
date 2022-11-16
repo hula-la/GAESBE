@@ -62,6 +62,7 @@ function FriendModal({ handleModal, type, client }: any) {
         {type === 'request' && <RequestToYou />}
         {type === 'invite' && <InviteFriend />}
       </StyledModal>
+      
     </StyledModalDiv>
   );
 }
