@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { coinActions } from './coinFlipSlice';
-import CoinModal from './components/CoinModal';
 
 const Container = styled.div`
   height: 100%;
@@ -117,7 +117,8 @@ const CoinFlipPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isBeting, setIsBeting] = useState<boolean>(false);
   const [flagment, setFlagment] = useState(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const ranking = [1, 2, 3, 4, 5];
 
   const onClickBet = () => {
     setIsBeting(true);
@@ -139,14 +140,6 @@ const CoinFlipPage = () => {
 
   const onClickRun = () => {
     setIsBeting(false);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const handleModal = () => {
-    setIsOpen(true);
   };
 
   const coinFlip = () => {
@@ -179,14 +172,36 @@ const CoinFlipPage = () => {
   useEffect(() => {
     if (result) {
       coinFlip();
+      if (result.correct) {
+        setTimeout(() => {
+          Swal.fire({
+            icon: 'success',
+            title: '축하합니다!',
+            text: `${result.winningStreak}연승 중입니다!`,
+          });
+        }, 3500);
+      } else {
+        setTimeout(() => {
+          Swal.fire({
+            icon: 'error',
+            title: '아...아쉽네요',
+            text: `다시 도전해보세요`,
+          });
+        }, 3500);
+      }
     }
   }, [result]);
 
   return (
     <Container>
-      {isOpen && <CoinModal handleModal={closeModal} />}
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
+      </div>
+      <div>1연승중~</div>
+      <div>
+        {ranking.map((rank, idx) => {
+          return <div key={idx}>{rank}. 닉네임</div>;
+        })}
       </div>
       <div ref={coinRef} className="coin">
         <div className="heads">
