@@ -154,34 +154,8 @@ const ChangeUserInfoPage = () => {
   return (
     <ChangeUserInfo>
       <MyCharacter>
-        {!changeNickName && userInfo && (
-          <h1 className="h1">
-            {userInfo.nickname}
-            <img
-              onClick={handleInput}
-              src="/img/selectbutton/setnicknamebutton.png"
-              alt=""
-            />
-          </h1>
-        )}
-        {changeNickName && (
-          <h1 className="h1">
-            <input onChange={onChangeNickname} />
-            {isDuplicate && <p>중복된 닉네임입니다.</p>}
-            <img
-              onClick={onClickHandler}
-              src="/img/selectbutton/setnicknamebutton.png"
-              alt=""
-            />
-          </h1>
-        )}
-        <img
-          className="img"
-          src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
-          alt="캐릭터 없음"
-        />
         <MyCharacterInfo>
-          {!changeNickName && (
+          {!changeNickName && userInfo && (
             <h1 className="h1">
               {userInfo.nickname}
               {/* <button onClick={handleInput}>변경</button> */}
@@ -209,13 +183,6 @@ const ChangeUserInfoPage = () => {
             src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
             alt="캐릭터 없음"
           />
-          {/* <a
-            href="javascript:void(0)"
-            className="eightbit-btn eightbit-btn--reset"
-            onClick={handleMypage}
-          >
-            나가기
-          </a> */}
         </MyCharacterInfo>
       </MyCharacter>
       <SelectCharacter>
@@ -252,16 +219,14 @@ const ChangeUserInfoPage = () => {
               </>
             );
           })}
-        </AllCharacterList>
-        <a
-          href="javascript:void(0)"
-          className="eightbit-btn"
-          onClick={handleChangeCharacter}
-        >
-          캐릭터 변경
-        </a>
-        {/* <button onClick={handleChangeCharacter}>변경</button> */}
       </SelectCharacter>
+      <a
+        href="javascript:void(0)"
+        className="eightbit-btn"
+        onClick={handleChangeCharacter}
+      >
+        캐릭터 변경
+      </a>
     </ChangeUserInfo>
   );
 };
