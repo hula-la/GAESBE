@@ -22,7 +22,7 @@ const TypingMain = styled.div`
 
   height: 100%;
   width: 100%;
-  
+
   background-color: #232323;
   justify-content: center;
   text-align: center;
@@ -192,16 +192,6 @@ function TypingMainPage() {
   const onClickCreateRoom = () => {
     navigate('friend', { state: { lang: gameType, shareCode: null } });
   };
-
-  // 코드 치고 들어가기
-  const onClickEnterFriend = () => {
-    navigate('friend', { state: { shareCode: shareCode } });
-  };
-
-  const onChangeCode = (e: any) => {
-    setShareCode(e.target.value);
-  };
-  // console.log(gameType);
   return (
     <TypingMain>
       <div className="aniToDown">
@@ -264,19 +254,11 @@ function TypingMainPage() {
           <a
             href="javascript:void(0)"
             className="eightbit-btn eightbit-btn--proceed"
-            onClick={handleFriendGame}
+            onClick={onClickCreateRoom}
           >
             친구 매칭
           </a>
         </SelectTypeBox>
-        {isOpen && (
-          <div>
-            <div onClick={onClickCreateRoom}>방 만들기</div>
-            <div>친구 코드</div>
-            <input onChange={onChangeCode} />
-            <button onClick={onClickEnterFriend}>방 들어가기</button>
-          </div>
-        )}
       </SelectGameType>
     </TypingMain>
   );

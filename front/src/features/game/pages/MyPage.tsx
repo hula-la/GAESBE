@@ -13,24 +13,29 @@ import CSRecordTable from '../components/cs/CSRecordTable';
 import TypingRecordTable from '../components/typing/TypingRecordTable';
 
 const MyPageContainer = styled.div`
-  width: 66%;
+  width: 100%;
+  height: 99%;
   color: white;
   background-color: #232323;
-  border: 2px solid red;
-  // display: flex;
-  // flex-direction: row;
+  /* border: 2px solid red; */
 `;
 const Up = styled.div`
+  width: 100%;
+  height: 30%;
+  /* border: 2px solid blue; */
   display: flex;
   flex-direction: row;
 `;
 const MyCharacter = styled.div`
   // border: 2px solid blue;
-  width: 30%;
+  width: 25%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .img {
+    width: 35%;
+  }
 `;
 const UserBotton = styled.div`
   width: 100%;
@@ -39,12 +44,14 @@ const UserBotton = styled.div`
   justify-content: space-around;
 `;
 const MyRecord = styled.div`
-  width: 70%;
+  /* margin-top: %; */
+  width: 75%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 `;
 const Down = styled.div`
+  /* border: 2px solid yellow; */
   margin-top: 5%;
   margin-left: 7%;
   width: 70%;
@@ -62,11 +69,32 @@ const Down = styled.div`
     color: black;
   }
 `;
+const GameType = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+`;
 const MyPower = styled.div`
   width: 85%;
-  height: 50%;
+  height: 40%;
   margin-left: 7%;
   border: 5px solid orange;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;
+  }
   // background-color: orange;
 `;
 const MyPage = () => {
@@ -168,7 +196,7 @@ const MyPage = () => {
             <MyCharacter>
               <h1>{userInfo.nickname}</h1>
               <img
-                // src={`/img/rank/character${userInfo.profileChar}.png`}
+                className="img"
                 src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}
                 alt="asdf"
               />
@@ -178,10 +206,34 @@ const MyPage = () => {
               </UserBotton>
             </MyCharacter>
             <MyRecord>
-              <div className="gametype">알고리즘 1등 {algoRecord.rank} 회</div>
-              <div className="gametype">CS게임 1등</div>
-              <div className="gametype">타자게임 1등</div>
-              <div className="gametype">싸피게임 최대연승</div>
+              <GameType>
+                <h2>알고리즘 1등</h2>
+                <br />
+                <br />
+                <br />
+                <div>{algoRecord.rank} 회</div>
+              </GameType>
+              <GameType>
+                <h2>CS게임 1등</h2>
+                <br />
+                <br />
+                <br />
+                <div>회</div>
+              </GameType>
+              <GameType>
+                <h2>타자게임 1등</h2>
+                <br />
+                <br />
+                <br />
+                <div>회</div>
+              </GameType>
+              <GameType>
+                <h2>싸피게임 최대연승</h2>
+                <br />
+                <br />
+                <br />
+                <div>회</div>
+              </GameType>
             </MyRecord>
           </Up>
           <Down>
@@ -200,10 +252,10 @@ const MyPage = () => {
           </Down>
           <MyPower>
             <div>
-              <h1>{userInfo.nickname}님의 최근 전적</h1>
+              {/* <h1>{userInfo.nickname}님의 최근 전적</h1> */}
               {gameType === 'algo' && (
                 <div>
-                  <h1>알고리즘</h1>
+                  {/* <h1>알고리즘</h1> */}
                   {detailModal === 'algo' && (
                     <DetailResultModal
                       handleModal={handleCloseModal}

@@ -1,13 +1,14 @@
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { friendActions } from '../friendSlice';
+import { algoActions } from '../../algorithm/algorithmSlice';
 import FriendList from './FriendList';
 import FriendModal from '../components/FriendModal';
 import FriendSecondModal from '../components/FriendSecondModal';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../../../components/Common/retroBtn.css';
-import { algoActions } from '../../algorithm/algorithmSlice';
 
 const FriendSide = styled.div`
   width: 18vw;
@@ -241,7 +242,10 @@ function FriendMainPage() {
     setIsInvite(false);
     if (invitedGameInfo.inviteGameType === 'algo') {
       if (!userInfo.bjId) {
-        alert('백준아이디를 연동해야지만 게임을 할 수 있습니다');
+        Swal.fire({
+          icon: 'info',
+          text: '백준아이디를 연동해야지만 게임을 할 수 있습니다',
+        });
         return;
       }
       const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode);

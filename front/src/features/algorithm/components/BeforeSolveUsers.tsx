@@ -7,8 +7,7 @@ const UserProfiles = styled.div`
   flex-direction: row;
   justify-content: space-around;
 
-
-  .user-item{
+  .user-item {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -17,48 +16,45 @@ const UserProfiles = styled.div`
     margin: auto 0;
     position: relative;
   }
-  .nickname{
+  .nickname {
     background-color: #2e2e2e;
     color: white;
     padding: 7px;
     font-size: 12px;
     border-radius: 8px;
   }
-  p{
-    color:#2e2e2e;
+  p {
     font-size: 1.3rem;
     margin: 0;
   }
 
-  .profile{
-    height:120px;
+  .profile {
+    height: 120px;
     width: 90%;
     z-index: 1;
-
   }
   .stand {
     width: 8rem;
-    margin: 0 auto; 
+    margin: 0 auto;
     position: absolute;
-    top:80%
+    top: 80%;
   }
-
 `;
 
 function BeforeSolveUsers({ inGameUsers }: any) {
   return (
     <UserProfiles>
-      {inGameUsers.map((user: InGameUsersInterface) => {
+      {inGameUsers.map((user: InGameUsersInterface, index: number) => {
         return (
-
-          <div className='user-item' key={user.id}>
-            <p className='nickname'>{user.nickname}</p>
+          <div className="user-item" key={index}>
+            <p>{user.min ? user.min + ' 분' : null} </p>
+            <p className="nickname">{user.nickname}</p>
             <img
               src={`${process.env.REACT_APP_S3_URL}/profile/${user.profileChar}_normal.gif`}
               alt="프로필이미지"
-              className='profile'
+              className="profile"
             />
-            <img className="stand" src={`/img/stand.png`}></img>
+            {/* <img className="stand" src={`/img/stand.png`}></img> */}
           </div>
         );
       })}

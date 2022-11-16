@@ -114,7 +114,7 @@ const CoinFlipPage = () => {
   const dispatch = useDispatch();
   const coinRef = useRef<HTMLDivElement | null>(null);
   const { result } = useSelector((state: any) => state.coin);
-  const { isLoading } = useSelector((state: any) => state.coin);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isBeting, setIsBeting] = useState<boolean>(false);
   const [flagment, setFlagment] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -124,10 +124,19 @@ const CoinFlipPage = () => {
   };
   const onClickBetSSa = () => {
     dispatch(coinActions.requestCoinFlipStart({ patten: 6 }));
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
   };
   const onClickBetFy = () => {
     dispatch(coinActions.requestCoinFlipStart({ patten: 7 }));
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
   };
+
   const onClickRun = () => {
     setIsBeting(false);
   };
@@ -188,12 +197,12 @@ const CoinFlipPage = () => {
         </div>
       </div>
       <div className="buttons">
-        {!isBeting && (
+        {!isBeting && !isLoading && (
           <button onClick={onClickBet} id="flip-button">
             베팅!
           </button>
         )}
-        {isBeting && (
+        {isBeting && !isLoading && (
           <div className="buttons">
             <button onClick={onClickBetSSa} id="flip-button">
               이번엔 싸다!

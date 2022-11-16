@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import { usePrompt } from '../../../utils/block';
 import FriendModal from '../../friend/components/FriendModal';
@@ -83,7 +84,6 @@ const LoadingBlock = styled.div`
     font-size: large;
   }
 `;
-
 
 const WaitingBlock = styled.div`
   display: flex;
@@ -197,30 +197,43 @@ const IngameBlock = styled.div`
   .rankBlock {
     margin-top: 1rem;
     display: flex;
+    width: 80%;
+    height: 20%;
   }
   .rankwrapper {
     margin-right: 1rem;
-    .character {
-      width: 30%;
-      height: 30%;
+    display: flex;
+    width: 25%;
+    .medal {
+      height: 70%;
+    }
+    .characterBox {
+      width: 50%;
+      .character {
+        width: 60%;
+      }
+      .playerNickName {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+      }
     }
   }
-  .character {
+  /* .character {
     width: 70%;
     height: 30%;
-  }
+  } */
 `;
 
 const PlayerCharacter = styled.div`
   position: absolute;
   height: 20%;
-  .playerNickName{
+  .playerNickName {
     text-align: center;
     height: 20%;
   }
-  img{
+  img {
     height: 80%;
-
   }
 `;
 
@@ -238,6 +251,7 @@ const CSFriendPage = () => {
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [myScore, setMyScore] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [solveOrder, setSolveOrder] = useState<any>(null);
   const [answer, setAnswer] = useState<number | null>(null);
@@ -502,11 +516,20 @@ const CSFriendPage = () => {
   }, [friendId]);
 
   useEffect(() => {
+    if (ranking) {
+      const tmp = ranking.filter((rank: any) => {
+        return rank[0] === userInfo.id;
+      });
+      setMyScore(tmp);
+    }
+  }, [ranking]);
+
+  useEffect(() => {
     const preventGoBack = () => {
       // change start
       window.history.pushState(null, '', window.location.href);
       // change end
-      alert('게임중에는 나갈 수 없습니다');
+      Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
     };
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);
@@ -555,7 +578,7 @@ const CSFriendPage = () => {
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div className='playerNickName'>{player.nickname}</div>
+                      <div className="playerNickName">{player.nickname}</div>
                       <img
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
@@ -637,13 +660,16 @@ const CSFriendPage = () => {
                   ranking.slice(0, 3).map((rank: any, idx: number) => {
                     return (
                       <div key={idx} className="rankwrapper">
-                        <div>
-                          <img src={`/img/rank/medal${idx}.png`} />
-                          <div>
-                            <img
-                              className="character"
-                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
-                            />
+                        <img
+                          className="medal"
+                          src={`/img/rank/medal${idx}.png`}
+                        />
+                        <div className="characterBox">
+                          <img
+                            className="character"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
+                          />
+                          <div className="playerNickName">
                             <div>{rank[1]}</div>
                             <div>{rank[3]}</div>
                           </div>
@@ -651,6 +677,15 @@ const CSFriendPage = () => {
                       </div>
                     );
                   })}
+                {myScore && (
+                  <div>
+                    <div>15등</div>
+                    <img
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
+                      alt="profile"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}

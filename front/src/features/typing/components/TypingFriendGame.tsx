@@ -7,6 +7,7 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
+import '../../../components/Common/retroBtn.css';
 import { usePrompt } from '../../../utils/block';
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -117,11 +118,26 @@ const WaitingTypingGameBox = styled.div`
   width: 90%;
   height: 17rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: black;
   background-color: white;
   border-radius: 20px;
+`;
+const MasterGameButton = styled.div`
+  width: 30%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+const GuestGameButton = styled.div`
+  width: 30%;
+  margin-top: 5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `;
 const TypingGameBox = styled.div`
   width: 90%;
@@ -149,7 +165,7 @@ const This = styled.div`
 `;
 const TypingFriendGame = () => {
   let roomcode: string;
-  let testtest: number;
+  // let testtest: number;
   let testprogress: any;
   const location = useLocation();
   const navigate = useNavigate();
@@ -172,8 +188,26 @@ const TypingFriendGame = () => {
   const { shareCode } = location.state;
   const { friendId } = useSelector((state: any) => state.friend);
   const [master, setMaster] = useState<Boolean>(false);
+  const [isStart, setIsStart] = useState<boolean>(false);
 
   const client = useRef<any>(null);
+
+  useEffect(() => {
+    if (isStart) {
+      interval.current = setInterval(() => {
+        setSec(initialTime.current % 60);
+        initialTime.current -= 1;
+      }, 1000);
+      return () => clearInterval(interval.current);
+    }
+  }, [isStart]);
+
+  useEffect(() => {
+    if (initialTime.current < 0) {
+      clearInterval(interval.current);
+    }
+  }, [sec]);
+
   useEffect(() => {
     if (isEnd && resultId && resultNickName) {
       console.log('끄읕');
@@ -211,33 +245,12 @@ const TypingFriendGame = () => {
       );
       client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
-        console.log(client.current, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-        // client.current.connect({}, (frame: any) => {
         console.log('*****************121**************************');
         client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
-          // client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
             setRoomCode(data.room);
             roomcode = data.room;
-          }
-          if (data.hasOwnProperty('isLast')) {
-            if (data.isLast === true) {
-              client.current.send(
-                // client.current.send(
-                '/api/typing2/start',
-                {},
-                JSON.stringify({
-                  langType: lang,
-                  roomCode: roomcode,
-                }),
-              );
-              // setIsReady(true);
-              setIsLoading(false);
-              // setTimeout(() => {
-              //   setIsLoading(false);
-              // }, 5000);
-            }
           }
           if (data.hasOwnProperty('isMaster')) {
             if (data.isMaster === true) {
@@ -296,11 +309,14 @@ const TypingFriendGame = () => {
             setTest(testdata.progressByPlayer[`${userInfo.id}`]);
             setTestProgress(testdata);
             testprogress = testdata.progressByPlayer;
-            testtest = testdata.progressByPlayer[`${userInfo.id}`];
+            // testtest = testdata.progressByPlayer[`${userInfo.id}`];
           } else if (testdata.hasOwnProperty('msg')) {
             if (testdata.msg === 'start') {
               // setIsReady(true);
-              setIsLoading(false);
+              setIsStart(true);
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 4000);
             } else if (testdata.msg === 'end') {
               setResultId(testdata.winUserId);
               setResultNickName(testdata.winUserNickName);
@@ -476,7 +492,10 @@ const TypingFriendGame = () => {
         roomCode: roomCode,
       }),
     );
-    setIsLoading(false);
+    setIsStart(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 4000);
   };
   useEffect(() => {
     if (friendId) {
@@ -581,17 +600,47 @@ const TypingFriendGame = () => {
         {/* 대기하고 있을때 */}
         {isLoading && players && (
           <WaitingTypingGameBox>
-            {master && <div>시작하기를 눌러 게임을 시작하세요</div>}
-            {!master && <div>방장이 시작하기를 기다리세요</div>}
+            {master && !isStart && (
+              <div>당신은 방장입니다. 시작하기를 눌러 게임을 시작하세요.</div>
+            )}
+            {master && isStart && <div>{sec}초뒤 시작합니다.</div>}
+
+            {!master && !isStart && <div>방장이 시작하기를 기다리세요.</div>}
+            {!master && isStart && <div>{sec}초뒤 시작합니다.</div>}
             {modal === 'invite' && (
               <FriendModal handleModal={closeModal} type="invite" />
             )}
-            <div>
-              <button onClick={handleModal}>친구 초대</button>
-            </div>
-            <div>
-              {master && <button onClick={onClickStart}>게임시작</button>}
-            </div>
+            <MasterGameButton>
+              {master && !isStart && (
+                <>
+                  <a
+                    href="javascript:void(0)"
+                    className="eightbit-btn"
+                    onClick={handleModal}
+                  >
+                    친구 초대
+                  </a>
+                  <a
+                    href="javascript:void(0)"
+                    className="eightbit-btn eightbit-btn--proceed"
+                    onClick={onClickStart}
+                  >
+                    게임 시작
+                  </a>
+                </>
+              )}
+            </MasterGameButton>
+            <GuestGameButton>
+              {!master && !isStart && (
+                <a
+                  href="javascript:void(0)"
+                  className="eightbit-btn"
+                  onClick={handleModal}
+                >
+                  친구 초대
+                </a>
+              )}
+            </GuestGameButton>
           </WaitingTypingGameBox>
         )}
 
