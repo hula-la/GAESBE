@@ -238,7 +238,7 @@ public class CsRoomService {
         HashMap<String, Long> players = csRoom.getPlayers();
 
         // 방이 가득찼다면 예외 날림
-        if (players.size()>=maxPlayer) throw new ExceedMaxPlayerException();
+        if (players.size()>=maxPlayer) throw new ExceedMaxPlayerException(csSocketDto);
 
         // 방이 가득 안찼으면 player에 추가하고 변경된 정보 저장
         players.put(csSocketDto.getSessionId(),csSocketDto.getUserId());
