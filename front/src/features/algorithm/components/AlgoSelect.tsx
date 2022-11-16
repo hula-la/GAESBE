@@ -20,7 +20,7 @@ const Wrapper = styled.div`
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 121%;
-    
+    /* position: absolute; */
   }
   .progressBar{
     height: 10%;

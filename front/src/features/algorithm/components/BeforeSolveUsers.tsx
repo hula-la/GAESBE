@@ -6,16 +6,20 @@ const UserProfiles = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-
+  /* position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translate(-50%,0); */
 
   .user-item{
+
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     height: fit-content;
     margin: auto 0;
-    position: relative;
+
   }
   .nickname{
     background-color: #2e2e2e;

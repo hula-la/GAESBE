@@ -8,6 +8,7 @@ import Level4 from '../components/level/Level4';
 import Level5 from '../components/level/Level5';
 import Level6 from '../components/level/Level6';
 
+
 import { attendanceRequest } from '../../../api/mypageApi';
 import AttendanceComponent from '../components/AttendanceComponent';
 import { gameActions } from '../gameSlice';

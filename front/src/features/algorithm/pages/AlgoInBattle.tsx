@@ -31,7 +31,7 @@ const Wrapper = styled.div`
   margin: auto;
   .title {
     text-align: center;
-    height: 20%;
+    height: 18%;
     img {
       width: 60%;
     }
