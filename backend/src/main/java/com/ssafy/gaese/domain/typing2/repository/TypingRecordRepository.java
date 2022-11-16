@@ -7,7 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface TypingRecordRepository extends JpaRepository<TypingRecord, Long> {
     Page<TypingRecord> findAllByUser(User user, Pageable pageable);
+
+    List<TypingRecord> findAllByUser(User user);
 
 }

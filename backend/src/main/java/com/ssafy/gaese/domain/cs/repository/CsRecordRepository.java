@@ -11,5 +11,6 @@ import java.util.Optional;
 
 public interface CsRecordRepository extends JpaRepository<CsRecord, Long> {
     Page<CsRecord> findAllByUser(User user, Pageable pageable);
+    List<CsRecord> findAllByUser(User user);
 
 }

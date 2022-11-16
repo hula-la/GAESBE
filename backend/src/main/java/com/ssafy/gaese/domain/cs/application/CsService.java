@@ -9,11 +9,18 @@ import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
 import com.ssafy.gaese.domain.cs.exception.*;
 import com.ssafy.gaese.domain.cs.repository.*;
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
+import com.ssafy.gaese.domain.user.application.ItemService;
+import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
+import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
+import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +45,13 @@ public class CsService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AbilityRepository abilityRepository;
 
+    private final ItemService itemService;
+
+    private final FriendSocketService friendSocketService;
+
+    private final UserCharacterRepository userCharacterRepository;
+
+    private final CharacterRepository characterRepository;
 
 
     private final int penaltyScore=60;
@@ -338,7 +352,12 @@ public class CsService {
 
                 if (isCorrectedList[i]) correctCnt++;
                 csRecordProblemRepository.save(csRecordProblem);
+
+
             }
+
+            //케릭터 해금 관련
+            charChecker(v);
 
             // 맞은 갯수가 3분의 1이상이어야 함.
             if (correctCnt>=numProblem/3){
@@ -351,6 +370,99 @@ public class CsService {
 
             csRecordRedisRepository.deleteById(roomDto.getCode() + v);
         });
+
+    }
+    void charChecker(Long userid)
+    {
+        User user = userRepository.findById(userid).get();
+
+        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
+        List<CsRecord> csRecords = csRecordRepository.findAllByUser(user);
+        ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
+
+        int oneCount=0;
+        int threeCount=0;
+
+        for (CsRecord csRecord:csRecords)
+        {
+            if(csRecord.getRanks()<2)
+            {
+                oneCount++;
+                threeCount++;
+            }
+            else if(csRecord.getRanks()<4)
+            {
+                threeCount++;
+            }
+        }
+
+        int charId=17;
+        if(threeCount>9 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+        charId=16;
+        if(threeCount>4 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+        charId=15;
+        if(threeCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+
+        charId=14;
+        if(oneCount>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+        charId=13;
+        if(oneCount>2 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+        charId=12;
+        if(oneCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+
+
+        charId=11;
+        if(!userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+
 
     }
 
