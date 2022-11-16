@@ -49,6 +49,17 @@ const Wrapper = styled.div`
     font-size: 1.5rem;
     text-align: center;
   }
+  .img-btn{
+    position: absolute;
+    width: 100%;
+    top: 165%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    img{
+      width: 30%;
+      margin: 0 8%;
+    }
+  }
 `;
 
 function RequestToYou() {
@@ -97,6 +108,10 @@ function RequestToYou() {
             <button className="eightbit-btn--proceed">친구 요청</button>
           </div>
         </form>
+      </div>
+      <div className='img-btn'>
+        <img src='/img/gameButton1.png'></img>
+        <img src='/img/gameButton3.png'></img>
       </div>
     </Wrapper>
   );
