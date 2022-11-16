@@ -1,5 +1,23 @@
 import { MyRecordInterface } from '../../../../models/algo';
+import styled from 'styled-components';
 
+const Tr = styled.div`
+  width: 210%;
+  margin-top: 1%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+`;
+const Th = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
+const Td = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
 function AlgoRecordTable({
   records,
   handleDetail,
@@ -22,35 +40,34 @@ function AlgoRecordTable({
     <>
       <table>
         <thead>
-          <tr>
-            <th>문제번호</th>
-            <th>순위</th>
-            <th>걸린 시간</th>
-            <th>배틀 날짜</th>
-            <th>제출 언어</th>
-            <th>상세보기</th>
-          </tr>
+          <Tr>
+            <Th>문제번호</Th>
+            <Th>순위</Th>
+            <Th>걸린 시간</Th>
+            <Th>배틀 날짜</Th>
+            <Th>제출 언어</Th>
+            <Th>상세보기</Th>
+          </Tr>
         </thead>
         <tbody>
           {records.map((record: MyRecordInterface) => {
             return (
-              <tr key={record.id}>
-                <td>
-                  {record.problemId}
+              <Tr key={record.id}>
+                <Td>
                   <button onClick={() => handleOpenBj(record.problemId)}>
-                    문제보러가기
+                    {record.problemId}
                   </button>
-                </td>
-                <td>{record.ranking}</td>
-                <td>{record.solveTime}</td>
-                <td>{record.date.split('T')[0].replaceAll('-', '.')}</td>
-                <td>{language[record.lan]}</td>
-                <td>
+                </Td>
+                <Td>{record.ranking}</Td>
+                <Td>{record.solveTime}</Td>
+                <Td>{record.date.split('T')[0].replaceAll('-', '.')}</Td>
+                <Td>{language[record.lan]}</Td>
+                <Td>
                   <button onClick={() => handleDetail(record.roomCode)}>
                     상세정보
                   </button>
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             );
           })}
         </tbody>
