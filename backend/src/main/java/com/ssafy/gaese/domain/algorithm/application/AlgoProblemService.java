@@ -224,10 +224,10 @@ public class AlgoProblemService {
         AlgoRankDto algoRankDto = AlgoRankDto.builder()
                 .problemId(problemId)
                 .min((int)minDiff+"")
-                .nickName(userRepository.getNickNameById(userId)+"")
+                .nickname(userRepository.getNickNameById(userId)+"")
                 .userId(userId).build();
         //redis 저장 - 랭킹용
-        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickName(), minDiff);
+        zSetOperations.add(roomCode+"-rank", algoRankDto.getNickname(), minDiff);
 
         //redis 저장 - 기록용
         algoRankRedisRepository.save(algoRankDto);
