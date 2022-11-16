@@ -4,6 +4,9 @@ import { useDispatch } from 'react-redux';
 
 import Swal from 'sweetalert2';
 
+import { BjConnectCodeRequest } from '../../../api/algoApi';
+import { algoActions } from '../algorithmSlice';
+
 import LoadingSpinner from "./LoadingSpinner"
 import styled from "styled-components"
 import '../../../components/Common/retroBtn.css';
