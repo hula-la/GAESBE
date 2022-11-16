@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import Swal from 'sweetalert2';
 
 import { friendActions } from '../friendSlice';
 import { itemActions } from '../../game/itemSlice';
@@ -52,9 +53,10 @@ function FriendSocket() {
               }),
             );
           } else if (data.hasOwnProperty('character')) {
-            alert(
-              `${data.need}의 조건을 가진 캐릭터를 획득했습니다.(모달이나 스윗얼럿으로 바꾸면 사진 넣어줄거임)`,
-            );
+            Swal.fire({
+              imageUrl: `${process.env.REACT_APP_S3_URL}/profile/${data.character}_normal.gif`,
+              text: `${data.need}의 조건을 가진 캐릭터를 획득했습니다.`,
+            });
             dispatch(itemActions.fetchCharacterStart());
           } else {
             setMsgId(data.id);

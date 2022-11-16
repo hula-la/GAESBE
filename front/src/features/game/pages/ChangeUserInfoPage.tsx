@@ -105,9 +105,15 @@ const ChangeUserInfoPage = () => {
   const navigate = useNavigate();
   const { isDuplicate } = useSelector((state: any) => state.auth);
   const { userInfo } = useSelector((state: any) => state.auth);
-  const [nickname, setNickname] = useState<string>(userInfo.nickname);
-  const [profilechar, setProfilechar] = useState<string>(userInfo.profileChar);
+  const [nickname, setNickname] = useState<string>('');
+  const [profilechar, setProfilechar] = useState<string>('');
   const { characters } = useSelector((state: any) => state.item);
+  useEffect(() => {
+    if (userInfo) {
+      setNickname(userInfo.nickname);
+      setProfilechar(userInfo.profileChar);
+    }
+  }, [userInfo]);
 
   let characterList = characters;
 
@@ -148,10 +154,31 @@ const ChangeUserInfoPage = () => {
   return (
     <ChangeUserInfo>
       <MyCharacter>
-        <BackArrow
-          onClick={handleMypage}
-          src="/img/arrow/back-arrow.png"
-          alt=""
+        {!changeNickName && userInfo && (
+          <h1 className="h1">
+            {userInfo.nickname}
+            <img
+              onClick={handleInput}
+              src="/img/selectbutton/setnicknamebutton.png"
+              alt=""
+            />
+          </h1>
+        )}
+        {changeNickName && (
+          <h1 className="h1">
+            <input onChange={onChangeNickname} />
+            {isDuplicate && <p>중복된 닉네임입니다.</p>}
+            <img
+              onClick={onClickHandler}
+              src="/img/selectbutton/setnicknamebutton.png"
+              alt=""
+            />
+          </h1>
+        )}
+        <img
+          className="img"
+          src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
+          alt="캐릭터 없음"
         />
         <MyCharacterInfo>
           {!changeNickName && (
@@ -193,8 +220,9 @@ const ChangeUserInfoPage = () => {
       </MyCharacter>
       <SelectCharacter>
         <h1>당신의 캐릭터를 변경하세요</h1>
-        <AllCharacterList>
-          {characterList.map((character: any) => {
+
+        {characterList &&
+          characterList.map((character: any) => {
             return (
               <>
                 {character.own ? (

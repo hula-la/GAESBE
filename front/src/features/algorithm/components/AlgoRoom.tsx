@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { algoActions } from '../algorithmSlice';
 import { AlgoRoomInterface } from '../../../models/algo';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import '../../../components/Common/retroBtn.css';
 interface Props {

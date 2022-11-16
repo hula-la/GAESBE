@@ -59,7 +59,10 @@ function* creatAlgoRoomSaga(action: Action<AlgoRoomInterface>) {
         yield put(algoActions.enterAlgoRoom(res.data));
       }
     } else {
-      Swal.fire('이미 다른 게임을 진행중인 것 아닌가요?');
+      Swal.fire({
+        icon: 'warning',
+        text: '이미 다른 게임을 진행중인 것 아닌가요?',
+      });
     }
   } catch (error) {
     console.log(error);
@@ -79,14 +82,12 @@ function* checkMyAnswerRequestSaga(
     if (res.status === 200) {
       if (res.data.result === 1) {
         yield put(algoActions.solveSuccess(true));
+        yield Swal.fire({ icon: 'success', text: res.data.msg });
+      } else {
+        yield Swal.fire({ icon: 'warning', text: res.data.msg });
       }
-      yield Swal.fire({
-        icon: 'warning',
-        text: res.data.msg,
-      });
     }
   } catch (error) {
-    console.log(error);
     yield put(algoActions.loadingEnd());
   }
   yield put(algoActions.setLoadingMsg(''));

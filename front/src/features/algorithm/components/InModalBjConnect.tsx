@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+
 import Swal from 'sweetalert2';
 
 import { BjConnectCodeRequest } from '../../../api/algoApi';
@@ -38,7 +39,11 @@ function InModalBjConnect() {
       bjId: { value: string };
     };
     const bjId = target.bjId.value;
-    dispatch(algoActions.bjConnectRequestStart(bjId));
+    if (bjId) {
+      dispatch(algoActions.bjConnectRequestStart(bjId));
+    } else {
+      Swal.fire({ icon: 'error', text: '백준 아이디를 입력해주세요' });
+    }
   };
 
   const handleCopyCode = (value: string) => {
