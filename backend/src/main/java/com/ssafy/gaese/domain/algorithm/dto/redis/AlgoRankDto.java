@@ -21,7 +21,7 @@ public class AlgoRankDto {
     String problemId;
     String roomCode;
     String min;
-    String nickName;
+    String nickname;
     int profileChar;
 
 }
