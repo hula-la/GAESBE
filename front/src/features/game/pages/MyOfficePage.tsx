@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import styled from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { attendanceRequest } from '../../../api/mypageApi';
+import AttendanceComponent from '../components/AttendanceComponent';
+import { gameActions } from '../gameSlice';
+import { itemActions } from '../itemSlice';
 import Level0 from '../components/level/Level0';
 import Level1 from '../components/level/Level1';
 import Level2 from '../components/level/Level2';
@@ -7,13 +11,9 @@ import Level3 from '../components/level/Level3';
 import Level4 from '../components/level/Level4';
 import Level5 from '../components/level/Level5';
 import Level6 from '../components/level/Level6';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
-
-import { attendanceRequest } from '../../../api/mypageApi';
-import AttendanceComponent from '../components/AttendanceComponent';
-import { gameActions } from '../gameSlice';
-import { itemActions } from '../itemSlice';
-import { useSelector, useDispatch } from 'react-redux';
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -60,6 +60,10 @@ const Office = styled.div`
     top: 3rem;
     font-size: 2rem;
     color: white;
+
+    img{
+      width: 10rem;
+    }
     /* font-weight: bold; */
   }
 `;
@@ -142,12 +146,12 @@ const MyOfficePage = () => {
     try {
       const res = await attendanceRequest();
       if (res.status === 200) {
-        alert('출석체크 되었습니다');
+        Swal.fire({icon:'success', text:'출석체크 되었습니다'});
         handleReload(true);
       }
     } catch (error: any) {
       if (error.response.status === 446) {
-        alert('오늘은 이미 출석했습니다');
+        Swal.fire({icon:'info', text:'오늘은 이미 출석했습니다'});
       }
     }
   };
@@ -178,7 +182,8 @@ const MyOfficePage = () => {
             const Component: any = officeComponents[idx];
             return (
               <Office>
-                <div className="officeName">{v.name}</div>
+                <div className="officeName"><img src={`/img/MyOffice/officeName/${idx}.png`}/></div>
+                {/* <div className="officeName">{v.name}</div> */}
 
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}
               </Office>

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import { usePrompt } from '../../../utils/block';
 import FriendModal from '../../friend/components/FriendModal';
@@ -20,20 +21,49 @@ const Container = styled.div`
   font-style: normal;
   position: relative;
   height:100vh;
-  .inviteBtn{
-    position: absolute;
-    top: 0;
-    right:0;
-  }
-  .startBtn{
+
+  .startBtnContainer{
     position: absolute;
     bottom: 3rem;
     right:3rem;
-    width: 9rem;
+    width: 10rem;
+
+    transition: transform 0.3s;
+
+    .inviteBtn{
+    width:100%;
     :hover{
-      transform: scale(1.1);
-      transition: transform 0.3s;
-      cursor: url('/img/cursor/hover_cursor.png'), auto;
+        transform: scale(1.1);
+        
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+
+    .inviteBtnBox{
+      padding-left: 1rem;
+      position: relative;
+      font-size: 1rem;
+      
+
+      :hover .inviteBtnToolTip{
+        display: block;
+      }
+      .inviteBtnToolTip{
+        display: none;
+        position: absolute;
+        bottom: 110%;
+
+      }
+    }
+
+    .startBtn{
+      width: 100%;
+
+      :hover{
+        transform: scale(1.1);
+        transition: transform 0.3s;
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
     }
   }
   .gameTitle {
@@ -55,7 +85,6 @@ const LoadingBlock = styled.div`
   }
 `;
 
-
 const WaitingBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,10 +95,13 @@ const WaitingBlock = styled.div`
     width: 100%;
     height: 100%;
   }
-  .subtitle {
+  .friendNum {
     font-size: 2rem;
     font-weight: 400;
     margin-bottom: 2%;
+
+    display: flex;
+    align-items: center;
   }
   .waitingContent {
     display: flex;
@@ -165,30 +197,43 @@ const IngameBlock = styled.div`
   .rankBlock {
     margin-top: 1rem;
     display: flex;
+    width: 80%;
+    height: 20%;
   }
   .rankwrapper {
     margin-right: 1rem;
-    .character {
-      width: 30%;
-      height: 30%;
+    display: flex;
+    width: 25%;
+    .medal {
+      height: 70%;
+    }
+    .characterBox {
+      width: 50%;
+      .character {
+        width: 60%;
+      }
+      .playerNickName {
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+      }
     }
   }
-  .character {
+  /* .character {
     width: 70%;
     height: 30%;
-  }
+  } */
 `;
 
 const PlayerCharacter = styled.div`
   position: absolute;
   height: 20%;
-  .playerNickName{
+  .playerNickName {
     text-align: center;
     height: 20%;
   }
-  img{
+  img {
     height: 80%;
-
   }
 `;
 
@@ -206,6 +251,7 @@ const CSFriendPage = () => {
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [myScore, setMyScore] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [solveOrder, setSolveOrder] = useState<any>(null);
   const [answer, setAnswer] = useState<number | null>(null);
@@ -470,11 +516,20 @@ const CSFriendPage = () => {
   }, [friendId]);
 
   useEffect(() => {
+    if (ranking) {
+      const tmp = ranking.filter((rank: any) => {
+        return rank[0] === userInfo.id;
+      });
+      setMyScore(tmp);
+    }
+  }, [ranking]);
+
+  useEffect(() => {
     const preventGoBack = () => {
       // change start
       window.history.pushState(null, '', window.location.href);
       // change end
-      alert('게임중에는 나갈 수 없습니다');
+      Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
     };
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);
@@ -503,7 +558,11 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <div className="subtitle">{players.length }/10</div>
+          <h3>
+            혼자 또는 친구와 함께 게임을 즐겨보세요
+          </h3>
+
+          
           
           <div className="waitingContent">
             <div className="imgBox">
@@ -519,7 +578,7 @@ const CSFriendPage = () => {
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div className='playerNickName'>{player.nickname}</div>
+                      <div className="playerNickName">{player.nickname}</div>
                       <img
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
                         alt="character"
@@ -528,14 +587,30 @@ const CSFriendPage = () => {
                   );
                 })}
             </div>
-            <button className='inviteBtn' onClick={handleModal}>친구 초대</button>
+            
+            {/* <button className='inviteBtn' onClick={handleModal}>친구 초대</button> */}
             {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
               })} */}
           </div>
+          <div className='startBtnContainer'>
 
-          {isMaster && <img className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+            <div className="friendNum">{players.length}/10
+              <div className="inviteBtnBox">
+                <div className="inviteBtnToolTip">친구 초대</div>
+                <img src='/img/cs/inviteBtn2.png' className='inviteBtn' onClick={handleModal} />
+
+              </div>
+            </div>
+            <div>
+              
+              {isMaster && <img  className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+            </div>
+
+          </div>
+
+
           {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
@@ -585,13 +660,16 @@ const CSFriendPage = () => {
                   ranking.slice(0, 3).map((rank: any, idx: number) => {
                     return (
                       <div key={idx} className="rankwrapper">
-                        <div>
-                          <img src={`/img/rank/medal${idx}.png`} />
-                          <div>
-                            <img
-                              className="character"
-                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
-                            />
+                        <img
+                          className="medal"
+                          src={`/img/rank/medal${idx}.png`}
+                        />
+                        <div className="characterBox">
+                          <img
+                            className="character"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
+                          />
+                          <div className="playerNickName">
                             <div>{rank[1]}</div>
                             <div>{rank[3]}</div>
                           </div>
@@ -599,6 +677,15 @@ const CSFriendPage = () => {
                       </div>
                     );
                   })}
+                {myScore && (
+                  <div>
+                    <div>15등</div>
+                    <img
+                      src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
+                      alt="profile"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}

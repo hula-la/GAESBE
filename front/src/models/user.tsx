@@ -1,8 +1,7 @@
 export interface Action<T> {
-  type: string
-  payload: T
+  type: string;
+  payload: T;
 }
-
 
 export interface UserInfo {
   nicknamge: string;
@@ -30,24 +29,23 @@ export interface User {
   error: string | null;
 }
 
-
 export interface OfficeInterface {
-  officeId: number
-  name: string
-  minLv: number
-  own: boolean
+  officeId: number;
+  name: string;
+  minLv: number;
+  own: boolean;
 }
 
 export interface CharactersInterface {
-  characterId: number
-  need: string
-  own: boolean
+  characterId: number;
+  need: string;
+  own: boolean;
 }
 
 export interface OfficesInterface {
-  offices: OfficeInterface[]
+  offices: OfficeInterface[];
 }
 
 export interface CharacterInterface {
-  characters: CharactersInterface[]
+  characters: CharactersInterface[];
 }

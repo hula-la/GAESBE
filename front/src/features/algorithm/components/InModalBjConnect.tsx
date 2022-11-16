@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import {BjConnectCodeRequest} from '../../../api/algoApi'
-import {algoActions} from '../algorithmSlice'
+import Swal from 'sweetalert2';
 
 import LoadingSpinner from "./LoadingSpinner"
 import styled from "styled-components"
@@ -119,10 +118,10 @@ align-items: center;
 `
 
 function InModalBjConnect() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const {userInfo} = useSelector((state:any) => state.auth)
-  const {loadingMsg} = useSelector((state:any) => state.algo)
+  const { userInfo } = useSelector((state: any) => state.auth);
+  const { loadingMsg } = useSelector((state: any) => state.algo);
 
 
   const [openInfo, setOpenInfo] = useState<boolean>(false)
@@ -130,42 +129,49 @@ function InModalBjConnect() {
   const [connectCode, setConnectCode] = useState<string>('')
 
   useEffect(() => {
-    setBjIdForm(userInfo.bjId)
-  }, [])
+    setBjIdForm(userInfo.bjId);
+  }, []);
 
   const handleCodeRequest = async () => {
     try {
-      const res = await BjConnectCodeRequest()
-      if (res.status===200) {
-        setConnectCode(res.data)
+      const res = await BjConnectCodeRequest();
+      if (res.status === 200) {
+        setConnectCode(res.data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  const handleCheckBjConnect = (e:React.SyntheticEvent) => {
+  const handleCheckBjConnect = (e: React.SyntheticEvent) => {
     e.preventDefault();
     const target = e.target as typeof e.target & {
       bjId: { value: string };
     };
     const bjId = target.bjId.value;
-    dispatch(algoActions.bjConnectRequestStart(bjId))
-  }
+    if (bjId) {
+      dispatch(algoActions.bjConnectRequestStart(bjId));
+    } else {
+      Swal.fire({ icon: 'error', text: '백준 아이디를 입력해주세요' });
+    }
+  };
 
-  const handleCopyCode = (value:string) => {
-    const tmp = document.createElement('input')
-    document.body.appendChild(tmp)
-    tmp.value = value
-    tmp.select()
-    document.execCommand('copy')
+  const handleCopyCode = (value: string) => {
+    const tmp = document.createElement('input');
+    document.body.appendChild(tmp);
+    tmp.value = value;
+    tmp.select();
+    document.execCommand('copy');
     document.body.removeChild(tmp);
-    alert('복사되었습니다')
-  }
+    Swal.fire({
+      icon: 'success',
+      text: '복사되었습니다',
+    });
+  };
 
-  const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setBjIdForm(e.currentTarget.value)
-  }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBjIdForm(e.currentTarget.value);
+  };
 
   const handleOpenInfo = () =>{
     setOpenInfo(!openInfo);
@@ -209,4 +215,4 @@ function InModalBjConnect() {
     </div>
   </Wrapper>
 }
-export default InModalBjConnect
+export default InModalBjConnect;

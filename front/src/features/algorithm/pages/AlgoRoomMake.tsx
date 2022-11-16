@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { algoActions } from '../algorithmSlice';
 import { AlgoRoomInterface } from '../../../models/algo';
 import styled from 'styled-components';
@@ -125,7 +126,7 @@ function AlgoRoomMake() {
 
   const [form, setForm] = useState<AlgoRoomInterface>({
     roomCode: '',
-    time: '1',
+    time: '30',
     tier: '1',
     num: '0',
     no: '0',
@@ -143,28 +144,37 @@ function AlgoRoomMake() {
 
   useEffect(() => {
     if (!userInfo.bjId) {
-      alert('백준아이디를 연동해야지만 게임을 할 수 있습니다');
+      Swal.fire({
+        icon: 'info',
+        text: '백준아이디를 연동해야지만 게임을 할 수 있습니다',
+      });
       handleGoMain();
     }
   }, []);
 
-  const handleTime = (e:string) => {
-    const newForm = JSON.parse(JSON.stringify(form))
-    if (e==='minus') {
-      if (newForm.time==='30') {
-        alert('30분보다 적게는 설정할 수 없습니다')
-        return
+  const handleTime = (e: string) => {
+    const newForm = JSON.parse(JSON.stringify(form));
+    if (e === 'minus') {
+      if (newForm.time <= 31) {
+        Swal.fire({
+          icon: 'info',
+          text: '30분보다 적게는 설정할 수 없습니다',
+        });
+        return;
       }
-      newForm.time = String(Number(newForm.time) - 10)
+      newForm.time = String(Number(newForm.time) - 10);
     } else {
-      if (newForm.time==='120') {
-        alert('120분보다 많게는 설정할 수 없습니다')
-        return
+      if (newForm.time >= 111) {
+        Swal.fire({
+          icon: 'info',
+          text: '120분보다 많게는 설정할 수 없습니다',
+        });
+        return;
       }
-      newForm.time = String(Number(newForm.time) + 10)
+      newForm.time = String(Number(newForm.time) + 10);
     }
-    setForm(newForm)
-  }
+    setForm(newForm);
+  };
   const handleOnSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(algoActions.creatAlgoRoom(form));
@@ -175,41 +185,41 @@ function AlgoRoomMake() {
       navigate('/game/algo/battle');
     }
   }, [InGameInfo]);
-  
-  const handleTier = (e:{type:string, num:number}) => {
-    const newForm = JSON.parse(JSON.stringify(form))
-    if (e.type==='plus') {
-      const newTier = String((Number(newForm.tier) + e.num) % 20)
+
+  const handleTier = (e: { type: string; num: number }) => {
+    const newForm = JSON.parse(JSON.stringify(form));
+    if (e.type === 'plus') {
+      const newTier = String((Number(newForm.tier) + e.num) % 20);
       if (newTier === '0') {
-        newForm.tier = '20'
+        newForm.tier = '20';
       } else {
-        newForm.tier = newTier
+        newForm.tier = newTier;
       }
     } else {
-      let newTier = (Number(newForm.tier) - e.num) % 20
+      let newTier = (Number(newForm.tier) - e.num) % 20;
       if (newTier <= 0) {
-        newTier += 20
+        newTier += 20;
       }
-      newForm.tier = String(newTier)
+      newForm.tier = String(newTier);
     }
-    setForm(newForm)
-  }
+    setForm(newForm);
+  };
 
-  const [tierString, setTierString] = useState<string>('브론즈 5')
+  const [tierString, setTierString] = useState<string>('브론즈 5');
 
   useEffect(() => {
-    const color = parseInt(String((Number(form.tier) - 1) / 5))
-    const tier = 5 - (Number(form.tier) - 1) % 5
-    if (color===0) {
-      setTierString(`브론즈 ${tier}`)
-    } else if (color===1) {
-      setTierString(`실버 ${tier}`)
-    } else if (color===2) {
-      setTierString(`골드 ${tier}`)
-    } else if (color===3) {
-      setTierString(`플레티넘 ${tier}`)
+    const color = parseInt(String((Number(form.tier) - 1) / 5));
+    const tier = 5 - ((Number(form.tier) - 1) % 5);
+    if (color === 0) {
+      setTierString(`브론즈 ${tier}`);
+    } else if (color === 1) {
+      setTierString(`실버 ${tier}`);
+    } else if (color === 2) {
+      setTierString(`골드 ${tier}`);
+    } else if (color === 3) {
+      setTierString(`플레티넘 ${tier}`);
     }
-  }, [form.tier])
+  }, [form.tier]);
 
   return (
     <Wrapper>
