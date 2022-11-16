@@ -25,7 +25,6 @@ const UserProfiles = styled.div`
     border-radius: 8px;
   }
   p{
-    color:#2e2e2e;
     font-size: 1.3rem;
     margin: 0;
   }
@@ -50,15 +49,15 @@ function BeforeSolveUsers({ inGameUsers }: any) {
     <UserProfiles>
       {inGameUsers.map((user: InGameUsersInterface) => {
         return (
-
           <div className='user-item' key={user.id}>
+            <p>{user.min?user.min+" 분" :null} </p>
             <p className='nickname'>{user.nickname}</p>
             <img
               src={`${process.env.REACT_APP_S3_URL}/profile/${user.profileChar}_normal.gif`}
               alt="프로필이미지"
               className='profile'
             />
-            <img className="stand" src={`/img/stand.png`}></img>
+            {/* <img className="stand" src={`/img/stand.png`}></img> */}
           </div>
         );
       })}

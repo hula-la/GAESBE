@@ -10,6 +10,7 @@ import AlgoRoom from '../components/AlgoRoom';
 import AlgoModal from '../components/AlgoModal';
 import styled from 'styled-components';
 import '../../../components/Common/retroBtn.css';
+
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;

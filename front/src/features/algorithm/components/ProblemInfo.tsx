@@ -1,10 +1,10 @@
 import styled from "styled-components"
 
 const Frame = styled.div`
-  height:100%;
   width:300px;
   color: black;
   font-size: 1.1rem;
+  margin: auto;
   .bg{
     background-image: url(/img/yellow-fill-box.png);
     background-repeat: no-repeat;
@@ -59,8 +59,7 @@ function ProblemInfo({nowProblem}:any) {
           <p className="ratio">정답률</p>{nowProblem.ratio}
         </div>
       </div>
-      <p className="tag">{nowProblem.tag}</p>
-
+      <p className="tag"></p>
     </div>
   </Frame>
 }

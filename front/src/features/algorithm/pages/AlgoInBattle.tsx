@@ -69,8 +69,8 @@ function AlgoInBattle() {
   }, [ranking]);
 
   const socket: CustomWebSocket = new SockJS(
-    // 'https://k7e104.p.ssafy.io:8081/api/ws',
-    'http://localhost:8080/api/ws',
+    'https://k7e104.p.ssafy.io:8081/api/ws',
+    // 'http://localhost:8080/api/ws',
 
   );
   const client = useRef<any>(null);
