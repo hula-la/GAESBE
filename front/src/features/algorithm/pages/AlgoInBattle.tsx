@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import Swal from 'sweetalert2';
 
 import { algoActions } from '../algorithmSlice';
 import { bojUserIdRequest } from '../../../api/algoApi';
@@ -183,7 +184,7 @@ function AlgoInBattle() {
       // change start
       window.history.pushState(null, '', window.location.href);
       // change end
-      alert('게임중에는 나갈 수 없습니다');
+      Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
     };
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);

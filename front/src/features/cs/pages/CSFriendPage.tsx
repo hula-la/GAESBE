@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import { usePrompt } from '../../../utils/block';
 import FriendModal from '../../friend/components/FriendModal';
@@ -467,7 +468,7 @@ const CSFriendPage = () => {
       // change start
       window.history.pushState(null, '', window.location.href);
       // change end
-      alert('게임중에는 나갈 수 없습니다');
+      Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
     };
     window.history.pushState(null, '', window.location.href);
     window.addEventListener('popstate', preventGoBack);
