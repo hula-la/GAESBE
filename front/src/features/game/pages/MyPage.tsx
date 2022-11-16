@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
@@ -7,10 +6,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
 import { gameActions } from '../gameSlice';
+import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import AlgoRecordTable from '../components/algo/AlgoRecordTable';
 import DetailResultModal from '../components/DetailResultModal';
 import CSRecordTable from '../components/cs/CSRecordTable';
 import TypingRecordTable from '../components/typing/TypingRecordTable';
+
 
 const MyPageContainer = styled.div`
   width: 66%;
@@ -105,7 +107,7 @@ const MyPage = () => {
         setAlgoRecord({ ...algoRecord, records: res.data.content });
       }
     } catch (error) {
-      alert('알고리즘 배틀 정보를 못가져왔습니다');
+      Swal.fire({icon:'error', text:'알고리즘 배틀 정보를 못가져왔습니다'});
     }
   };
   const fetchAlgoRecordRank = async () => {
@@ -115,7 +117,7 @@ const MyPage = () => {
         setAlgoRecord({ ...algoRecord, rank: res.data });
       }
     } catch (error) {
-      alert('알고리즘 배틀 정보를 못가져왔습니다');
+      Swal.fire({icon:'error', text:'알고리즘 배틀 정보를 못가져왔습니다'});
     }
   };
 
@@ -131,7 +133,7 @@ const MyPage = () => {
       // 유저 인포 널로 바꾸고
       // 엑세스 토큰 지우고
     } else {
-      alert('삭제 안함');
+      Swal.fire({icon:'info', text:'삭제 안함'});
     }
   };
   const handleChange = () => {

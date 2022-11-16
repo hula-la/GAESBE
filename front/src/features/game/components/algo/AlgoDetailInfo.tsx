@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { resultCodeRequest } from '../../../../api/algoApi';
 
+import Swal from 'sweetalert2'
+
 interface ResultCodeInterface {
   code: string;
   lan: number;
@@ -28,7 +30,7 @@ function AlgoDetailInfo({ algoDetailRoomCode }: any) {
         setResultCodes(res.data);
       }
     } catch (error) {
-      alert('배틀의 상세 결과를 가져오는데 오류가 발생했습니다');
+      Swal.fire({icon: 'error', text:'배틀의 상세 결과를 가져오는데 오류가 발생했습니다'});
     }
   };
   return (
