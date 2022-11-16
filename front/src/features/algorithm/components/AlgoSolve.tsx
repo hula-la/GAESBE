@@ -5,13 +5,117 @@ import { ProblemInterface, RankingUserInfo } from '../../../models/algo';
 import { algoActions } from '../algorithmSlice';
 
 import ProblemInfo from './ProblemInfo';
-import GameResultModal from './GameResultModal';
-import LoadingSpinner from './LoadingSpinner';
+import GameResultModal from './GameResultModal'
+import LoadingSpinner from './LoadingSpinner'
+import BeforeSolveUsers from './BeforeSolveUsers';
+
+import styled from "styled-components";
+import '../../../components/Common/retroBtn.css';
+
 
 interface LanguageInterface {
   lanId: number;
   name: string;
 }
+
+const Wrapper = styled.div`
+  height: 90%;
+  .content{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .content > div{
+    width: 48%;
+    text-align: center;
+  }
+
+  .user{
+    display: flex;
+   flex-direction: row;
+   justify-content: space-around;
+  }
+  .left{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .progress{
+      height: 10%;
+      
+    }
+    .btn{
+      margin: auto;
+
+    }
+    .user-list{
+      height: 40%;
+    }
+    .user-list div:nth-child(1){
+      text-align: left;
+      margin-bottom: 3%;
+      color:#ffc02d;
+      font-size: 1.1rem;
+    }
+  }
+  .right{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .select{
+      height: 10%;
+      width:100%;
+      min-height: 50px;
+      margin: 3% auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .btnBlueGreen {
+        background: #92cd41;
+      }
+      .btnBlueGreen.btnPush {
+        box-shadow: 0px 5px 0px 0px #4aa52e;
+      }
+      .btnPush:hover {
+        margin-top: 15px;
+        margin-bottom: 5px;
+      }
+      .btnBlueGreen.btnPush:hover {
+        box-shadow: 0px 0px 0px 0px #4aa52e;
+      }
+      span.button {
+        display: block;
+        position: relative;
+        float: left;
+        width: 80px;
+        padding: 0;
+        margin: auto;
+        text-align: center;
+        line-height: 30px;
+        color: #FFF;
+        /* border : 3px solid #000; */
+        transition: all 0.2s ;
+      }
+
+
+    }
+    input[type=radio]{
+      display:none;
+    }
+    
+    input[type=radio]:checked + span{
+      color: yellow  
+    }
+    button{
+
+    }
+  }
+  /* 3D */
+
+
+
+
+
+`
 
 function AlgoSolve({
   client,
@@ -145,52 +249,64 @@ function AlgoSolve({
   };
 
   return (
-    <>
-      <h2>문제 풀때 컴포넌트</h2>
-      {loadingMsg === 'SUBMIT' && <LoadingSpinner loadingMsg="제출 확인 중" />}
+    <Wrapper>
+      
+      {loadingMsg==='SUBMIT' && <LoadingSpinner loadingMsg='제출 확인 중' />}
       {modal && <GameResultModal handleModal={handleModal} myRank={myRank} />}
-      {ranking.map((user: RankingUserInfo, index: number) => {
-        return (
-          <div key={index}>
-            <h2>{user.nickName}</h2>
-            <img
-              src={`/img/rank/character${user.profileChar}.png`}
-              alt="프로필이미지"
-            />
-            <h3>걸린 시간 : {user.min} 분</h3>
+
+      <div className='content'>
+        <div className='left'>  
+          <div className='progress'>progress bar</div>
+          <ProblemInfo nowProblem={nowProblem} />
+          <a className='btn eightbit-btn eightbit-btn--proceed' onClick={handleGoToSolve}>문제풀러가기</a>
+          <div className='user-list'>
+          {/* {ranking.map((user:RankingUserInfo, index:number) => {
+            return <div  key={index}>
+              <h2>{user.nickName}</h2>
+              <img src={`/img/rank/character${user.profileChar}.png`} alt="프로필이미지" />
+              {user.min} 분
+
+            </div>
+          })} */}
+            <div className='rank-title'>명예의 전당</div>
+            <BeforeSolveUsers inGameUsers={ranking}></BeforeSolveUsers>
           </div>
-        );
-      })}
-      <ProblemInfo nowProblem={nowProblem} />
-      <button onClick={handleGoToSolve}>문제풀러가기</button>
-      <br />
-      {gameResultMsg ? null : (
-        <>
-          {languageList.map((language) => (
-            <label key={language.lanId} htmlFor={language.name}>
-              <input
-                type="radio"
-                name="lanId"
-                id={language.name}
-                value={language.lanId}
-                onChange={handleRadio}
-                checked={form.lanId === language.lanId}
+        </div>
+        <div className='right'>
+              <textarea
+                ref={codeTextArea}
+                style={{ resize: 'none', overflow: 'auto' }}
+                rows={25}
+                cols={50}
+                wrap="off"
+                onChange={handleCode}
+                placeholder={form.code}
+                value={form.code}
+                disabled={gameResultMsg ? true: false}
               />
-              {language.name}
-            </label>
-          ))}
-          <textarea
-            ref={codeTextArea}
-            style={{ resize: 'none', overflow: 'auto' }}
-            rows={30}
-            cols={60}
-            wrap="off"
-            onChange={handleCode}
-          />
-          <button onClick={handleCheckSubmit}>정답 확인하기</button>
-        </>
-      )}
-    </>
+              {gameResultMsg ? null
+              : <>
+              <div className='select' >
+                {languageList.map((language) => (
+                  <label key={language.lanId} htmlFor={language.name}>
+                    <input
+                      type="radio"
+                      name="lanId"
+                      id={language.name}
+                      value={language.lanId}
+                      onChange={handleRadio}
+                      checked={form.lanId === language.lanId}
+                    />
+                    <span className='button btnPush btnBlueGreen'>{language.name}</span>
+                  </label>
+                ))}
+              </div>
+              <button className='eightbit-btn eightbit-btn--proceed' onClick={handleCheckSubmit}>정답 확인</button>
+            </>
+          }
+        </div>
+      </div>
+    </Wrapper>
   );
 }
 export default AlgoSolve;
