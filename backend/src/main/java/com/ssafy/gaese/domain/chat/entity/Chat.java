@@ -33,7 +33,7 @@ public class Chat {
     @Column(nullable = false)
     private String msg;
     @Column(nullable = false)
-    private Date date;
+    private String date;
 
     // 메시지를 확인했는지 유무
     @Column(nullable = false)
