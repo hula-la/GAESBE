@@ -129,9 +129,12 @@ const friendSlice = createSlice({
       let newArr2;
       if (state.uncheckedChatList[action.payload.id]) {
         newArr = tmp.concat(state.uncheckedChatList[action.payload.id]);
-        newArr2 = tmp.concat(state.chatList[action.payload.id]);
       } else {
         newArr = tmp;
+      }
+      if (state.chatList[action.payload.id]) {
+        newArr2 = tmp.concat(state.chatList[action.payload.id]);
+      } else {
         newArr2 = tmp;
       }
       if (!state.isChatOpen) {
