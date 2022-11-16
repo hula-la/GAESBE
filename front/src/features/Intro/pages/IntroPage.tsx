@@ -221,6 +221,13 @@ const Wrapper = styled.div`
     transform: translateY(0px);
     transition-delay: 0.1s;
   }
+  .lastTitle {
+    margin-top: 5rem;
+    font-size: 50px;
+    color: #fff;
+    text-align: end;
+    margin-right: 20%;
+  }
 `;
 
 const IntroPage = () => {
@@ -341,10 +348,12 @@ const IntroPage = () => {
       officeImg2Ref.current?.classList.remove('active');
       officeImg3Ref.current?.classList.add('active');
       officeImg4Ref.current?.classList.remove('active');
-    } else if (percent >= 80) {
+    } else if (percent >= 80 && percent < 100) {
       txt04ref.current?.classList.add('active');
       officeImg3Ref.current?.classList.remove('active');
       officeImg4Ref.current?.classList.add('active');
+    } else if (percent >= 100) {
+      officeImg4Ref.current?.classList.remove('active');
     } else if (percent < 0) {
       txt01ref.current?.classList.remove('active');
       txt02ref.current?.classList.remove('active');
@@ -454,9 +463,15 @@ const IntroPage = () => {
             </div>
           </div>
         </article>
+        <div className="lastTitle">화장실부터 대기업까지!</div>
+        <div>
+          <img src="" alt="" />
+          <img src="" alt="" />
+          <img src="" alt="" />
+        </div>
       </div>
       <div className="introBox"></div>
-      <div className="introBox"></div>
+      {/* <div className="introBox"></div> */}
     </Wrapper>
   );
 };
