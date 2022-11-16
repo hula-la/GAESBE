@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
+import '../../../components/Common/retroBtn.css';
 
 const StyledModal = styled.div`
   padding: 3vmin;
@@ -13,12 +14,69 @@ const StyledModal = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   /* background-color: gray; */
-  /* border: 1px solid black; */
+  border: 5px solid black;
   border-radius: 20px;
-  background-color: white;
+  background-color: #F0568C;
   z-index: 1000;
-  color: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+
+  .modal-title {
+    height: 10%;
+    text-align: center;
+    font-size: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-btn {
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button{
+      margin:3% 2% 0 2%;
+    }
+  }
   `;
+
+  const ModalWrapper = styled.div`
+    margin: auto;
+    height: 80%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 5px solid #000;
+    color:#000;  
+    
+    .modal-content {
+      height: 100%;
+      display: flex;
+      flex-direction : column;
+      justify-content:space-around;
+      align-items: center;
+    }
+
+    .msg{
+      margin-top: 5%;
+      font-size: 1.5rem;
+    }
+
+    .img{
+      height: 60%;
+    }
+    .rank{
+      margin-bottom: 5%;
+      font-size: 1.5rem;
+    }
+
+  `
   const StyledModalDiv = styled.div`
   top: 0%;
   left: 0%;
@@ -55,10 +113,20 @@ function GameResultModal({ handleModal, myRank }: any) {
   return (
     <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e)=> e.stopPropagation()}>
-        <button onClick={handleModal}>남아있기</button>
-        <button onClick={leaveAlgoInGamePage}>떠나가기</button>
-        <h1>{gameResultMsg}</h1>
-        <h1>{myRank} 등 입니다!</h1>
+         <div className='modal-title'>
+            <span>알고리즘 배틀 결과</span>
+          </div>
+        <ModalWrapper>
+          <div className='modal-content'>
+            <div className='msg'>{gameResultMsg}</div>
+            <div className='img'>img</div>
+            <div className='rank'>{myRank} 등 입니다!</div>
+          </div>
+        </ModalWrapper>
+        <div className='modal-btn'>
+            <button className="eightbit-btn eightbit-btn--proceed" onClick={handleModal}>남아있기</button>
+            <button className="eightbit-btn " onClick={leaveAlgoInGamePage}>떠나가기</button>
+          </div>
       </StyledModal>
     </StyledModalDiv>
   )

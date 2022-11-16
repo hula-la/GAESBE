@@ -30,7 +30,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     border: 1px solid #fff;
-
+    position: relative;
   }
   .btn-bottom {
     height: 25%;
