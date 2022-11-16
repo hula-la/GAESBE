@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { algoActions } from '../algorithmSlice';
 import { AlgoRoomInterface } from '../../../models/algo';
 import styled from 'styled-components';
@@ -64,7 +65,10 @@ function AlgoRoom({ roomInfo }: Props) {
     if (userInfo.bjId) {
       dispatch(algoActions.enterAlgoRoom(roomInfo));
     } else {
-      alert('백준아이디를 연동해야지만 게임을 할 수 있습니다');
+      Swal.fire({
+        icon: 'info',
+        text: '백준아이디를 연동해야지만 게임을 할 수 있습니다',
+      });
       navigate('/game/algo');
     }
   };

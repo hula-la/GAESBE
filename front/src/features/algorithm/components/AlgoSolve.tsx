@@ -5,65 +5,92 @@ import { ProblemInterface, RankingUserInfo } from '../../../models/algo';
 import { algoActions } from '../algorithmSlice';
 
 import ProblemInfo from './ProblemInfo';
-import GameResultModal from './GameResultModal'
-import LoadingSpinner from './LoadingSpinner'
+import GameResultModal from './GameResultModal';
+import LoadingSpinner from './LoadingSpinner';
 import BeforeSolveUsers from './BeforeSolveUsers';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 import '../../../components/Common/retroBtn.css';
-
 
 interface LanguageInterface {
   lanId: number;
   name: string;
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ time: number }>`
   height: 90%;
-  .content{
+  .content {
     display: flex;
     justify-content: space-between;
   }
 
-  .content > div{
+  .content > div {
     width: 48%;
     text-align: center;
   }
 
-  .user{
+  .user {
     display: flex;
-   flex-direction: row;
-   justify-content: space-around;
+    flex-direction: row;
+    justify-content: space-around;
   }
-  .left{
+  .left {
     height: 100%;
     display: flex;
     flex-direction: column;
-    .progress{
-      height: 10%;
-      
-    }
-    .btn{
-      margin: auto;
 
+    .progressContainer {
+      height: 10%;
     }
-    .user-list{
+
+    --duration: ${(props) => props.time * 60};
+
+    .progressContainer .progress {
+      animation: roundtime calc(var(--duration) * 1s) linear forwards;
+      transform-origin: left center;
+    }
+
+    @keyframes roundtime {
+      to {
+        transform: scaleX(0);
+      }
+    }
+
+    .progress {
+      background: orange;
+      height: 100%;
+      /* width: 100%; */
+      text-align: right;
+      font: bold 12px arial;
+      border-right: 1px silver solid;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      line-height: 30px;
+      color: #444;
+      /* -webkit-transition: width 5s linear; For Safari 3.1 to 6.0 */
+      /* transition: width 5s linear; */
+    }
+
+    .btn {
+      margin: auto;
+    }
+    .user-list {
       height: 40%;
     }
-    .user-list div:nth-child(1){
+    .user-list div:nth-child(1) {
       text-align: left;
       margin-bottom: 3%;
-      color:#ffc02d;
+      color: #ffc02d;
       font-size: 1.1rem;
     }
   }
-  .right{
+  .right {
     height: 100%;
     display: flex;
     flex-direction: column;
-    .select{
+    .select {
       height: 10%;
-      width:100%;
+      width: 100%;
       min-height: 50px;
       margin: 3% auto;
       display: flex;
@@ -91,31 +118,23 @@ const Wrapper = styled.div`
         margin: auto;
         text-align: center;
         line-height: 30px;
-        color: #FFF;
+        color: #fff;
         /* border : 3px solid #000; */
-        transition: all 0.2s ;
+        transition: all 0.2s;
       }
-
-
     }
-    input[type=radio]{
-      display:none;
+    input[type='radio'] {
+      display: none;
     }
-    
-    input[type=radio]:checked + span{
-      color: yellow  
-    }
-    button{
 
+    input[type='radio']:checked + span {
+      color: yellow;
+    }
+    button {
     }
   }
   /* 3D */
-
-
-
-
-
-`
+`;
 
 function AlgoSolve({
   client,
@@ -249,18 +268,24 @@ function AlgoSolve({
   };
 
   return (
-    <Wrapper>
-      
-      {loadingMsg==='SUBMIT' && <LoadingSpinner loadingMsg='제출 확인 중' />}
+    <Wrapper time={InGameInfo.time}>
+      {loadingMsg === 'SUBMIT' && <LoadingSpinner loadingMsg="제출 확인 중" />}
       {modal && <GameResultModal handleModal={handleModal} myRank={myRank} />}
 
-      <div className='content'>
-        <div className='left'>  
-          <div className='progress'>progress bar</div>
+      <div className="content">
+        <div className="left">
+          <div className="progressContainer">
+            <div className="progress" />
+          </div>
           <ProblemInfo nowProblem={nowProblem} />
-          <a className='btn eightbit-btn eightbit-btn--proceed' onClick={handleGoToSolve}>문제풀러가기</a>
-          <div className='user-list'>
-          {/* {ranking.map((user:RankingUserInfo, index:number) => {
+          <a
+            className="btn eightbit-btn eightbit-btn--proceed"
+            onClick={handleGoToSolve}
+          >
+            문제풀러가기
+          </a>
+          <div className="user-list">
+            {/* {ranking.map((user:RankingUserInfo, index:number) => {
             return <div  key={index}>
               <h2>{user.nickName}</h2>
               <img src={`/img/rank/character${user.profileChar}.png`} alt="프로필이미지" />
@@ -268,25 +293,25 @@ function AlgoSolve({
 
             </div>
           })} */}
-            <div className='rank-title'>명예의 전당</div>
+            <div className="rank-title">명예의 전당</div>
             <BeforeSolveUsers inGameUsers={ranking}></BeforeSolveUsers>
           </div>
         </div>
-        <div className='right'>
-              <textarea
-                ref={codeTextArea}
-                style={{ resize: 'none', overflow: 'auto' }}
-                rows={25}
-                cols={50}
-                wrap="off"
-                onChange={handleCode}
-                placeholder={form.code}
-                value={form.code}
-                disabled={gameResultMsg ? true: false}
-              />
-              {gameResultMsg ? null
-              : <>
-              <div className='select' >
+        <div className="right">
+          <textarea
+            ref={codeTextArea}
+            style={{ resize: 'none', overflow: 'auto' }}
+            rows={25}
+            cols={50}
+            wrap="off"
+            onChange={handleCode}
+            placeholder={form.code}
+            value={form.code}
+            disabled={gameResultMsg ? true : false}
+          />
+          {gameResultMsg ? null : (
+            <>
+              <div className="select">
                 {languageList.map((language) => (
                   <label key={language.lanId} htmlFor={language.name}>
                     <input
@@ -297,13 +322,20 @@ function AlgoSolve({
                       onChange={handleRadio}
                       checked={form.lanId === language.lanId}
                     />
-                    <span className='button btnPush btnBlueGreen'>{language.name}</span>
+                    <span className="button btnPush btnBlueGreen">
+                      {language.name}
+                    </span>
                   </label>
                 ))}
               </div>
-              <button className='eightbit-btn eightbit-btn--proceed' onClick={handleCheckSubmit}>정답 확인</button>
+              <button
+                className="eightbit-btn eightbit-btn--proceed"
+                onClick={handleCheckSubmit}
+              >
+                정답 확인
+              </button>
             </>
-          }
+          )}
         </div>
       </div>
     </Wrapper>
