@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
 import { MyRecordInterface } from '../../../models/algo';
-import AlgoRecordListItem from '../components/AlgoRecordListItem';
-import DetailResultModal from '../components/DetailResultModal'
+import AlgoRecordTable from '../components/algo/AlgoRecordTable';
+import DetailResultModal from '../components/DetailResultModal';
 
 const MyPageContainer = styled.div`
   width: 66%;
@@ -76,8 +76,8 @@ const MyPage = () => {
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
   const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
-  const [detailModal, setDetailModal] = useState<string>('')
-  const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('')
+  const [detailModal, setDetailModal] = useState<string>('');
+  const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
 
   useEffect(() => {
     if (record) {
@@ -95,7 +95,6 @@ const MyPage = () => {
     try {
       const res = await myRecordRequest();
       if (res.status === 200) {
-        console.log(res.data.content)
         setAlgoRecord({ ...algoRecord, records: res.data.content });
       }
     } catch (error) {
@@ -144,14 +143,14 @@ const MyPage = () => {
   const clickSsafyGame = () => {
     setGameType('ssafy');
   };
-  const handleDetailAlgo = (problemId:string) => {
-    setDetailModal('algo')
-    setAlgoDetailRoomCode(problemId)
-  }
+  const handleDetailAlgo = (roomCode: string) => {
+    setDetailModal('algo');
+    setAlgoDetailRoomCode(roomCode);
+  };
   const handleCloseModal = () => {
-    setDetailModal('')
-    setAlgoDetailRoomCode('')
-  }
+    setDetailModal('');
+    setAlgoDetailRoomCode('');
+  };
   return (
     <MyPageContainer>
       {userInfo && (
@@ -196,12 +195,18 @@ const MyPage = () => {
               {gameType === 'algo' && (
                 <div>
                   <h1>알고리즘</h1>
-                  {detailModal==='algo' && <DetailResultModal handleModal={handleCloseModal} algoDetailRoomCode={algoDetailRoomCode} />}
-                  {algoRecord.records.map((record: MyRecordInterface) => {
-                    return (
-                      <AlgoRecordListItem key={record.id} record={record} handleDetail={(problemId:string)=>{handleDetailAlgo(problemId)}} />
-                    );
-                  })}
+                  {detailModal === 'algo' && (
+                    <DetailResultModal
+                      handleModal={handleCloseModal}
+                      algoDetailRoomCode={algoDetailRoomCode}
+                    />
+                  )}
+                  <AlgoRecordTable
+                    records={algoRecord.records}
+                    handleDetail={(roomCode: string) => {
+                      handleDetailAlgo(roomCode);
+                    }}
+                  />
                 </div>
               )}
               {gameType === 'cs' && (

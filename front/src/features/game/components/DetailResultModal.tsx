@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AlgoDetailInfo from '../components/AlgoDetailInfo'
+import AlgoDetailInfo from './algo/AlgoDetailInfo';
 
 import styled from 'styled-components';
 
@@ -18,8 +18,8 @@ const StyledModal = styled.div`
   background-color: white;
   z-index: 1000;
   color: black;
-  `;
-  const StyledModalDiv = styled.div`
+`;
+const StyledModalDiv = styled.div`
   top: 0%;
   left: 0%;
   position: fixed;
@@ -28,7 +28,6 @@ const StyledModal = styled.div`
   z-index: 100;
   background-color: rgba(0, 0, 0, 0.4);
 `;
-
 
 function AlgoModal({ handleModal, algoDetailRoomCode }: any) {
   useEffect(() => {
@@ -39,17 +38,17 @@ function AlgoModal({ handleModal, algoDetailRoomCode }: any) {
       width: 100%;`;
     return () => {
       const scrollY = document.body.style.top;
-      document.body.style.cssText = "";
-      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+      document.body.style.cssText = '';
+      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
     };
   }, []);
 
   return (
     <StyledModalDiv onClick={handleModal}>
-      <StyledModal onClick={(e)=> e.stopPropagation()}>
+      <StyledModal onClick={(e) => e.stopPropagation()}>
         <AlgoDetailInfo algoDetailRoomCode={algoDetailRoomCode} />
       </StyledModal>
     </StyledModalDiv>
-  )
+  );
 }
-export default AlgoModal
+export default AlgoModal;
