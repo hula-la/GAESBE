@@ -122,15 +122,7 @@ const TypingGameBox = styled.div`
   padding-top: 1rem;
   height: 17rem;
   border-radius: 20px;
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    width: 15px;
-    border-radius: 70px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 50px;
-    background-color: gray;
-  }
+  overflow: hidden;
 `;
 const Wow = styled.div`
   display: inline;
@@ -169,26 +161,26 @@ const TypingGame = () => {
   const [sec, setSec] = useState(3);
 
   // const socket: CustomWebSocket = new SockJS(
-    //   'https://k7e104.p.ssafy.io:8081/api/ws',
-    // );
-    const client = useRef<any>(null);
-    // useEffect(() => {
-      // }, []);
-      // const client2 = Stomp.over(socket);
-      useEffect(() => {
-        if (isEnd && resultId && resultNickName) {
-          console.log('끄읕');
-          navigate('/game/typing/result', {
-            state: {
-              resultId: resultId,
-              resultNickName: resultNickName,
-              resultProfile: resultProfile,
-            },
-          });
-        }
-      }, [isEnd, resultId, resultNickName]);
-      useEffect(() => {
-        if (isReady) {
+  //   'https://k7e104.p.ssafy.io:8081/api/ws',
+  // );
+  const client = useRef<any>(null);
+  // useEffect(() => {
+  // }, []);
+  // const client2 = Stomp.over(socket);
+  useEffect(() => {
+    if (isEnd && resultId && resultNickName) {
+      console.log('끄읕');
+      navigate('/game/typing/result', {
+        state: {
+          resultId: resultId,
+          resultNickName: resultNickName,
+          resultProfile: resultProfile,
+        },
+      });
+    }
+  }, [isEnd, resultId, resultNickName]);
+  useEffect(() => {
+    if (isReady) {
       interval.current = setInterval(() => {
         setSec(initialTime.current % 60);
         initialTime.current -= 1;
@@ -200,29 +192,29 @@ const TypingGame = () => {
     if (userInfo) {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
-        );
-        client.current = Stomp.over(socket);
-        client.current.connect({}, (frame: any) => {
-          console.log('*****************121**************************');
-          client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
-            var data = JSON.parse(res.body);
-            if (data.hasOwnProperty('room')) {
-              setRoomCode(data.room);
-              roomcode = data.room;
-            }
-            if (data.hasOwnProperty('isLast')) {
-              if (data.isLast === true) {
-                client.current.send(
-                  '/api/typing2/start',
+      );
+      client.current = Stomp.over(socket);
+      client.current.connect({}, (frame: any) => {
+        console.log('*****************121**************************');
+        client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
+          var data = JSON.parse(res.body);
+          if (data.hasOwnProperty('room')) {
+            setRoomCode(data.room);
+            roomcode = data.room;
+          }
+          if (data.hasOwnProperty('isLast')) {
+            if (data.isLast === true) {
+              client.current.send(
+                '/api/typing2/start',
                 {},
                 JSON.stringify({
                   langType: lang,
                   roomCode: roomcode,
                 }),
-                );
-                setIsReady(true);
-                setTimeout(() => {
-                  setIsLoading(false);
+              );
+              setIsReady(true);
+              setTimeout(() => {
+                setIsLoading(false);
               }, 5000);
             }
           }
@@ -238,31 +230,31 @@ const TypingGame = () => {
               userId: userInfo.id,
               roomType: 'RANDOM',
             }),
-            );
-          };
-          enterRoom();
-          const fetchMemberInfo = () => {
-            client.current.send(
-              '/api/typing2/memberInfo',
-              {},
-              JSON.stringify({
-                roomCode: roomcode,
-              }),
-              );
-            };
-            setTimeout(() => {
-              fetchMemberInfo();
-            }, 2000);
-          });
-        }
-      }, [userInfo]);
-      
+          );
+        };
+        enterRoom();
+        const fetchMemberInfo = () => {
+          client.current.send(
+            '/api/typing2/memberInfo',
+            {},
+            JSON.stringify({
+              roomCode: roomcode,
+            }),
+          );
+        };
+        setTimeout(() => {
+          fetchMemberInfo();
+        }, 2000);
+      });
+    }
+  }, [userInfo]);
+
   useEffect(() => {
     if (roomCode) {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-    const client2 = Stomp.over(socket);
+      const client2 = Stomp.over(socket);
       client2.connect({}, (frame) => {
         console.log('*****************177**************************');
         client2.subscribe('/typing2/room/' + roomCode, (res) => {
@@ -302,6 +294,18 @@ const TypingGame = () => {
     };
   }, []);
 
+  const typinggamebox = useRef<HTMLDivElement>(null);
+  function yscroll() {
+    typinggamebox.current?.scrollBy({
+      left: -10000,
+      top: 40,
+      behavior: 'smooth',
+    });
+  }
+  function xscroll() {
+    typinggamebox.current?.scrollBy({ left: 10, behavior: 'smooth' });
+  }
+
   const exapmleitem = `${paragraph}`;
   const example = exapmleitem.split(' ');
   const item = example.map((e) => e);
@@ -329,7 +333,7 @@ const TypingGame = () => {
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
         console.log('****************보냄********************');
-
+        xscroll();
         client.current.send(
           '/api/typing2/submit',
           {},
@@ -355,6 +359,7 @@ const TypingGame = () => {
     } else if (event.key === 'Enter') {
       // window.scrollBy(0, 1000);
       if (index === example[sentence].length) {
+        yscroll();
         const changedState = JSON.parse(
           JSON.stringify({ index: 0, sentence: sentence + 1, type: 0 }),
         );
@@ -385,7 +390,7 @@ const TypingGame = () => {
       // 내가 친거랑 쳐야하는게 똑같다면
       if (example[sentence][index] === event.key) {
         console.log('****************보냄********************');
-
+        xscroll();
         client.current.send(
           '/api/typing2/submit',
           {},
