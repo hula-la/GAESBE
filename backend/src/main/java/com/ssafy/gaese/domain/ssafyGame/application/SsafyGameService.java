@@ -95,7 +95,7 @@ public class SsafyGameService {
         ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
 
 
-        if(user.getMaxWinStreak()>6 || !userCharacterRepository.findByUserAndCharacters(user,characters.get(24)).isPresent())
+        if(user.getMaxWinStreak()>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(24)).isPresent())
         {
             UserCharacter userCharacter = new UserCharacter();
             userCharacter.setUser(user);
@@ -103,7 +103,7 @@ public class SsafyGameService {
             userCharacterRepository.save(userCharacter);
             friendSocketService.sendCharacters(user.getId(),24L);
         }
-        if(user.getMaxWinStreak()>3 || !userCharacterRepository.findByUserAndCharacters(user,characters.get(23)).isPresent())
+        if(user.getMaxWinStreak()>3 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(23)).isPresent())
         {
             UserCharacter userCharacter = new UserCharacter();
             userCharacter.setUser(user);
@@ -111,7 +111,7 @@ public class SsafyGameService {
             userCharacterRepository.save(userCharacter);
             friendSocketService.sendCharacters(user.getId(),23L);
         }
-        if(user.getMaxWinStreak()>1 || !userCharacterRepository.findByUserAndCharacters(user,characters.get(22)).isPresent())
+        if(user.getMaxWinStreak()>1 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(22)).isPresent())
         {
             UserCharacter userCharacter = new UserCharacter();
             userCharacter.setUser(user);
