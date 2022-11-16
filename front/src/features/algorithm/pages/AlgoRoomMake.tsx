@@ -99,7 +99,7 @@ function AlgoRoomMake() {
 
   const [form, setForm] = useState<AlgoRoomInterface>({
     roomCode: '',
-    time: '30',
+    time: '1',
     tier: '1',
     num: '0',
     no: '0',
@@ -128,7 +128,7 @@ function AlgoRoomMake() {
   const handleTime = (e: string) => {
     const newForm = JSON.parse(JSON.stringify(form));
     if (e === 'minus') {
-      if (newForm.time <= 31) {
+      if (newForm.time <= 39) {
         Swal.fire({
           icon: 'info',
           text: '30분보다 적게는 설정할 수 없습니다',
