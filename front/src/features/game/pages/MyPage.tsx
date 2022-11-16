@@ -6,9 +6,11 @@ import { authActions } from '../../auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
-import { MyRecordInterface } from '../../../models/algo';
+import { gameActions } from '../gameSlice';
 import AlgoRecordTable from '../components/algo/AlgoRecordTable';
 import DetailResultModal from '../components/DetailResultModal';
+import CSRecordTable from '../components/cs/CSRecordTable';
+import TypingRecordTable from '../components/typing/TypingRecordTable';
 
 const MyPageContainer = styled.div`
   width: 66%;
@@ -70,9 +72,11 @@ const MyPower = styled.div`
 const MyPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [gameType, setGameType] = useState<string>('algo');
+
   const { userInfo } = useSelector((state: any) => state.auth);
   const { record } = useSelector((state: any) => state.game);
+
+  const [gameType, setGameType] = useState<string>('algo');
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
   const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
@@ -87,6 +91,7 @@ const MyPage = () => {
   }, [record]);
 
   useEffect(() => {
+    dispatch(gameActions.fetchRecordStart());
     algoRecordSetting();
   }, []);
   const algoRecordSetting = async () => {
@@ -103,7 +108,6 @@ const MyPage = () => {
       alert('알고리즘 배틀 정보를 못가져왔습니다');
     }
   };
-
   const fetchAlgoRecordRank = async () => {
     try {
       const res = await myRecordRankRequest();
@@ -145,14 +149,17 @@ const MyPage = () => {
   const clickSsafyGame = () => {
     setGameType('ssafy');
   };
+
   const handleDetailAlgo = (roomCode: string) => {
     setDetailModal('algo');
     setAlgoDetailRoomCode(roomCode);
   };
+
   const handleCloseModal = () => {
     setDetailModal('');
     setAlgoDetailRoomCode('');
   };
+
   return (
     <MyPageContainer>
       {userInfo && (
@@ -214,22 +221,13 @@ const MyPage = () => {
               {gameType === 'cs' && (
                 <div>
                   <h1>CS</h1>
-                  {csList.map((e: any) => (
-                    <div>
-                      <div>{e.date}</div>
-                      <div>{e.ranks}등</div>
-                    </div>
-                  ))}
+                  <CSRecordTable csList={csList} />
                 </div>
               )}
               {gameType === 'typing' && (
                 <div>
                   <h1>TYPING</h1>
-                  {typingList.map((e: any) => (
-                    <div>
-                      <div>{e.ranks}</div>
-                    </div>
-                  ))}
+                  <TypingRecordTable typingList={typingList} />
                 </div>
               )}
               {gameType === 'ssafy' && <div>싸피</div>}

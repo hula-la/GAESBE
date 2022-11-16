@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import Level0 from '../components/Level0';
-import Level1 from '../components/Level1';
-import Level2 from '../components/Level2';
-import Level3 from '../components/Level3';
-import Level4 from '../components/Level4';
-import Level5 from '../components/Level5';
-import Level6 from '../components/Level6';
+import Level0 from '../components/level/Level0';
+import Level1 from '../components/level/Level1';
+import Level2 from '../components/level/Level2';
+import Level3 from '../components/level/Level3';
+import Level4 from '../components/level/Level4';
+import Level5 from '../components/level/Level5';
+import Level6 from '../components/level/Level6';
 
 import { attendanceRequest } from '../../../api/mypageApi';
 import AttendanceComponent from '../components/AttendanceComponent';
@@ -15,8 +15,8 @@ import { itemActions } from '../itemSlice';
 import { useSelector, useDispatch } from 'react-redux';
 const Wrapper = styled.div`
   height: 100%;
-    width: 100%;
-    
+  width: 100%;
+
   position: relative;
 
   overflow: hidden;

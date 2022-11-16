@@ -24,7 +24,6 @@ import FriendSocket from './features/friend/pages/FriendSocket';
 import OnlyNoLogin from './private/OnlyNoLogin';
 import OnlyLogin from './private/OnlyLogin';
 import { itemActions } from './features/game/itemSlice';
-import { gameActions } from './features/game/gameSlice';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -32,7 +31,6 @@ const App = () => {
     dispatch(authActions.fetchUserInfoStart());
     dispatch(authActions.fetchAbilityStart());
     dispatch(itemActions.fetchCharacterStart());
-    dispatch(gameActions.fetchRecordStart());
   }, []);
   const { userInfo } = useSelector((state: any) => state.auth);
 

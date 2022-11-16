@@ -43,7 +43,7 @@ function AlgoRecordTable({
                 </td>
                 <td>{record.ranking}</td>
                 <td>{record.solveTime}</td>
-                <td>{record.date.split('T')[0]}</td>
+                <td>{record.date.split('T')[0].replaceAll('-', '.')}</td>
                 <td>{language[record.lan]}</td>
                 <td>
                   <button onClick={() => handleDetail(record.roomCode)}>
