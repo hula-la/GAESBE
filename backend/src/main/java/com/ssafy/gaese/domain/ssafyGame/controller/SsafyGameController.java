@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.ssafyGame.controller;
 
 import com.ssafy.gaese.domain.ssafyGame.application.SsafyGameService;
+import com.ssafy.gaese.domain.ssafyGame.dto.FiveResultDto;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipParamDto;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipResultDto;
 import com.ssafy.gaese.security.model.CustomUserDetails;
@@ -29,5 +30,12 @@ public class SsafyGameController {
                                               @AuthenticationPrincipal CustomUserDetails userDetails){
         
         return ResponseEntity.ok().body(ssafyGameService.flipStart(param, userDetails.getId()));
+    }
+
+    @PostMapping("/five")
+    @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
+    public ResponseEntity<FiveResultDto> getFive(@AuthenticationPrincipal CustomUserDetails userDetails){
+
+        return ResponseEntity.ok().body(ssafyGameService.getFive(userDetails.getId()));
     }
 }

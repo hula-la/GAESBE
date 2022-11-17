@@ -1,8 +1,10 @@
 package com.ssafy.gaese.domain.ssafyGame.application;
 
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
+import com.ssafy.gaese.domain.ssafyGame.dto.FiveResultDto;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipParamDto;
 import com.ssafy.gaese.domain.ssafyGame.dto.FlipResultDto;
+import com.ssafy.gaese.domain.ssafyGame.dto.NickMaxWinSteakDto;
 import com.ssafy.gaese.domain.user.application.ItemService;
 import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
@@ -119,6 +121,18 @@ public class SsafyGameService {
             userCharacterRepository.save(userCharacter);
             friendSocketService.sendCharacters(user.getId(),21L);
         }
+    }
+
+    public FiveResultDto getFive(Long userId)
+    {
+
+        FiveResultDto result = new FiveResultDto();
+        User user = userRepository.findById(userId).get();
+        result.setMyWinMaxWinStreak(user.getMaxWinStreak());
+        result.setList(userRepository.getNickMaxWinSteakDtoDesc());
+
+
+        return result;
     }
 
 }
