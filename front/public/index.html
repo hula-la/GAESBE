@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,10 +35,16 @@
       src="https://code.jquery.com/jquery-1.11.3.min.js"
     ></script>
     <script type="text/javascript">
-      document.oncontextmenu = function(){return false;}
+      document.oncontextmenu = function () {
+        return false;
+      };
     </script>
   </head>
-  <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <body
+    oncontextmenu="return false"
+    onselectstart="return false"
+    ondragstart="return false"
+  >
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
