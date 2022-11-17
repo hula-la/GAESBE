@@ -175,7 +175,6 @@ const IngameBlock = styled.div`
   .problem {
     box-sizing: border-box;
     width: 60%;
-    height: 45%;
     background: #ffffff;
     border: 5px solid #000000;
     box-shadow: 5px 5px 0px 4px #000000, 4px 4px 0px 7px #ffffff;
@@ -703,11 +702,6 @@ const CSFriendPage = () => {
       )}
       {isStart && (
         <IngameBlock>
-          {/* <img
-            src="/img/gametitle/gametitle3.png"
-            className="gameTitle"
-            alt="gameTitle"
-          /> */}
           {(!problem || isNext) && (
             <div>
               <img src="/img/loadingspinner.gif" alt="loadingSpinner" />

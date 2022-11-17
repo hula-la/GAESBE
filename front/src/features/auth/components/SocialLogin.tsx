@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  margin-bottom: 1rem;
   .social {
     padding: 0.6em 1em;
     border-radius: 0.25em;
@@ -9,7 +10,7 @@ const Wrapper = styled.div`
     font-size: 1rem;
     margin-top: 0.7em;
     display: flex;
-    width: 60%;
+    width: 100%;
     height: 3rem;
     justify-content: center;
     align-items: center;
