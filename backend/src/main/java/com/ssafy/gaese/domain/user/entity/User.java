@@ -1,6 +1,7 @@
 package com.ssafy.gaese.domain.user.entity;
 
 import com.ssafy.gaese.domain.algorithm.dto.AlgoUserDto;
+import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.chat.entity.Chat;
 import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
@@ -68,6 +69,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<TypingRecord> typingRecordList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<AlgoRecord> algorithmRecordList = new ArrayList<>();
 
 
     @Builder.Default
