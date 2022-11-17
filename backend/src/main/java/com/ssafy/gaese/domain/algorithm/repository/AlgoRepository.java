@@ -14,6 +14,8 @@ import java.util.List;
 public interface AlgoRepository extends JpaRepository<AlgoRecord, Long> {
 
     Page<AlgoRecord> findByUser(User user,Pageable pageable);
+
+    List<AlgoRecord> findAllByUser(User user);
     /*
     select count(*) from gaese.algo_record where user_id = 54 and ranking = 1;
      */

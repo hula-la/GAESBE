@@ -41,4 +41,11 @@ public class CsController {
         return ResponseEntity.ok().body(csService.findCsRecord(userDetails.getId(),pageable));
     }
 
+
+    @GetMapping("/record/rank")
+    @ApiOperation(value = "cs 게임 1등 갯수 출력", notes = "사용자별 cs 게임 기록 조회")
+    public ResponseEntity<Integer> getWinCount(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return ResponseEntity.ok().body(csService.getWinCount(userDetails.getId()));
+    }
+
 }

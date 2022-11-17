@@ -266,10 +266,12 @@ public class TypingService {
     {
         User user = userRepository.findById(userid).get();
 
-//        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
         List<TypingRecord> typingRecords = typingRecordRepository.findAllByUser(user);
-        ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
-
+        ArrayList<Characters> characterArr = (ArrayList<Characters>) characterRepository.findAll();
+        Map<Long,Characters> characters = new HashMap<>();
+        for (Characters c:characterArr) {
+            characters.put(c.getId(),c);
+        }
         int oneCount=0;
         int threeCount=0;
 
@@ -282,46 +284,38 @@ public class TypingService {
             }
         }
 
-        int charId=10;
+        int charId=11;
 
         if(oneCount>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
-        charId=9;
+        charId=10;
         if(oneCount>2 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
-        charId=8;
+        charId=9;
         if(oneCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
 
-
-        charId=7;
+        charId=8;
         if(!userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
 
 
+    }
+
+    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    {
+        UserCharacter userCharacter = new UserCharacter();
+        userCharacter.setUser(user);
+        userCharacter.setCharacters(characters.get(charId));
+        userCharacterRepository.save(userCharacter);
+        friendSocketService.sendCharacters(user.getId(),(long)charId);
     }
 }

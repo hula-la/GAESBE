@@ -10,6 +10,7 @@ import com.ssafy.gaese.domain.cs.entity.CsRecordProblem;
 import com.ssafy.gaese.domain.cs.exception.*;
 import com.ssafy.gaese.domain.cs.repository.*;
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
+import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.user.application.ItemService;
 import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
@@ -376,9 +377,12 @@ public class CsService {
     {
         User user = userRepository.findById(userid).get();
 
-        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
         List<CsRecord> csRecords = csRecordRepository.findAllByUser(user);
-        ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
+        ArrayList<Characters> characterArr = (ArrayList<Characters>) characterRepository.findAll();
+        Map<Long,Characters> characters = new HashMap<>();
+        for (Characters c:characterArr) {
+            characters.put(c.getId(),c);
+        }
 
         int oneCount=0;
         int threeCount=0;
@@ -396,74 +400,68 @@ public class CsService {
             }
         }
 
-        int charId=17;
+        int charId=18;
         if(threeCount>9 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
-        charId=16;
+        charId=17;
         if(threeCount>4 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
-        charId=15;
+        charId=16;
         if(threeCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
 
-        charId=14;
+        charId=15;
         if(oneCount>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
-        charId=13;
+        charId=14;
         if(oneCount>2 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
-        charId=12;
+        charId=13;
         if(oneCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
 
 
-        charId=11;
+        charId=12;
         if(!userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(charId));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),(long)charId);
+            userCharacterSet(user,charId,characters);
         }
 
 
     }
 
+
+    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    {
+        UserCharacter userCharacter = new UserCharacter();
+        userCharacter.setUser(user);
+        userCharacter.setCharacters(characters.get(charId));
+        userCharacterRepository.save(userCharacter);
+        friendSocketService.sendCharacters(user.getId(),(long)charId);
+    }
+
+    public int getWinCount(long userId)
+    {
+        User user =userRepository.findById(userId).get();
+        List<CsRecord> csRecordRecords = csRecordRepository.findAllByUser(user);
+        int count =0;
+        for (CsRecord cr:csRecordRecords ) {
+            if(cr.getRanks()==1)
+                count++;
+
+        }
+        return count;
+    }
 }
