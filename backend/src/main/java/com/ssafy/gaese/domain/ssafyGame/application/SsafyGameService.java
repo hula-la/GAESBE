@@ -128,8 +128,23 @@ public class SsafyGameService {
 
         FiveResultDto result = new FiveResultDto();
         User user = userRepository.findById(userId).get();
+        List<User> userList = userRepository.getNickMaxWinSteakDtoDesc();
+
+        List<NickMaxWinSteakDto> list = new ArrayList<>();
+
+
+        for (User u:userList )
+        {
+            NickMaxWinSteakDto nickMaxWinSteakDto = new NickMaxWinSteakDto();
+            nickMaxWinSteakDto.setMax_win_streak(u.getMaxWinStreak());
+            nickMaxWinSteakDto.setNickName(u.getNickname());
+
+            list.add(nickMaxWinSteakDto);
+        }
+
+
         result.setMyWinMaxWinStreak(user.getMaxWinStreak());
-        result.setList(userRepository.getNickMaxWinSteakDtoDesc());
+        result.setList(list);
 
 
         return result;

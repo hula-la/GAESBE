@@ -23,6 +23,8 @@ import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
 import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
+import com.ssafy.gaese.global.util.TimeUtil;
+import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -106,7 +108,7 @@ public class TypingService {
         roomDto.setStart(true);
 //        시작 시간 알림
         roomDto.setStartTime(System.currentTimeMillis());
-
+        roomDto.setStartSpeedTime(TimeUtil.forTypingSpeedTime());
         roomDto = typingRoomRedisRepository.save(roomDto);
 
         // 문제 보내기
@@ -144,9 +146,11 @@ public class TypingService {
     public void rankUpdate(TypingRoomDto roomDto)
     {
         LocalDateTime now = LocalDateTime.now();
-        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
+        String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
         int rank =1;
-
+        int nowSpeedTime = TimeUtil.forTypingSpeedTime() -roomDto.getStartSpeedTime();
+        if(nowSpeedTime<0)
+            nowSpeedTime+=3600;
 
         while(roomDto.getPlayers().size()>0)
         {
@@ -171,11 +175,14 @@ public class TypingService {
             //레코드 기록
             TypingRecord typingRecord = new TypingRecord();
             typingRecord.setRanks(rank);
+            System.out.println("nowSpeedTime : " + nowSpeedTime);
+            System.out.println("roomDto.getPoint().get(maxId) : " + roomDto.getPoint().get(maxId));
+            typingRecord.setTypeSpeed((roomDto.getPoint().get(maxId)*60) /nowSpeedTime);
             typingRecord.setDate(formatedNow);
             typingRecord.setLangType(roomDto.getLangType());
             typingRecord.setUser(userRepository.findById(maxId).get());
             typingRecordRepository.save(typingRecord);
-
+            charChecker(maxId);
             Ability ability = abilityRepository.findByUser_Id(maxId).get();
 //            System.out.println("변화 전 어빌리티");
 //            System.out.println(maxId);
@@ -214,8 +221,9 @@ public class TypingService {
         HashMap<Long, Float> progressByPlayer = roomDto.getProgressByPlayer();
         Integer point = roomDto.getPoint().get(userId)+1;
         roomDto.getPoint().put(userId,point);
-        long paragraphLength = roomDto.getParagraphLength();
+        int paragraphLength = roomDto.getParagraphLength();
         float pointPerWord = (float) (100*point / paragraphLength);
+
 //        float pointPerWord = (float) (1);
 
         progressByPlayer.put(userId,pointPerWord);

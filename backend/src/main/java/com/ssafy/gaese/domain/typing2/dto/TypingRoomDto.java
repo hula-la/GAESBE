@@ -37,8 +37,10 @@ public class TypingRoomDto {
 
 //    시작 시간
     private long startTime;
-    //    시작 시간
-    private long paragraphLength;
+    //speed 계산용 시작시간
+    private int startSpeedTime;
+
+    private int paragraphLength;
 
     private TypingSocketDto.RoomType roomType;
 
