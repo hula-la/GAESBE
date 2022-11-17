@@ -20,51 +20,49 @@ const Container = styled.div`
   font-family: 'NeoDunggeunmo';
   font-style: normal;
   position: relative;
-  height:100vh;
+  height: 100vh;
 
-  .timeOut{
+  .timeOut {
     position: absolute;
     bottom: 1rem;
-  } 
+  }
 
-  .startBtnContainer{
+  .startBtnContainer {
     position: absolute;
     bottom: 3rem;
-    right:3rem;
+    right: 3rem;
     width: 10rem;
 
     transition: transform 0.3s;
 
-    .inviteBtn{
-    width:100%;
-    :hover{
+    .inviteBtn {
+      width: 100%;
+      :hover {
         transform: scale(1.1);
-        
+
         cursor: url('/img/cursor/hover_cursor.png'), auto;
       }
     }
 
-    .inviteBtnBox{
+    .inviteBtnBox {
       padding-left: 1rem;
       position: relative;
       font-size: 1rem;
-      
 
-      :hover .inviteBtnToolTip{
+      :hover .inviteBtnToolTip {
         display: block;
       }
-      .inviteBtnToolTip{
+      .inviteBtnToolTip {
         display: none;
         position: absolute;
         bottom: 110%;
-
       }
     }
 
-    .startBtn{
+    .startBtn {
       width: 100%;
 
-      :hover{
+      :hover {
         transform: scale(1.1);
         transition: transform 0.3s;
         cursor: url('/img/cursor/hover_cursor.png'), auto;
@@ -157,7 +155,7 @@ const IngameBlock = styled.div`
     /* transition: width 5s linear; */
   }
   .progressContainer {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     height: 30px;
     border: 1px silver solid;
@@ -171,11 +169,7 @@ const IngameBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
-
-
-
-   
+    margin-top: 3rem;
   }
   .problem {
     box-sizing: border-box;
@@ -194,24 +188,24 @@ const IngameBlock = styled.div`
       height: 1rem;
       width: 100%;
     } */
-    .problemContent{
+    .problemContent {
       margin: 1rem;
       overflow-y: auto;
 
       &::-webkit-scrollbar {
         width: 10px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #2f3542;
-      border-radius: 10px;
-      background-clip: padding-box;
-      border: 2px solid transparent;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: grey;
-      border-radius: 10px;
-      box-shadow: inset 0px 0px 5px white;
-    }
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #2f3542;
+        border-radius: 10px;
+        background-clip: padding-box;
+        border: 2px solid transparent;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: grey;
+        border-radius: 10px;
+        box-shadow: inset 0px 0px 5px white;
+      }
     }
     /* justify-content: space-between; */
     .question {
@@ -235,9 +229,9 @@ const IngameBlock = styled.div`
 
     transition: transform 0.3s;
 
-    :hover{
+    :hover {
       transform: scale(1.05);
-      
+
       cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
   }
@@ -246,51 +240,49 @@ const IngameBlock = styled.div`
     display: flex;
     width: 80%;
     height: 20%;
-    position:relative;
+    position: relative;
   }
   .rankwrapper {
     margin-right: 1rem;
     display: flex;
     width: 25%;
 
-    &.myRankWrapper{
+    &.myRankWrapper {
       position: absolute;
-      right:0;
+      right: 0;
     }
     .medal {
       height: 70%;
     }
 
-    .myRank{
+    .myRank {
       font-size: 2rem;
-      padding-right:0 0.5rem;
-      span{
+      padding-right: 0 0.5rem;
+      span {
         font-size: 1rem;
       }
     }
-    
   }
   .characterBox {
-      width: 50%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .myCharacter {
+      right: 0;
+      position: absolute;
+    }
+
+    .character {
+      width: 100%;
+    }
+    .playerNickName {
       display: flex;
       flex-direction: column;
-      align-items: center;
-
-      .myCharacter{
-        right: 0;
-        position: absolute;
-      }
-
-
-      .character {
-        width: 100%;
-      }
-      .playerNickName {
-        display: flex;
-        flex-direction: column;
-        /* margin-left: 1rem; */
-      }
+      /* margin-left: 1rem; */
     }
+  }
   /* .character {
     width: 70%;
     height: 30%;
@@ -324,6 +316,7 @@ const CSFriendPage = () => {
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
   const [myScore, setMyScore] = useState<any>(null);
+  const [myRanking, setMyRanking] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [solveOrder, setSolveOrder] = useState<any>(null);
   const [answer, setAnswer] = useState<number | null>(null);
@@ -595,24 +588,26 @@ const CSFriendPage = () => {
       const tmp = ranking.filter((rank: any) => {
         return rank[0] === userInfo.id;
       });
-      setMyScore(tmp);
+      setMyScore(tmp[0]);
+      const my = (element: any) => element[0] === userInfo.id;
+      console.log(ranking.findIndex(my));
     }
   }, [ranking]);
 
-  useEffect(() => {
-    const preventGoBack = () => {
-      // change start
-      window.history.pushState(null, '', window.location.href);
-      // change end
-      Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
-    };
-    window.history.pushState(null, '', window.location.href);
-    window.addEventListener('popstate', preventGoBack);
-    return () => window.removeEventListener('popstate', preventGoBack);
-  }, []);
-  // 뒤로가기 막는 useEffect
-  // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
+  // useEffect(() => {
+  //   const preventGoBack = () => {
+  //     // change start
+  //     window.history.pushState(null, '', window.location.href);
+  //     // change end
+  //     Swal.fire({ icon: 'error', text: '게임중에는 나갈 수 없습니다' });
+  //   };
+  //   window.history.pushState(null, '', window.location.href);
+  //   window.addEventListener('popstate', preventGoBack);
+  //   return () => window.removeEventListener('popstate', preventGoBack);
+  // }, []);
+  // // 뒤로가기 막는 useEffect
+  // // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
+  // usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
 
   return (
     <Container>
@@ -633,12 +628,8 @@ const CSFriendPage = () => {
             className="gameTitle"
             alt="gameTitle"
           />
-          <h3>
-            혼자 또는 친구와 함께 게임을 즐겨보세요
-          </h3>
+          <h3>혼자 또는 친구와 함께 게임을 즐겨보세요</h3>
 
-          
-          
           <div className="waitingContent">
             <div className="imgBox">
               <img
@@ -646,7 +637,7 @@ const CSFriendPage = () => {
                 className="waitingroom"
                 alt="room"
               />
-              {players && 
+              {players &&
                 players.map((player: any, idx: number) => {
                   return (
                     <PlayerCharacter
@@ -662,40 +653,46 @@ const CSFriendPage = () => {
                   );
                 })}
             </div>
-            
+
             {/* <button className='inviteBtn' onClick={handleModal}>친구 초대</button> */}
             {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
               })} */}
           </div>
-          <div className='startBtnContainer'>
-
-            <div className="friendNum">{players.length}/10
+          <div className="startBtnContainer">
+            <div className="friendNum">
+              {players.length}/10
               <div className="inviteBtnBox">
                 <div className="inviteBtnToolTip">친구 초대</div>
-                <img src='/img/cs/inviteBtn2.png' className='inviteBtn' onClick={handleModal} />
-
+                <img
+                  src="/img/cs/inviteBtn2.png"
+                  className="inviteBtn"
+                  onClick={handleModal}
+                />
               </div>
             </div>
             <div>
-              
-              {isMaster && <img  className='startBtn' src='/img/cs/startBtn.png' onClick={onClickStart} />}
+              {isMaster && (
+                <img
+                  className="startBtn"
+                  src="/img/cs/startBtn.png"
+                  onClick={onClickStart}
+                />
+              )}
             </div>
-
           </div>
 
-
-          {isReady && <p className='timeOut'>{sec}초 후 게임이 시작됩니다!</p>}
+          {isReady && <p className="timeOut">{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
       {isStart && (
         <IngameBlock>
-          <img
+          {/* <img
             src="/img/gametitle/gametitle3.png"
             className="gameTitle"
             alt="gameTitle"
-          />
+          /> */}
           {(!problem || isNext) && (
             <div>
               <img src="/img/loadingspinner.gif" alt="loadingSpinner" />
@@ -710,25 +707,14 @@ const CSFriendPage = () => {
                 </div>
                 <div className="problemContent">
                   <div className="question">{problem.question}</div>
-                  {/* <div>{problem.example}</div> */}
-                  {/* <div>{problem.example.split('|')}</div> */}
-                  <div>{problem.example.split('|').map((k: String, v: number) => (
-                    <div className="example">{v + 1}. { k}</div>
-                  )
-                  )}</div>
+                  <div>
+                    {problem.example.split('|').map((k: String, v: number) => (
+                      <div className="example">
+                        {v + 1}. {k}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                {/* <div>{problem.example.split('|').map((k: String, v: number) => {
-                  return (
-                    <div>{v}. {k}</div>
-                  )
-                })}</div> */}
-                {/* {problem.examples.map((example: string, index: number) => {
-                return (
-                  <span>
-                  {index} : {example}
-                  </span>
-                  );
-                })} */}
               </div>
               <div className="selectbuttons">
                 {answerButton.map((answer, idx) => {
@@ -766,19 +752,21 @@ const CSFriendPage = () => {
                   })}
                 {myScore && (
                   <div className="rankwrapper myRankWrapper">
-                    <div className='myRank'>15<span>th</span></div>
+                    <div className="myRank">
+                      {myRanking + 1}
+                      <span>등</span>
+                    </div>
 
-                    <div  className="characterBox myCharacter">
+                    <div className="characterBox myCharacter">
                       <img
                         className="character"
-                        src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[0][2]}_normal.gif`}
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[2]}_normal.gif`}
                         alt="profile"
                       />
                       <div className="playerNickName">
-                          <div>asz</div>
-                          <div>5000</div>
+                        <div>{myScore[1]}zz</div>
+                        <div>{myScore[3]}</div>
                       </div>
-
                     </div>
                   </div>
                 )}
@@ -794,13 +782,30 @@ const CSFriendPage = () => {
           {isSolved !== null && !isNext && (
             <div>
               <p>중간결과 페이지</p>
+              <div className="problemBox">
+                <div className="problem">
+                  <div className="problemContent">
+                    <div className="question">{problem.question}</div>
+                    <div>
+                      {problem.example
+                        .split('|')
+                        .map((k: String, v: number) => (
+                          <div className="example">
+                            {v + 1}. {k}
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div>
-                <div>{problem.question}</div>
-                <div>{problem.example.split('|').map((k: String, v: number) => {
-                  (
-                    <div>{v}. {k}</div>
-                  )
-                })}</div>
+                <div>
+                  {problem.example.split('|').map((k: String, v: number) => {
+                    <div>
+                      {v}. {k}
+                    </div>;
+                  })}
+                </div>
                 <div>답 : {answer}</div>
                 <div>고른 비율</div>
                 {cntPerNum &&
