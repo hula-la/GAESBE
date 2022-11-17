@@ -40,7 +40,7 @@ export const mySsafyRecordRequest = async () => {
 
 export const mySsafyWinRequest = async () => {
   const res = await client.get('ssafy/record/rank');
-  return res
+  return res;
 };
 export const allGameRankingRequest = async () => {
   const res = await client.get('ability/rank');
