@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { coinActions } from './coinFlipSlice';
@@ -111,6 +112,7 @@ const Container = styled.div`
 `;
 
 const CoinFlipPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const coinRef = useRef<HTMLDivElement | null>(null);
   const { result } = useSelector((state: any) => state.coin);
@@ -197,11 +199,20 @@ const CoinFlipPage = () => {
 
   return (
     <Container>
+      <img
+        onClick={() => navigate('/game/select')}
+        src="/img/arrow/back-arrow.png"
+        alt=""
+      />
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>
-      <div>나의 최대 연승 : {ranking.myWinMaxWinStreak}</div>
-      <div>{ranking.myWinningStreak}연승중~</div>
+      {ranking && (
+        <>
+          <div>나의 최대 연승 : {ranking.myWinMaxWinStreak}</div>
+          <div>{ranking.myWinningStreak}연승중~</div>
+        </>
+      )}
       <div>
         {ranking &&
           ranking['list'].map((rank: any, idx: any) => {

@@ -221,7 +221,7 @@ const SideBar = () => {
           />
           <p className="foldername">MYROOM</p>
         </div>
-        <div onClick={() => handleOnClick('typing')} className="folder">
+        <div onClick={() => handleOnClick('select')} className="folder">
           <img
             src="/img/folderIcon/FolderClose.png"
             alt="menu"
@@ -232,9 +232,9 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">TYPING</p>
+          <p className="foldername">GAME</p>
         </div>
-        <div onClick={() => handleOnClick('algo')} className="folder">
+        <div onClick={() => handleOnClick('ranking')} className="folder">
           <img
             src="/img/folderIcon/FolderClose.png"
             alt="menu"
@@ -245,33 +245,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">ALGORITHM</p>
-        </div>
-        <div onClick={() => handleOnClick('CS')} className="folder">
-          <img
-            src="/img/folderIcon/FolderClose.png"
-            alt="menu"
-            className="folderIcon folderClose"
-          />
-          <img
-            src="/img/folderIcon/FolderOpen.png"
-            alt="menu"
-            className="folderIcon folderOpen"
-          />
-          <p className="foldername">CS</p>
-        </div>
-        <div onClick={() => handleOnClick('casino')} className="folder">
-          <img
-            src="/img/folderIcon/FolderClose.png"
-            alt="menu"
-            className="folderIcon folderClose"
-          />
-          <img
-            src="/img/folderIcon/FolderOpen.png"
-            alt="menu"
-            className="folderIcon folderOpen"
-          />
-          <p className="foldername">MINI</p>
+          <p className="foldername">RANKING</p>
         </div>
         {/* <button onClick={onClickLogout}>로그 아웃</button> */}
         <div onClick={onClickLogout} className="logoutfolder">

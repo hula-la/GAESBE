@@ -8,6 +8,8 @@ import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import GamePage from './features/game/pages/GamePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import CSgamePage from './features/cs/pages/CSgamePage';
+import GameSelectPage from './features/game/pages/GameSelectPage';
+import GameRankingPage from './features/game/pages/GameRankingPage';
 
 import Background from './components/Layout/Background';
 import MyOfficePage from './features/game/pages/MyOfficePage';
@@ -50,6 +52,8 @@ const App = () => {
           <Route element={<OnlyLogin />}>
             <Route path="game/*" element={<GamePage />}>
               <Route path="mypage" element={<MyPage />} />
+              <Route path="select" element={<GameSelectPage />} />
+              <Route path="ranking" element={<GameRankingPage />} />
               <Route path="mypage/change" element={<ChangeUserInfoPage />} />
               <Route path="" element={<MyOfficePage />} />
               <Route path="typing/*" element={<TypingPage />} />

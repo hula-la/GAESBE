@@ -125,6 +125,11 @@ function AlgoMainPage() {
 
   return (
     <Wrapper>
+      <img
+        onClick={() => navigate('/game/select')}
+        src="/img/arrow/back-arrow.png"
+        alt=""
+      />
       <Content>
         {bjConnectModal && <AlgoModal handleModal={handleConnectModal} />}
         <h1 className="title">

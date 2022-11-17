@@ -76,7 +76,6 @@ const SelectGameTypeBox = styled.div`
     }
     &.friend {
       background-color: #b468da46;
-
     }
 
     :hover {
@@ -172,6 +171,11 @@ const CSgamePage = () => {
 
   return (
     <CsMain>
+      <img
+        onClick={() => navigate('/game/select')}
+        src="/img/arrow/back-arrow.png"
+        alt=""
+      />
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>

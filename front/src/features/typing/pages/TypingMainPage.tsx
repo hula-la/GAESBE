@@ -194,6 +194,11 @@ function TypingMainPage() {
   };
   return (
     <TypingMain>
+      <img
+        onClick={() => navigate('/game/select')}
+        src="/img/arrow/back-arrow.png"
+        alt=""
+      />
       <div className="aniToDown">
         <div className="title">
           <img src="/img/gametitle/gametitle2.png" alt="title" />

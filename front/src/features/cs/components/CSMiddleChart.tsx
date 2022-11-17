@@ -41,6 +41,11 @@ export const options = {
       },
     },
   },
+  scales: {
+    y: {
+      display: false,
+    },
+  },
 };
 
 const labels = ['1', '2', '3', '4'];
