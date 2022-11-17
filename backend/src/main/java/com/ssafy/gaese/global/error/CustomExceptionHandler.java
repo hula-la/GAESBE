@@ -6,6 +6,7 @@ import com.ssafy.gaese.domain.friends.exception.AlreadyFriendRequestException;
 import com.ssafy.gaese.domain.friends.exception.NotFriendException;
 import com.ssafy.gaese.domain.friends.exception.ReqToMeException;
 import com.ssafy.gaese.domain.user.exception.AlreadyCheckException;
+import com.ssafy.gaese.domain.user.exception.LevelNotSatisfiedException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.security.error.ErrorCode;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,12 @@ public class CustomExceptionHandler {
     @ExceptionHandler(value = {AlreadyCheckException.class})
     public ResponseEntity<Object> handleAlreadyCheckException(){
         ErrorCode ec = ErrorCode.ALREADYCHECK_TOKEN;
+        return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
+    }
+    
+    @ExceptionHandler(value = {LevelNotSatisfiedException.class})
+    public ResponseEntity<Object> handleLevelNotSatisfiedException(){
+        ErrorCode ec = ErrorCode.LEVELNOTSATISFIED_TOKEN;
         return ResponseEntity.status(ec.getCode()).body(ErrorResponseBody.of(ec.name(),ec.getMessage()));
     }
 
