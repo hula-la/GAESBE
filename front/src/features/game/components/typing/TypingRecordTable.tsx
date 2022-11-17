@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Tr = styled.div`
   width: 490%;
-  margin-top: 1%;
+  margin-top: 10%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -29,6 +29,7 @@ function TypingRecordTable({ typingList }: any) {
           <Th>순위</Th>
         </Tr>
       </thead>
+      <hr style={{ width: '400%', marginLeft: '40%' }} />
       <tbody>
         {typingList.map((e: any) => (
           <Tr key={e.typingRecordId}>

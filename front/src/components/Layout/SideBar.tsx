@@ -91,9 +91,10 @@ const Side = styled.div`
     padding: 15% 0;
     .logoutfolder {
       display: flex;
+      justify-content: start;
       align-items: center;
-      height: 13%;
       width: 100%;
+      height: 10%;
       position: relative;
       :hover {
         transform: translateY(-1vh);
@@ -102,8 +103,10 @@ const Side = styled.div`
     }
     .logout {
       display: flex;
-      height: 60%;
-      padding-left: 10%;
+      width: 30%;
+      height: 80%;
+      /* height: 60%; */
+      padding-left: 6%;
     }
     .logoutname {
       font-style: normal;
@@ -111,7 +114,7 @@ const Side = styled.div`
       font-size: 23px;
       line-height: 30px;
       color: #ffffff;
-      margin-left: 2.2rem;
+      margin-left: 1rem;
       margin-top: 2rem;
       left: 37%;
     }
@@ -275,12 +278,9 @@ const SideBar = () => {
         </div>
         {/* <button onClick={onClickLogout}>로그 아웃</button> */}
         <div onClick={onClickLogout} className="logoutfolder">
-          <img
-            className="logout"
-            // style={{ margin: height: '50%' }}
-            src="/img/login/logout.png"
-            alt=""
-          />
+          {/* <img className="logout" src="/img/login/logout.png" alt="" /> */}
+          <img className="logout" src="/img/login/logout1.png" alt="" />
+          {/* <img className="logout2" src="/img/login/logout2.png" alt="" /> */}
           <p className="logoutname">로그 아웃</p>
         </div>
       </div>

@@ -104,7 +104,8 @@ const UnLockedCharacter = styled.img`
   width: 50%;
 `;
 const LockedCharacter = styled.img`
-  width: 50%;
+  width: 100%;
+  /* width: 50%; */
   opacity: 0.7;
 `;
 const ChangeUserInfoPage = () => {
@@ -228,8 +229,15 @@ const ChangeUserInfoPage = () => {
                       key={character.characterId}
                       onClick={(e) => handleUnLockSelectCharacter()}
                     >
-                      <LockedCharacter
+                      {/* <LockedCharacter
+                        
                         src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                        alt="프로필 이미지"
+                      />
+                      <p>{character.need}</p>
+                    </CharacterList> */}
+                      <LockedCharacter
+                        src="/img/rank/lockedcharacter.png"
                         alt="프로필 이미지"
                       />
                       <p>{character.need}</p>
