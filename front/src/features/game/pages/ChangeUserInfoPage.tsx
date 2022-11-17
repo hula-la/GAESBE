@@ -110,13 +110,18 @@ const LockedCharacter = styled.img`
 const ChangeUserInfoPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isDuplicate } = useSelector((state: any) => state.auth);
-  const { userInfo } = useSelector((state: any) => state.auth);
-  const [nickname, setNickname] = useState<string>(userInfo.nickname);
-  const [profilechar, setProfilechar] = useState<string>(userInfo.profileChar);
+  const { isDuplicate, userInfo } = useSelector((state: any) => state.auth);
+  const [nickname, setNickname] = useState<string>('');
+  const [profilechar, setProfilechar] = useState<string>('');
   const { characters } = useSelector((state: any) => state.item);
 
   let characterList = characters;
+  useEffect(() => {
+    if (userInfo) {
+      setNickname(userInfo.nickname);
+      setProfilechar(userInfo.profileChar);
+    }
+  }, [userInfo]);
 
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
@@ -202,36 +207,37 @@ const ChangeUserInfoPage = () => {
       <SelectCharacter>
         <h1>당신의 캐릭터를 변경하세요</h1>
         <AllCharacterList>
-          {characterList.map((character: any) => {
-            return (
-              <>
-                {character.own ? (
-                  <CharacterList
-                    key={character.characterId}
-                    onClick={(e) =>
-                      handleSelectCharacter(character.characterId)
-                    }
-                  >
-                    <UnLockedCharacter
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
-                      alt="프로필 이미지"
-                    />
-                  </CharacterList>
-                ) : (
-                  <CharacterList
-                    key={character.characterId}
-                    onClick={(e) => handleUnLockSelectCharacter()}
-                  >
-                    <LockedCharacter
-                      src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
-                      alt="프로필 이미지"
-                    />
-                    <p>{character.need}</p>
-                  </CharacterList>
-                )}
-              </>
-            );
-          })}
+          {characterList &&
+            characterList.map((character: any) => {
+              return (
+                <>
+                  {character.own ? (
+                    <CharacterList
+                      key={character.characterId}
+                      onClick={(e) =>
+                        handleSelectCharacter(character.characterId)
+                      }
+                    >
+                      <UnLockedCharacter
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                        alt="프로필 이미지"
+                      />
+                    </CharacterList>
+                  ) : (
+                    <CharacterList
+                      key={character.characterId}
+                      onClick={(e) => handleUnLockSelectCharacter()}
+                    >
+                      <LockedCharacter
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${character.characterId}_normal.gif`}
+                        alt="프로필 이미지"
+                      />
+                      <p>{character.need}</p>
+                    </CharacterList>
+                  )}
+                </>
+              );
+            })}
         </AllCharacterList>
         <a
           href="javascript:void(0)"
