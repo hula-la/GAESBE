@@ -219,7 +219,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">MYROOM</p>
+          <p className="foldername">내 방</p>
         </div>
         <div onClick={() => handleOnClick('select')} className="folder">
           <img
