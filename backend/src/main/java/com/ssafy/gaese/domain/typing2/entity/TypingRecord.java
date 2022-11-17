@@ -49,6 +49,7 @@ public class TypingRecord {
                 .typeSpeed(this.typeSpeed)
                 .ranks(this.ranks)
                 .langType(this.langType)
+                .date(this.date)
                 .build();
     }
 

@@ -14,6 +14,8 @@ public class TypingRecordDto {
 
     private int ranks;
 
+    private String date;
+
     private TypingRecord.LangType langType;
 
 }
