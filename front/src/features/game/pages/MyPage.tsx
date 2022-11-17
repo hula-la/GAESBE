@@ -9,6 +9,8 @@ import {
   myRecordRequest,
   myCsWinRequest,
   myTypingWinRequest,
+  mySsafyRecordRequest,
+  mySsafyWinRequest,
 } from '../../../api/gameApi';
 import { gameActions } from '../gameSlice';
 import styled from 'styled-components';
@@ -17,7 +19,7 @@ import AlgoRecordTable from '../components/algo/AlgoRecordTable';
 import DetailResultModal from '../components/DetailResultModal';
 import CSRecordTable from '../components/cs/CSRecordTable';
 import TypingRecordTable from '../components/typing/TypingRecordTable';
-
+import SsafyRecordTable from '../components/ssafy/SsafyRecordTable';
 const MyPageContainer = styled.div`
   width: 100%;
   height: 99%;
@@ -165,7 +167,9 @@ const MyPage = () => {
   const [algoRecordRank, setAlgoRecordRank] = useState<number>(0);
   const [typingWinNum, setTypingWinNum] = useState<number>(0);
   const [csWinNum, setCsWinNum] = useState<number>(0);
+  const [ssafyWinNum, setSsafyWinNum] = useState<number>(0);
   const [algoRecords, setAlgoRecords] = useState([]);
+  const [ssafyRecords, setSsafyRecords] = useState<any>(null);
   const [detailModal, setDetailModal] = useState<string>('');
   const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
   const [left, setLeft] = useState<any>('22.5%');
@@ -187,6 +191,8 @@ const MyPage = () => {
     fetchAlgoRecord();
     fetchTypingWin();
     fetchCsWin();
+    fetchMySsafyRecord();
+    fetchSsafyWin();
   }, []);
   const fetchAlgoRecord = async () => {
     try {
@@ -228,10 +234,32 @@ const MyPage = () => {
       Swal.fire({ icon: 'error', text: 'CS 게임 정보를 못가져왔습니다' });
     }
   };
+  const fetchMySsafyRecord = async () => {
+    try {
+      const res = await mySsafyRecordRequest();
+      console.log(res);
+      if (res.status === 200) {
+        setSsafyRecords(res.data.content);
+        console.log(res.data.content, '싸피ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ');
+      }
+    } catch (error) {
+      Swal.fire({ icon: 'error', text: '싸피게임 정보를 못가져왔습니다' });
+    }
+  };
+  const fetchSsafyWin = async () => {
+    try {
+      const res = await mySsafyWinRequest();
+      if (res.status === 200) {
+        setSsafyWinNum(res.data);
+      }
+    } catch (error) {
+      Swal.fire({ icon: 'error', text: '싸피게임 정보를 못가져왔습니다' });
+    }
+  };
 
   let csList: Array<any> = csrecord;
   let typingList: Array<any> = typingrecord;
-
+  let ssafyList: Array<any> = ssafyRecords;
   const handleDelete = () => {
     Swal.fire({
       title: '진짜?',
@@ -356,7 +384,7 @@ const MyPage = () => {
                 <h2>싸피게임 최대연승</h2>
                 <br />
                 <br />
-                <h1>회</h1>
+                <h1>{ssafyWinNum}회</h1>
               </GameType>
             </MyRecord>
           </Up>
@@ -423,7 +451,11 @@ const MyPage = () => {
                   <TypingRecordTable typingList={typingList} />
                 </div>
               )}
-              {gameType === 'ssafy' && <div>싸피</div>}
+              {gameType === 'ssafy' && (
+                <div>
+                  <SsafyRecordTable ssafyList={ssafyList}></SsafyRecordTable>
+                </div>
+              )}
             </div>
           </MyPower>
         </>

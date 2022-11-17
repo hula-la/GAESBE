@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const Tr = styled.div`
-  width: 800%;
+  /* border: 2px solid red; */
+  width: 700%;
   margin-top: 10%;
   display: flex;
   flex-direction: row;
@@ -18,25 +19,25 @@ const Td = styled.div`
   justify-content: center;
 `;
 
-function CSRecordTable({ csList }: any) {
+function SsafyRecordTable({ ssafyList }: any) {
   return (
     <table>
       <thead>
         <Tr>
           <Th>배틀 날짜</Th>
-          <Th>순위</Th>
+          <Th>결과</Th>
         </Tr>
       </thead>
-      <hr style={{ width: '650%', marginLeft: '50%' }} />
+      <hr style={{ width: '600%', marginLeft: '50%' }} />
       <tbody>
-        {csList.map((e: any) => (
-          <Tr key={e.csRecordId}>
+        {ssafyList.map((e: any) => (
+          <Tr key={e.ssafyRecordId}>
             <Td>{e.date}</Td>
-            <Td>{e.ranks}등</Td>
+            <Td>{e.correct === true ? <div>성공</div> : <div>실패</div>}</Td>
           </Tr>
         ))}
       </tbody>
     </table>
   );
 }
-export default CSRecordTable;
+export default SsafyRecordTable;
