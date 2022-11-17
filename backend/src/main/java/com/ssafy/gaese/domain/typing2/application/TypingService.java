@@ -1,6 +1,8 @@
 package com.ssafy.gaese.domain.typing2.application;
 
+import com.ssafy.gaese.domain.cs.entity.CsRecord;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
 import com.ssafy.gaese.domain.typing2.dto.TypingRecordDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
@@ -10,11 +12,17 @@ import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.typing2.repository.TypingParagraphRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRecordRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
+import com.ssafy.gaese.domain.user.application.ItemService;
+import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
+import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
+import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,10 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +44,16 @@ public class TypingService {
     private final TypingRoomRedisRepository typingRoomRedisRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-
     private final AbilityRepository abilityRepository;
+
+    private final ItemService itemService;
+
+    private final FriendSocketService friendSocketService;
+
+    private final UserCharacterRepository userCharacterRepository;
+
+    private final CharacterRepository characterRepository;
+
 
     public Page<TypingRecordDto> findTypingRecord(Long userId, Pageable pageable){
         Page<TypingRecord> TypingRecords = typingRecordRepository
@@ -228,4 +241,67 @@ public class TypingService {
         }
     }
 
+
+    void charChecker(Long userid)
+    {
+        User user = userRepository.findById(userid).get();
+
+        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
+        List<TypingRecord> typingRecords = typingRecordRepository.findAllByUser(user);
+        ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
+
+        int oneCount=0;
+        int threeCount=0;
+
+        for (TypingRecord typingRecord:typingRecords)
+        {
+            if(typingRecord.getRanks()<2)
+            {
+                oneCount++;
+                threeCount++;
+            }
+        }
+
+        int charId=10;
+
+        if(oneCount>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+        charId=9;
+        if(oneCount>2 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+        charId=8;
+        if(oneCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+
+
+        charId=7;
+        if(!userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            UserCharacter userCharacter = new UserCharacter();
+            userCharacter.setUser(user);
+            userCharacter.setCharacters(characters.get(charId));
+            userCharacterRepository.save(userCharacter);
+            friendSocketService.sendCharacters(user.getId(),(long)charId);
+        }
+
+
+    }
 }
