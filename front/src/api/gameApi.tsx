@@ -20,3 +20,8 @@ export const myRecordRankRequest = async () => {
   const res = await client.get('/algo/record/rank');
   return res;
 };
+// 모든 게임 랭킹
+export const allGameRankingRequest = async () => {
+  const res = await client.get('ability/rank');
+  return res;
+};

@@ -49,3 +49,10 @@ export interface OfficesInterface {
 export interface CharacterInterface {
   characters: CharactersInterface[];
 }
+
+export interface RankerInfoInterface {
+  exp: number;
+  lv: number;
+  nickName: string;
+  userId: number;
+}
