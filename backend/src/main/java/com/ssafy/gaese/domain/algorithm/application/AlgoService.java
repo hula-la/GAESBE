@@ -6,6 +6,8 @@ import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.*;
+import com.ssafy.gaese.domain.friends.application.FriendSocketService;
+import com.ssafy.gaese.domain.user.application.ItemService;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.entity.item.Characters;
