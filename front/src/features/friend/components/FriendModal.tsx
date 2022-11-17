@@ -21,7 +21,6 @@ const StyledModal = styled.div`
   background-color: #f0568c;
   z-index: 1000;
   color: #fff;
-
 `;
 const StyledModalDiv = styled.div`
   top: 0%;
@@ -33,9 +32,12 @@ const StyledModalDiv = styled.div`
   background-color: rgba(142, 142, 142, 0.4);
 `;
 
-function FriendModal({ handleModal, type, client }: any) {
-  const [option, setOption] = useState<string | null>('manage');
+interface Props {
+  handleModal: () => void;
+  type: string;
+}
 
+function FriendModal({ handleModal, type }: Props) {
   useEffect(() => {
     document.body.style.cssText = `
       position: fixed; 
@@ -49,20 +51,12 @@ function FriendModal({ handleModal, type, client }: any) {
     };
   }, []);
 
-  const handleOption = (e: string) => {
-    setOption(null);
-    setTimeout(() => {
-      setOption(e);
-    }, 100);
-  };
-
   return (
     <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e) => e.stopPropagation()}>
         {type === 'request' && <RequestToYou />}
         {type === 'invite' && <InviteFriend />}
       </StyledModal>
-      
     </StyledModalDiv>
   );
 }
