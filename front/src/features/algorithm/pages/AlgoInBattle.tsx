@@ -182,6 +182,7 @@ function AlgoInBattle() {
             type: 'ENTER',
             sessionId: socket._transport.url.slice(-18, -10),
             userId: userInfo.id,
+            nickname: userInfo.nickname,
             roomCode: InGameInfo.roomCode,
           }),
         );
