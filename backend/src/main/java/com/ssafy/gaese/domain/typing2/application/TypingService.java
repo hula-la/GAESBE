@@ -172,20 +172,19 @@ public class TypingService {
             TypingRecord typingRecord = new TypingRecord();
             typingRecord.setRanks(rank);
             typingRecord.setDate(formatedNow);
-            typingRecord.setId(maxId);
             typingRecord.setLangType(roomDto.getLangType());
             typingRecord.setUser(userRepository.findById(maxId).get());
             typingRecordRepository.save(typingRecord);
 
             Ability ability = abilityRepository.findByUser_Id(maxId).get();
-            System.out.println("변화 전 어빌리티");
-            System.out.println(maxId);
-            System.out.println(ability.getTypingLv());
-            System.out.println(ability.getTypingExp());
+//            System.out.println("변화 전 어빌리티");
+//            System.out.println(maxId);
+//            System.out.println(ability.getTypingLv());
+//            System.out.println(ability.getTypingExp());
             ability.addExp("typing",5-rank);
-            System.out.println("변화 후 어빌리티");
-            System.out.println(ability.getTypingLv());
-            System.out.println(ability.getTypingExp());
+//            System.out.println("변화 후 어빌리티");
+//            System.out.println(ability.getTypingLv());
+//            System.out.println(ability.getTypingExp());
             abilityRepository.save(ability);
 
             roomDto.getPlayers().remove(maxKey);
