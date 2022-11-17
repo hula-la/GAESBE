@@ -181,14 +181,8 @@ public class SsafyGameService {
     public int getWinCount(Long userId)
     {
         User user =userRepository.findById(userId).get();
-        List<SsafyRecord> ssafyRecord = ssafyRecordRepository.findAllByUser(user);
-        int count =0;
-        for (SsafyRecord sr:ssafyRecord ) {
-            if(sr.isCorrect())
-                count++;
 
-        }
-        return count;
+        return user.getMaxWinStreak();
     }
 
 }
