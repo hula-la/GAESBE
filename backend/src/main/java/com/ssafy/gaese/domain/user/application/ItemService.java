@@ -8,6 +8,8 @@ import com.ssafy.gaese.domain.user.entity.item.Characters;
 import com.ssafy.gaese.domain.user.entity.item.Office;
 import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.entity.item.UserOffice;
+import com.ssafy.gaese.domain.user.exception.AlreadyOfficeBuyException;
+import com.ssafy.gaese.domain.user.exception.LevelNotSatisfiedException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,6 +64,9 @@ public class ItemService {
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
         Office office = officeRepository.findById(officeId).orElseThrow(() -> new RuntimeException("오피스가 없습니다"));
 
+        Optional<UserOffice> userOfficeOpt = userOfficeRepository.findByUserAndOffice(user, office);
+        if(userOfficeOpt.isPresent()) throw new AlreadyOfficeBuyException();
+
         // 레벨 확인
         int mnLv=Integer.MAX_VALUE;
         Ability ability = user.getAbility();
@@ -69,7 +75,7 @@ public class ItemService {
         mnLv = Math.min(mnLv, ability.getCsLv());
         mnLv = Math.min(mnLv, ability.getLuckLv());
 
-        if(mnLv<office.getMinLv()) throw new RuntimeException("최소 레벨이 충족되지 않았습니다.");
+        if(mnLv<office.getMinLv())  throw new LevelNotSatisfiedException();
 
         //이미 유저 오피스 레벨이 더 높다면 오히려 더 낮아지므로 조건문 넣었음, 같은경우도 의미는 없음
         else if(user.getOfficeLv()<officeId)
