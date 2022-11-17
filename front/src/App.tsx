@@ -24,6 +24,7 @@ import FriendSocket from './features/friend/pages/FriendSocket';
 import OnlyNoLogin from './private/OnlyNoLogin';
 import OnlyLogin from './private/OnlyLogin';
 import { itemActions } from './features/game/itemSlice';
+import TestPage from './features/cs/pages/TestPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const App = () => {
               <Route path="CS/random" element={<CSRandomPage />} />
               <Route path="CS/friend" element={<CSFriendPage />} />
               <Route path="CS/result" element={<CSResultPage />} />
+              <Route path="test" element={<TestPage />} />
             </Route>
           </Route>
         </Routes>

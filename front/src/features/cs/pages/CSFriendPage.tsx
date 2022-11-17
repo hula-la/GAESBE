@@ -287,6 +287,9 @@ const IngameBlock = styled.div`
   .middleWrapper {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .problemBox2 {
       width: 100%;
       display: flex;
@@ -294,6 +297,10 @@ const IngameBlock = styled.div`
       align-items: center;
       margin-top: 3rem;
     }
+  }
+  .chart {
+    width: 50%;
+    margin-top: 5rem;
   }
 `;
 
@@ -805,7 +812,9 @@ const CSFriendPage = () => {
                   </div>
                 </div>
               </div>
-              <CSMiddleChart />
+              <div className="chart">
+                <CSMiddleChart />
+              </div>
               <div>
                 <div>답 : {answer}</div>
                 <div>고른 비율</div>

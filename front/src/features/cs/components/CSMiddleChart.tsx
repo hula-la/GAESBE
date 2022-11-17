@@ -28,17 +28,11 @@ export const options = {
     title: {
       display: false,
     },
-    scales: {
-      x: {
-        grid: false,
-        position: 'bottom',
-      },
-      y: {
-        grid: {
-          // 가로선 설정
-          color: '#E2E2E230',
-        },
-      },
+  },
+  scales: {
+    y: {
+      display: false,
+      max: 10,
     },
   },
 };
@@ -49,7 +43,8 @@ export const data = {
   labels,
   datasets: [
     {
-      data: [1, 2, 3, 4],
+      barThickness: 50,
+      data: [1, 2, 3, 10],
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
     },
   ],

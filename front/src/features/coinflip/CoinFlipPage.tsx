@@ -182,6 +182,7 @@ const CoinFlipPage = () => {
             title: '축하합니다!',
             text: `${result.winningStreak}연승 중입니다!`,
           });
+          dispatch(coinActions.fetchSsafyRecordStart());
         }, 3500);
       } else {
         setTimeout(() => {
@@ -190,6 +191,7 @@ const CoinFlipPage = () => {
             title: '아...아쉽네요',
             text: `다시 도전해보세요`,
           });
+          dispatch(coinActions.fetchSsafyRecordStart());
         }, 3500);
       }
     }
@@ -200,8 +202,12 @@ const CoinFlipPage = () => {
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>
-      <div>나의 최대 연승 : {ranking.myWinMaxWinStreak}</div>
-      <div>{ranking.myWinningStreak}연승중~</div>
+      {ranking && (
+        <div>
+          <div>나의 최대 연승 : {ranking.myWinMaxWinStreak}</div>
+          <div>{ranking.myWinningStreak}연승중~</div>
+        </div>
+      )}
       <div>
         {ranking &&
           ranking['list'].map((rank: any, idx: any) => {
