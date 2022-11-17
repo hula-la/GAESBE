@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { usePrompt } from '../../../utils/block';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
+import CSMiddleChart from '../components/CSMiddleChart';
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
@@ -283,10 +284,17 @@ const IngameBlock = styled.div`
       /* margin-left: 1rem; */
     }
   }
-  /* .character {
-    width: 70%;
-    height: 30%;
-  } */
+  .middleWrapper {
+    width: 100%;
+    height: 100%;
+    .problemBox2 {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 3rem;
+    }
+  }
 `;
 
 const PlayerCharacter = styled.div`
@@ -429,7 +437,7 @@ const CSFriendPage = () => {
             setIsSubmit(false);
             setTimeout(() => {
               setIsNext(true);
-            }, 7000);
+            }, 57000);
           } else if (data.hasOwnProperty('master')) {
             setIsMaster(true);
           }
@@ -624,7 +632,7 @@ const CSFriendPage = () => {
           )}
 
           <img
-            src="/img/gametitle/gametitle3.png"
+            src="/img/gametitle/GameTitle6.png"
             className="gameTitle"
             alt="gameTitle"
           />
@@ -764,7 +772,7 @@ const CSFriendPage = () => {
                         alt="profile"
                       />
                       <div className="playerNickName">
-                        <div>{myScore[1]}zz</div>
+                        <div>{myScore[1]}</div>
                         <div>{myScore[3]}</div>
                       </div>
                     </div>
@@ -780,9 +788,8 @@ const CSFriendPage = () => {
             </div>
           )}
           {isSolved !== null && !isNext && (
-            <div>
-              <p>중간결과 페이지</p>
-              <div className="problemBox">
+            <div className="middleWrapper">
+              <div className="problemBox2">
                 <div className="problem">
                   <div className="problemContent">
                     <div className="question">{problem.question}</div>
@@ -798,14 +805,8 @@ const CSFriendPage = () => {
                   </div>
                 </div>
               </div>
+              <CSMiddleChart />
               <div>
-                <div>
-                  {problem.example.split('|').map((k: String, v: number) => {
-                    <div>
-                      {v}. {k}
-                    </div>;
-                  })}
-                </div>
                 <div>답 : {answer}</div>
                 <div>고른 비율</div>
                 {cntPerNum &&
