@@ -6,12 +6,12 @@ import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.*;
-import com.ssafy.gaese.domain.friends.application.FriendSocketService;
-import com.ssafy.gaese.domain.user.application.ItemService;
+import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.entity.item.Characters;
 import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
+import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
 import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
@@ -48,6 +48,7 @@ public class AlgoService {
     private final SocketInfo socketInfo;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AlgoSocketService algoSocketService;
+    private final AbilityRepository abilityRepository;
     static ChromeDriver driver = null;
 
 
@@ -101,7 +102,8 @@ public class AlgoService {
                     .solveTime("-")
                     .build();
         }
-
+        Ability ability = abilityRepository.findByUser_Id(userId).get();
+        ability.addExp("algorithm", 1);
         algoRepository.save(algoRecordDto.toEntity(user));
 
         charChecker(user.getId());
@@ -194,8 +196,10 @@ public class AlgoService {
                             .ranking(i+1)
                             .solveTime(rank.getMin()+"")
                             .build();
+
                     algoRepository.save(algoRecordDto.toEntity(user));
-                    charChecker(user.getId());
+                    Ability ability = abilityRepository.findByUser_Id(Long.parseLong(algoSocketDto.getUserId())).get();
+                    ability.addExp("algorithm", 1);
                     break;
                 }
             }
