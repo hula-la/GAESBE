@@ -33,3 +33,13 @@ export const myRecordRankRequest = async () => {
   const res = await client.get('/algo/record/rank');
   return res;
 };
+
+export const mySsafyRecordRequest = async () => {
+  const res = await client.get('ssafy/record?page=0&size=20&sort=id,DESC');
+  return res;
+};
+
+export const mySsafyWinRequest = async () => {
+  const res = await client.get('ssafy/record/rank');
+  return res;
+};
