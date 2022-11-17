@@ -35,7 +35,8 @@ public class ItemService {
     public List<CharacterDto> getCharacters(Long userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
 
-        Set<Long> characterIdList = user.getUserCharacterList().stream().map(uc -> uc.getCharacters().getId()).collect(Collectors.toSet());
+        Set<Long> characterIdList = user.getUserCharacterList().stream().
+                map(uc -> uc.getCharacters().getId()).collect(Collectors.toSet());
         List<CharacterDto> characters = characterRepository.findAll().stream()
                 .map(c -> c.toDto(characterIdList.contains(c.getId())))
                 .collect(Collectors.toList());

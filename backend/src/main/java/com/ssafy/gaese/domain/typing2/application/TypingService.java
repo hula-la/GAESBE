@@ -64,6 +64,19 @@ public class TypingService {
         return typingRecordDtoPage;
     }
 
+    public int getWinCount(Long userId)
+    {
+        User user =userRepository.findById(userId).get();
+        List<TypingRecord> TypingRecords = typingRecordRepository.findAllByUser(user);
+        int count =0;
+        for (TypingRecord tr:TypingRecords ) {
+            if(tr.getRanks()==1)
+                count++;
+
+        }
+        return count;
+    }
+
 
     public void gameStart(TypingRoomDto roomDto) throws InterruptedException {
         Map<String,Object> res = new HashMap<>();
@@ -253,7 +266,7 @@ public class TypingService {
     {
         User user = userRepository.findById(userid).get();
 
-        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
+//        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
         List<TypingRecord> typingRecords = typingRecordRepository.findAllByUser(user);
         ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
 
