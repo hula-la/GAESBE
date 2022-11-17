@@ -273,7 +273,7 @@ public class CsService {
             simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,res);
 
             //            게임 시작하고 60초 타이머
-            Thread.sleep(10*1000);
+            Thread.sleep(60*1000);
         }
 
         return csRoomRedisRepository.findById(roomId).orElseThrow(()->new RoomNotFoundException());
