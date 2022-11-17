@@ -1,3 +1,4 @@
+import { relative } from 'path';
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -9,7 +10,7 @@ import { coinActions } from './coinFlipSlice';
 const Container = styled.div`
   height: 100%;
   background-color: #232323;
-  color: aqua;
+  color: #fff;
   .stats {
     text-align: right;
     color: #ffffff;
@@ -24,10 +25,11 @@ const Container = styled.div`
     }
   }
   .coin {
-    height: 50%;
-    width: 50%;
+    height: 40%;
+    width: 40%;
     position: relative;
-    margin: 50px auto;
+    margin: auto;
+    margin-bottom: 2%;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
   }
@@ -97,6 +99,7 @@ const Container = styled.div`
   .buttons {
     display: flex;
     justify-content: center;
+    height: 8%;
   }
   button {
     width: 120px;
@@ -106,9 +109,99 @@ const Container = styled.div`
     cursor: pointer;
   }
   #flip-button {
-    background-color: #424ae0;
+    width:18%;
+    /* background-image: url(/img/selectbutton/ssafy/pushButton_blue1.png); */
+    /* background-color: #424ae0; */
     color: #ffffff;
+    background-size:100% 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span{
+      margin-bottom:10%;
+    }
   }
+  .flip-btn-blue{
+    background-image: url(/img/selectbutton/ssafy/pushButton_blue1.png);
+  }
+
+  .flip-btn-red{
+    background-image: url(/img/selectbutton/ssafy/pushButton_red1.png);
+  }
+  .flip-btn-blue:hover{
+    background-image: url(/img/selectbutton/ssafy/pushButton_blue2.png);
+  }
+  .flip-btn-red:hover{
+    background-image: url(/img/selectbutton/ssafy/pushButton_red2.png);
+  }
+
+  .ranking-list{
+    margin: 3% auto;
+    border: 5px solid #000;
+    border-radius: 10px;
+    background-color: #6f43ff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height:15%;
+    width:80%;
+    /* position: relative; */
+
+    p{
+      width: 5em;
+      margin: 0;
+      padding: 3%;
+    }
+    p.rank-info{
+      display: flex;
+      justify-content: space-between;
+      img{
+        
+      }
+      span{
+        margin: auto;
+      }
+    }
+    p.rank-name{
+      text-align: center;
+      border : 1px solid #000;
+      padding:5% 10%;
+      border-radius: 20px;
+      color:#fff;
+      background-color: #232323;
+    }
+
+  }
+
+  .win{
+    margin:auto;
+    width:80%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    span{
+      color: black;
+      padding: 3% 4%;
+      border-radius: 30px;
+      border: 5px solid #000;
+    }
+    div{
+      width: 100%;
+    }
+  }
+  .win-max{
+    text-align: left;
+    span{
+      background-color: #f0568c;
+    }
+  }
+  .win-now{
+    text-align: right;
+    span{
+      background-color: #ffc02d;
+    }
+  }
+
 `;
 
 const CoinFlipPage = () => {
@@ -209,22 +302,31 @@ const CoinFlipPage = () => {
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>
-      {ranking && (
-        <div>
-          <div>나의 최대 연승 : {ranking.myWinMaxWinStreak}</div>
-          <div>{ranking.myWinningStreak}연승중~</div>
-        </div>
-      )}
-      <div>
+
+      <div className='ranking-list'>
         {ranking &&
           ranking['list'].map((rank: any, idx: any) => {
             return (
-              <div key={idx}>
-                {idx + 1}등 {rank.nickName} {rank.max_win_streak}연승
+              <div className='ranking-itme' style={{ fontSize:`${24/((idx*0.1+1))}px`}} key={idx}>
+                <p className='rank-info'>
+                  <span>
+                    {idx<3?<img src={`/img/rank/medal${idx}.png`} style={{width:`${30/((idx*0.2+1))}px`}} alt={`${idx+1}등`} />
+                    :<span>{idx+1}등</span>
+                    }
+                    </span>
+                  <span>{rank.max_win_streak}연승</span>
+                </p>
+                <p className='rank-name'>{rank.nickName} </p>
               </div>
             );
           })}
       </div>
+      {ranking && (
+        <div className='win'>
+          <div className='win-max'>내 최대 연승 <span>{ranking.myWinMaxWinStreak}</span></div>
+          <div className='win-now'><span>{ranking.myWinningStreak}</span> 연승 중~</div>
+        </div>
+      )}
       <div ref={coinRef} className="coin">
         <div className="heads">
           <img src="/img/coin/head.png" alt="head" />
@@ -233,24 +335,25 @@ const CoinFlipPage = () => {
           <img src="/img/coin/tail.png" alt="tail" />
         </div>
       </div>
+
       <div className="buttons">
         {!isBeting && !isLoading && (
-          <button onClick={onClickBet} id="flip-button">
-            베팅!
-          </button>
+          <div onClick={onClickBet} id="flip-button" className='flip-btn-blue'>
+            <span>베팅!</span>
+          </div>
         )}
         {isBeting && !isLoading && (
-          <div className="buttons">
-            <button onClick={onClickBetSSa} id="flip-button">
-              이번엔 싸다!
-            </button>
-            <button onClick={onClickRun} id="flip-button">
-              돔황챠
-            </button>
-            <button onClick={onClickBetFy} id="flip-button">
-              아니지 피다!
-            </button>
-          </div>
+          <>
+            <div onClick={onClickBetSSa} id="flip-button" className='flip-btn-red'>
+               <span>이번엔 싸다!</span>
+            </div>
+            <div onClick={onClickRun} id="flip-button" >
+               <span>돔황챠</span>
+            </div>
+            <div onClick={onClickBetFy} id="flip-button" className='flip-btn-blue'>
+               <span>아니지 피다!</span>
+            </div>
+          </>
         )}
       </div>
     </Container>
