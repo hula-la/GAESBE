@@ -10,7 +10,7 @@ import AlgoRoom from '../components/AlgoRoom';
 import AlgoModal from '../components/AlgoModal';
 import styled from 'styled-components';
 import '../../../components/Common/retroBtn.css';
-
+import Swal from 'sweetalert2';
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -22,7 +22,6 @@ const Content = styled.div`
   height: 90%;
   width: 80%;
 
-  
   margin: 0 auto;
   .title {
     text-align: center;
@@ -90,11 +89,11 @@ function AlgoMainPage() {
     start: AlgoRoomInterface[];
     wait: AlgoRoomInterface[];
   }>({ start: [], wait: [] });
-  const [bjConnectModal, setBjConnectModal] = useState<boolean>(false)
+  const [bjConnectModal, setBjConnectModal] = useState<boolean>(false);
 
   const handleConnectModal = () => {
-    setBjConnectModal(!bjConnectModal)
-  }
+    setBjConnectModal(!bjConnectModal);
+  };
 
   const handleMakeRoom = () => {
     navigate('make');
