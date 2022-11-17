@@ -1,25 +1,32 @@
 package com.ssafy.gaese.domain.ssafyGame.application;
 
 import com.ssafy.gaese.domain.friends.application.FriendSocketService;
-import com.ssafy.gaese.domain.ssafyGame.dto.FiveResultDto;
-import com.ssafy.gaese.domain.ssafyGame.dto.FlipParamDto;
-import com.ssafy.gaese.domain.ssafyGame.dto.FlipResultDto;
-import com.ssafy.gaese.domain.ssafyGame.dto.NickMaxWinSteakDto;
+import com.ssafy.gaese.domain.ssafyGame.dto.*;
+import com.ssafy.gaese.domain.ssafyGame.entity.SsafyRecord;
+import com.ssafy.gaese.domain.ssafyGame.repository.SsafyRecordRepository;
+import com.ssafy.gaese.domain.typing2.dto.TypingRecordDto;
+import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.user.application.ItemService;
 import com.ssafy.gaese.domain.user.dto.item.CharacterDto;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.entity.item.Characters;
 import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
+import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
 import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
+import com.ssafy.gaese.global.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +43,8 @@ public class SsafyGameService {
     private final UserCharacterRepository userCharacterRepository;
 
     private final CharacterRepository characterRepository;
+
+    private final SsafyRecordRepository  ssafyRecordRepository;
 
     public FlipResultDto flipStart(FlipParamDto param, Long userId)
     {
@@ -86,6 +95,15 @@ public class SsafyGameService {
         resultDto.setPatten(rand);
         resultDto.setWinningStreak(user.getWinningStreak());
 
+        SsafyRecord ssafyRecord = new SsafyRecord();
+
+        ssafyRecord.setCorrect(rand== param.getPatten());
+        ssafyRecord.setDate(TimeUtil.getNowDateTime());
+        ssafyRecord.setUser(user);
+        ssafyRecord.setWinningStreak(user.getWinningStreak());
+
+        ssafyRecordRepository.save(ssafyRecord);
+
         userRepository.save(user);
 
         return  resultDto;
@@ -94,35 +112,37 @@ public class SsafyGameService {
     void charChecker(User user)
     {
         List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
-        ArrayList<Characters> characters = (ArrayList<Characters>) characterRepository.findAll();
-
-
-        if(user.getMaxWinStreak()>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(23)).isPresent())
-        {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(23));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),23L);
+        ArrayList<Characters> characterArr = (ArrayList<Characters>) characterRepository.findAll();
+        Map<Long,Characters> characters = new HashMap<>();
+        for (Characters c:characterArr) {
+            characters.put(c.getId(),c);
         }
-        if(user.getMaxWinStreak()>3 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(22)).isPresent())
+
+        int charId=24;
+        if(user.getMaxWinStreak()>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(22));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),22L);
+            userCharacterSet(user, charId,characters);
         }
-        if(user.getMaxWinStreak()>1 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(21)).isPresent())
+        charId=23;
+        if(user.getMaxWinStreak()>3 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
-            UserCharacter userCharacter = new UserCharacter();
-            userCharacter.setUser(user);
-            userCharacter.setCharacters(characters.get(21));
-            userCharacterRepository.save(userCharacter);
-            friendSocketService.sendCharacters(user.getId(),21L);
+            userCharacterSet(user, charId,characters);
+        }
+        charId=22;
+        if(user.getMaxWinStreak()>1 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            userCharacterSet(user, charId,characters);
         }
     }
 
+    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    {
+        UserCharacter userCharacter = new UserCharacter();
+        userCharacter.setUser(user);
+        userCharacter.setCharacters(characters.get(charId));
+        userCharacterRepository.save(userCharacter);
+        friendSocketService.sendCharacters(user.getId(),(long)charId);
+    }
     public FiveResultDto getFive(Long userId)
     {
 
@@ -149,6 +169,26 @@ public class SsafyGameService {
 
 
         return result;
+    }
+
+
+    public Page<SsafyRecordDto> findTypingRecord(Long userId, Pageable pageable){
+        Page<SsafyRecord> ssafyRecord = ssafyRecordRepository.findAllByUser(userRepository.findById(userId).orElseThrow(()->new UserNotFoundException()), pageable);
+        Page<SsafyRecordDto> typingRecordDtoPage = ssafyRecord.map((typingRecord) -> typingRecord.toDto());
+        return typingRecordDtoPage;
+    }
+
+    public int getWinCount(Long userId)
+    {
+        User user =userRepository.findById(userId).get();
+        List<SsafyRecord> ssafyRecord = ssafyRecordRepository.findAllByUser(user);
+        int count =0;
+        for (SsafyRecord sr:ssafyRecord ) {
+            if(sr.isCorrect())
+                count++;
+
+        }
+        return count;
     }
 
 }
