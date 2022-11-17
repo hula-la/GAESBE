@@ -45,7 +45,6 @@ public class AlgoSocketService {
         AlgoRoomPassDto algoRoomPassDto = algoRoomPassRepository.findById(roomCode).orElseThrow(()->new NoSuchElementException());
         algoRoomPassDto.setPass(true);
         algoRoomPassRepository.save(algoRoomPassDto);
-        System.out.println("[service] pass 변경");
     }
 
 

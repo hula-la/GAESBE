@@ -6,8 +6,10 @@ import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomRedisDto;
 import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.*;
+import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
+import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -42,6 +44,7 @@ public class AlgoService {
     private final SocketInfo socketInfo;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final AlgoSocketService algoSocketService;
+    private final AbilityRepository abilityRepository;
     static ChromeDriver driver = null;
 
     public void saveAlgoRecord(String roomCode){
@@ -86,7 +89,8 @@ public class AlgoService {
                     .solveTime("-")
                     .build();
         }
-
+        Ability ability = abilityRepository.findByUser_Id(userId).get();
+        ability.addExp("algorithm", 1);
         algoRepository.save(algoRecordDto.toEntity(user));
 
         return algoRecordDto;
@@ -177,7 +181,10 @@ public class AlgoService {
                             .ranking(i+1)
                             .solveTime(rank.getMin()+"")
                             .build();
+
                     algoRepository.save(algoRecordDto.toEntity(user));
+                    Ability ability = abilityRepository.findByUser_Id(Long.parseLong(algoSocketDto.getUserId())).get();
+                    ability.addExp("algorithm", 1);
                     break;
                 }
             }
