@@ -23,7 +23,6 @@ public class SsafyGameController {
 
     private final SsafyGameService ssafyGameService;
 
-    //금액이 부족하면 null 반환 함
     @PostMapping("/flip")
     @ApiOperation(value = "알고리즘 게임 기록 등록", notes = "알고리즘 게임 기록 등록")
     public ResponseEntity<FlipResultDto> filp(@RequestBody FlipParamDto param,

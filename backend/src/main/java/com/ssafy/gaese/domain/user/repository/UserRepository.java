@@ -40,7 +40,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.bjId=:bjId WHERE u.id=:id")
     int updateBjId(@Param("id") Long id, @Param("bjId") String bjId);
 
-    @Query(value = "SELECT max_win_streak, nickname FROM gaese.user ORDER BY max_win_streak desc LIMIT 5",nativeQuery = true)
-    List<NickMaxWinSteakDto> getNickMaxWinSteakDtoDesc();
+    @Query(value = "SELECT * FROM gaese.user ORDER BY max_win_streak desc LIMIT 5",nativeQuery = true)
+    List<User> getNickMaxWinSteakDtoDesc();
 
 }
