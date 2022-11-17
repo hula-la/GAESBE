@@ -144,6 +144,7 @@ public class SsafyGameService {
 
 
         result.setMyWinMaxWinStreak(user.getMaxWinStreak());
+        result.setMyWinningStreak(user.getWinningStreak());
         result.setList(list);
 
 
