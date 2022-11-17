@@ -116,7 +116,7 @@ public class SessionDisconnectConfig {
                 AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
                         .sessionId(sessionId)
                         .roomCode(info[1])
-                        .userId(info[0]).build();
+                        .userId(info[0]).nickname(info[3]).build();
 
                 algoService.leaveRoom(algoSocketDto,info[0]);
                 // 게임을 하고 있다는 기록 지움

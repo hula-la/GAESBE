@@ -138,7 +138,7 @@ public class AlgoService {
                     algoSocketDto.getUserId(),
                     algoSocketDto.getRoomCode(),
                     "Algo",
-                    null);
+                    algoSocketDto.getNickname());
             // 한개의 게임에만 접속할 수 있도록
             socketInfo.setOnlinePlayer(Long.parseLong(algoSocketDto.getUserId()));
             return true;
