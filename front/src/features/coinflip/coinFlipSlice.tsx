@@ -24,7 +24,6 @@ const coinSlice = createSlice({
     requestCoinFlipStart(state, action) {},
     requestCoinFlipSuccess(state, action) {
       state.result = action.payload;
-      console.log(state.result);
     },
     requestCoinFlipError(state, action) {},
     // 결과 리셋
