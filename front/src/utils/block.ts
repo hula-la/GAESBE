@@ -6,7 +6,6 @@ import { useContext, useEffect } from 'react';
 import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-// function useConfirmExit(confirmExit: () => boolean, when = true) {
 function useConfirmExit(message: string, when = true) {
   const { navigator } = useContext(NavigationContext);
 

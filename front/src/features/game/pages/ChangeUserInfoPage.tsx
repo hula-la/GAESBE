@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const ChangeUserInfo = styled.div`
   width: 100%;
@@ -114,6 +115,7 @@ const ChangeUserInfoPage = () => {
   const [nickname, setNickname] = useState<string>('');
   const [profilechar, setProfilechar] = useState<string>('');
   const { characters } = useSelector((state: any) => state.item);
+  const [lengthOutOfRange, setLengthOutOfRange] = useState<boolean>(false);
 
   let characterList = characters;
   useEffect(() => {
@@ -124,10 +126,22 @@ const ChangeUserInfoPage = () => {
   }, [userInfo]);
 
   const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length < 2 || e.target.value.length > 8) {
+      setLengthOutOfRange(true);
+    } else {
+      setLengthOutOfRange(false);
+    }
     setNickname(e.target.value);
     dispatch(authActions.checkNicknameStart(e.target.value));
   };
   const onClickHandler = (e: React.MouseEvent<HTMLElement>) => {
+    if (isDuplicate || lengthOutOfRange) {
+      Swal.fire({
+        icon: 'error',
+        text: '닉네임이 중복되거나 글자수 제한에 맞지 않습니다',
+      });
+      return;
+    }
     dispatch(
       authActions.createUserInfoStart({
         nickname,
@@ -146,7 +160,7 @@ const ChangeUserInfoPage = () => {
     return setProfilechar(item);
   };
   const handleUnLockSelectCharacter = () => {
-    alert('아직 획득하지 못한 캐릭터 입니다.');
+    Swal.fire({ icon: 'info', text: '아직 획득하지 못한 캐릭터 입니다.' });
   };
   const handleChangeCharacter = () => {
     dispatch(
@@ -180,8 +194,9 @@ const ChangeUserInfoPage = () => {
           )}
           {changeNickName && (
             <h1 className="h1">
-              <input onChange={onChangeNickname} />
+              <input onChange={onChangeNickname} value={nickname} />
               {isDuplicate && <p>중복된 닉네임입니다.</p>}
+              {lengthOutOfRange && <p>닉네임은 2~6글자만 가능합니다</p>}
               {/* <button onClick={onClickHandler}>닉네임 변경</button> */}
               <img
                 onClick={onClickHandler}

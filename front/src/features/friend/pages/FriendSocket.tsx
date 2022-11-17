@@ -52,12 +52,6 @@ function FriendSocket() {
                 isChatOpen,
               }),
             );
-          } else if (data.hasOwnProperty('character')) {
-            Swal.fire({
-              imageUrl: `${process.env.REACT_APP_S3_URL}/profile/${data.character}_normal.gif`,
-              text: `${data.need}의 조건을 가진 캐릭터를 획득했습니다.`,
-            });
-            dispatch(itemActions.fetchCharacterStart());
           } else {
             setMsgId(data.id);
             dispatch(
@@ -68,6 +62,12 @@ function FriendSocket() {
               }),
             );
           }
+        } else if (data.hasOwnProperty('character')) {
+          Swal.fire({
+            imageUrl: `${process.env.REACT_APP_S3_URL}/profile/${data.character}_normal.gif`,
+            text: `${data.need}의 조건을 가진 캐릭터를 획득했습니다.`,
+          });
+          dispatch(itemActions.fetchCharacterStart());
         } else {
           dispatch(friendActions.setFriends(JSON.parse(res.body)));
         }

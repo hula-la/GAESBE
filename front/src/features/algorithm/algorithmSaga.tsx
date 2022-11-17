@@ -125,7 +125,7 @@ function* bjConnectRequestSaga(action: Action<string>) {
   } catch (error) {
     yield Swal.fire({
       icon: 'warning',
-      text: '연동하는데 문제가 생겼습니다/n잠시 후 다시 시도해 주세요',
+      text: '연동하는데 문제가 생겼습니다 잠시 후 다시 시도해 주세요',
     });
   } finally {
     yield put(algoActions.bjConnectRequestEnd());

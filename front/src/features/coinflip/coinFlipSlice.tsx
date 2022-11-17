@@ -9,10 +9,12 @@ interface Result {
 
 interface Coin {
   result: Result | null;
+  ranking: any;
 }
 
 const initialState: Coin = {
   result: null,
+  ranking: null,
 };
 
 const coinSlice = createSlice({
@@ -22,12 +24,20 @@ const coinSlice = createSlice({
     requestCoinFlipStart(state, action) {},
     requestCoinFlipSuccess(state, action) {
       state.result = action.payload;
-      console.log(state.result)
+      console.log(state.result);
     },
     requestCoinFlipError(state, action) {},
     // 결과 리셋
     resetResult(state) {
       state.result = null;
+    },
+    // 기록 조회
+    fetchSsafyRecordStart(state) {},
+    fetchSsafyRecordSuccess(state, action) {
+      state.ranking = action.payload;
+    },
+    fetchSsafyRecordError(state, action) {
+      console.log(action.payload);
     },
   },
 });

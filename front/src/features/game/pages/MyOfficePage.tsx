@@ -61,7 +61,7 @@ const Office = styled.div`
     font-size: 2rem;
     color: white;
 
-    img{
+    img {
       width: 10rem;
     }
     /* font-weight: bold; */
@@ -121,6 +121,8 @@ const MyOfficePage = () => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [needReload, setNeedReload] = useState<boolean>(false);
+  const [levelupable, setLevelupable] = useState<boolean>(false);
+  const [nextLevel, setNextLevel] = useState<number>(0);
   const handleModal = () => {
     setModalOpen(!modalOpen);
   };
@@ -132,6 +134,27 @@ const MyOfficePage = () => {
     dispatch(itemActions.fetchCharacterStart());
     dispatch(itemActions.fetchOfficeStart());
   }, []);
+  useEffect(() => {
+    if (offices && userAbility) {
+      const nextoffice = offices.filter((office: any) => !office.own);
+      if (
+        nextoffice.length >= 1 &&
+        nextoffice[0].minLv <=
+          Math.min(
+            userAbility.algorithmLv,
+            userAbility.csLv,
+            userAbility.typingLv,
+            userAbility.luckLv,
+          )
+      ) {
+        console.log('nextoffice', nextoffice);
+        setLevelupable(true);
+        setNextLevel(nextoffice[0].officeId);
+      } else {
+        setLevelupable(false);
+      }
+    }
+  }, [offices, userAbility]);
 
   const officePrev = () => {
     idxRef.current -= 1;
@@ -146,21 +169,23 @@ const MyOfficePage = () => {
     try {
       const res = await attendanceRequest();
       if (res.status === 200) {
-        Swal.fire({icon:'success', text:'출석체크 되었습니다'});
+        Swal.fire({ icon: 'success', text: '출석체크 되었습니다' });
         handleReload(true);
       }
     } catch (error: any) {
       if (error.response.status === 446) {
-        Swal.fire({icon:'info', text:'오늘은 이미 출석했습니다'});
+        Swal.fire({ icon: 'info', text: '오늘은 이미 출석했습니다' });
       }
     }
   };
-  // useEffect(() => {
-  //   // dispatch(itemActions.fetchCharacterStart());
-  //   dispatch(gameActions.fetchRecordStart());
-  // }, []);
+
+  const handleLevelUp = () => {
+    dispatch(itemActions.requestBuyOfficeStart(nextLevel));
+  };
+
   return (
     <Wrapper>
+      {levelupable && <button onClick={handleLevelUp}>레벨 업!!</button>}
       {offices && officeIdx > 0 && (
         <OfficeBtn
           className="prevBtn"
@@ -182,7 +207,9 @@ const MyOfficePage = () => {
             const Component: any = officeComponents[idx];
             return (
               <Office>
-                <div className="officeName"><img src={`/img/MyOffice/officeName/${idx}.png`}/></div>
+                <div className="officeName">
+                  <img src={`/img/MyOffice/officeName/${idx}.png`} />
+                </div>
                 {/* <div className="officeName">{v.name}</div> */}
 
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}

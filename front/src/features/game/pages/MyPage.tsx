@@ -192,6 +192,7 @@ const MyPage = () => {
       confirmButtonText: '네!',
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log('컨펌함');
         dispatch(authActions.deleteUserInfoStart());
         navigate('/login');
         console.log('지금 유저 인포', userInfo);

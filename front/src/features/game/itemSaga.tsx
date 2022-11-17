@@ -51,13 +51,15 @@ function* onFetchOfficeSaga() {
 
 // 오피스 사기
 function* requestBuyOfficeSage(action: any) {
-  const { fetchOfficeSuccess, fetchOfficeError } = itemActions;
+  const { fetchOfficeSuccess, fetchOfficeError, fetchOfficeStart } =
+    itemActions;
   try {
     const response: AxiosResponse = yield call(
       requestBuyOfficeApi,
       action.payload,
     );
     yield put(fetchOfficeSuccess(response.data));
+    yield put(fetchOfficeStart());
   } catch (e: any) {
     yield put(fetchOfficeError(e.response));
   }

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { coinActions } from './coinFlipSlice';
@@ -111,14 +112,14 @@ const Container = styled.div`
 `;
 
 const CoinFlipPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const coinRef = useRef<HTMLDivElement | null>(null);
   const { result } = useSelector((state: any) => state.coin);
+  const { ranking } = useSelector((state: any) => state.coin);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isBeting, setIsBeting] = useState<boolean>(false);
   const [flagment, setFlagment] = useState(false);
-
-  const ranking = [1, 2, 3, 4, 5];
 
   const onClickBet = () => {
     setIsBeting(true);
@@ -170,6 +171,10 @@ const CoinFlipPage = () => {
   };
 
   useEffect(() => {
+    dispatch(coinActions.fetchSsafyRecordStart());
+  }, []);
+
+  useEffect(() => {
     if (result) {
       coinFlip();
       if (result.correct) {
@@ -194,14 +199,29 @@ const CoinFlipPage = () => {
 
   return (
     <Container>
+      <img
+        onClick={() => navigate('/game/select')}
+        src="/img/arrow/back-arrow.png"
+        alt=""
+      />
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
       </div>
-      <div>1연승중~</div>
+      {ranking && (
+        <>
+          <div>나의 최대 연승 : {ranking.myWinMaxWinStreak}</div>
+          <div>{ranking.myWinningStreak}연승중~</div>
+        </>
+      )}
       <div>
-        {ranking.map((rank, idx) => {
-          return <div key={idx}>{rank}. 닉네임</div>;
-        })}
+        {ranking &&
+          ranking['list'].map((rank: any, idx: any) => {
+            return (
+              <div key={idx}>
+                {idx + 1}등 {rank.nickName} {rank.max_win_streak}연승
+              </div>
+            );
+          })}
       </div>
       <div ref={coinRef} className="coin">
         <div className="heads">
