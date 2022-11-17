@@ -186,7 +186,7 @@ public class AlgoService {
         System.out.println("떠날꺼임 > "+algoSocketDto.getUserId());
 
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
-
+        HashMap<String, Object> res = new HashMap<>();
         algoRedisRepositoryCustom.leaveRoom(algoSocketDto);
         // 방장이 나갔는지 확인
         if(algoRoomRedisDto.getAlgoRoomDto().getMaster().equals(algoSocketDto.getUserId())){
@@ -194,14 +194,6 @@ public class AlgoService {
             if(changeMaster(algoSocketDto.getRoomCode())){
                 System.out.println("마스터 변경");
 
-                HashMap<String, Object> res = new HashMap<>();
-                res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
-
-                List<AlgoUserDto> users = getUsers(getUserIds(algoSocketDto.getRoomCode()));
-                res.put("users",users);
-                res.put("master", getMaster(algoSocketDto.getRoomCode()));
-                simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
-                return;
             }else{
                 System.out.println("방 제거");
                 deleteRoom(algoSocketDto.getRoomCode());
@@ -210,6 +202,7 @@ public class AlgoService {
                 return;
             }
         }
+
         if(getUserIds(algoSocketDto.getRoomCode()).size()==0){
             System.out.println("사람 없음 방 제거");
             deleteRoom(algoSocketDto.getRoomCode());
@@ -217,6 +210,16 @@ public class AlgoService {
             algoRedisRepositoryCustom.deleteRoomUser(algoRoomRedisDto,user.getBjId());
             return;
         }
+
+        res = new HashMap<>();
+        res.put("msg",algoSocketDto.getUserId()+" 님이 나가셨습니다.");
+
+        List<AlgoUserDto> users = getUsers(getUserIds(algoSocketDto.getRoomCode()));
+        res.put("users",users);
+        res.put("master", getMaster(algoSocketDto.getRoomCode()));
+
+        simpMessagingTemplate.convertAndSend("/algo/room/"+algoSocketDto.getRoomCode(),res);
+
     }
 
 
