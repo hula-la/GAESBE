@@ -5,14 +5,12 @@ import CSMiddleChart from '../components/CSMiddleChart';
 const Test = styled.div`
   .middleWrapper {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     .problem {
       box-sizing: border-box;
       width: 60%;
-      height: 45%;
       background: #ffffff;
       border: 5px solid #000000;
       box-shadow: 5px 5px 0px 4px #000000, 4px 4px 0px 7px #ffffff;
@@ -55,6 +53,9 @@ const Test = styled.div`
       .example {
         margin: 0.5rem 0;
       }
+      .answer {
+        color: #0ac413;
+      }
     }
     .problemBox2 {
       width: 100%;
@@ -65,8 +66,9 @@ const Test = styled.div`
     }
   }
   .chart {
-    width: 50%;
+    width: 60%;
     margin-top: 5rem;
+    border: 5px solid #000000;
   }
 `;
 
@@ -91,7 +93,11 @@ const TestPage = () => {
               <div className="question">{problem.question}</div>
               <div>
                 {problem.example.split('|').map((k: String, v: number) => (
-                  <div className="example">
+                  <div
+                    className={
+                      'example' + (v + 1 === problem.answer ? ' answer' : '')
+                    }
+                  >
                     {v + 1}. {k}
                   </div>
                 ))}

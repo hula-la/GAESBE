@@ -27,7 +27,7 @@ import OnlyNoLogin from './private/OnlyNoLogin';
 import OnlyLogin from './private/OnlyLogin';
 import { itemActions } from './features/game/itemSlice';
 import TestPage from './features/cs/pages/TestPage';
-import CSResultPageTest from './features/cs/pages/CSResultPageTest'
+import CSResultPageTest from './features/cs/pages/CSResultPageTest';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -45,11 +45,10 @@ const App = () => {
         <Routes>
           <Route path="" element={<IntroPage />} />
           <Route path="oauth2/redirect" element={<RedirectPage />} />
-          <Route path="" element={<Background />}>
-            <Route element={<OnlyNoLogin userInfo={userInfo} />}>
-              <Route path="login" element={<LoginPage />} />
+          <Route element={<OnlyNoLogin userInfo={userInfo} />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="" element={<Background />}>
               <Route path="nickname" element={<SetNicknamePage />} />
-             
             </Route>
           </Route>
           <Route element={<OnlyLogin />}>
@@ -67,7 +66,7 @@ const App = () => {
               <Route path="CS/friend" element={<CSFriendPage />} />
               <Route path="CS/result" element={<CSResultPage />} />
               <Route path="test" element={<TestPage />} />
-              <Route path="CS/test" element={<CSResultPageTest/>}/>
+              <Route path="CS/test" element={<CSResultPageTest />} />
             </Route>
           </Route>
         </Routes>
