@@ -25,7 +25,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "User")
+@Table(name = "User",
+        indexes = {
+                @Index(name = "idx_maxWinStreak", columnList = "maxWinStreak")
+        })
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
