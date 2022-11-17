@@ -8,6 +8,8 @@ import SetNicknamePage from './features/auth/pages/SetNicknamePage';
 import GamePage from './features/game/pages/GamePage';
 import RedirectPage from './features/auth/pages/RedirectPage';
 import CSgamePage from './features/cs/pages/CSgamePage';
+import GameSelectPage from './features/game/pages/GameSelectPage';
+import GameRankingPage from './features/game/pages/GameRankingPage';
 
 import Background from './components/Layout/Background';
 import MyOfficePage from './features/game/pages/MyOfficePage';
@@ -25,6 +27,7 @@ import OnlyNoLogin from './private/OnlyNoLogin';
 import OnlyLogin from './private/OnlyLogin';
 import { itemActions } from './features/game/itemSlice';
 import TestPage from './features/cs/pages/TestPage';
+import CSResultPageTest from './features/cs/pages/CSResultPageTest'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -46,11 +49,14 @@ const App = () => {
             <Route element={<OnlyNoLogin userInfo={userInfo} />}>
               <Route path="login" element={<LoginPage />} />
               <Route path="nickname" element={<SetNicknamePage />} />
+             
             </Route>
           </Route>
           <Route element={<OnlyLogin />}>
             <Route path="game/*" element={<GamePage />}>
               <Route path="mypage" element={<MyPage />} />
+              <Route path="select" element={<GameSelectPage />} />
+              <Route path="ranking" element={<GameRankingPage />} />
               <Route path="mypage/change" element={<ChangeUserInfoPage />} />
               <Route path="" element={<MyOfficePage />} />
               <Route path="typing/*" element={<TypingPage />} />
@@ -61,6 +67,7 @@ const App = () => {
               <Route path="CS/friend" element={<CSFriendPage />} />
               <Route path="CS/result" element={<CSResultPage />} />
               <Route path="test" element={<TestPage />} />
+              <Route path="CS/test" element={<CSResultPageTest/>}/>
             </Route>
           </Route>
         </Routes>

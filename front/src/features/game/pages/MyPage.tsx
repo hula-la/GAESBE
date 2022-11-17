@@ -4,7 +4,12 @@ import { useDispatch } from 'react-redux';
 import { authActions } from '../../auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
-import { myRecordRankRequest, myRecordRequest } from '../../../api/gameApi';
+import {
+  myRecordRankRequest,
+  myRecordRequest,
+  myCsWinRequest,
+  myTypingWinRequest,
+} from '../../../api/gameApi';
 import { gameActions } from '../gameSlice';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -51,53 +56,70 @@ const MyRecord = styled.div`
   flex-direction: row;
   justify-content: space-around;
 `;
+const WhiteBox = styled.div`
+  position: absolute;
+  width: 10%;
+  height: 7%;
+  // algo
+  /* left: 22.5%; */
+  // cs
+  /* left: 38%; */
+  // 타자
+  /* left: 53%; */
+  // 싸피
+  /* left: 68.95%; */
+  background-color: white;
+  /* z-index: -1; */
+  /* border: 2px solid red; */
+`;
 const Down = styled.div`
   /* border: 2px solid yellow; */
   margin-top: 5%;
   margin-left: 7%;
-  width: 70%;
+  width: 88%;
+  /* width: 70%; */
   height: 7%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  color: white;
   .gametypealgo {
     /* border: 2px solid orange; */
-    width: 15%;
+    width: 18%;
     display: flex;
     justify-content: center;
     align-items: center;
     /* background-color: orange; */
-    color: white;
-    :hover {
+    z-index: 1;
+    /* :hover {
       background-color: orange;
-    }
+    } */
   }
   .gametypecs {
     /* border: 2px solid orange; */
-    width: 15%;
+    width: 18%;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: orange; */
-    color: white;
+    z-index: 1;
   }
   .gametypetyping {
     /* border: 2px solid orange; */
-    width: 15%;
+    width: 18%;
     display: flex;
     justify-content: center;
     align-items: center;
     /* background-color: orange; */
-    color: white;
+    z-index: 1;
   }
   .gametypessafy {
     /* border: 2px solid orange; */
-    width: 15%;
+    width: 18%;
     display: flex;
     justify-content: center;
     align-items: center;
     /* background-color: orange; */
-    color: white;
+    z-index: 1;
   }
 `;
 const GameType = styled.div`
@@ -110,7 +132,9 @@ const MyPower = styled.div`
   width: 85%;
   height: 40%;
   margin-left: 7%;
-  border: 5px solid orange;
+  border: 1rem solid white;
+  box-shadow: 0.2rem 0.2rem 0.2rem 0.2rem #6f43ff;
+  /* border-radius: 5px; */
   overflow: auto;
   ::-webkit-scrollbar {
     width: 10px;
@@ -139,9 +163,16 @@ const MyPage = () => {
   const [csrecord, setCsRecord] = useState<any>(null);
   const [typingrecord, setTypingRecord] = useState<any>(null);
   const [algoRecordRank, setAlgoRecordRank] = useState<number>(0);
+  const [typingWinNum, setTypingWinNum] = useState<number>(0);
+  const [csWinNum, setCsWinNum] = useState<number>(0);
   const [algoRecords, setAlgoRecords] = useState([]);
   const [detailModal, setDetailModal] = useState<string>('');
   const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
+  const [left, setLeft] = useState<any>('22.5%');
+  const [algocolor, setAlgoColor] = useState<any>('black');
+  const [cscolor, setCsColor] = useState<any>('white');
+  const [typingcolor, setTypingColor] = useState<any>('white');
+  const [ssafycolor, setSsafyColor] = useState<any>('white');
   // console.log(algoRecord, 'zzzzzzzzzzzzzzzzzzzzzzzzzz');
   useEffect(() => {
     if (record) {
@@ -154,6 +185,8 @@ const MyPage = () => {
     dispatch(gameActions.fetchRecordStart());
     fetchAlgoRecordRank();
     fetchAlgoRecord();
+    fetchTypingWin();
+    fetchCsWin();
   }, []);
   const fetchAlgoRecord = async () => {
     try {
@@ -173,6 +206,26 @@ const MyPage = () => {
       }
     } catch (error) {
       Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
+    }
+  };
+  const fetchTypingWin = async () => {
+    try {
+      const res = await myTypingWinRequest();
+      if (res.status === 200) {
+        setTypingWinNum(res.data);
+      }
+    } catch (error) {
+      Swal.fire({ icon: 'error', text: '타이핑 게임 정보를 못가져왔습니다' });
+    }
+  };
+  const fetchCsWin = async () => {
+    try {
+      const res = await myCsWinRequest();
+      if (res.status === 200) {
+        setCsWinNum(res.data);
+      }
+    } catch (error) {
+      Swal.fire({ icon: 'error', text: 'CS 게임 정보를 못가져왔습니다' });
     }
   };
 
@@ -208,15 +261,35 @@ const MyPage = () => {
   };
   const clickAlgoGame = () => {
     setGameType('algo');
+    setLeft('22.5%');
+    setAlgoColor('black');
+    setCsColor('white');
+    setTypingColor('white');
+    setSsafyColor('white');
   };
   const clickCsGame = () => {
     setGameType('cs');
+    setLeft('38%');
+    setCsColor('black');
+    setAlgoColor('white');
+    setTypingColor('white');
+    setSsafyColor('white');
   };
   const clickTypingGame = () => {
     setGameType('typing');
+    setLeft('53%');
+    setTypingColor('black');
+    setAlgoColor('white');
+    setCsColor('white');
+    setSsafyColor('white');
   };
   const clickSsafyGame = () => {
     setGameType('ssafy');
+    setLeft('68.95%');
+    setSsafyColor('black');
+    setAlgoColor('white');
+    setCsColor('white');
+    setTypingColor('white');
   };
 
   const handleDetailAlgo = (roomCode: string) => {
@@ -242,8 +315,22 @@ const MyPage = () => {
                 alt="asdf"
               />
               <UserBotton>
-                <button onClick={handleChange}>정보 수정</button>
-                <button onClick={handleDelete}>회원 탈퇴</button>
+                <a
+                  href="javascript:void(0)"
+                  className="eightbit-btn"
+                  onClick={handleChange}
+                >
+                  정보 수정
+                </a>
+                <a
+                  href="javascript:void(0)"
+                  className="eightbit-btn eightbit-btn--reset"
+                  onClick={handleDelete}
+                >
+                  회원 탈퇴
+                </a>
+                {/* <button onClick={handleChange}>정보 수정</button>
+                <button onClick={handleDelete}>회원 탈퇴</button> */}
               </UserBotton>
             </MyCharacter>
             <MyRecord>
@@ -251,43 +338,56 @@ const MyPage = () => {
                 <h2>알고리즘 1등</h2>
                 <br />
                 <br />
-                <br />
-                <div>{algoRecordRank} 회</div>
+                <h1>{algoRecordRank} 회</h1>
               </GameType>
               <GameType>
                 <h2>CS게임 1등</h2>
                 <br />
                 <br />
-                <br />
-                <div>회</div>
+                <h1>{csWinNum}회</h1>
               </GameType>
               <GameType>
                 <h2>타자게임 1등</h2>
                 <br />
                 <br />
-                <br />
-                <div>회</div>
+                <h1>{typingWinNum}회</h1>
               </GameType>
               <GameType>
                 <h2>싸피게임 최대연승</h2>
                 <br />
                 <br />
-                <br />
-                <div>회</div>
+                <h1>회</h1>
               </GameType>
             </MyRecord>
           </Up>
           <Down>
-            <div className="gametypealgo" onClick={clickAlgoGame}>
+            <WhiteBox style={{ left: `${left}` }}></WhiteBox>
+            <div
+              style={{ color: `${algocolor}` }}
+              className="gametypealgo"
+              onClick={clickAlgoGame}
+            >
               알고리즘
             </div>
-            <div className="gametypecs" onClick={clickCsGame}>
+            <div
+              style={{ color: `${cscolor}` }}
+              className="gametypecs"
+              onClick={clickCsGame}
+            >
               CS 게임
             </div>
-            <div className="gametypetyping" onClick={clickTypingGame}>
+            <div
+              style={{ color: `${typingcolor}` }}
+              className="gametypetyping"
+              onClick={clickTypingGame}
+            >
               타자 게임
             </div>
-            <div className="gametypessafy" onClick={clickSsafyGame}>
+            <div
+              style={{ color: `${ssafycolor}` }}
+              className="gametypessafy"
+              onClick={clickSsafyGame}
+            >
               싸피 게임
             </div>
           </Down>

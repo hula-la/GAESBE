@@ -11,6 +11,7 @@ function* fetchRecordSaga(action: any) {
     yield put(
       fetchRecordSuccess({ cs: response1.data, typing: response2.data }),
     );
+    console.log(response1, response2, '정보 1,2');
   } catch (e: any) {
     yield put(fetchRecordError(e.response));
   }

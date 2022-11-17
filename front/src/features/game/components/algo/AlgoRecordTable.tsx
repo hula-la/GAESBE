@@ -3,10 +3,11 @@ import styled from 'styled-components';
 
 const Tr = styled.div`
   width: 210%;
-  margin-top: 1%;
+  margin-top: 4%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  /* border-bottom: 1px solid gray; */
 `;
 const Th = styled.div`
   width: 100%;
@@ -49,6 +50,7 @@ function AlgoRecordTable({
             <Th>상세보기</Th>
           </Tr>
         </thead>
+        <hr style={{ width: '190%', marginLeft: '10%' }} />
         <tbody>
           {records.map((record: MyRecordInterface) => {
             return (

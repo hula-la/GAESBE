@@ -35,6 +35,11 @@ export const options = {
       max: 10,
     },
   },
+  scales: {
+    y: {
+      display: false,
+    },
+  },
 };
 
 const labels = ['1', '2', '3', '4'];
