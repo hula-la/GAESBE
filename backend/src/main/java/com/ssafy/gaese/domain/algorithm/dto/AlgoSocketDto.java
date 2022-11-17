@@ -17,4 +17,5 @@ public class AlgoSocketDto {
     private String sessionId;
     private String userId;
     private String roomCode;
+    private String nickname;
 }

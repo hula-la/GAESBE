@@ -6,9 +6,6 @@ import com.ssafy.gaese.domain.algorithm.application.AlgoSocketService;
 import com.ssafy.gaese.domain.algorithm.dto.*;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRankDto;
 import com.ssafy.gaese.domain.algorithm.dto.redis.AlgoRoomPassDto;
-
-import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
-import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +26,6 @@ public class AlgoSocketController {
     private final AlgoService algoService;
     private final AlgoProblemService algoProblemService;
     private final AlgoSocketService algoSocketService;
-    private final SocketInfo socketInfo;
     private final RedisTemplate redisTemplate;
 
     // 알고리즘 방 입장/나가기
@@ -45,8 +40,10 @@ public class AlgoSocketController {
 
             SetOperations<String ,String > setOperations = redisTemplate.opsForSet();
             if (algoService.enterRoom(algoSocketDto)) {
+
+
                 res.put("playAnotherGame", false);
-                res.put("msg", algoSocketDto.getUserId() + " 님이 접속하셨습니다.");
+                res.put("msg", algoSocketDto.getNickname() + " 님이 접속하셨습니다.");
             }
 
         }
