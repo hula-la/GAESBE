@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Tr = styled.div`
   width: 800%;
-  margin-top: 1%;
+  margin-top: 10%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -27,6 +27,7 @@ function CSRecordTable({ csList }: any) {
           <Th>순위</Th>
         </Tr>
       </thead>
+      <hr style={{ width: '480%', marginLeft: '150%' }} />
       <tbody>
         {csList.map((e: any) => (
           <Tr key={e.csRecordId}>
