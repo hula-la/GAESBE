@@ -1,18 +1,18 @@
 package com.ssafy.gaese.domain.user.exception;
 
 public class LevelNotSatisfiedException extends RuntimeException {
-    public LevelNotReachException() {
+    public LevelNotSatisfiedException() {
     }
 
-    public LevelNotReachException(String message) {
+    public LevelNotSatisfiedException(String message) {
         super(message);
     }
 
-    public LevelNotReachException(String message, Throwable cause) {
+    public LevelNotSatisfiedException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public LevelNotReachException(Throwable cause) {
+    public LevelNotSatisfiedException(Throwable cause) {
         super(cause);
     }
 }

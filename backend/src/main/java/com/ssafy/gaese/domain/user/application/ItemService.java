@@ -8,6 +8,7 @@ import com.ssafy.gaese.domain.user.entity.item.Characters;
 import com.ssafy.gaese.domain.user.entity.item.Office;
 import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.entity.item.UserOffice;
+import com.ssafy.gaese.domain.user.exception.AlreadyOfficeBuyException;
 import com.ssafy.gaese.domain.user.exception.LevelNotSatisfiedException;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -61,6 +63,9 @@ public class ItemService {
     public List<OfficeDto> buyOffice(Long userId, Long officeId){
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
         Office office = officeRepository.findById(officeId).orElseThrow(() -> new RuntimeException("오피스가 없습니다"));
+
+        Optional<UserOffice> userOfficeOpt = userOfficeRepository.findByUserAndOffice(user, office);
+        if(userOfficeOpt.isPresent()) throw new AlreadyOfficeBuyException();
 
         // 레벨 확인
         int mnLv=Integer.MAX_VALUE;
