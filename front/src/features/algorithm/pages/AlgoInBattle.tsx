@@ -57,6 +57,8 @@ function AlgoInBattle() {
   const [ranking, setRanking] = useState<RankingUserInfo[]>([]);
   const [myRank, setMyRank] = useState<number>(5);
   const [timeOut, setTimeOut] = useState<boolean>(false);
+  const [msgAlert, setMsgAlert] = useState<boolean>(false);
+  const [msg, setMsg] = useState<string>('');
 
   useEffect(() => {
     for (let i = 0; i < 4; i++) {
@@ -68,6 +70,18 @@ function AlgoInBattle() {
       }
     }
   }, [ranking]);
+
+  useEffect(() => {
+    if (msgAlert) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        timer: 1000,
+        showConfirmButton: false,
+        text: msg,
+      });
+    }
+  }, [msg]);
 
   const client = useRef<any>(null);
   // 최초 입장시 소켓 뚫고, 백준id보내기
@@ -90,6 +104,8 @@ function AlgoInBattle() {
           `/algo/room/${InGameInfo.roomCode}`,
           (res: any) => {
             if (progress === 'before') {
+              setMsg(JSON.parse(res.body).msg);
+              setMsgAlert(true);
               setInGameUsers(JSON.parse(res.body).users);
               const newGameInfo = JSON.parse(JSON.stringify(InGameInfo));
               newGameInfo.master = JSON.parse(res.body).master;
