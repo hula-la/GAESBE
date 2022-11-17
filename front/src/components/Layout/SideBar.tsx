@@ -89,7 +89,32 @@ const Side = styled.div`
     justify-content: space-evenly;
 
     padding: 15% 0;
-
+    .logoutfolder {
+      display: flex;
+      align-items: center;
+      height: 13%;
+      width: 100%;
+      position: relative;
+      :hover {
+        transform: translateY(-1vh);
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+    .logout {
+      display: flex;
+      height: 60%;
+      padding-left: 10%;
+    }
+    .logoutname {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 23px;
+      line-height: 30px;
+      color: #ffffff;
+      margin-left: 2.2rem;
+      margin-top: 2rem;
+      left: 37%;
+    }
     .folder {
       display: flex;
       align-items: center;
@@ -248,7 +273,16 @@ const SideBar = () => {
           />
           <p className="foldername">MINI</p>
         </div>
-        <button onClick={onClickLogout}>로그 아웃</button>
+        {/* <button onClick={onClickLogout}>로그 아웃</button> */}
+        <div onClick={onClickLogout} className="logoutfolder">
+          <img
+            className="logout"
+            // style={{ margin: height: '50%' }}
+            src="/img/login/logout.png"
+            alt=""
+          />
+          <p className="logoutname">로그 아웃</p>
+        </div>
       </div>
     </Side>
   );

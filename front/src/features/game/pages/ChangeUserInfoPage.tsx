@@ -1,9 +1,10 @@
+import { format } from 'path';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { authActions } from '../../auth/authSlice';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import Swal from 'sweetalert2';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const ChangeUserInfo = styled.div`
   width: 100%;
@@ -20,6 +21,13 @@ const BackArrow = styled.img`
   top: 5%;
   left: 20%;
   transform: scaleX(-1);
+`;
+const Back = styled.img`
+  position: absolute;
+  width: 10%;
+  top: 5%;
+  left: 23%;
+  /* transform: scaleX(-1); */
 `;
 const MyCharacter = styled.div`
   /* border: 2px solid blue; */
@@ -104,15 +112,9 @@ const ChangeUserInfoPage = () => {
   const navigate = useNavigate();
   const { isDuplicate } = useSelector((state: any) => state.auth);
   const { userInfo } = useSelector((state: any) => state.auth);
-  const [nickname, setNickname] = useState<string>('');
-  const [profilechar, setProfilechar] = useState<string>('');
+  const [nickname, setNickname] = useState<string>(userInfo.nickname);
+  const [profilechar, setProfilechar] = useState<string>(userInfo.profileChar);
   const { characters } = useSelector((state: any) => state.item);
-  useEffect(() => {
-    if (userInfo) {
-      setNickname(userInfo.nickname);
-      setProfilechar(userInfo.profileChar);
-    }
-  }, [userInfo]);
 
   let characterList = characters;
 
@@ -139,7 +141,7 @@ const ChangeUserInfoPage = () => {
     return setProfilechar(item);
   };
   const handleUnLockSelectCharacter = () => {
-    Swal.fire({icon:'warning', text:'아직 획득하지 못한 캐릭터 입니다.'});
+    alert('아직 획득하지 못한 캐릭터 입니다.');
   };
   const handleChangeCharacter = () => {
     dispatch(
@@ -153,8 +155,14 @@ const ChangeUserInfoPage = () => {
   return (
     <ChangeUserInfo>
       <MyCharacter>
+        <BackArrow
+          onClick={handleMypage}
+          src="/img/arrow/back-arrow.png"
+          alt=""
+        />
+        <Back onClick={handleMypage} src="/img/arrow/back.png" alt="" />
         <MyCharacterInfo>
-          {!changeNickName && userInfo && (
+          {!changeNickName && (
             <h1 className="h1">
               {userInfo.nickname}
               {/* <button onClick={handleInput}>변경</button> */}
@@ -182,13 +190,19 @@ const ChangeUserInfoPage = () => {
             src={`${process.env.REACT_APP_S3_URL}/profile/${profilechar}_normal.gif`}
             alt="캐릭터 없음"
           />
+          {/* <a
+            href="javascript:void(0)"
+            className="eightbit-btn eightbit-btn--reset"
+            onClick={handleMypage}
+          >
+            나가기
+          </a> */}
         </MyCharacterInfo>
       </MyCharacter>
       <SelectCharacter>
         <h1>당신의 캐릭터를 변경하세요</h1>
-
-        {characterList &&
-          characterList.map((character: any) => {
+        <AllCharacterList>
+          {characterList.map((character: any) => {
             return (
               <>
                 {character.own ? (
@@ -218,14 +232,16 @@ const ChangeUserInfoPage = () => {
               </>
             );
           })}
+        </AllCharacterList>
+        <a
+          href="javascript:void(0)"
+          className="eightbit-btn"
+          onClick={handleChangeCharacter}
+        >
+          캐릭터 변경
+        </a>
+        {/* <button onClick={handleChangeCharacter}>변경</button> */}
       </SelectCharacter>
-      <a
-        href="javascript:void(0)"
-        className="eightbit-btn"
-        onClick={handleChangeCharacter}
-      >
-        캐릭터 변경
-      </a>
     </ChangeUserInfo>
   );
 };

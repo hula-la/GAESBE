@@ -119,11 +119,59 @@ const WaitingTypingGameBox = styled.div`
   height: 17rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  padding-top: 5%;
+  /* justify-content: center; */
   align-items: center;
   color: black;
   background-color: white;
   border-radius: 20px;
+  .startBtnContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 1rem;
+    right: 33rem;
+    width: 30rem;
+
+    transition: transform 0.3s;
+
+    .inviteBtn {
+      width: 100%;
+      :hover {
+        transform: scale(1.1);
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+
+    .inviteBtnBox {
+      padding-left: 1rem;
+      position: relative;
+      font-size: 1rem;
+
+      :hover .inviteBtnToolTip {
+        display: block;
+      }
+      .inviteBtnToolTip {
+        display: none;
+        position: absolute;
+        bottom: 110%;
+      }
+    }
+
+    .startBtn {
+      width: 50%;
+      height: 50%;
+
+      :hover {
+        transform: scale(1.1);
+        transition: transform 0.3s;
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+  }
 `;
 const MasterGameButton = styled.div`
   width: 30%;
@@ -612,8 +660,24 @@ const TypingFriendGame = () => {
             )}
             <MasterGameButton>
               {master && !isStart && (
-                <>
-                  <a
+                <div className="startBtnContainer">
+                  <div className="friendNum">
+                    {players.length}/4
+                    <div className="inviteBtnBox">
+                      <div className="inviteBtnToolTip">친구 초대</div>
+                      <img
+                        src="/img/cs/inviteBtn2.png"
+                        className="inviteBtn"
+                        onClick={handleModal}
+                      />
+                    </div>
+                  </div>
+                  <img
+                    className="startBtn"
+                    src="/img/cs/startBtn.png"
+                    onClick={onClickStart}
+                  />
+                  {/* <a
                     href="javascript:void(0)"
                     className="eightbit-btn"
                     onClick={handleModal}
@@ -626,19 +690,35 @@ const TypingFriendGame = () => {
                     onClick={onClickStart}
                   >
                     게임 시작
-                  </a>
-                </>
+                  </a> */}
+                </div>
               )}
             </MasterGameButton>
             <GuestGameButton>
               {!master && !isStart && (
-                <a
-                  href="javascript:void(0)"
-                  className="eightbit-btn"
-                  onClick={handleModal}
+                // <a
+                //   href="javascript:void(0)"
+                //   className="eightbit-btn"
+                //   onClick={handleModal}
+                // >
+                //   친구 초대
+                // </a>
+                <div
+                  className="startBtnContainer"
+                  style={{ justifyContent: 'center' }}
                 >
-                  친구 초대
-                </a>
+                  <div className="friendNum">
+                    {players.length}/4
+                    <div className="inviteBtnBox">
+                      <div className="inviteBtnToolTip">친구 초대</div>
+                      <img
+                        src="/img/cs/inviteBtn2.png"
+                        className="inviteBtn"
+                        onClick={handleModal}
+                      />
+                    </div>
+                  </div>
+                </div>
               )}
             </GuestGameButton>
           </WaitingTypingGameBox>

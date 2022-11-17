@@ -13,7 +13,6 @@ import DetailResultModal from '../components/DetailResultModal';
 import CSRecordTable from '../components/cs/CSRecordTable';
 import TypingRecordTable from '../components/typing/TypingRecordTable';
 
-
 const MyPageContainer = styled.div`
   width: 100%;
   height: 99%;
@@ -61,14 +60,44 @@ const Down = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  .gametype {
-    border: 2px solid orange;
+  .gametypealgo {
+    /* border: 2px solid orange; */
     width: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: orange;
-    color: black;
+    /* background-color: orange; */
+    color: white;
+    :hover {
+      background-color: orange;
+    }
+  }
+  .gametypecs {
+    /* border: 2px solid orange; */
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: orange; */
+    color: white;
+  }
+  .gametypetyping {
+    /* border: 2px solid orange; */
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: orange; */
+    color: white;
+  }
+  .gametypessafy {
+    /* border: 2px solid orange; */
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: orange; */
+    color: white;
   }
 `;
 const GameType = styled.div`
@@ -112,7 +141,7 @@ const MyPage = () => {
   const [algoRecord, setAlgoRecord] = useState({ rank: 0, records: [] });
   const [detailModal, setDetailModal] = useState<string>('');
   const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
-
+  console.log(algoRecord, 'zzzzzzzzzzzzzzzzzzzzzzzzzz');
   useEffect(() => {
     if (record) {
       setCsRecord(record.cs.content);
@@ -135,7 +164,7 @@ const MyPage = () => {
         setAlgoRecord({ ...algoRecord, records: res.data.content });
       }
     } catch (error) {
-      Swal.fire({icon:'error', text:'알고리즘 배틀 정보를 못가져왔습니다'});
+      Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
     }
   };
   const fetchAlgoRecordRank = async () => {
@@ -145,7 +174,7 @@ const MyPage = () => {
         setAlgoRecord({ ...algoRecord, rank: res.data });
       }
     } catch (error) {
-      Swal.fire({icon:'error', text:'알고리즘 배틀 정보를 못가져왔습니다'});
+      Swal.fire({ icon: 'error', text: '알고리즘 배틀 정보를 못가져왔습니다' });
     }
   };
 
@@ -161,7 +190,7 @@ const MyPage = () => {
       // 유저 인포 널로 바꾸고
       // 엑세스 토큰 지우고
     } else {
-      Swal.fire({icon:'info', text:'삭제 안함'});
+      Swal.fire({ icon: 'info', text: '삭제 안함' });
     }
   };
   const handleChange = () => {
@@ -239,16 +268,16 @@ const MyPage = () => {
             </MyRecord>
           </Up>
           <Down>
-            <div className="gametype" onClick={clickAlgoGame}>
+            <div className="gametypealgo" onClick={clickAlgoGame}>
               알고리즘
             </div>
-            <div className="gametype" onClick={clickCsGame}>
+            <div className="gametypecs" onClick={clickCsGame}>
               CS 게임
             </div>
-            <div className="gametype" onClick={clickTypingGame}>
+            <div className="gametypetyping" onClick={clickTypingGame}>
               타자 게임
             </div>
-            <div className="gametype" onClick={clickSsafyGame}>
+            <div className="gametypessafy" onClick={clickSsafyGame}>
               싸피 게임
             </div>
           </Down>
@@ -274,13 +303,13 @@ const MyPage = () => {
               )}
               {gameType === 'cs' && (
                 <div>
-                  <h1>CS</h1>
+                  {/* <h1>CS</h1> */}
                   <CSRecordTable csList={csList} />
                 </div>
               )}
               {gameType === 'typing' && (
                 <div>
-                  <h1>TYPING</h1>
+                  {/* <h1>TYPING</h1> */}
                   <TypingRecordTable typingList={typingList} />
                 </div>
               )}
