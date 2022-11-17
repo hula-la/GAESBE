@@ -60,14 +60,44 @@ const Down = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  .gametype {
-    border: 2px solid orange;
+  .gametypealgo {
+    /* border: 2px solid orange; */
     width: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: orange;
-    color: black;
+    /* background-color: orange; */
+    color: white;
+    :hover {
+      background-color: orange;
+    }
+  }
+  .gametypecs {
+    /* border: 2px solid orange; */
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: orange; */
+    color: white;
+  }
+  .gametypetyping {
+    /* border: 2px solid orange; */
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: orange; */
+    color: white;
+  }
+  .gametypessafy {
+    /* border: 2px solid orange; */
+    width: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: orange; */
+    color: white;
   }
 `;
 const GameType = styled.div`
@@ -112,7 +142,7 @@ const MyPage = () => {
   const [algoRecords, setAlgoRecords] = useState([]);
   const [detailModal, setDetailModal] = useState<string>('');
   const [algoDetailRoomCode, setAlgoDetailRoomCode] = useState<string>('');
-
+  // console.log(algoRecord, 'zzzzzzzzzzzzzzzzzzzzzzzzzz');
   useEffect(() => {
     if (record) {
       setCsRecord(record.cs.content);
@@ -247,16 +277,16 @@ const MyPage = () => {
             </MyRecord>
           </Up>
           <Down>
-            <div className="gametype" onClick={clickAlgoGame}>
+            <div className="gametypealgo" onClick={clickAlgoGame}>
               알고리즘
             </div>
-            <div className="gametype" onClick={clickCsGame}>
+            <div className="gametypecs" onClick={clickCsGame}>
               CS 게임
             </div>
-            <div className="gametype" onClick={clickTypingGame}>
+            <div className="gametypetyping" onClick={clickTypingGame}>
               타자 게임
             </div>
-            <div className="gametype" onClick={clickSsafyGame}>
+            <div className="gametypessafy" onClick={clickSsafyGame}>
               싸피 게임
             </div>
           </Down>
@@ -282,13 +312,13 @@ const MyPage = () => {
               )}
               {gameType === 'cs' && (
                 <div>
-                  <h1>CS</h1>
+                  {/* <h1>CS</h1> */}
                   <CSRecordTable csList={csList} />
                 </div>
               )}
               {gameType === 'typing' && (
                 <div>
-                  <h1>TYPING</h1>
+                  {/* <h1>TYPING</h1> */}
                   <TypingRecordTable typingList={typingList} />
                 </div>
               )}
