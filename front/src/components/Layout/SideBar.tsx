@@ -219,7 +219,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">MYROOM</p>
+          <p className="foldername">내 방</p>
         </div>
         <div onClick={() => handleOnClick('typing')} className="folder">
           <img
@@ -232,7 +232,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">TYPING</p>
+          <p className="foldername">타자 게임</p>
         </div>
         <div onClick={() => handleOnClick('algo')} className="folder">
           <img
@@ -245,7 +245,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">ALGORITHM</p>
+          <p className="foldername">알고리즘 배틀</p>
         </div>
         <div onClick={() => handleOnClick('CS')} className="folder">
           <img
@@ -258,7 +258,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">CS</p>
+          <p className="foldername">씨에스 파이트</p>
         </div>
         <div onClick={() => handleOnClick('casino')} className="folder">
           <img
@@ -271,7 +271,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">MINI</p>
+          <p className="foldername">미니 게임</p>
         </div>
         {/* <button onClick={onClickLogout}>로그 아웃</button> */}
         <div onClick={onClickLogout} className="logoutfolder">

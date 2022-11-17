@@ -24,6 +24,7 @@ import FriendSocket from './features/friend/pages/FriendSocket';
 import OnlyNoLogin from './private/OnlyNoLogin';
 import OnlyLogin from './private/OnlyLogin';
 import { itemActions } from './features/game/itemSlice';
+import CSResultPageTest from './features/cs/pages/CSResultPageTest'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const App = () => {
             <Route element={<OnlyNoLogin userInfo={userInfo} />}>
               <Route path="login" element={<LoginPage />} />
               <Route path="nickname" element={<SetNicknamePage />} />
+             
             </Route>
           </Route>
           <Route element={<OnlyLogin />}>
@@ -59,6 +61,7 @@ const App = () => {
               <Route path="CS/random" element={<CSRandomPage />} />
               <Route path="CS/friend" element={<CSFriendPage />} />
               <Route path="CS/result" element={<CSResultPage />} />
+              <Route path="CS/test" element={<CSResultPageTest/>}/>
             </Route>
           </Route>
         </Routes>
