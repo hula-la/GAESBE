@@ -15,4 +15,6 @@ public class FiveResultDto {
 
     private int myWinMaxWinStreak;
 
+    private int myWinningStreak;
+
 }

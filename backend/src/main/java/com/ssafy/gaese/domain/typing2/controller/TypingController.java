@@ -38,7 +38,11 @@ public class TypingController {
         return ResponseEntity.ok().body(typingService.findTypingRecord(userDetails.getId(),pageable));
     }
 
-
+    @GetMapping("/record/rank")
+    @ApiOperation(value = "typing 게임 1등 갯수 출력", notes = "사용자별 알고리즘 게임 기록 조회")
+    public ResponseEntity<Integer> getWinCount(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return ResponseEntity.ok().body(typingService.getWinCount(userDetails.getId()));
+    }
 
 
     @GetMapping("/find")

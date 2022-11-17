@@ -20,7 +20,7 @@ public class AbilityService {
     private final AbilityRepository abilityRepository;
     private final UserRepository userRepository;
 
-    static final int RankLenSize =10;
+
 
     public AbilityDto getAbility(Long userId){
         Optional<Ability> abilityOpt = abilityRepository.findByUser_Id(userId);
@@ -37,6 +37,8 @@ public class AbilityService {
 
     public RankDto getRank(Long userId)
     {
+        int RankLenSize =10;
+
         RankDto rankDto = new RankDto();
 
         //algo에 대해선 이미 정렬해서 받음
@@ -73,18 +75,19 @@ public class AbilityService {
         {
             if(cs.get(i).getUserId()==userId)
             {
-                rankDto.setMyCsRank((long) i);
+                rankDto.setMyCsRank((long) i+1);
             }
             if(typing.get(i).getUserId()==userId)
             {
-                rankDto.setMyTypingRank((long) i);
+                rankDto.setMyTypingRank((long) i+1);
             }
             if(luck.get(i).getUserId()==userId)
             {
-                rankDto.setMyLuckRank((long) i);
+                rankDto.setMyLuckRank((long) i+1);
             }
         }
-
+        if(algo.size()<RankLenSize)
+            RankLenSize=algo.size();
         rankDto.setAlgo(algo.subList(0,RankLenSize));
         rankDto.setCs(cs.subList(0,RankLenSize));
         rankDto.setTyping(typing.subList(0,RankLenSize));

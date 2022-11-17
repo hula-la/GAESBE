@@ -8,9 +8,13 @@ import com.ssafy.gaese.domain.algorithm.entity.AlgoRecord;
 import com.ssafy.gaese.domain.algorithm.repository.*;
 import com.ssafy.gaese.domain.user.entity.Ability;
 import com.ssafy.gaese.domain.user.entity.User;
+import com.ssafy.gaese.domain.user.entity.item.Characters;
+import com.ssafy.gaese.domain.user.entity.item.UserCharacter;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.AbilityRepository;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
+import com.ssafy.gaese.domain.user.repository.item.CharacterRepository;
+import com.ssafy.gaese.domain.user.repository.item.UserCharacterRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +50,15 @@ public class AlgoService {
     private final AlgoSocketService algoSocketService;
     private final AbilityRepository abilityRepository;
     static ChromeDriver driver = null;
+
+
+    private final ItemService itemService;
+
+    private final FriendSocketService friendSocketService;
+
+    private final UserCharacterRepository userCharacterRepository;
+
+    private final CharacterRepository characterRepository;
 
     public void saveAlgoRecord(String roomCode){
 
@@ -92,6 +105,8 @@ public class AlgoService {
         Ability ability = abilityRepository.findByUser_Id(userId).get();
         ability.addExp("algorithm", 1);
         algoRepository.save(algoRecordDto.toEntity(user));
+
+        charChecker(user.getId());
 
         return algoRecordDto;
     }
@@ -352,5 +367,58 @@ public class AlgoService {
         return res;
     }
 
+
+
+    void charChecker(Long userid)
+    {
+        User user = userRepository.findById(userid).get();
+
+        List<AlgoRecord> algoRecords = algoRepository.findAllByUser(user);
+        ArrayList<Characters> characterArr = (ArrayList<Characters>) characterRepository.findAll();
+        Map<Long,Characters> characters = new HashMap<>();
+        for (Characters c:characterArr) {
+            characters.put(c.getId(),c);
+        }
+
+        int algoCount=0;
+        int oneCount=0;
+
+        for (AlgoRecord algoRecord:algoRecords)
+        {
+            if(algoRecord.getRanking()<2)
+            {
+                oneCount++;
+            }
+            algoCount++;
+        }
+
+        int charId=21;
+        if(oneCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            userCharacterSet(user,charId,characters);
+        }
+        charId=20;
+        if(algoCount>2 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            userCharacterSet(user,charId,characters);
+        }
+        charId=19;
+        if(!userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+        {
+            userCharacterSet(user,charId,characters);
+        }
+
+
+    }
+
+
+    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    {
+        UserCharacter userCharacter = new UserCharacter();
+        userCharacter.setUser(user);
+        userCharacter.setCharacters(characters.get(charId));
+        userCharacterRepository.save(userCharacter);
+        friendSocketService.sendCharacters(user.getId(),(long)charId);
+    }
 
 }
