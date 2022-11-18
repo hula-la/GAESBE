@@ -96,6 +96,7 @@ public class FriendSocketService {
         refreshFriend(userId);
     }
 
+
     @Transactional
     public void saveFriend(Long userId, Long friendId) throws NullPointerException{
         User user = userRepository.findById(userId)
@@ -170,6 +171,8 @@ public class FriendSocketService {
         // 나갔다는 것을 알림
         refreshFriend(userId);
     }
+
+    //캐릭터 해금 알림
     public void sendCharacters(Long userId, Long charactersId)
     {
         HashMap<String, Object> res = new HashMap<>();
@@ -181,6 +184,17 @@ public class FriendSocketService {
 
         res.put("character",charactersId);
         res.put("need",characters.getNeed());
+
+        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
+    }
+
+    //친구 추가 알림
+    public void friendAlarm(Long userId)
+    {
+        HashMap<String, Object> res = new HashMap<>();
+
+        boolean alarm = true;
+        res.put("alam",alarm);
 
         simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
     }

@@ -30,7 +30,7 @@ public class FriendService {
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
 
-
+    private final FriendSocketService friendSocketService;
     public boolean requestFriend(Long userId, String targetNickname) throws NullPointerException{
 
         User targetUser = userRepository.findByNickname(targetNickname).orElseThrow(()->new UserNotFoundException());
@@ -70,6 +70,8 @@ public class FriendService {
                     .build();
             friendRequestRepository.save(friendRequest);
         }
+
+        friendSocketService.friendAlarm(userId);
         return true;
     }
 
