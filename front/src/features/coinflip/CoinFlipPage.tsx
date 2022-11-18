@@ -8,9 +8,23 @@ import Swal from 'sweetalert2';
 import { coinActions } from './coinFlipSlice';
 
 const Container = styled.div`
+  position: relative;
   height: 100%;
   background-color: #232323;
   color: #fff;
+  .arrowImg{
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover{
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+
+    }
+  }
   .stats {
     text-align: right;
     color: #ffffff;
@@ -20,6 +34,7 @@ const Container = styled.div`
   .title {
     text-align: center;
     height: 15%;
+    padding-top: 2%;
     img {
       height: 100%;
     }
@@ -310,6 +325,7 @@ const CoinFlipPage = () => {
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""
+        className='arrowImg'
       />
       <div className="title">
         <img src="/img/gametitle/gametitle3.png" alt="title" />
