@@ -115,6 +115,9 @@ public class SsafyGameService {
         Map<Long,Characters> characters = new HashMap<>();
         for (Characters c:characterArr) {
             characters.put(c.getId(),c);
+            System.out.println("케릭터 목록");
+            System.out.println(c.getId());
+            System.out.println(c);
         }
 
         int charId=24;
@@ -134,7 +137,7 @@ public class SsafyGameService {
         }
     }
 
-    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    void userCharacterSet(User user, long charId, Map<Long,Characters> characters)
     {
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setUser(user);
