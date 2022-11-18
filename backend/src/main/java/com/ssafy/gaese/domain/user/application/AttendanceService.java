@@ -80,7 +80,7 @@ public class AttendanceService {
 
 
 
-        int charId=0;
+        long charId=0;
         if(AttendanceCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user,charId,characters);

@@ -400,7 +400,7 @@ public class CsService {
             }
         }
 
-        int charId=18;
+        long charId=18;
         if(threeCount>9 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user,charId,characters);
