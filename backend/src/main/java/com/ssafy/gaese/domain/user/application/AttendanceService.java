@@ -50,8 +50,8 @@ public class AttendanceService {
                 .date(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .build();
 
-        charChecker(userId);
         attendanceRepository.save(attendance);
+        charChecker(userId);
         return true;
     }
 
