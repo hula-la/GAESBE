@@ -19,7 +19,13 @@ const TypingMain = styled.div`
       }
     }
   }
-
+  .img {
+    position: absolute;
+    /* width: 3%; */
+    top: 5%;
+    left: 20%;
+    transform: scaleX(-1);
+  }
   height: 100%;
   width: 100%;
 
@@ -195,6 +201,7 @@ function TypingMainPage() {
   return (
     <TypingMain>
       <img
+        className="img"
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""

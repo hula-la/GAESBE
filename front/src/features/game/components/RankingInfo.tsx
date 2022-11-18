@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Background from '../../../components/Layout/Background';
 import { RankerInfoInterface } from '../../../models/user';
 
 const GameType = styled.div`
@@ -27,6 +28,7 @@ const GameTable = styled.div`
   height: 75%;
   border: 5px solid black;
   border-radius: 15px;
+  /* background-color: orange; */
   background-color: #ffc02d;
   .table {
     width: 100%;
@@ -65,11 +67,15 @@ const GameTable = styled.div`
         border: 3px solid black;
         border-radius: 10px;
         color: black;
-        background-color: #f0568c;
         .td1 {
           width: 10%;
           display: flex;
           justify-content: center;
+          .img {
+            width: 150%;
+            height: 150%;
+            padding-left: 30%;
+          }
         }
         .td2 {
           width: 50%;
@@ -92,6 +98,7 @@ const GameTable = styled.div`
 `;
 function RankingInfo({ type, rankersInfo }: any) {
   console.log(type, 'aaaaaaaaaaaaaaaaaaaaaaaddddddd');
+  let background = '';
   return (
     <GameType>
       <GameHeader>
@@ -111,10 +118,33 @@ function RankingInfo({ type, rankersInfo }: any) {
           <tbody className="tbody">
             {rankersInfo.map(
               (rankerInfo: RankerInfoInterface, index: number) => {
+                if (index === 0) {
+                  background = '#f0568c';
+                } else if (index === 1) {
+                  background = '#ff98bc';
+                } else if (index === 2) {
+                  background = '#FFCFE0';
+                } else {
+                  background = 'white';
+                }
                 return (
                   index <= 4 && (
-                    <tr className="tr" key={index}>
-                      <td className="td1">{index + 1}</td>
+                    <tr
+                      className="tr"
+                      key={index}
+                      style={{ backgroundColor: `${background}` }}
+                    >
+                      <td className="td1">
+                        {index <= 2 ? (
+                          <img
+                            className="img"
+                            src={`/img/rank${index + 1}.png`}
+                            alt={`${index + 1}`}
+                          />
+                        ) : (
+                          <div>{index + 1}</div>
+                        )}
+                      </td>
                       <td className="td2">{rankerInfo.nickName}</td>
                       <td className="td3">Lv.{rankerInfo.lv}</td>
                       <td className="td4">{rankerInfo.exp}</td>

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Confetti from 'react-confetti';
 import '../../../components/Common/retroBtn.css';
+import { useSelector } from 'react-redux';
 const Result = styled.div`
   width: 100%;
   height: 100%;
@@ -12,6 +13,9 @@ const Result = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  img {
+    width: 15%;
+  }
 `;
 const ResultButton = styled.div`
   width: 20%;
@@ -23,6 +27,7 @@ const TypingResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { resultId, resultNickName, resultProfile } = location.state;
+  const { userInfo } = useSelector((state: any) => state.auth);
 
   const handleHome = () => {
     navigate('/game');
@@ -40,12 +45,25 @@ const TypingResultPage = () => {
         width={window.innerWidth}
         height={window.innerHeight / 1.1}
       ></Confetti>
-      <h1>축하합니다 우승입니다.</h1>
-      <div>{resultNickName}</div>
-      <img
-        src={`${process.env.REACT_APP_S3_URL}/profile/${resultProfile}_normal.gif`}
-        alt=""
-      />
+      {userInfo.id === resultId ? (
+        <>
+          <h1>축하합니다 우승입니다.</h1>
+          <h2>{resultNickName}</h2>
+          <img
+            src={`${process.env.REACT_APP_S3_URL}/profile/${resultProfile}_normal.gif`}
+            alt=""
+          />
+        </>
+      ) : (
+        <>
+          <h1>우승자는 {resultNickName}님 입니다.</h1>
+          <h2>{resultNickName}</h2>
+          <img
+            src={`${process.env.REACT_APP_S3_URL}/profile/${resultProfile}_normal.gif`}
+            alt=""
+          />
+        </>
+      )}
       <ResultButton>
         <a
           href="javascript:void(0)"
