@@ -27,20 +27,22 @@ const MyRoom = styled.img`
 `;
 
 const MyCharacter = styled.img`
-      width: 9%;
+    width: 9%;
     position: absolute;
-    bottom: 33%;
-    left: 43%;
+    bottom: 62%;
+    left: 28%;
     z-index: 4;
+    transform: scaleX(-1);
 `;
 const MyComputer = styled.img`
-      width: 17%;
+    width: 6%;
     position: absolute;
-    bottom: 45%;
-    left: 28%;
+    bottom: 44%;
+    left: 61%;
+    transform: scaleX(-1);
   :hover {
-    transform: scale(1.2);
-    content: url("/img/roomGif/level0computer.gif");
+    transform: scaleX(-1.2) scaleY(1.2);
+    /* content: url("/img/roomGif/level0computer.gif"); */
     transition: 0.4s ease-in-out;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
@@ -49,15 +51,8 @@ const Coin = styled.img`
   width: 4%;
   height: 3%;
   position: absolute;
-  bottom: 56%;
+  bottom: 49%;
   left: 50%;
-  animation: motion 1.4s linear 0s infinite ; margin-top: 0;
-  
-  @keyframes motion {
-	0% {margin-bottom: 0px;}
-	50% {margin-bottom: 1%;}
-	100% {margin-bottom: 0px;}
-}
 
   :hover {
     transform: scale(1.2);
@@ -66,10 +61,10 @@ const Coin = styled.img`
   }
   `;
 const Note = styled.img`
-  width: 9%;
-  position: absolute;
-  bottom: 38%;
-  right: 61%;
+      width: 6%;
+    position: absolute;
+    bottom: 68%;
+    right: 53%;
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
@@ -84,19 +79,17 @@ const Spider = styled.img`
   
   `;
 const Calender = styled.img`
-  /* width: 5%;
-  height: 12%; */
   position: absolute;
-  bottom: 61%;
-  right: 15%;
-  width: 7%;
-  height: 12%;
+    bottom: 61%;
+    left: 7%;
+    width: 5%;
+    height: 9%;
   /* bottom: 24vh;
   right: 31vw; */
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    content: url("/img/roomGif/level0calender.gif");
+    /* content: url("/img/roomGif/level0calender.gif"); */
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;
@@ -123,7 +116,7 @@ const Level5 = ({ handleModal,officeIdx }: any) => {
         
 
 
-        <MyRoom src="/img/MyOffice/level00.gif" alt="lv2 room" />
+        <MyRoom src="/img/MyOffice/level60.png" alt="lv6 room" />
 
         <MyComputer
           onClick={handleAlert}
@@ -131,9 +124,9 @@ const Level5 = ({ handleModal,officeIdx }: any) => {
           alt="내 컴퓨터"
         />
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-        <Note src="/img/MyOffice/level0note.png" />
-        <Spider src="/img/roomGif/spider.gif" />
-        <Calender onClick={handleModal} src="/img/MyOffice/level0calender.png" />
+        <Note src="/img/MyOffice/note.png" />
+        {/* <Spider src="/img/roomGif/spider.gif" /> */}
+        <Calender onClick={handleModal} src="/img/MyOffice/level3Calender.png" />
       </div>
     </Unity>
   );
