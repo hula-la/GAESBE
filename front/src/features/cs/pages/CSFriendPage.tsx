@@ -296,10 +296,17 @@ const IngameBlock = styled.div`
       align-items: center;
       margin-top: 3rem;
     }
+    .answer {
+      color: #0ac413;
+    }
   }
   .chart {
     width: 50%;
     margin-top: 5rem;
+  }
+  .middleText {
+    color: #ffffff;
+    margin-top: 3rem;
   }
 `;
 
@@ -798,7 +805,12 @@ const CSFriendPage = () => {
                       {problem.example
                         .split('|')
                         .map((k: String, v: number) => (
-                          <div className="example">
+                          <div
+                            className={
+                              'example' +
+                              (v + 1 === problem.answer ? ' answer' : '')
+                            }
+                          >
                             {v + 1}. {k}
                           </div>
                         ))}
@@ -809,15 +821,17 @@ const CSFriendPage = () => {
               <div className="chart">
                 <CSMiddleChart />
               </div>
-              <div>
-                <div>답 : {answer}</div>
-                <div>고른 비율</div>
-                {cntPerNum &&
-                  Object.keys(cntPerNum).map((num: any, idx: number) => {
-                    return <div key={idx}>{cntPerNum[num]}</div>;
-                  })}
-                {}
-              </div>
+              {solveOrder && solveOrder[userInfo.id] === -1 && (
+                <div className="middleText">틀렸습니다ㅜ</div>
+              )}
+              {solveOrder && solveOrder[userInfo.id] === 0 && (
+                <div className="middleText">시간초과입니다ㅜ</div>
+              )}
+              {solveOrder && solveOrder[userInfo.id] > 0 && (
+                <div className="middleText">
+                  {solveOrder[5]}등으로 정답을 맞추셨습니다!
+                </div>
+              )}
             </div>
           )}
         </IngameBlock>
