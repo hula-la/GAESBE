@@ -188,6 +188,5 @@ public class FriendSocketService {
         simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
     }
 
-    //친구 추가 알림
 
 }

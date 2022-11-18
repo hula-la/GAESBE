@@ -72,7 +72,7 @@ public class FriendService {
             friendRequestRepository.save(friendRequest);
         }
 
-        friendAlarm(targetUser.getId());
+//        friendAlarm(targetUser.getId());
         return true;
     }
 
@@ -120,14 +120,14 @@ public class FriendService {
 
     }
 
-    public void friendAlarm(Long userId)
-    {
-        HashMap<String, Object> res = new HashMap<>();
-
-        boolean alarm = true;
-
-        res.put("alarm",alarm);
-
-        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
-    }
+//    public void friendAlarm(Long userId)
+//    {
+//        HashMap<String, Object> res = new HashMap<>();
+//
+//        boolean alarm = true;
+//
+//        res.put("alarm",alarm);
+//
+//        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
+//    }
 }
