@@ -55,7 +55,7 @@ const Coin = styled.img`
   
   @keyframes motion {
 	0% {margin-bottom: 0px;}
-	50% {margin-bottom: 1%;}
+	50% {margin-bottom: 0.9%;}
 	100% {margin-bottom: 0px;}
 }
 
@@ -96,7 +96,7 @@ const Calender = styled.img`
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    content: url("/img/roomGif/level0calender.gif");
+    content: url("/img/MyOffice/level0calender.gif");
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;

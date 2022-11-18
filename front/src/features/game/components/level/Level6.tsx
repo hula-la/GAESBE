@@ -27,11 +27,19 @@ const MyRoom = styled.img`
 `;
 
 const MyCharacter = styled.img`
-      width: 9%;
+      width: 12%;
     position: absolute;
     bottom: 33%;
     left: 43%;
     z-index: 4;
+
+    animation: happyMotion 0.4s linear 0s infinite ; 
+  
+  @keyframes happyMotion {
+	0% {margin-bottom: 0px;}
+	50% {margin-bottom: 4%;}
+	100% {margin-bottom: 0px;}
+}
 `;
 const MyComputer = styled.img`
       width: 17%;
@@ -83,14 +91,12 @@ const Spider = styled.img`
   top: 4%;
   
   `;
-const Calender = styled.img`
-  /* width: 5%;
-  height: 12%; */
-  position: absolute;
-  bottom: 61%;
-  right: 15%;
-  width: 7%;
-  height: 12%;
+const Samsung = styled.img`
+      width: 24%;
+    position: absolute;
+    bottom: 48%;
+    left: 51%;
+    margin-bottom: 3%;
   /* bottom: 24vh;
   right: 31vw; */
   :hover {
@@ -122,18 +128,7 @@ const Level6 = ({ handleModal,officeIdx }: any) => {
             />}
         
 
-
-        <MyRoom src="/img/MyOffice/level00.gif" alt="lv2 room" />
-
-        <MyComputer
-          onClick={handleAlert}
-          src="/img/MyOffice/level2computer.png"
-          alt="내 컴퓨터"
-        />
-        <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-        <Note src="/img/MyOffice/level0note.png" />
-        <Spider src="/img/roomGif/spider.gif" />
-        <Calender onClick={handleModal} src="/img/MyOffice/level0calender.png" />
+        <Samsung onClick={handleModal} src="/img/MyOffice/samsung.png" />
       </div>
     </Unity>
   );
