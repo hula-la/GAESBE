@@ -47,10 +47,10 @@ export const data = {
       barThickness: 50,
       data: [1, 2, 3, 10],
       backgroundColor: [
-        'rgba(255, 99, 132, 0.2)', // Bar 1
-        'rgba(54, 162, 235, 0.2)', // Bar 2
-        'rgba(255, 206, 86, 0.2)', // Bar 3
-        'rgba(75, 192, 192, 0.2)',
+        'rgba(255, 99, 132, 1)', // Bar 1
+        'rgba(54, 162, 235, 1)', // Bar 2
+        'rgba(255, 206, 86, 1)', // Bar 3
+        'rgba(75, 192, 192, 1)',
       ],
     },
   ],
