@@ -111,7 +111,6 @@ public class SsafyGameService {
 
     void charChecker(User user)
     {
-        List<CharacterDto> charDtoList = itemService.getCharacters(user.getId());
         ArrayList<Characters> characterArr = (ArrayList<Characters>) characterRepository.findAll();
         Map<Long,Characters> characters = new HashMap<>();
         for (Characters c:characterArr) {
