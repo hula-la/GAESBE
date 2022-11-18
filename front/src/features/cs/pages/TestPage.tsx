@@ -93,6 +93,7 @@ const Test = styled.div`
       font-size: larger;
       font-weight: bold;
     }
+    .problemNumber {}
     .example {
       margin: 0.5rem 0;
     }
@@ -201,7 +202,7 @@ const TestPage = () => {
           </div>
           <div className="problemContent">
             <div className="question">
-              <span>1</span> {problem.question}
+              <span className='problemNumber'>1</span> {problem.question}
             </div>
             <div>
               {problem.example.split('|').map((k: String, v: number) => (

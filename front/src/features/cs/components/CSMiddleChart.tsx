@@ -40,23 +40,22 @@ export const options = {
 
 const labels = ['1', '2', '3', '4'];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      barThickness: 50,
-      data: [1, 2, 3, 10],
-      backgroundColor: [
-        'rgba(255, 99, 132, 1)', // Bar 1
-        'rgba(54, 162, 235, 1)', // Bar 2
-        'rgba(255, 206, 86, 1)', // Bar 3
-        'rgba(75, 192, 192, 1)',
-      ],
-    },
-  ],
-};
-
 const CSMiddleChart = () => {
+  const data = {
+    labels,
+    datasets: [
+      {
+        barThickness: 50,
+        data: [1, 1, 1, 3],
+        backgroundColor: [
+          'rgba(255, 99, 132, 1)', // Bar 1
+          'rgba(54, 162, 235, 1)', // Bar 2
+          'rgba(255, 206, 86, 1)', // Bar 3
+          'rgba(75, 192, 192, 1)',
+        ],
+      },
+    ],
+  };
   return <Bar options={options} data={data} />;
 };
 

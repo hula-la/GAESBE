@@ -555,7 +555,12 @@ const CSFriendPage = () => {
     if (isEnd && rankByPlayer) {
       console.log('끝');
       navigate('/game/CS/result', {
-        state: { ranking: ranking, rankByPlayer: rankByPlayer },
+        state: {
+          ranking: ranking,
+          rankByPlayer: rankByPlayer,
+          myScore: myScore,
+          myRanking: myRanking,
+        },
       });
     }
   }, [players, isEnd, rankByPlayer]);
