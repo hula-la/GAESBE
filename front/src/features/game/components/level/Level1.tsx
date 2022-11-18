@@ -34,13 +34,13 @@ const MyCharacter = styled.img`
     z-index: 4;
 `;
 const MyComputer = styled.img`
-      width: 17%;
+        width: 12%;
     position: absolute;
-    bottom: 45%;
-    left: 28%;
+    bottom: 52%;
+    left: 67%;
   :hover {
     transform: scale(1.2);
-    content: url("/img/roomGif/level0computer.gif");
+    content: url("/img/MyOffice/level2computer.gif");
     transition: 0.4s ease-in-out;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
@@ -51,13 +51,13 @@ const Coin = styled.img`
   position: absolute;
   bottom: 56%;
   left: 50%;
-  animation: motion 1.4s linear 0s infinite ; margin-top: 0;
+  /* animation: motion 1.4s linear 0s infinite ; margin-top: 0;
   
   @keyframes motion {
 	0% {margin-bottom: 0px;}
 	50% {margin-bottom: 1%;}
 	100% {margin-bottom: 0px;}
-}
+} */
 
   :hover {
     transform: scale(1.2);
@@ -68,27 +68,22 @@ const Coin = styled.img`
 const Note = styled.img`
   width: 9%;
   position: absolute;
-  bottom: 38%;
-  right: 61%;
+  bottom: 50%;
+  right: 15%;
+  transform: scaleX(-1);
   :hover {
-    transform: scale(1.2);
+    transform: scaleX(-1.2) scaleY(1.2);
     transition: 0.4s ease-in-out;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;
-const Spider = styled.img`
-  width: 13%;
-  left: 44%;
-  position: absolute;
-  top: 4%;
-  
-  `;
+
 const Calender = styled.img`
   /* width: 5%;
   height: 12%; */
   position: absolute;
-  bottom: 61%;
-  right: 15%;
+  bottom: 72%;
+  right: 36%;
   width: 7%;
   height: 12%;
   /* bottom: 24vh;
@@ -123,7 +118,7 @@ const Level1 = ({ handleModal,officeIdx }: any)=> {
         
 
 
-        <MyRoom src="/img/MyOffice/level00.gif" alt="lv1 room" />
+        <MyRoom src="/img/MyOffice/level2.png" alt="lv1 room" />
 
         <MyComputer
           onClick={handleAlert}
@@ -131,8 +126,7 @@ const Level1 = ({ handleModal,officeIdx }: any)=> {
           alt="내 컴퓨터"
         />
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-        <Note src="/img/MyOffice/level0note.png" />
-        <Spider src="/img/roomGif/spider.gif" />
+        <Note src="/img/MyOffice/note.png" />
         <Calender onClick={handleModal} src="/img/MyOffice/level0calender.png" />
       </div>
     </Unity>

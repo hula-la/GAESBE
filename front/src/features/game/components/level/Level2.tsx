@@ -40,7 +40,7 @@ const MyComputer = styled.img`
     left: 28%;
   :hover {
     transform: scale(1.2);
-    content: url("/img/roomGif/level0computer.gif");
+    content: url("/img/roomGif/level2computer.gif");
     transition: 0.4s ease-in-out;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
@@ -123,7 +123,7 @@ const Level2 = ({ handleModal,officeIdx }: any) => {
         
 
 
-        <MyRoom src="/img/MyOffice/level00.gif" alt="lv2 room" />
+        <MyRoom src="/img/MyOffice/level3.png" alt="lv2 room" />
 
         <MyComputer
           onClick={handleAlert}

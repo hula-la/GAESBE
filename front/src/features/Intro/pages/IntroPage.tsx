@@ -555,7 +555,7 @@ const IntroPage = () => {
 
         <div className="goOffice" onClick={goLogin}>
           <div>Go to Office</div>
-          <img className="arrowRight" src="/img/intro/arrow_right.png" />
+          <img className="arrowRight" src="/img/Intro/arrow_right.png" />
         </div>
 
         <div className="introWrapper">
