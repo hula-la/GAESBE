@@ -71,7 +71,7 @@ public class FriendService {
             friendRequestRepository.save(friendRequest);
         }
 
-        friendSocketService.friendAlarm(userId);
+        friendSocketService.friendAlarm(targetUser.getId());
         return true;
     }
 
