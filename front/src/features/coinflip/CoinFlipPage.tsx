@@ -26,27 +26,26 @@ const Container = styled.div`
   }
   .coin {
     height: 40%;
-    width: 40%;
+    width: 100%;
     position: relative;
-    margin: auto;
+    /* margin: auto; */
     margin-bottom: 2%;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
   }
   .coin img {
-    width: 100%;
     height: 100%;
   }
   .heads {
     position: absolute;
-    width: 100%;
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
   .tails {
     position: absolute;
-    width: 100%;
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -125,13 +124,25 @@ const Container = styled.div`
     background-image: url(/img/selectbutton/ssafy/pushButton_blue1.png);
   }
 
+  .exit-btn{
+    /* transition: all 0.5s; */
+    padding: 1rem;
+    :hover{
+      /* transform: scale(1.2);  */
+      color: #b5b5b5;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
+
   .flip-btn-red{
     background-image: url(/img/selectbutton/ssafy/pushButton_red1.png);
   }
   .flip-btn-blue:hover{
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
     background-image: url(/img/selectbutton/ssafy/pushButton_blue2.png);
   }
   .flip-btn-red:hover{
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
     background-image: url(/img/selectbutton/ssafy/pushButton_red2.png);
   }
 
@@ -142,9 +153,10 @@ const Container = styled.div`
     background-color: #6f43ff;
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-end;
     height:15%;
     width:80%;
+    padding-bottom:0.4rem;
     /* position: relative; */
 
     p{
@@ -347,8 +359,8 @@ const CoinFlipPage = () => {
             <div onClick={onClickBetSSa} id="flip-button" className='flip-btn-red'>
                <span>이번엔 싸다!</span>
             </div>
-            <div onClick={onClickRun} id="flip-button" >
-               <span>돔황챠</span>
+            <div onClick={onClickRun} id="flip-button">
+               <span className='exit-btn'>돔황챠</span>
             </div>
             <div onClick={onClickBetFy} id="flip-button" className='flip-btn-blue'>
                <span>아니지 피다!</span>

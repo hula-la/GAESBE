@@ -146,7 +146,7 @@ function GameRankingPage() {
   return (
     <Wrapper>
       <MainHeader>
-        <h1>🏆게츠비 명예의 전당🏆</h1>
+        <h1>🏆개츠비 명예의 전당🏆</h1>
       </MainHeader>
       <MyRankingBlock>
         <MyRankingHeader>

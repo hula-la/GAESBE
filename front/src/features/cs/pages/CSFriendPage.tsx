@@ -281,6 +281,7 @@ const IngameBlock = styled.div`
       display: flex;
       flex-direction: column;
       /* margin-left: 1rem; */
+
     }
   }
   .middleWrapper {
@@ -313,9 +314,22 @@ const IngameBlock = styled.div`
 const PlayerCharacter = styled.div`
   position: absolute;
   height: 20%;
+  display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   .playerNickName {
     text-align: center;
     height: 20%;
+
+    border-radius: 0.8rem;
+      background: #00000070;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem;
+
+
   }
   img {
     height: 80%;
@@ -363,31 +377,35 @@ const CSFriendPage = () => {
     {
       left: '14%',
       top: '56%',
+      zIndex: 4,
     },
     {
-      left: '22%',
-      top: '52%',
+      left: '25%',
+      top: '47%',
+      zIndex: 2,
     },
     {
       left: '35%',
       top: '43%',
     },
     {
-      left: '30%',
-      top: '56%',
+      left: '33%',
+      top: '63%',
+      zIndex: 4,
     },
     {
       left: '43%',
       top: '52%',
+      zIndex: 2,
     },
     {
-      left: '44%',
-      top: '65%',
-      zIndex: '2',
+      left: '48%',
+      top: '37%',
     },
     {
       left: '53%',
       top: '56%',
+      zIndex: 2,
     },
     {
       left: '67%',
