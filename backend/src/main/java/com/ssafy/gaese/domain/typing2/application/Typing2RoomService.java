@@ -38,7 +38,7 @@ public class Typing2RoomService {
 
     private final SocketInfo socketInfo;
 
-    private final int maxPlayer=2;
+    private final int maxPlayer=4;
     private final String PythonWaitRoomKey="PythonTypingWaitRoom";
     private final String JavaWaitRoomKey="JavaTypingWaitRoom";
 

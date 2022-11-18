@@ -284,7 +284,7 @@ public class TypingService {
             }
         }
 
-        int charId=11;
+        long charId=11;
 
         if(oneCount>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {

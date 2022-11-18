@@ -288,7 +288,7 @@ public class CsService {
             simpMessagingTemplate.convertAndSend("/cs/room/"+roomId,res);
 
             //            게임 시작하고 60초 타이머
-            Thread.sleep(60*1000);
+            Thread.sleep(8*1000);
         }
 
         return csRoomRedisRepository.findById(roomId).orElseThrow(()->new RoomNotFoundException());
@@ -400,7 +400,7 @@ public class CsService {
             }
         }
 
-        int charId=18;
+        long charId=18;
         if(threeCount>9 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user,charId,characters);

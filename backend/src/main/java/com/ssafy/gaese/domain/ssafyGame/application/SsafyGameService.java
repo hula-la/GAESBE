@@ -120,7 +120,7 @@ public class SsafyGameService {
             System.out.println(c);
         }
 
-        int charId=24;
+        long charId=24;
         if(user.getMaxWinStreak()>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user, charId,characters);
