@@ -10,7 +10,7 @@ import { friendActions } from '../friendSlice';
 const FriendListItemBlock = styled.div`
   width: 100%;
   .friendBoxWrapper {
-    height: 4rem;
+    height: 4.5rem;
     width: 100%;
     margin-top: 0.5rem;
     display: flex;
@@ -74,7 +74,7 @@ const FriendListItemBlock = styled.div`
         border-top-left-radius: 0.4rem;
         border-top-right-radius: 0.4rem;
       }
-      .bubbleText.mid:hover::after {
+      /* .bubbleText.mid:hover::after {
         content: '';
         position: absolute;
         right: 0;
@@ -87,7 +87,7 @@ const FriendListItemBlock = styled.div`
         margin-top: -17px;
         margin-right: -17px;
         z-index: 5;
-      }
+      } */
       .bubbleText.bottom:hover {
         border-bottom-right-radius: 0.4rem;
         border-bottom-left-radius: 0.4rem;
@@ -153,13 +153,14 @@ const FriendListItemBlock = styled.div`
     .nicknameBox {
       margin-left: 0.5rem;
       .level {
-        font-size: 10px;
+        font-size: 0.8rem;
       }
       .nickname {
         @import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
-        font-family: 'Iceberg', cursive;
-        font-size: 20px;
-        font-weight: 600;
+        /* font-family: 'Iceberg', cursive; */
+        font-size: 1.3rem;
+        margin-top: 0.3rem;
+        /* font-weight: 600; */
       }
     }
     .messageImg {

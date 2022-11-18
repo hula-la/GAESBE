@@ -88,17 +88,32 @@ const Side = styled.div`
     justify-content: center;
     justify-content: space-evenly;
 
-    padding: 15% 0;
+    padding-bottom: 10%;
     .logoutfolder {
       display: flex;
-      justify-content: start;
       align-items: center;
-      width: 100%;
-      height: 10%;
-      position: relative;
+      position: absolute;
+      width: 60%;
+      
+      bottom: 1rem;
+      left: 0;
+
+      transition: all 0.2s linear;
       :hover {
-        transform: translateY(-1vh);
+        transform: translateY(-0.5vh);
         cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+
+      :hover p{
+        display: block;
+      }
+
+      p{
+        display: none;
+        border-radius: 0.3rem;
+        background:black;
+        color: white;
+        padding:0.2rem;
       }
     }
     .logout {
@@ -108,16 +123,7 @@ const Side = styled.div`
       /* height: 60%; */
       padding-left: 6%;
     }
-    .logoutname {
-      font-style: normal;
-      font-weight: 400;
-      font-size: 23px;
-      line-height: 30px;
-      color: #ffffff;
-      margin-left: 1rem;
-      margin-top: 2rem;
-      left: 37%;
-    }
+
     .folder {
       display: flex;
       align-items: center;
@@ -165,7 +171,7 @@ const Side = styled.div`
       .foldername {
         font-style: normal;
         font-weight: 400;
-        font-size: 23px;
+        font-size: 1.3rem;
         line-height: 30px;
         color: #ffffff;
         margin-left: 1rem;
@@ -222,7 +228,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">내 방</p>
+          <p className="foldername">내 오피스</p>
         </div>
         <div onClick={() => handleOnClick('select')} className="folder">
           <img
@@ -235,7 +241,7 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">GAME</p>
+          <p className="foldername">게임</p>
         </div>
         <div onClick={() => handleOnClick('ranking')} className="folder">
           <img
@@ -248,14 +254,27 @@ const SideBar = () => {
             alt="menu"
             className="folderIcon folderOpen"
           />
-          <p className="foldername">RANKING</p>
+          <p className="foldername">랭킹</p>
+        </div>
+        <div onClick={() => handleOnClick('mypage')} className="folder">
+          <img
+            src="/img/folderIcon/FolderClose.png"
+            alt="menu"
+            className="folderIcon folderClose"
+          />
+          <img
+            src="/img/folderIcon/FolderOpen.png"
+            alt="menu"
+            className="folderIcon folderOpen"
+          />
+          <p className="foldername">마이페이지</p>
         </div>
         {/* <button onClick={onClickLogout}>로그 아웃</button> */}
         <div onClick={onClickLogout} className="logoutfolder">
           {/* <img className="logout" src="/img/login/logout.png" alt="" /> */}
           <img className="logout" src="/img/login/logout1.png" alt="" />
           {/* <img className="logout2" src="/img/login/logout2.png" alt="" /> */}
-          <p className="logoutname">로그 아웃</p>
+          <p>로그아웃</p>
         </div>
       </div>
     </Side>

@@ -65,6 +65,8 @@ const GameBlock = styled.div`
     background-image: url('/img/game_main_btn_2.png');
     background-repeat: no-repeat;
     background-size: 100%;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
+
   }
   .img {
     width: 40%;
