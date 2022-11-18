@@ -58,11 +58,18 @@ const MyRankingList = styled.div`
   align-items: center;
   /* border: 2px solid purple; */
   div {
+    height: 50%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     padding-left: 1rem;
+    h1 {
+      font-size: 5rem;
+    }
+    div {
+      font-size: 2rem;
+    }
   }
 `;
 const AllRankingBlock = styled.div`
