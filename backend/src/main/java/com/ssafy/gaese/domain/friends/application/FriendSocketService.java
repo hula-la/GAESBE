@@ -189,13 +189,5 @@ public class FriendSocketService {
     }
 
     //친구 추가 알림
-    public void friendAlarm(Long userId)
-    {
-        HashMap<String, Object> res = new HashMap<>();
 
-        boolean alarm = true;
-        res.put("alam",alarm);
-
-        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
-    }
 }

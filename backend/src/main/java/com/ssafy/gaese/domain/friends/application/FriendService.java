@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class FriendService {
     private final FriendRequestRepository friendRequestRepository;
     private final UserRepository userRepository;
 
-    private final FriendSocketService friendSocketService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     public boolean requestFriend(Long userId, String targetNickname) throws NullPointerException{
 
         User targetUser = userRepository.findByNickname(targetNickname).orElseThrow(()->new UserNotFoundException());
@@ -71,7 +72,7 @@ public class FriendService {
             friendRequestRepository.save(friendRequest);
         }
 
-        friendSocketService.friendAlarm(targetUser.getId());
+        friendAlarm(targetUser.getId());
         return true;
     }
 
@@ -119,5 +120,14 @@ public class FriendService {
 
     }
 
+    public void friendAlarm(Long userId)
+    {
+        HashMap<String, Object> res = new HashMap<>();
 
+        boolean alarm = true;
+
+        res.put("alarm",alarm);
+
+        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
+    }
 }
