@@ -400,7 +400,7 @@ public class CsService {
             }
         }
 
-        int charId=18;
+        long charId=18;
         if(threeCount>9 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user,charId,characters);
@@ -443,7 +443,7 @@ public class CsService {
     }
 
 
-    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    void userCharacterSet(User user, long charId, Map<Long,Characters> characters)
     {
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setUser(user);

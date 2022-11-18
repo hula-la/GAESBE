@@ -394,7 +394,7 @@ public class AlgoService {
             algoCount++;
         }
 
-        int charId=21;
+        long charId=21;
         if(oneCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user,charId,characters);
@@ -414,7 +414,7 @@ public class AlgoService {
     }
 
 
-    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    void userCharacterSet(User user, long charId, Map<Long,Characters> characters)
     {
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setUser(user);

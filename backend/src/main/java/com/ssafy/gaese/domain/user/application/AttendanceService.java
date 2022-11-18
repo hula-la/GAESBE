@@ -80,7 +80,7 @@ public class AttendanceService {
 
 
 
-        int charId=0;
+        long charId=0;
         if(AttendanceCount>0 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user,charId,characters);
@@ -121,7 +121,7 @@ public class AttendanceService {
     }
 
 
-    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    void userCharacterSet(User user, long charId, Map<Long,Characters> characters)
     {
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setUser(user);

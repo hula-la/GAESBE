@@ -115,9 +115,12 @@ public class SsafyGameService {
         Map<Long,Characters> characters = new HashMap<>();
         for (Characters c:characterArr) {
             characters.put(c.getId(),c);
+            System.out.println("케릭터 목록");
+            System.out.println(c.getId());
+            System.out.println(c);
         }
 
-        int charId=24;
+        long charId=24;
         if(user.getMaxWinStreak()>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
             userCharacterSet(user, charId,characters);
@@ -134,7 +137,7 @@ public class SsafyGameService {
         }
     }
 
-    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    void userCharacterSet(User user, long charId, Map<Long,Characters> characters)
     {
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setUser(user);

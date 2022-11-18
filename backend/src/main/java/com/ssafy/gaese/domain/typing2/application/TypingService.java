@@ -284,7 +284,7 @@ public class TypingService {
             }
         }
 
-        int charId=11;
+        long charId=11;
 
         if(oneCount>6 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
@@ -310,7 +310,7 @@ public class TypingService {
 
     }
 
-    void userCharacterSet(User user, int charId, Map<Long,Characters> characters)
+    void userCharacterSet(User user, long charId, Map<Long,Characters> characters)
     {
         UserCharacter userCharacter = new UserCharacter();
         userCharacter.setUser(user);
