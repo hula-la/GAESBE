@@ -94,6 +94,8 @@ public class FriendSocketService {
         findFriendList(userId);
         // 들어왔다는 것을 알림
         refreshFriend(userId);
+
+        friendRequestChecker(userId);
     }
 
 
@@ -188,5 +190,29 @@ public class FriendSocketService {
         simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
     }
 
+    public void friendRequestChecker(Long userId)
+    {
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException());
+
+        if(friendRequestRepository.findByTargetUser(user)!=null)
+        {
+            friendAlarm(user.getId());
+        }
+
+    }
+
+
+    //친구 신청시 친구에게 알람 보냄
+    public void friendAlarm(Long userId)
+    {
+        HashMap<String, Object> res = new HashMap<>();
+
+        boolean alarm = true;
+
+        res.put("alarm",alarm);
+
+        simpMessagingTemplate.convertAndSend("/friend/"+userId,res);
+    }
 
 }
