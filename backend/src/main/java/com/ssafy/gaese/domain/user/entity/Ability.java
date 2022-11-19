@@ -3,6 +3,7 @@ package com.ssafy.gaese.domain.user.entity;
 import com.ssafy.gaese.domain.user.dto.AbilityDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Parent;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
@@ -25,32 +26,34 @@ import java.util.Date;
 @ToString
 public class Ability {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @MapsId
-    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
-    @JoinColumn(name = "userId")
+    //    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+//    @OneToOne
+    @JoinColumn(name = "id")
     private User user;
 
-    @ColumnDefault("1")
-    private int algorithmLv;
-    @ColumnDefault("1")
-    private int csLv;
-    @ColumnDefault("1")
-    private int typingLv;
+    @Builder.Default
+    private int algorithmLv=1;
+    @Builder.Default
+    private int csLv=1;
+    @Builder.Default
+    private int typingLv=1;
 
-    @ColumnDefault("1")
-    private int luckLv;
+    @Builder.Default
+    private int luckLv=1;
 
-    @ColumnDefault("0")
-    private int algorithmExp;
-    @ColumnDefault("0")
-    private int csExp;
-    @ColumnDefault("0")
-    private int typingExp;
-    @ColumnDefault("0")
-    private int luckExp;
+    @Builder.Default
+    private int algorithmExp=0;
+    @Builder.Default
+    private int csExp=0;
+    @Builder.Default
+    private int typingExp=0;
+    @Builder.Default
+    private int luckExp=0;
 
     public Ability(User user) {
         this.user = user;
