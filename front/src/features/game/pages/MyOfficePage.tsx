@@ -13,6 +13,7 @@ import Level5 from '../components/level/Level5';
 import Level6 from '../components/level/Level6';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import LevelupModal from '../components/LevelupModal';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -22,6 +23,11 @@ const Wrapper = styled.div`
 
   overflow: hidden;
 
+  .lockImg {
+    margin-top: 20%;
+    height: 40%;
+  }
+
   .abilitys {
     position: absolute;
     bottom: 3%;
@@ -30,7 +36,7 @@ const Wrapper = styled.div`
     flex-direction: row;
     color: #ffffff;
     width: 100%;
-    z-index:0;
+    z-index: 0;
     .ability {
       /* margin-right: 5rem; */
       width: 25%;
@@ -42,7 +48,6 @@ const Wrapper = styled.div`
       align-items: center;
       justify-content: space-between;
       padding: 0px 4%;
-
     }
     .gaze {
       width: 80%;
@@ -52,10 +57,28 @@ const Wrapper = styled.div`
   }
 `;
 
+const LevelUpBtn = styled.button`
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0.6rem;
+  border-radius: 0.8rem;
+  font-size: 1.2rem;
+  background: #f27474;
+  z-index: 1000;
+
+  :hover {
+    background: #e86464;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
+  }
+`;
+
 const Office = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+
+  text-align: center;
 
   .officeName {
     z-index: 5;
@@ -82,6 +105,7 @@ const OfficeBtn = styled.img`
   transition: 0.3s transform;
   :hover {
     transform: scale(1.2);
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
 
   &.prevBtn {
@@ -112,7 +136,6 @@ const MyOfficePage = () => {
   const idxRef = useRef(0);
   const { userAbility } = useSelector((state: any) => state.auth);
   const { offices } = useSelector((state: any) => state.item);
-
   const officeComponents = [
     Level0,
     Level1,
@@ -127,6 +150,8 @@ const MyOfficePage = () => {
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [levelupable, setLevelupable] = useState<boolean>(false);
   const [nextLevel, setNextLevel] = useState<number>(0);
+  const [nextLevelName, setNextLevelName] = useState<String>('');
+  const [isLevelup, setIsLevelup] = useState<Boolean>(false);
   const handleModal = () => {
     setModalOpen(!modalOpen);
   };
@@ -141,6 +166,10 @@ const MyOfficePage = () => {
   useEffect(() => {
     if (offices && userAbility) {
       const nextoffice = offices.filter((office: any) => !office.own);
+      idxRef.current = offices.length - nextoffice.length - 1;
+      setOfficeIdx(idxRef.current);
+      console.log('idxRef.current' + idxRef.current);
+
       if (
         nextoffice.length >= 1 &&
         nextoffice[0].minLv <=
@@ -154,6 +183,7 @@ const MyOfficePage = () => {
         console.log('nextoffice', nextoffice);
         setLevelupable(true);
         setNextLevel(nextoffice[0].officeId);
+        setNextLevelName(nextoffice[0].name);
       } else {
         setLevelupable(false);
       }
@@ -185,11 +215,22 @@ const MyOfficePage = () => {
 
   const handleLevelUp = () => {
     dispatch(itemActions.requestBuyOfficeStart(nextLevel));
+    setIsLevelup(true);
+    setTimeout(() => {
+      setIsLevelup(false);
+    }, 2000);
   };
 
   return (
     <Wrapper>
-      {levelupable && <button onClick={handleLevelUp}>레벨 업!!</button>}
+      {levelupable && (
+        <LevelUpBtn onClick={handleLevelUp}>
+          {nextLevelName} 지원하기
+        </LevelUpBtn>
+      )}
+      {isLevelup && (
+        <LevelupModal handleModal={handleModal} nextLevel={officeIdx} />
+      )}
       {offices && officeIdx > 0 && (
         <OfficeBtn
           className="prevBtn"
@@ -217,12 +258,16 @@ const MyOfficePage = () => {
                 {/* <div className="officeName">{v.name}</div> */}
 
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}
+                {!v.own && (
+                  <img className="lockImg" src="/img/Intro/padlock.png" />
+                )}
               </Office>
             );
           })}
 
           {modalOpen && (
             <AttendanceComponent
+              officeIdx={officeIdx}
               needReload={needReload}
               handleReload={handleReload}
               attendance={attendance}
