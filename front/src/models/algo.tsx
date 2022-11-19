@@ -1,6 +1,6 @@
 export interface Action<T> {
-  type: string
-  payload: T
+  type: string;
+  payload: T;
 }
 
 /**
@@ -13,13 +13,13 @@ start: 시작한 게임인지 boolean
 master : userId string
 */
 export interface AlgoRoomInterface {
-  roomCode: string
-  time: string
-  tier: string
-  num: string
-  no : string
-  start: boolean
-  master: string
+  roomCode: string;
+  time: string;
+  tier: string;
+  num: string;
+  no: string;
+  start: boolean;
+  master: string;
 }
 
 /**
@@ -29,11 +29,11 @@ export interface AlgoRoomInterface {
  profileChar: 프로필사진 숫자 number
  */
 export interface InGameUsersInterface {
-  bjId: string
-  id: number
-  nickname: string
-  profileChar: number
-  min:number
+  bjId: string;
+  id: number;
+  nickname: string;
+  profileChar: number;
+  min: number;
 }
 
 /**
@@ -45,12 +45,12 @@ export interface InGameUsersInterface {
  title: 제목 string
  */
 export interface ProblemInterface {
-  problemId : string
-  correct: string
-  ratio: string
-  submit: string
-  tag: string
-  title: string
+  problemId: string;
+  correct: string;
+  ratio: string;
+  submit: string;
+  tag: string;
+  title: string;
 }
 
 /**
@@ -61,11 +61,11 @@ export interface ProblemInterface {
  profileChar: 프로필 사진number
  */
 export interface RankingUserInfo {
-  userId:number
-  roomCode:string
-  min:string
-  nickName: string
-  profileChar: number
+  userId: number;
+  roomCode: string;
+  min: string;
+  nickName: string;
+  profileChar: number;
 }
 
 /**
@@ -80,13 +80,12 @@ export interface RankingUserInfo {
  1004 : c)
  */
 export interface RecordSendInterface {
-  roomCode: string
-  problemId: string
-  ranking: number
-  code: string
-  lanId: number
+  roomCode: string;
+  problemId: string | number;
+  ranking: number;
+  code: string;
+  lanId: number;
 }
-
 
 /**
  code: string 제출한 코드
@@ -102,15 +101,15 @@ export interface RecordSendInterface {
  userId: number 유저아이디
  */
 export interface MyRecordInterface {
-  code: string
-  date: string
-  id: number
-  isRetry: false
-  isSolve: false
-  lan: number
-  problemId: number
-  ranking: number
-  roomCode: string
-  solveTime: string
-  userId: number
+  code: string;
+  date: string;
+  id: number;
+  isRetry: false;
+  isSolve: false;
+  lan: number;
+  problemId: number;
+  ranking: number;
+  roomCode: string;
+  solveTime: string;
+  userId: number;
 }

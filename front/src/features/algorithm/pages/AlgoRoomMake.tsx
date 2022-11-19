@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   .title {
     /* border : 1px solid white; */
     font-size: 4rem;
-    margin : 5% 0;
+    margin: 5% 0;
     span {
       margin: auto 0;
       color: #6f43ff;
@@ -53,7 +53,7 @@ const Wrapper = styled.div`
           height: 9rem;
         }
       }
-      .tier-btn{
+      .tier-btn {
         margin-top: 3%;
         border-radius: 15px;
         background-color: #363636;
@@ -75,25 +75,25 @@ const Wrapper = styled.div`
         text-align: center;
         font-size: 6rem;
       }
-      .time-btn{
+      .time-btn {
         margin-top: 3%;
         border-radius: 15px;
         background-color: #363636;
         border: 5px solid #000;
       }
-      .time-input{
+      .time-input {
         font-size: 8rem;
       }
     }
   }
-  .room-info{
+  .room-info {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    span{
+    span {
       margin: auto 4%;
-      padding-bottom:2px;
+      padding-bottom: 2px;
       font-size: 1.5rem;
       width: 20%;
       text-align: center;
@@ -126,7 +126,7 @@ function AlgoRoomMake() {
 
   const [form, setForm] = useState<AlgoRoomInterface>({
     roomCode: '',
-    time: '1',
+    time: '30',
     tier: '1',
     num: '0',
     no: '0',
@@ -229,40 +229,48 @@ function AlgoRoomMake() {
       <form className="content">
         <div className="tier">
           <p>티어</p>
-          <div className='tier-btn'>
+          <div className="tier-btn">
             <div>
               <img
                 className="arrow-icon"
                 src={`/img/arrow/pink-small-arrow-up.png`}
-                alt='티어업'
-                onClick={()=>{handleTier({type:'plus', num:5})}}
-                ></img>
+                alt="티어업"
+                onClick={() => {
+                  handleTier({ type: 'plus', num: 5 });
+                }}
+              ></img>
             </div>
             <div className="tier-select">
               <img
                 className="arrow-icon"
                 src={`/img/arrow/yellow-small-arrow-left.png`}
-                alt='티어레프트'
-                onClick={()=>{handleTier({type:'minus', num:1})}}
-                ></img>
+                alt="티어레프트"
+                onClick={() => {
+                  handleTier({ type: 'minus', num: 1 });
+                }}
+              ></img>
               <img
                 className="tier-icon"
                 src={`/img/tier/${form.tier}.svg`}
-                alt='티어이미지'
-                ></img>
+                alt="티어이미지"
+              ></img>
               <img
                 className="arrow-icon"
                 src={`/img/arrow/yellow-small-arrow-right.png`}
-                alt='티어롸이트'
-                onClick={()=>{handleTier({type:'plus', num:1})}}
-                ></img>
+                alt="티어롸이트"
+                onClick={() => {
+                  handleTier({ type: 'plus', num: 1 });
+                }}
+              ></img>
             </div>
             <div>
               <img
                 className="arrow-icon"
                 src={`/img/arrow/pink-small-arrow-down.png`}
-                alt='티어다운'
-                onClick={()=>{handleTier({type:'minus', num:5})}}
+                alt="티어다운"
+                onClick={() => {
+                  handleTier({ type: 'minus', num: 5 });
+                }}
               ></img>
             </div>
           </div>
@@ -271,30 +279,34 @@ function AlgoRoomMake() {
           <p>
             <label htmlFor="time">시간제한(분)</label>
           </p>
-          <div className='time-btn'>
+          <div className="time-btn">
             <div>
               <img
                 className="arrow-icon"
                 src={`/img/arrow/pink-small-arrow-up.png`}
-                alt='시간+버튼'
-                onClick={()=>{handleTime('plus')}}
-                ></img>
+                alt="시간+버튼"
+                onClick={() => {
+                  handleTime('plus');
+                }}
+              ></img>
             </div>
-            <div  className='time-input'>
+            <div className="time-input">
               <span>{form.time}</span>
             </div>
             <div>
               <img
                 className="arrow-icon"
                 src={`/img/arrow/pink-small-arrow-down.png`}
-                alt='시간-버튼'
-                onClick={()=>{handleTime('minus')}}
+                alt="시간-버튼"
+                onClick={() => {
+                  handleTime('minus');
+                }}
               ></img>
             </div>
           </div>
         </div>
       </form>
-      <div className='room-info'>
+      <div className="room-info">
         <span>{tierString}</span>
         <span>{form.time} 분</span>
       </div>

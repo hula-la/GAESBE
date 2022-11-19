@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Action } from '../../models/algo'
-import { AlgoRoomInterface, RecordSendInterface } from '../../models/algo'
+import { Action } from '../../models/algo';
+import { AlgoRoomInterface, RecordSendInterface } from '../../models/algo';
 
 type AlgoGameState = {
   isLoading: boolean;
   needReload: boolean;
-  InGameInfo: AlgoRoomInterface | null
-  solve: boolean,
-  gameResultMsg: string
-  loadingMsg: string
+  InGameInfo: AlgoRoomInterface | null;
+  solve: boolean;
+  gameResultMsg: string;
+  loadingMsg: string;
 };
 
 const initialState: AlgoGameState = {
@@ -17,7 +17,7 @@ const initialState: AlgoGameState = {
   needReload: false,
   solve: false,
   gameResultMsg: '',
-  loadingMsg: ''
+  loadingMsg: '',
 };
 
 const algoSlice = createSlice({
@@ -25,14 +25,14 @@ const algoSlice = createSlice({
   initialState,
   reducers: {
     loadingEnd(state) {
-      state.isLoading = false
+      state.isLoading = false;
     },
     setLoadingMsg(state, action: Action<string>) {
-      state.loadingMsg = action.payload
-    }
-    ,
+      console.log('로딩메세지 변경', action.payload);
+      state.loadingMsg = action.payload;
+    },
     setNeedReload(state, action: Action<boolean>) {
-      state.needReload = action.payload
+      state.needReload = action.payload;
     },
     creatAlgoRoom(state, action: Action<AlgoRoomInterface>) {},
     enterAlgoRoom(state, action: Action<AlgoRoomInterface>) {},
@@ -40,28 +40,35 @@ const algoSlice = createSlice({
       state.InGameInfo = action.payload;
     },
     exitAlgoRoom(state) {
-      state.InGameInfo = null
+      state.InGameInfo = null;
     },
-    checkMyAnswerRequestStart(state, action: Action<{roomCode:string, problemId: number, userBjId: string, lanId: number}>) {
-      state.loadingMsg = 'SUBMIT'
-      state.isLoading = true
+    checkMyAnswerRequestStart(
+      state,
+      action: Action<{
+        roomCode: string;
+        problemId: number;
+        userBjId: string;
+        lanId: number;
+      }>,
+    ) {
+      state.loadingMsg = 'SUBMIT';
+      state.isLoading = true;
     },
     solveSuccess(state, action: Action<boolean>) {
-      state.solve = action.payload
+      state.solve = action.payload;
     },
-    sendMyRank(state, action: Action<RecordSendInterface>) {
-    },
+    sendMyRank(state, action: Action<RecordSendInterface>) {},
     setGameResult(state, action: Action<string>) {
-      state.gameResultMsg = action.payload
+      state.gameResultMsg = action.payload;
     },
-    bjConnectRequestStart(state, action:Action<string>) {
-      state.loadingMsg = 'BJCONNECT'
+    bjConnectRequestStart(state, action: Action<string>) {
+      state.loadingMsg = 'BJCONNECT';
     },
     bjConnectRequestEnd(state) {
-      state.loadingMsg = ''
-    }
-  }
-})
+      state.loadingMsg = '';
+    },
+  },
+});
 
 export const algoActions = algoSlice.actions;
 

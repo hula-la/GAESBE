@@ -179,9 +179,6 @@ function InModalBjConnect({ handleModal }: Props) {
   const handleOpenInfo = () => {
     setOpenInfo(!openInfo);
   };
-  useEffect(() => {
-    console.log(openInfo);
-  });
 
   return (
     <Wrapper>

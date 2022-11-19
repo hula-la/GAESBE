@@ -81,16 +81,16 @@ function* checkMyAnswerRequestSaga(
     const res: AxiosResponse = yield call(checkMyAnswerRequest, action.payload);
     if (res.status === 200) {
       if (res.data.result === 1) {
+        console.log('정답체크 함', res.data.msg);
         yield put(algoActions.solveSuccess(true));
         yield Swal.fire({ icon: 'success', text: res.data.msg });
+        yield put(algoActions.loadingEnd());
+        yield put(algoActions.setLoadingMsg(''));
       } else {
         yield Swal.fire({ icon: 'warning', text: res.data.msg });
       }
     }
-  } catch (error) {
-    yield put(algoActions.loadingEnd());
-  }
-  yield put(algoActions.setLoadingMsg(''));
+  } catch (error) {}
 }
 
 function* sendMyRankSaga(action: Action<RecordSendInterface>) {

@@ -20,7 +20,7 @@ interface Props {
   handleModal: () => void;
   algoDetailRoomCode: any;
 }
-function AlgoDetailInfo({ handleModal }: Props, { algoDetailRoomCode }: any) {
+function AlgoDetailInfo({ handleModal, algoDetailRoomCode }: Props) {
   const language: any = {
     1001: 'c++',
     1002: 'java',
@@ -32,9 +32,15 @@ function AlgoDetailInfo({ handleModal }: Props, { algoDetailRoomCode }: any) {
   useEffect(() => {
     fetchResultCodeRequest();
   }, []);
+  useEffect(() => {
+    if (resultCodes) {
+      console.log(resultCodes);
+    }
+  }, [resultCodes]);
   const fetchResultCodeRequest = async () => {
     try {
       const res = await resultCodeRequest(algoDetailRoomCode);
+      console.log(res);
       if (res.status === 200) {
         setResultCodes(res.data);
       }
