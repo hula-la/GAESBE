@@ -29,28 +29,29 @@ public class Ability {
     private Long id;
 
     @MapsId
-    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
+//    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
+    @OneToOne
     @JoinColumn(name = "userId")
     private User user;
 
-    @ColumnDefault("1")
-    private int algorithmLv;
-    @ColumnDefault("1")
-    private int csLv;
-    @ColumnDefault("1")
-    private int typingLv;
+    @Builder.Default
+    private int algorithmLv=1;
+    @Builder.Default
+    private int csLv=1;
+    @Builder.Default
+    private int typingLv=1;
 
-    @ColumnDefault("1")
-    private int luckLv;
+    @Builder.Default
+    private int luckLv=1;
 
-    @ColumnDefault("0")
-    private int algorithmExp;
-    @ColumnDefault("0")
-    private int csExp;
-    @ColumnDefault("0")
-    private int typingExp;
-    @ColumnDefault("0")
-    private int luckExp;
+    @Builder.Default
+    private int algorithmExp=0;
+    @Builder.Default
+    private int csExp=0;
+    @Builder.Default
+    private int typingExp=0;
+    @Builder.Default
+    private int luckExp=0;
 
     public Ability(User user) {
         this.user = user;
