@@ -74,8 +74,9 @@ const FriendSide = styled.div`
     height: 80%;
     background-color: #6f43ff;
     box-sizing: border-box;
-    border: 3px solid #000000;
-    border-radius: 10px;
+    border-top: 3px solid #000000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -83,13 +84,14 @@ const FriendSide = styled.div`
   }
   .friendButtons {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     height: 10%;
     background-color: #6f43ff;
     box-sizing: border-box;
-    border: 3px solid #000000;
-    border-radius: 10px;
+    border-bottom: 3px solid #000000;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     margin-bottom: 1rem;
     .friendButton {
       color: #000000;

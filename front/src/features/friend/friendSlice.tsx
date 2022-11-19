@@ -69,6 +69,12 @@ const friendSlice = createSlice({
       state.isLoading = false;
     },
     // 게임에 친구 초대
+    openInvite(state) {
+      state.isInvite = true;
+    },
+    closeInvite(state) {
+      state.isInvite = false;
+    },
     inviteFriend(state, action) {
       state.friendId = action.payload;
     },

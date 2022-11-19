@@ -17,25 +17,28 @@ function InviteFriend() {
   };
   return (
     <>
-      {friends.online && (
-        <>
-          {friends.online.map((onlineFriend: FriendInterface, idx: Number) => {
-            return (
-              <>
-                <Close onClick={closeModal} src="/img/close.png" alt="" />
-                <br />
-                <br />
-                <FriendListItem
-                  key={onlineFriend.id}
-                  type="online"
-                  friend={onlineFriend}
-                  category="invite"
-                />
-              </>
-            );
-          })}
-        </>
-      )}
+      {friends.online &&
+        friends.online.length > 0 &&
+        friends.online(
+          <>
+            {friends.online.map(
+              (onlineFriend: FriendInterface, idx: Number) => {
+                return (
+                  <>
+                   <Close onClick={closeModal} src="/img/close.png" alt="" />
+                    <FriendListItem
+                      key={onlineFriend.id}
+                      type="online"
+                      friend={onlineFriend}
+                      category="invite"
+                    />
+                  </>
+                );
+              },
+            )}
+          </>,
+        )}
+      {friends.online.length === 0 && <div>초대할 친구가 없습니다.</div>}
     </>
   );
 }

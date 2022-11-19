@@ -248,7 +248,10 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
           </div>
           {category === 'noInvite' && chatCnt !== 0 && <div>{chatCnt}</div>}
           {category === 'noInvite' && chatCnt === 0 && <div></div>}
-          {category === 'invite' && <button onClick={invite}>초대하기</button>}
+          {category === 'invite' && !friend.playGame && (
+            <button onClick={invite}>초대하기</button>
+          )}
+          {category === 'invite' && friend.playGame && <div>게임중</div>}
         </div>
       </div>
     </FriendListItemBlock>
