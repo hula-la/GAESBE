@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 public class AlgoSocketDto extends BaseSocketDto {
