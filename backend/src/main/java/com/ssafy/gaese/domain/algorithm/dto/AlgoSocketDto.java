@@ -1,21 +1,13 @@
 package com.ssafy.gaese.domain.algorithm.dto;
 
 
+import com.ssafy.gaese.global.Dto.BaseSocketDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @ToString
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class AlgoSocketDto {
-    public enum Type {
-        ENTER, LEAVE
-    }
+@SuperBuilder
+public class AlgoSocketDto extends BaseSocketDto {
 
-    private Type type;
-    private String sessionId;
-    private String userId;
-    private String roomCode;
-    private String nickname;
 }
