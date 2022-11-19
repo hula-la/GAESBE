@@ -21,12 +21,15 @@ function InviteFriend() {
         <>
           {friends.online.map((onlineFriend: FriendInterface, idx: Number) => {
             return (
+              <>
+              <Close onClick={closeModal} src="/img/close.png" alt="" />
               <FriendListItem
                 key={onlineFriend.id}
                 type="online"
                 friend={onlineFriend}
                 category="invite"
               />
+              </>
             );
           })}
         </>

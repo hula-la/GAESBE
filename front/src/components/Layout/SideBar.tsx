@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import styled from 'styled-components';
+import { itemActions } from '../../features/game/itemSlice';
 import { authActions } from '../../features/auth/authSlice';
-
+import { A } from 'chart.js/dist/chunks/helpers.core';
 const Side = styled.div`
   width: 18vw;
   min-width: 12rem;
@@ -74,6 +76,12 @@ const Side = styled.div`
       font-size: 30px;
       font-weight: 600;
     }
+    .userLv {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      font-size: 20px;
+    }
   }
   .menubar {
     height: 90%;
@@ -94,7 +102,7 @@ const Side = styled.div`
       align-items: center;
       position: absolute;
       width: 60%;
-      
+
       bottom: 1rem;
       left: 0;
 
@@ -104,16 +112,16 @@ const Side = styled.div`
         cursor: url('/img/cursor/hover_cursor.png'), auto;
       }
 
-      :hover p{
+      :hover p {
         display: block;
       }
 
-      p{
+      p {
         display: none;
         border-radius: 0.3rem;
-        background:black;
+        background: black;
         color: white;
-        padding:0.2rem;
+        padding: 0.2rem;
       }
     }
     .logout {
@@ -186,9 +194,10 @@ const Side = styled.div`
 const SideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { userAbility } = useSelector((state: any) => state.auth);
   const { userInfo } = useSelector((state: any) => state.auth);
-
+  const { offices } = useSelector((state: any) => state.item);
+  const [officeList, setOfficeList] = useState<any>(null);
   const handleOnClick = (path: string) => {
     navigate(path);
   };
@@ -197,6 +206,19 @@ const SideBar = () => {
     dispatch(authActions.logout());
     navigate('/');
   };
+  useEffect(() => {
+    if (offices) {
+      setOfficeList(offices);
+    }
+  }, [offices]);
+  let officelist = officeList && officeList.filter((ele: any) => ele.own);
+  console.log(userInfo);
+  // console.log(userAbility, '여기요');
+  // console.log(userAbility.algorithmLv);
+  // console.log(userAbility.csLv);
+  // console.log(userAbility.luckLv);
+  // console.log(userAbility.typingLv);
+
   return (
     <Side>
       <div className="logoBox">
@@ -206,7 +228,22 @@ const SideBar = () => {
         <div className="profileBox">
           <div className="profileInfo">
             <div className="nickname">{userInfo.nickname}</div>
-            <div>Lv1. 반지하</div>
+            <div className="userLv">
+              <div className="userAbilityLv">
+                Lv.
+                {userAbility &&
+                  Math.min(
+                    userAbility.algorithmLv,
+                    userAbility.csLv,
+                    userAbility.luckLv,
+                    userAbility.typingLv,
+                  )}
+              </div>
+              <div className="userRoomLv">
+                {officelist && officelist[officelist.length - 1].name}
+              </div>
+            </div>
+            {/* <div>Lv1. 반지하</div> */}
           </div>
           <img
             src={`${process.env.REACT_APP_S3_URL}/profile/${userInfo.profileChar}_normal.gif`}

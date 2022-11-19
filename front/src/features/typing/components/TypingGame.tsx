@@ -58,6 +58,8 @@ const PersonalId = styled.div`
   height: 100%;
 `;
 const CharacterSet = styled('div')<{ progress: string }>`
+  width: 100%;
+  height: 100%;
   padding-left: ${(props) => props.progress};
   // 부드럽게 움직이도록
   transition: all 0.4s;
@@ -65,6 +67,7 @@ const CharacterSet = styled('div')<{ progress: string }>`
   flex-direction: column;
 `;
 const CharacterName = styled.div`
+  opacity: 0.9;
   /* width: 10%; */
   min-width: 7%;
   height: 200%;
@@ -76,9 +79,10 @@ const CharacterName = styled.div`
     color: white;
     padding: 7px;
     font-size: 10px;
-    border-radius: 8px;
+    border-radius: 15px;
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 `;
 const CharacterImg = styled.img`
@@ -144,6 +148,7 @@ const WaitingTypingGameBox = styled.div`
   color: black;
   background-color: white;
   border-radius: 20px;
+  font-family: 'Hack';
 `;
 const TypingGameBox = styled.div`
   width: 90%;
@@ -153,6 +158,7 @@ const TypingGameBox = styled.div`
   height: 17rem;
   border-radius: 20px;
   overflow: hidden;
+  font-family: 'Hack';
 `;
 const Wow = styled.div`
   display: inline;
