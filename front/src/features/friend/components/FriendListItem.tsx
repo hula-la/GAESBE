@@ -36,7 +36,6 @@ const FriendListItemBlock = styled.div`
 
     .linetb {
       border-bottom: 1px solid black;
-      border-top: 1px solid black;
     }
 
     .speechBubbleWrapper {
@@ -74,20 +73,6 @@ const FriendListItemBlock = styled.div`
         border-top-left-radius: 0.4rem;
         border-top-right-radius: 0.4rem;
       }
-      /* .bubbleText.mid:hover::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 50%;
-        width: 0;
-        height: 0;
-        border: 17px solid transparent;
-        border-left-color: #e6a713;
-        border-right: 0;
-        margin-top: -17px;
-        margin-right: -17px;
-        z-index: 5;
-      } */
       .bubbleText.bottom:hover {
         border-bottom-right-radius: 0.4rem;
         border-bottom-left-radius: 0.4rem;
@@ -234,9 +219,7 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
           {category === 'noInvite' && (
             <div className="speechBubbleWrapper">
               <div className="speechBubble">
-                <div className="bubbleText top">방 놀러가기</div>
-                {/* <hr className="styledHr" /> */}
-                <div className="bubbleText linetb mid" onClick={openChat}>
+                <div className="bubbleText linetb top" onClick={openChat}>
                   채팅방
                 </div>
                 {/* <hr className="styledHr" /> */}

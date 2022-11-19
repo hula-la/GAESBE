@@ -1,18 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import styled from 'styled-components';
+import FriendModal from '../../friend/components/FriendModal';
+import { friendActions } from '../../friend/friendSlice';
 
 import CSIsLoadingPage from '../components/CSIsLoading';
+import CSMiddleChart from '../components/CSMiddleChart';
 
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
 
 const Container = styled.div`
-  width: 82%;
+  width: 100%;
   height: 100%;
   background-color: #232323;
   color: #ffffff;
@@ -148,27 +152,49 @@ const IngameBlock = styled.div`
   }
 `;
 
+const PlayerCharacter = styled.div`
+  position: absolute;
+  height: 20%;
+  .playerNickName {
+    text-align: center;
+    height: 20%;
+  }
+  img {
+    height: 80%;
+  }
+`;
+
 const CSIngamePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [isLast, setIsLast] = useState<Boolean>(false);
-  const [isReady, setIsReady] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
+  const [problemCnt, setProblemCnt] = useState<number>(0);
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
-  const [isCorrect, setIsCorrect] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
+  const [myScore, setMyScore] = useState<any>(null);
+  const [myRanking, setMyRanking] = useState<any>(null);
+  const [cntPerNum, setCntPerNum] = useState<any>(null);
+  const [chartPerNum, setChartPerNum] = useState<any>(null);
+  const [solveOrder, setSolveOrder] = useState<any>(null);
+  const [answer, setAnswer] = useState<number | null>(null);
   const [isNext, setIsNext] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<any>(null);
-  const [result, setResult] = useState<any>(null);
+  const [rankByPlayer, setRankByPlayer] = useState<any>(null);
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
+  const { modal } = useSelector((state: any) => state.friend);
+  const { friendId } = useSelector((state: any) => state.friend);
 
   const answerButton = [1, 2, 3, 4];
+  const answerButtonOX = [1, 2];
 
   const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
@@ -228,16 +254,8 @@ const CSIngamePage = () => {
   ];
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  const socket: CustomWebSocket = new SockJS(
-    'https://k7e104.p.ssafy.io:8081/api/ws',
-  );
   const client = useRef<any>(null);
-  useEffect(() => {
-    client.current = Stomp.over(socket);
-  }, []);
   // client.debug = () => {};
-
-  const client2 = Stomp.over(socket);
 
   // 게임 시작 전 자동 시작 타이머
   useEffect(() => {
@@ -252,14 +270,18 @@ const CSIngamePage = () => {
 
   useEffect(() => {
     if (initialTime.current < 0) {
-      console.log('타임 아웃');
       clearInterval(interval.current);
     }
   }, [sec]);
 
   // 소켓 연결 후 구독 및 요청
+
   useEffect(() => {
     if (userInfo) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
         // 내 개인 정보 구독
         client.current.subscribe(`/cs/${userInfo.id}`, (res: any) => {
@@ -272,20 +294,11 @@ const CSIngamePage = () => {
               setIsSubmit(true);
             }
           } else if (data.hasOwnProperty('isSolved')) {
-            setIsCorrect(data.isCorrect);
             setIsSolved(data.isSolved);
             setIsSubmit(false);
-            setProblem('a');
             setTimeout(() => {
               setIsNext(true);
-            }, 7000);
-          } else {
-            setIsCorrect(data.isCorrect);
-          }
-          if (data.hasOwnProperty('isLast')) {
-            if (data.isLast === true) {
-              setIsLast(true);
-            }
+            }, 57000);
           }
         });
 
@@ -309,6 +322,10 @@ const CSIngamePage = () => {
 
   useEffect(() => {
     if (roomCode) {
+      const socket: CustomWebSocket = new SockJS(
+        'https://k7e104.p.ssafy.io:8081/api/ws',
+      );
+      const client2 = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
       client2.connect({}, (frame) => {
         client2.subscribe('/cs/room/' + roomCode, (res) => {
@@ -316,20 +333,23 @@ const CSIngamePage = () => {
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
               setIsEnd(true);
-              setResult(data1.result);
+              setRankByPlayer(data1.rankByPlayer);
             } else if (data1.msg === 'ready') {
               setIsReady(true);
             } else {
-              setIsStart(true);
               setIsReady(false);
+              setIsStart(true);
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
-            setIsCorrect(null);
             setIsSolved(null);
             setProblem(data1.currentProblem);
+            setProblemCnt((prev) => prev + 1);
             setIsNext(false);
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
+            setCntPerNum(data1.cntPerNum);
+            setSolveOrder(data1.solveOrder);
+            setAnswer(data1.answer);
           } else {
             if (!playerList) {
               for (let i = 0; i < data1.length; i++) {
@@ -391,13 +411,18 @@ const CSIngamePage = () => {
     if (players) {
       setIsLoading(false);
     }
-    if (isEnd && result) {
+    if (isEnd && rankByPlayer) {
       console.log('끝');
       navigate('/game/CS/result', {
-        state: { result: result, players: players },
+        state: {
+          ranking: ranking,
+          rankByPlayer: rankByPlayer,
+          myScore: myScore,
+          myRanking: myRanking,
+        },
       });
     }
-  }, [players, result, isEnd]);
+  }, [players, isEnd, rankByPlayer]);
 
   // 정답 유무 확인
   const handleAnswerSend = (e: any, number: any) => {
@@ -413,100 +438,203 @@ const CSIngamePage = () => {
     );
   };
 
+  const handleModal = () => {
+    dispatch(friendActions.handleModal('invite'));
+  };
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
+  };
+
+  useEffect(() => {
+    if (friendId) {
+      client.current.send(
+        '/api/friend/invite',
+        {},
+        JSON.stringify({
+          userId: friendId,
+          gameType: 'cs',
+          roomCode: roomCode,
+        }),
+      );
+    }
+  }, [friendId]);
+
+  useEffect(() => {
+    if (ranking) {
+      const tmp = ranking.filter((rank: any) => {
+        return rank[0] === userInfo.id;
+      });
+      setMyScore(tmp[0]);
+      const my = (element: any) => element[0] === userInfo.id;
+      console.log(ranking.findIndex(my));
+    }
+  }, [ranking]);
+
+  useEffect(() => {
+    if (cntPerNum) {
+      const tmp = Object.values(cntPerNum);
+      setChartPerNum(tmp);
+    }
+  }, [cntPerNum]);
+
   return (
     <Container>
       {isLoading && <CSIsLoadingPage />}
       {!isLoading && !isStart && (
         <WaitingBlock>
-          <img src="/img/gametitle/gametitle3.png" className="gameTitle" />
-          <div className="subtitle">
-            10명의 인원이 모이면 자동으로 게임이 시작합니다
-          </div>
-          {isReady && <p>{sec}초 후 게임이 시작됩니다!</p>}
+          {modal === 'invite' && (
+            <FriendModal handleModal={closeModal} type="invite" />
+          )}
+
+          <img
+            src="/img/gametitle/GameTitle6.png"
+            className="gameTitle"
+            alt="gameTitle"
+          />
+          <h3>10명이 모이면 자동으로 게임이 시작합니다!!</h3>
           <div className="waitingContent">
             <div className="imgBox">
-              <img src="/img/rank/waitingroom.png" className="waitingroom" />
+              <img
+                src="/img/rank/waitingroom.png"
+                className="waitingroom"
+                alt="room"
+              />
               {players &&
                 players.map((player: any, idx: number) => {
                   return (
-                    <div
+                    <PlayerCharacter
                       key={idx}
                       style={characterLocationArr[countArr.indexOf(player.id)]}
                     >
-                      <div>{player.nickname}</div>
+                      <div className="playerNickName">{player.nickname}</div>
                       <img
-                        style={{ height: '100%', width: '100%' }}
-                        key={idx}
                         src={`${process.env.REACT_APP_S3_URL}/profile/${player.profileChar}_normal.gif`}
+                        alt="character"
                       />
-                    </div>
+                    </PlayerCharacter>
                   );
                 })}
             </div>
-            {players &&
+
+            {/* <button className='inviteBtn' onClick={handleModal}>친구 초대</button> */}
+            {/* {players &&
               players.map((player: any, idx: number) => {
                 return <li key={idx}>{player.nickname}</li>;
-              })}
+              })} */}
           </div>
+          {/* <div className="startBtnContainer">
+            <div className="friendNum">
+              {players.length}/10
+              <div className="inviteBtnBox">
+                <div className="inviteBtnToolTip">친구 초대</div>
+                <img
+                  src="/img/cs/inviteBtn2.png"
+                  className="inviteBtn"
+                  onClick={handleModal}
+                />
+              </div>
+            </div>
+          </div> */}
+
+          {isReady && <p className="timeOut">{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
       )}
       {isStart && (
         <IngameBlock>
-          <img src="/img/gametitle/gametitle3.png" className="gameTitle" />
           {(!problem || isNext) && (
             <div>
-              <img src="/img/loadingspinner.gif" />
+              <img src="/img/loadingspinner.gif" alt="loadingSpinner" />
               <p className="loadingText">문제를 불러오고 있습니다</p>
             </div>
           )}
-          {problem && !isSubmit && isCorrect === null && (
+          {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
+              {problemCnt && (
+                <div className="problemCount">{problemCnt}/10</div>
+              )}
               <div className="problem">
                 <div className="progressContainer">
-                  <div className="progress"></div>
+                  <div className="progress"> </div>
                 </div>
-                <div className="question">{problem.question}</div>
-                <div>{problem.example}</div>
-                {/* {problem.examples.map((example: string, index: number) => {
-                return (
-                  <span>
-                  {index} : {example}
-                  </span>
-                  );
-                })} */}
+                <div className="problemContent">
+                  <div className="question">{problem.question}</div>
+                  <div>
+                    {problem.example.split('|').map((k: String, v: number) => (
+                      <div className="example">
+                        {v + 1}. {k}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
               <div className="selectbuttons">
-                {answerButton.map((answer, idx) => {
-                  return (
-                    <img
-                      key={idx}
-                      className="selectbutton"
-                      onClick={(e) => handleAnswerSend(e, answer)}
-                      src={`/img/selectbutton/button${answer}.png`}
-                    />
-                  );
-                })}
+                {problem &&
+                  problem.type === 'MULTICHOICE' &&
+                  answerButton.map((answer, idx) => {
+                    return (
+                      <img
+                        key={idx}
+                        className="selectbutton"
+                        onClick={(e) => handleAnswerSend(e, answer)}
+                        src={`/img/selectbutton/button${answer}.png`}
+                      />
+                    );
+                  })}
+                {problem &&
+                  problem.type === 'OX' &&
+                  answerButtonOX.map((answer, idx) => {
+                    return (
+                      <img
+                        key={idx}
+                        className="selectbutton"
+                        onClick={(e) => handleAnswerSend(e, answer)}
+                        src={`/img/selectbutton/button${answer}.png`}
+                      />
+                    );
+                  })}
               </div>
-
               <div className="rankBlock">
                 {ranking &&
-                  ranking.map((rank: any, idx: number) => {
+                  ranking.slice(0, 3).map((rank: any, idx: number) => {
                     return (
                       <div key={idx} className="rankwrapper">
-                        <div>
-                          <img src={`/img/rank/medal${idx}.png`} />
-                          <div>
-                            <img
-                              className="character"
-                              src={`${process.env.REACT_APP_S3_URL}/profile/${rank[0]}_normal.gif`}
-                            />
+                        <img
+                          className="medal"
+                          src={`/img/rank/medal${idx}.png`}
+                        />
+                        <div className="characterBox">
+                          <img
+                            className="character"
+                            src={`${process.env.REACT_APP_S3_URL}/profile/${rank[2]}_normal.gif`}
+                          />
+                          <div className="playerNickName">
                             <div>{rank[1]}</div>
-                            <div>{rank[2]}</div>
+                            <div>{rank[3]}</div>
                           </div>
                         </div>
                       </div>
                     );
                   })}
+                {myScore && myRanking >= 4 && (
+                  <div className="rankwrapper myRankWrapper">
+                    <div className="myRank">
+                      {myRanking + 1}
+                      <span>등</span>
+                    </div>
+
+                    <div className="characterBox myCharacter">
+                      <img
+                        className="character"
+                        src={`${process.env.REACT_APP_S3_URL}/profile/${myScore[2]}_normal.gif`}
+                        alt="profile"
+                      />
+                      <div className="playerNickName">
+                        <div>{myScore[1]}</div>
+                        <div>{myScore[3]}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -516,25 +644,44 @@ const CSIngamePage = () => {
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
-          {isCorrect !== null &&
-            isSolved !== null &&
-            problem === 'a' &&
-            !isNext && (
-              <div>
-                {!isSolved && <div>시간초과요~</div>}
-                {isSolved && isCorrect && <div>정답입니다~</div>}
-                {isSolved && !isCorrect && <div>오답입니다~</div>}
-                {ranking &&
-                  ranking.map((rank: any, idx: number) => {
-                    return (
-                      <div key={idx}>
-                        <div>{rank[1]}</div>
-                        <div>{rank[2]}</div>
+          {isSolved !== null && !isNext && (
+            <div className="problemBox">
+              {problemCnt && (
+                <div className="problemCount">{problemCnt}/10</div>
+              )}
+              <div className="problem">
+                <div className="problemContent">
+                  <div className="question">{problem.question}</div>
+                  <div>
+                    {problem.example.split('|').map((k: String, v: number) => (
+                      <div
+                        className={
+                          'example' +
+                          (v + 1 === problem.answer ? ' answer' : '')
+                        }
+                      >
+                        {v + 1}. {k}
                       </div>
-                    );
-                  })}
+                    ))}
+                  </div>
+                </div>
               </div>
-            )}
+              <div className="chart">
+                <CSMiddleChart chartPerNum={chartPerNum} />
+              </div>
+              {solveOrder && solveOrder[userInfo.id] === -1 && (
+                <div className="middleText">틀렸습니다ㅜ</div>
+              )}
+              {solveOrder && solveOrder[userInfo.id] === 0 && (
+                <div className="middleText">시간초과입니다ㅜ</div>
+              )}
+              {solveOrder && solveOrder[userInfo.id] > 0 && (
+                <div className="middleText">
+                  {solveOrder[userInfo.id]}등으로 정답을 맞추셨습니다!
+                </div>
+              )}
+            </div>
+          )}
         </IngameBlock>
       )}
     </Container>

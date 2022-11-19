@@ -40,13 +40,13 @@ export const options = {
 
 const labels = ['1', '2', '3', '4'];
 
-const CSMiddleChart = () => {
+const CSMiddleChart = ({ chartPerNum }: any) => {
   const data = {
     labels,
     datasets: [
       {
         barThickness: 50,
-        data: [1, 1, 1, 3],
+        data: chartPerNum,
         backgroundColor: [
           'rgba(255, 99, 132, 1)', // Bar 1
           'rgba(54, 162, 235, 1)', // Bar 2
