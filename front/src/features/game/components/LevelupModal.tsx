@@ -5,9 +5,16 @@ import AlgoDetailInfo from './algo/AlgoDetailInfo';
 import styled from 'styled-components';
 
 const StyledModal = styled.div`
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* border: 0.5rem solid #ce372b; */
+    background: #bd372c;
+    justify-content: space-around;
+
   padding: 3vmin;
-  width: 40vw;
-  height: 80vh;
+  width: 36vw;
+  height: 61vh;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -15,9 +22,13 @@ const StyledModal = styled.div`
   /* background-color: gray; */
   /* border: 1px solid black; */
   border-radius: 20px;
-  background-color: white;
+  /* background-color: white; */
   z-index: 1000;
   color: black;
+
+  .levelUpTitle{
+    height: 35%;
+  }
 `;
 const StyledModalDiv = styled.div`
   top: 0%;
@@ -29,7 +40,14 @@ const StyledModalDiv = styled.div`
   background-color: rgba(0, 0, 0, 0.4);
 `;
 
-function AlgoModal({ handleModal, algoDetailRoomCode }: any) {
+const LevelUpGif = styled.img`
+    /* margin: 7% 0; */
+width: 80%;
+border: 0.5rem solid black;
+border-radius: 0.6rem;
+`
+
+function LevelupModal({ handleModal, nextLevel }: any) {
   useEffect(() => {
     document.body.style.cssText = `
       position: fixed; 
@@ -46,12 +64,15 @@ function AlgoModal({ handleModal, algoDetailRoomCode }: any) {
   return (
     <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e) => e.stopPropagation()}>
-        <AlgoDetailInfo
-          handleModal={handleModal}
-          algoDetailRoomCode={algoDetailRoomCode}
+        <img
+          src="/img/levelUp2.png"
+          className='levelUpTitle'
+        />
+        <LevelUpGif
+          src={`/img/officeLevelUpGif/${nextLevel+1}.gif`}
         />
       </StyledModal>
     </StyledModalDiv>
   );
 }
-export default AlgoModal;
+export default LevelupModal;

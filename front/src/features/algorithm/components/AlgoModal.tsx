@@ -56,7 +56,7 @@ function AlgoModal({ handleModal }: Props) {
   return (
     <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e) => e.stopPropagation()}>
-        <InModalBjConnect />
+        <InModalBjConnect handleModal={handleModal} />
       </StyledModal>
     </StyledModalDiv>
   );

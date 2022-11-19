@@ -34,7 +34,21 @@ const FriendSide = styled.div`
       transform: translateX(0); /* 애니메이션이 100%만큼 동작시 */
     }
   }
-
+  .sideTitleInvite {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 10%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 3px solid #000000;
+    border-radius: 10px;
+    color: #000000;
+    a {
+      width: 20%;
+    }
+  }
   .sideTitle {
     display: flex;
     flex-direction: row;

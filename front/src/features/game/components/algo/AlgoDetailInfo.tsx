@@ -1,17 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import styled from 'styled-components';
 import { resultCodeRequest } from '../../../../api/algoApi';
 
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+
+const Close = styled.img`
+  /* z-index: 5000; */
+  position: absolute;
+  right: 10%;
+`;
 
 interface ResultCodeInterface {
   code: string;
   lan: number;
   userId: number;
 }
-
-function AlgoDetailInfo({ algoDetailRoomCode }: any) {
+interface Props {
+  handleModal: () => void;
+  algoDetailRoomCode: any;
+}
+function AlgoDetailInfo({ handleModal }: Props, { algoDetailRoomCode }: any) {
   const language: any = {
     1001: 'c++',
     1002: 'java',
@@ -30,11 +39,15 @@ function AlgoDetailInfo({ algoDetailRoomCode }: any) {
         setResultCodes(res.data);
       }
     } catch (error) {
-      Swal.fire({icon: 'error', text:'배틀의 상세 결과를 가져오는데 오류가 발생했습니다'});
+      Swal.fire({
+        icon: 'error',
+        text: '배틀의 상세 결과를 가져오는데 오류가 발생했습니다',
+      });
     }
   };
   return (
     <>
+      <Close onClick={handleModal} src="/img/close.png" alt="asdfasdf" />
       <h1>알고리즘 배틀 코드 리뷰</h1>
       {resultCodes?.map((code: ResultCodeInterface, index) => {
         if (code.userId === userInfo.id) {

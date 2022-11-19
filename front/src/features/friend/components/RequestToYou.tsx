@@ -18,6 +18,11 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  .img {
+    top: 10%;
+    right: 10%;
+    position: absolute;
+  }
   .content {
     margin: auto 10%;
   }
@@ -49,13 +54,13 @@ const Wrapper = styled.div`
     font-size: 1.5rem;
     text-align: center;
   }
-  .img-btn{
+  .img-btn {
     position: absolute;
     width: 100%;
     top: 165%;
     left: 50%;
     transform: translate(-50%, 0);
-    img{
+    img {
       width: 30%;
       margin: 0 8%;
     }
@@ -86,10 +91,13 @@ function RequestToYou() {
   const handleChangeInput = (e: React.FormEvent<HTMLInputElement>) => {
     setForm(e.currentTarget.value);
   };
-
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
+  };
   return (
     <Wrapper>
       <div className="content">
+        <img className="img" onClick={closeModal} src="/img/close.png" alt="" />
         <h1>친구 신청</h1>
         <form onSubmit={handleSubmit}>
           <div className="label">
@@ -109,9 +117,9 @@ function RequestToYou() {
           </div>
         </form>
       </div>
-      <div className='img-btn'>
-        <img src='/img/gameButton1.png'></img>
-        <img src='/img/gameButton3.png'></img>
+      <div className="img-btn">
+        <img src="/img/gameButton1.png"></img>
+        <img src="/img/gameButton3.png"></img>
       </div>
     </Wrapper>
   );
