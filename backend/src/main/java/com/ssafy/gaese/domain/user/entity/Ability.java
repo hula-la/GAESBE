@@ -3,6 +3,7 @@ package com.ssafy.gaese.domain.user.entity;
 import com.ssafy.gaese.domain.user.dto.AbilityDto;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Parent;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
@@ -25,7 +26,6 @@ import java.util.Date;
 @ToString
 public class Ability {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @MapsId
