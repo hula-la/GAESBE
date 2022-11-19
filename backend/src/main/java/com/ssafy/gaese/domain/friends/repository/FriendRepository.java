@@ -13,7 +13,7 @@ public interface FriendRepository extends JpaRepository<Friends,Integer> {
     boolean existsByFirstUserAndSecondUser(User first, User second);
 
     List<Friends> findByFirstUser(User user);
-    Friends findByFirstUserAndSecondUser(User first, User secone);
+    Friends findByFirstUserAndSecondUser(User first, User second);
     List<Friends> findBySecondUser(User user);
 
 }
