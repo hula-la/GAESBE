@@ -50,7 +50,12 @@ public class FriendSocketService {
             Optional<OnlineUserDto> onlineFriendOpt = onlineUserRedisRepository.findById(friend.getId());
 
             // 온라인인 친구면
-            if (onlineFriendOpt.isPresent()) onlineList.add(friend);
+            if (onlineFriendOpt.isPresent()) {
+                
+                // 게임하고 있는지 확인
+                friend.setPlayGame(socketInfo.isPlayGame(friend.getId()));
+                onlineList.add(friend);
+            }
             else offlineList.add(friend);
 
         });
@@ -64,12 +69,12 @@ public class FriendSocketService {
 
         List<FriendDto> friends = friendService.getFriends(userId);
 
-
         // 친구들에게 친구목록 리프레쉬하라는 메시지 보냄
         friends.forEach(friend ->{
             findFriendList(friend.getId());
         });
     }
+
     public void userEnter(FriendSocketDto friendSocketDto){
         Long userId = friendSocketDto.getUserId();
 
@@ -133,6 +138,7 @@ public class FriendSocketService {
         findFriendList(friendId);
 
     }
+
     public void delFriend(Long userId, Long friendId) throws NullPointerException{
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
@@ -180,7 +186,6 @@ public class FriendSocketService {
 
         if(characters==null)
             return;
-
 
         res.put("character",charactersId);
         res.put("need",characters.getNeed());

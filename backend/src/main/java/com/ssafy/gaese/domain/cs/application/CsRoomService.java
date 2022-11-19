@@ -128,6 +128,11 @@ public class CsRoomService {
         // 방에 사람이 꽉차서 시작한다고 함
         res.clear();
         res.put("msg", "ready");
+
+        // 시작됐다고 저장
+        roomDto.setRoomStatus(CsRoomDto.RoomStatus.START);
+        roomDto = csRoomRedisRepository.save(roomDto);
+
         simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
         Thread.sleep(5*1000);

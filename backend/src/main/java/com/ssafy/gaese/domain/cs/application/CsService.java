@@ -149,9 +149,7 @@ public class CsService {
     public CsRoomDto gameStart(CsRoomDto roomDto, List<CsProblem> randomProblem) throws InterruptedException {
         Map<String,Object> res = new HashMap<>();
 
-        // 시작됐다고 저장
-        roomDto.setRoomStatus(CsRoomDto.RoomStatus.START);
-        roomDto = csRoomRedisRepository.save(roomDto);
+
 
         // 게임 시작했다고 클라이언트에게 알리기
         res.put("msg", "start");
@@ -264,7 +262,6 @@ public class CsService {
             // 방 전원에게 ranking을 보내줌
             res.clear();
             res.put("ranking", rankList);
-            res.put("solveOrder", isSolvedByPlayer1);
 
             // 답 보내 줌
             Integer answer = csProblemRepository
@@ -294,12 +291,6 @@ public class CsService {
 
         // 끝났다는 메시지
         res.put("msg", "end");
-
-//        마지막 결과 보내기
-//        res.put("result", roomDto);
-
-
-
 
         HashMap<Long, Long> score = roomDto.getScore();
 

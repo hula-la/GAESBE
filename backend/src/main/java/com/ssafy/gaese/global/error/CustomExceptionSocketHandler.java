@@ -31,34 +31,43 @@ public class CustomExceptionSocketHandler {
     public void handleExceedMaxPlayerException(ExceedMaxPlayerException exceedMaxPlayerException){
         BaseSocketDto socketDto = exceedMaxPlayerException.getSocketDto();
 
-        HashMap<String, String> res = new HashMap<>();
-        res.put("errorMsg","인원이 다 찼습니다.");
-        simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        if (socketDto!=null){
+            HashMap<String, String> res = new HashMap<>();
+            res.put("errorMsg","인원이 다 찼습니다.");
+            simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        }
     }
     @MessageExceptionHandler(value = {PlayAnotherGameException.class})
     public void handlePlayAnotherGameException(PlayAnotherGameException playAnotherGameException){
         BaseSocketDto socketDto = playAnotherGameException.getSocketDto();
 
-        HashMap<String, String> res = new HashMap<>();
-        res.put("errorMsg","이미 다른 게임 중입니다.");
-        simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        if (socketDto!=null){
+            HashMap<String, String> res = new HashMap<>();
+            res.put("errorMsg","이미 다른 게임 중입니다.");
+            simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        }
+
     }
     @MessageExceptionHandler(value = {RoomNotFoundException.class})
     public void handleRoomNotFoundException(RoomNotFoundException roomNotFoundException){
         BaseSocketDto socketDto = roomNotFoundException.getSocketDto();
 
-        HashMap<String, String> res = new HashMap<>();
-        res.put("errorMsg","방이 존재하지 않습니다.");
-        simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        if (socketDto!=null){
+            HashMap<String, String> res = new HashMap<>();
+            res.put("errorMsg","방이 존재하지 않습니다.");
+            simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        }
     }
 
     @MessageExceptionHandler(value = {AlreadyGameStartException.class})
     public void handleAlreadyGameStartException(AlreadyGameStartException alreadyGameStartException){
         BaseSocketDto socketDto = alreadyGameStartException.getSocketDto();
 
-        HashMap<String, String> res = new HashMap<>();
-        res.put("errorMsg","이미 게임이 진행 중인 방입니다.");
-        simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        if (socketDto!=null){
+            HashMap<String, String> res = new HashMap<>();
+            res.put("errorMsg","이미 게임이 진행 중인 방입니다.");
+            simpMessagingTemplate.convertAndSend("/friend/"+ socketDto.getUserId(),res);
+        }
     }
 
 
