@@ -62,12 +62,6 @@ public class AlgoService {
 
     private final CharacterRepository characterRepository;
 
-    public void saveAlgoRecord(String roomCode){
-
-        System.out.println("user");
-        List<String> users = getUserIds(roomCode);
-
-    }
 
     public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
@@ -104,9 +98,10 @@ public class AlgoService {
                     .solveTime("-")
                     .build();
         }
+        algoRepository.save(algoRecordDto.toEntity(user));
         Ability ability = abilityRepository.findByUser_Id(userId).get();
         ability.addExp("algorithm", 1);
-        algoRepository.save(algoRecordDto.toEntity(user));
+
 
         charChecker(user.getId());
 
