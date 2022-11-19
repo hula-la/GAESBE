@@ -79,8 +79,10 @@ function AlgoBeforeStart({client, handleLeaveRoom, startGame, inGameUsers }: any
             친구초대
         </a>
       </div>
-      {loadingMsg === 'START' && (
-        <LoadingSpinner loadingMsg="곧 배틀이 시작됩니다" />
+      {loadingMsg === 'START' && (<>
+          <LoadingSpinner loadingMsg="곧 배틀이 시작됩니다" />
+          <p className="loadingText">곧 배틀이 시작됩니다</p>
+        </>
       )}
       <div className="user">
         <BeforeSolveUsers inGameUsers={inGameUsers} />
@@ -96,7 +98,7 @@ function AlgoBeforeStart({client, handleLeaveRoom, startGame, inGameUsers }: any
           <FriendModal handleModal={handleModal} type="invite" />
         )}
         {InGameInfo.master != userInfo.id && (
-          <a className="eightbit-btn eightbit-btn--enable">대기중</a>
+          <a className="eightbit-btn eightbit-btn--disable">대기중</a>
         )}
       </div>
     </Wrapper>
