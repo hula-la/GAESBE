@@ -18,7 +18,7 @@ public class AlgoRankDto {
 
     @Id
     Long userId;
-    String problemId;
+    Long problemId;
     String roomCode;
     String min;
     String nickname;
