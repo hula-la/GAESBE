@@ -420,10 +420,10 @@ const MyPage = () => {
             </div>
           </Down>
           <MyPower>
-            <div>
+          <div style={{'width':'100%'}}>
               {/* <h1>{userInfo.nickname}님의 최근 전적</h1> */}
               {gameType === 'algo' && (
-                <div>
+                <div style={{'width':'100%'}}>
                   {/* <h1>알고리즘</h1> */}
                   {detailModal === 'algo' && (
                     <DetailResultModal

@@ -1,6 +1,28 @@
 import { MyRecordInterface } from '../../../../models/algo';
 import styled from 'styled-components';
 
+
+const Wrapper = styled.div`
+  width:100%;
+  table{
+    width:47%;
+  }
+  .problem-btn:hover{
+    color : #e2b708;
+  }
+  .detail{
+    background-color: #2e2e2e;
+    border: none;
+    padding : 4px 6px;
+    color:#fff;
+    transition: 0.2s;
+  }
+  .detail:hover{
+    background-color: #e2b708;
+    color:#2e2e2e;
+  }
+`
+
 const Tr = styled.div`
   width: 210%;
   margin-top: 4%;
@@ -38,7 +60,7 @@ function AlgoRecordTable({
   };
 
   return (
-    <>
+    <Wrapper>
       <table>
         <thead>
           <Tr>
@@ -56,16 +78,16 @@ function AlgoRecordTable({
             return (
               <Tr key={record.id}>
                 <Td>
-                  <button onClick={() => handleOpenBj(record.problemId)}>
+                  <a className='problem-btn' onClick={() => handleOpenBj(record.problemId)}>
                     {record.problemId}
-                  </button>
+                  </a>
                 </Td>
                 <Td>{record.ranking}</Td>
                 <Td>{record.solveTime}</Td>
                 <Td>{record.date.split('T')[0].replaceAll('-', '.')}</Td>
                 <Td>{language[record.lan]}</Td>
                 <Td>
-                  <button onClick={() => handleDetail(record.roomCode)}>
+                  <button className='detail' onClick={() => handleDetail(record.roomCode)}>
                     상세정보
                   </button>
                 </Td>
@@ -74,7 +96,7 @@ function AlgoRecordTable({
           })}
         </tbody>
       </table>
-    </>
+    </Wrapper>
   );
 }
 export default AlgoRecordTable;
