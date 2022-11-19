@@ -134,18 +134,18 @@ public class FriendService {
 
 
     //해당 유저가 친구 신청이 남아 있으면 알람을 보냄
-    public void friendRequestChecker(Long userId)
-    {
-        User user = userRepository.findById(userId)
-                .orElseThrow(()->new UserNotFoundException());
-
-        if(friendRequestRepository.findByTargetUser(user)!=null)
-        {
-            friendAlarm(user.getId(), true);
-        }
-
-    }
-
+//    public void friendRequestChecker(Long userId)
+//    {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(()->new UserNotFoundException());
+//
+//        if(friendRequestRepository.findByTargetUser(user)!=null)
+//        {
+//            friendAlarm(user.getId(), true);
+//        }
+//
+//    }
+//
 
     //친구 신청시 친구에게 알람 보냄
     public void friendAlarm(Long userId, boolean alarm)

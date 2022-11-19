@@ -215,7 +215,10 @@ public class FriendSocketService {
         User user = userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundException());
 
-        if(friendRequestRepository.findByTargetUser(user)!=null)
+
+//        System.out.println("\n\n\n\n\n\nfriendRequestRepository.findByRequestUser(user).size()");
+//        System.out.println(friendRequestRepository.findByTargetUser(user).size());
+        if(friendRequestRepository.findByTargetUser(user).size()>0)
         {
             friendAlarm(user.getId(),true);
         }
