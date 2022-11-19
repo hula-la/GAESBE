@@ -19,6 +19,7 @@ function FriendSocket() {
   const { chatFriend } = useSelector((state: any) => state.friend);
   const { sendContent } = useSelector((state: any) => state.friend);
   const { isChatOpen } = useSelector((state: any) => state.friend);
+  const { isInvite } = useSelector((state: any) => state.friend);
   const [msgId, setMsgId] = useState<any>(null);
 
   const socket: CustomWebSocket = new SockJS(
@@ -119,6 +120,18 @@ function FriendSocket() {
       setMsgId(null);
     }
   }, [msgId]);
+
+  useEffect(() => {
+    if (isInvite) {
+      client.current.send(
+        `/api/friend/refresh`,
+        {},
+        JSON.stringify({
+          userId: userInfo.id,
+        }),
+      );
+    }
+  }, [isInvite]);
 
   return <></>;
 }
