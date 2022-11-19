@@ -356,16 +356,14 @@ function FriendMainPage() {
 
   return (
     <FriendSide>
-      {!isInvite && (
-        <div className="sideTitle">
-          <img
-            className="sideTitleImg"
-            src="/img/friendEarth.png"
-            alt="friendmark"
-          />
-          <div className="sideTitleContent">Friends</div>
-        </div>
-      )}
+      <div className="sideTitle">
+        <img
+          className="sideTitleImg"
+          src="/img/friendEarth.png"
+          alt="friendmark"
+        />
+        <div className="sideTitleContent">Friends</div>
+      </div>
       {/* {isInvite && (
         <div className="sideTitle">
           <div onClick={acceptInvite}>수락</div>

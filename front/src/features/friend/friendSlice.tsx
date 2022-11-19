@@ -164,6 +164,11 @@ const friendSlice = createSlice({
       state.uncheckedChatList[action.payload] = [];
     },
     postChatError(state, action) {},
+    // 친구 삭제시 채팅 삭제
+    resetChatList(state, action) {
+      const { friendId, myId } = action.payload;
+      state.chatList[friendId] = {};
+    },
     // 에러메세지 저장
     setErrorMsg(state, action) {
       state.errorMsg = action.payload;
