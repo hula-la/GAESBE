@@ -204,7 +204,7 @@ public class AlgoProblemService {
         hashOperations.put("algoRoom:"+roomCode,"algoRoomDto.isStart","1");
     }
 
-    public void saveUserTime(String problemId,String roomCode, Long userId) throws ParseException {
+    public void saveUserTime(Long problemId,String roomCode, Long userId) throws ParseException {
 
         HashOperations<String, String,String> hashOperations = redisTemplate.opsForHash();
         ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();

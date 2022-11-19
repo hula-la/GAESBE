@@ -16,4 +16,12 @@ public interface ChatRepository extends JpaRepository<Chat,Long> {
     @Query("SELECT c From Chat c  WHERE c.fromUser.id =:myId OR c.toUser.id=:myId order by c.date desc ")
     List<Chat> findMyChat(@Param("myId") Long myId);
 
+    //DELETE From gaese.chat WHERE (from_user_id =7 and to_user_id=5) or (from_user_id =5 and to_user_id=7)
+    @Query(value ="DELETE From gaese.chat WHERE (from_user_id =:myId and to_user_id=:friendId) or (from_user_id =:friendId and to_user_id=:myId)"
+            , nativeQuery = true)
+    List<Chat> delMyChat(@Param("myId") Long myId, @Param("friendId") Long friendId);
+
+
+
+
 }
