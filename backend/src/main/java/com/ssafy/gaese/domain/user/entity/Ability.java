@@ -26,12 +26,14 @@ import java.util.Date;
 @ToString
 public class Ability {
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @MapsId
-//    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
-    @OneToOne
-    @JoinColumn(name = "userId")
+    //    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+//    @OneToOne
+    @JoinColumn(name = "id")
     private User user;
 
     @Builder.Default
