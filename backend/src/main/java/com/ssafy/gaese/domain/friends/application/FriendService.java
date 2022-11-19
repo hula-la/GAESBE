@@ -70,9 +70,10 @@ public class FriendService {
                     .createdDate(new Date())
                     .build();
             friendRequestRepository.save(friendRequest);
+            //친구 신청이 왔다고  알람 보내는 부분
+            friendAlarm(targetUser.getId(),true);
         }
 
-        friendAlarm(targetUser.getId());
         return true;
     }
 
@@ -85,7 +86,12 @@ public class FriendService {
                 .collect(Collectors.toList());
 
         if(friendRequestList.size()>0)
-            friendAlarm(userId);
+        {
+            System.out.println("친구 신청 알람 보내기 전 리스트 사이즈 체크");
+            System.out.println(friendRequestList.size());
+            friendAlarm(userId, true);
+            
+        }
 
         return friendRequestList;
     }
@@ -135,18 +141,16 @@ public class FriendService {
 
         if(friendRequestRepository.findByTargetUser(user)!=null)
         {
-            friendAlarm(user.getId());
+            friendAlarm(user.getId(), true);
         }
 
     }
 
 
     //친구 신청시 친구에게 알람 보냄
-    public void friendAlarm(Long userId)
+    public void friendAlarm(Long userId, boolean alarm)
     {
         HashMap<String, Object> res = new HashMap<>();
-
-        boolean alarm = true;
 
         res.put("alarm",alarm);
 

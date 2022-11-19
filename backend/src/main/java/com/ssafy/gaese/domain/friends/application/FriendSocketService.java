@@ -1,5 +1,6 @@
 package com.ssafy.gaese.domain.friends.application;
 
+import com.ssafy.gaese.domain.chat.repository.ChatRepository;
 import com.ssafy.gaese.domain.friends.dto.FriendDto;
 import com.ssafy.gaese.domain.friends.dto.FriendSocketDto;
 import com.ssafy.gaese.domain.friends.dto.OnlineUserDto;
@@ -33,6 +34,7 @@ public class FriendSocketService {
     private final SocketInfo socketInfo;
     private final FriendRequestRepository friendRequestRepository;
 
+    private final ChatRepository chatRepository;
     private final CharacterRepository characterRepository;
 
 
@@ -134,8 +136,15 @@ public class FriendSocketService {
         // 친구 신청 목록에서 삭제
         friendRequestRepository.deleteByRequestUserAndTargetUser(friend,user);
 
-        if(friendRequestRepository.findByRequestUser(user).size()==0)
+        int findByRequestCount = friendRequestRepository.findByRequestUser(user).size();
+        if(findByRequestCount==0)
             friendAlarm(userId,false);
+        else
+            friendAlarm(userId,true);
+
+
+        System.out.println("친구 수락 후 남은 수 목록 체크");
+        System.out.println(findByRequestCount);
 
 
 
@@ -169,9 +178,11 @@ public class FriendSocketService {
             throw new NotFriendException();
         }
 
+        chatRepository.delMyChat(userId, friendId);
         // 친구 추가 한 후에 온라인/오프라인 리스트 리프레쉬
         findFriendList(userId);
         findFriendList(friendId);
+
 
     }
 
