@@ -13,6 +13,7 @@ import com.ssafy.gaese.domain.typing2.application.Typing2RoomService;
 import com.ssafy.gaese.domain.typing2.dto.TypingRoomDto;
 import com.ssafy.gaese.domain.typing2.dto.TypingSocketDto;
 import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
+import com.ssafy.gaese.global.Dto.BaseSocketDto;
 import com.ssafy.gaese.global.redis.SocketInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -78,7 +79,7 @@ public class SessionDisconnectConfig {
             case "Cs":
                 System.out.println("cs에서 나감 : "+ sessionId);
                 CsSocketDto csSocketDto = CsSocketDto.builder()
-                        .type(CsSocketDto.Type.LEAVE)
+                        .type(BaseSocketDto.Type.LEAVE)
                         .userId(Long.parseLong(info[0]))
                         .roomCode(info[1])
                         .sessionId(sessionId)
@@ -116,7 +117,7 @@ public class SessionDisconnectConfig {
                 AlgoSocketDto algoSocketDto = AlgoSocketDto.builder()
                         .sessionId(sessionId)
                         .roomCode(info[1])
-                        .userId(info[0]).nickname(info[3]).build();
+                        .userId(Long.valueOf(info[0])).nickname(info[3]).build();
 
                 algoService.leaveRoom(algoSocketDto,info[0]);
                 // 게임을 하고 있다는 기록 지움

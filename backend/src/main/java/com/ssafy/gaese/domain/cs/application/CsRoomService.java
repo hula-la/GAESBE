@@ -2,6 +2,7 @@ package com.ssafy.gaese.domain.cs.application;
 
 import com.ssafy.gaese.domain.cs.dto.redis.CsRoomDto;
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
+import com.ssafy.gaese.domain.cs.exception.AlreadyGameStartException;
 import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.cs.repository.CsRecordRedisRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
@@ -10,6 +11,7 @@ import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
 import com.ssafy.gaese.domain.cs.repository.CsProblemRepository;
 import com.ssafy.gaese.domain.cs.repository.CsRoomRedisRepository;
+import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
@@ -52,13 +54,16 @@ public class CsRoomService {
 
         // 방 입장
         Long userId = csSocketDto.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
         if(csSocketDto.getType() == CsSocketDto.Type.ENTER){
             // 다른 게임을 하고있는 중인지 확인
             if(socketInfo.isPlayGame(userId)){
-                res.clear();
                 res.put("playAnotherGame", true);
                 simpMessagingTemplate.convertAndSend("/cs/"+ userId,res);
-                throw new PlayAnotherGameException();
+//                res.clear();
+//                res.put("errorMsg", "이미 게임을 진행 중입니다.");
+                simpMessagingTemplate.convertAndSend("/friend/"+ userId,res);
+                throw new PlayAnotherGameException(csSocketDto);
             }
 
 
@@ -76,6 +81,8 @@ public class CsRoomService {
                 }
             }
 
+            res.put("msg", user.getNickname() + " 님이 접속하셨습니다.");
+
             socketInfo.setSocketInfo(csSocketDto.getSessionId(),
                     userId.toString(),
                     csSocketDto.getRoomCode(),
@@ -88,8 +95,11 @@ public class CsRoomService {
         // 방 나가기
         else if(csSocketDto.getType() == CsSocketDto.Type.LEAVE){
             leaveRoom(csSocketDto);
+            res.put("msg",user.getNickname()+" 님이 나가셨습니다.");
             return;
         }
+        // 방 전원에게 유저 출입 메시지전달
+        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
 
         // 방 코드를 개인에게 전달
         res.clear();
@@ -110,7 +120,7 @@ public class CsRoomService {
     }
 
     public void gameProcess(CsSocketDto csSocketDto) throws InterruptedException {
-        CsRoomDto roomDto = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+        CsRoomDto roomDto = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(csSocketDto));
         // 문제 뽑아오기
         List<CsProblem> randomProblem = csProblemRepository.findRandomProblem(numProblem);
 
@@ -216,14 +226,20 @@ public class CsRoomService {
     public void changeMaster(CsRoomDto csRoom){
         HashMap<String, Long> players = csRoom.getPlayers();
         Collection<Long> keys = players.values();
+        Map<String,Object> res = new HashMap<>();
 
         // 반장이 될 사람
         Long nextMasterPlayerId = (Long) keys.toArray()[0];
         csRoom.setMaster(nextMasterPlayerId);
         csRoomRedisRepository.save(csRoom);
 
+        // 반장이 바꼈다고 방전체한테 알리기
+        User user = userRepository.findById(nextMasterPlayerId).orElseThrow(() -> new UserNotFoundException());
+        res.put("msg",user.getNickname()+" 님이 반장이 되었습니다.");
+        simpMessagingTemplate.convertAndSend("/cs/room/"+csRoom.getCode(),res);
+
         // res 초기화
-        Map<String,Object> res = new HashMap<>();
+        res.clear();
         res.put("master",true);
 
         simpMessagingTemplate.convertAndSend("/cs/"+nextMasterPlayerId,res);
@@ -232,7 +248,9 @@ public class CsRoomService {
     // 친선전 방 입장
     public synchronized CsRoomDto enterRoom(CsSocketDto csSocketDto){
         System.out.println(csSocketDto.toString());
-        CsRoomDto csRoom = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+        CsRoomDto csRoom = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(csSocketDto));
+
+        if (csRoom.getRoomStatus()== CsRoomDto.RoomStatus.START) throw new AlreadyGameStartException(csSocketDto);
 
         if (csRoom.getPlayers()==null)csRoom.setPlayers(new HashMap<>());
         HashMap<String, Long> players = csRoom.getPlayers();
@@ -250,7 +268,7 @@ public class CsRoomService {
 
     // 방 나가기
     public void leaveRoom(CsSocketDto csSocketDto){
-        CsRoomDto csRoom = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+        CsRoomDto csRoom = csRoomRedisRepository.findById(csSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(csSocketDto));
 
         HashMap<String, Long> players = csRoom.getPlayers();
         players.remove(csSocketDto.getSessionId());

@@ -1,6 +1,12 @@
 package com.ssafy.gaese.domain.cs.exception;
 
+import com.ssafy.gaese.global.Dto.BaseSocketDto;
+import lombok.Getter;
+
+@Getter
 public class PlayAnotherGameException extends RuntimeException {
+    private BaseSocketDto SocketDto;
+
     public PlayAnotherGameException() {
     }
 
@@ -15,4 +21,8 @@ public class PlayAnotherGameException extends RuntimeException {
     public PlayAnotherGameException(Throwable cause) {
         super(cause);
     }
+    public PlayAnotherGameException(BaseSocketDto SocketDto) {
+        this.SocketDto = SocketDto;
+    }
+
 }

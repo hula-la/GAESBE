@@ -1,5 +1,7 @@
 package com.ssafy.gaese.domain.typing2.application;
 
+import com.ssafy.gaese.domain.cs.dto.redis.CsRoomDto;
+import com.ssafy.gaese.domain.cs.exception.AlreadyGameStartException;
 import com.ssafy.gaese.domain.cs.exception.ExceedMaxPlayerException;
 import com.ssafy.gaese.domain.cs.exception.PlayAnotherGameException;
 import com.ssafy.gaese.domain.cs.exception.RoomNotFoundException;
@@ -57,7 +59,7 @@ public class Typing2RoomService {
                 res.put("playAnotherGame", true);
 //                반려하는 부분 만들어 줘야함
                 simpMessagingTemplate.convertAndSend("/typing2/"+typingSocketDto.getUserId(),roomResByUser);
-                throw new PlayAnotherGameException();
+                throw new PlayAnotherGameException(typingSocketDto);
             }
             System.out.println("typingSocketDto 방 들어올때 체크");
             System.out.println(typingSocketDto);
@@ -127,7 +129,7 @@ public class Typing2RoomService {
 
 
     public void gameProcess(TypingSocketDto typingSocketDto) throws InterruptedException {
-        TypingRoomDto roomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+        TypingRoomDto roomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(typingSocketDto));
 
 
         Map<String,Object> res = new HashMap<>();
@@ -238,7 +240,9 @@ public class Typing2RoomService {
     // 친선전 방 입장
     public synchronized TypingRoomDto enterRoom(TypingSocketDto typingSocketDto){
         System.out.println(typingSocketDto.toString());
-        TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+        TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(typingSocketDto));
+
+        if (typingRoomDto.getRoomStatus()== TypingRoomDto.RoomStatus.START) throw new AlreadyGameStartException(typingSocketDto);
 
         if (typingRoomDto.getPlayers()==null)typingRoomDto.setPlayers(new HashMap<>());
         HashMap<String, Long> players = typingRoomDto.getPlayers();
@@ -266,7 +270,7 @@ public class Typing2RoomService {
 
     // 방 나가기
     public TypingRoomDto leaveRoom(TypingSocketDto typingSocketDto){
-        TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException());
+        TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(typingSocketDto));
 
         HashMap<String, Long> players = typingRoomDto.getPlayers();
 

@@ -1,11 +1,12 @@
 package com.ssafy.gaese.domain.cs.exception;
 
 import com.ssafy.gaese.domain.cs.dto.CsSocketDto;
+import com.ssafy.gaese.global.Dto.BaseSocketDto;
 import lombok.Getter;
 
 @Getter
 public class ExceedMaxPlayerException extends RuntimeException {
-    private CsSocketDto csSocketDto;
+    private BaseSocketDto SocketDto;
 
     public ExceedMaxPlayerException() {
     }
@@ -18,7 +19,7 @@ public class ExceedMaxPlayerException extends RuntimeException {
         super(message, cause);
     }
 
-    public ExceedMaxPlayerException(CsSocketDto csSocketDto) {
-        this.csSocketDto = csSocketDto;
+    public ExceedMaxPlayerException(BaseSocketDto SocketDto) {
+        this.SocketDto = SocketDto;
     }
 }

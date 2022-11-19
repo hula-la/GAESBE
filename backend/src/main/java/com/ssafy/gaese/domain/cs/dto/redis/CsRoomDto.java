@@ -17,10 +17,14 @@ public class CsRoomDto {
     public enum RoomType {
         RANDOM, FRIEND;
     }
+    public enum RoomStatus {
+        WAIT, START;
+    }
 
     @Id
     private String code;
     private String name;
+    private RoomStatus roomStatus;
     // sessionId: userId
     private HashMap<String, Long> players;
     private HashSet<Long> problems;
