@@ -43,6 +43,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final CharacterRepository characterRepository;
     private final OfficeRepository officeRepository;
 
+    private final AbilityRepository abilityRepository;
+
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -102,6 +104,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .office(office)
                 .user(user)
                 .build());
+        userOfficeRepository.save(UserOffice.builder()
+                .office(office)
+                .user(user)
+                .build());
+
+        abilityRepository.save(new Ability(user));
 
 
         return save;
