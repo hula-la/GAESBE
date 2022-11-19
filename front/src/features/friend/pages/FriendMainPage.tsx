@@ -34,7 +34,21 @@ const FriendSide = styled.div`
       transform: translateX(0); /* 애니메이션이 100%만큼 동작시 */
     }
   }
-
+  .sideTitleInvite {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 10%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 3px solid #000000;
+    border-radius: 10px;
+    color: #000000;
+    a {
+      width: 20%;
+    }
+  }
   .sideTitle {
     display: flex;
     flex-direction: row;
@@ -301,9 +315,23 @@ function FriendMainPage() {
         </div>
       )}
       {isInvite && (
-        <div className="sideTitle">
-          <div onClick={acceptInvite}>수락</div>
-          <div onClick={rejectInvite}>거절</div>
+        <div className="sideTitleInvite">
+          <a
+            href="javascript:void(0)"
+            className="eightbit-btn"
+            onClick={acceptInvite}
+          >
+            수락
+          </a>
+          <a
+            href="javascript:void(0)"
+            className="eightbit-btn eightbit-btn--reset"
+            onClick={rejectInvite}
+          >
+            거절
+          </a>
+          {/* <div onClick={acceptInvite}>수락12</div>
+          <div onClick={rejectInvite}>거절12</div> */}
         </div>
       )}
       <div className="sideMain">

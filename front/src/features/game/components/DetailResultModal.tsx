@@ -46,7 +46,10 @@ function AlgoModal({ handleModal, algoDetailRoomCode }: any) {
   return (
     <StyledModalDiv onClick={handleModal}>
       <StyledModal onClick={(e) => e.stopPropagation()}>
-        <AlgoDetailInfo algoDetailRoomCode={algoDetailRoomCode} />
+        <AlgoDetailInfo
+          handleModal={handleModal}
+          algoDetailRoomCode={algoDetailRoomCode}
+        />
       </StyledModal>
     </StyledModalDiv>
   );

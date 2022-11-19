@@ -1,22 +1,37 @@
 import { useSelector } from 'react-redux';
 import { FriendInterface } from '../../../models/friend';
 import FriendListItem from './FriendListItem';
+import styled from 'styled-components';
+import { friendActions } from '../friendSlice';
+import { useDispatch } from 'react-redux';
+const Close = styled.img`
+  position: absolute;
+  right: 10%;
+`;
 
 function InviteFriend() {
+  const dispatch = useDispatch();
   const { friends } = useSelector((state: any) => state.friend);
-
+  const closeModal = () => {
+    dispatch(friendActions.handleModal(null));
+  };
   return (
     <>
       {friends.online && (
         <>
           {friends.online.map((onlineFriend: FriendInterface, idx: Number) => {
             return (
-              <FriendListItem
-                key={onlineFriend.id}
-                type="online"
-                friend={onlineFriend}
-                category="invite"
-              />
+              <>
+                <Close onClick={closeModal} src="/img/close.png" alt="" />
+                <br />
+                <br />
+                <FriendListItem
+                  key={onlineFriend.id}
+                  type="online"
+                  friend={onlineFriend}
+                  category="invite"
+                />
+              </>
             );
           })}
         </>
