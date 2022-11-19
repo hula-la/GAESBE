@@ -25,13 +25,14 @@ const Wrapper = styled.div`
   .abilitys {
     position: absolute;
     bottom: 3%;
-    left: 12%;
+    /* left: 12%; */
     display: flex;
     flex-direction: row;
     color: #ffffff;
-    width: 90%;
+    width: 100%;
+    z-index:0;
     .ability {
-      margin-right: 5rem;
+      /* margin-right: 5rem; */
       width: 25%;
       font-family: 'NeoDunggeunmo';
       font-size: 1.2rem;
@@ -39,9 +40,12 @@ const Wrapper = styled.div`
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: space-between;
+      padding: 0px 4%;
+
     }
     .gaze {
-      width: 100%;
+      width: 80%;
       margin-top: 0.5rem;
       /* box-shadow: 0px 0px 3px 4px #ffffff; */
     }

@@ -9,7 +9,32 @@ const Wrapper = styled.div`
 
   .lastTitle {
     height: 100vh;
+    flex-direction: column;
   }
+  .goOffice2{
+      font-size: 2rem;
+      margin-top: 2rem;
+      color: #f27474;
+
+      :hover {
+        animation-name: scaleUp;
+        animation-iteration-count: initial;
+        animation-duration: 0.3s;
+        z-index: 10;
+        transform: scale(1.1);
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+
+        @keyframes scaleUp {
+          0% {
+            transform: scale(1);
+          }
+          100% {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
 
   .Intro {
     position: relative;
@@ -37,6 +62,15 @@ const Wrapper = styled.div`
       z-index: 1;
       right: 8%;
       bottom: 16%;
+
+      :hover {
+        transform: scale(1.1);
+        transition: transform 0.4yys;
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+
+
+      }
     }
     .characters {
       height: 16%;
@@ -50,13 +84,15 @@ const Wrapper = styled.div`
       align-items: flex-end;
     }
 
+    
+
     .goOffice {
       position: absolute;
       bottom: 20%;
       right: 23%;
       z-index: 10;
-      color: #232323;
-      text-shadow: -1px 0 #ffffff, 0 1px #ffffff, 1px 0 #ffffff, 0 -1px #ffffff;
+      color: #ffffff;
+      text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000, 0 -1px #000000;
       font-size: 2rem;
 
       transition: transform 0.3s;
@@ -534,6 +570,7 @@ const IntroPage = () => {
         />
         <img
           src="/img/Intro/introOffice.png"
+          onClick={goLogin}
           alt="Intro"
           className="introOffice"
         />
@@ -594,7 +631,6 @@ const IntroPage = () => {
                 </div>
               </div>
               <div className="textBoxPage">
-                <img className="icon" src="/img/Intro/computerIcon.gif" />
                 <div ref={txt03ref} className="infoTxt txt03">
                   <p className="title">타이핑 배틀</p>
                   <p className="content">타이핑하며 언어와 친해지자!</p>
@@ -634,7 +670,14 @@ const IntroPage = () => {
               </div>
             </div>
           </div>
-          <div className="lastTitle">지금부터 즐겨보세요!</div>
+          <div className="lastTitle">
+            <div>
+            지금부터 즐겨보세요!
+            </div>
+            <div className="goOffice2" onClick={goLogin}>
+              Go to Office
+            </div>
+          </div>
         </article>
       </div>
       {/* <div className="introBox"></div> */}
