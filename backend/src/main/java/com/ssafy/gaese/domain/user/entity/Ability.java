@@ -23,7 +23,6 @@ import java.util.Date;
                 @Index(name = "idx_luck", columnList = "luckLv, luckExp")
         }
 )
-@ToString
 public class Ability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

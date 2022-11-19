@@ -26,7 +26,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "User",
         indexes = {
                 @Index(name = "idx_maxWinStreak", columnList = "maxWinStreak")
