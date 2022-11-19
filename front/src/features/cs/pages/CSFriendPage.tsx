@@ -632,6 +632,7 @@ const CSFriendPage = () => {
           roomCode: roomCode,
         }),
       );
+      dispatch(friendActions.resetFriend());
     }
   }, [friendId]);
 
