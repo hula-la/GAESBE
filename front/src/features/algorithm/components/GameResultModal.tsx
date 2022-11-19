@@ -65,15 +65,15 @@ const StyledModal = styled.div`
 
     .msg{
       margin-top: 5%;
-      font-size: 1.5rem;
+      font-size: 2rem;
     }
 
-    .img{
-      height: 60%;
+    img{
+      width: 110%;
     }
     .rank{
       margin-bottom: 5%;
-      font-size: 1.5rem;
+      font-size: 2rem;
     }
 
   `
@@ -119,7 +119,9 @@ function GameResultModal({ handleModal, myRank }: any) {
         <ModalWrapper>
           <div className='modal-content'>
             <div className='msg'>{gameResultMsg}</div>
-            <div className='img'>img</div>
+
+              {myRank <= 3 ? <img src={`/img/rank/medal${myRank-1}.png`}/>:<span style={{'fontSize':'6rem'}}>{myRank==4?"🎉":"😥"}</span>}
+
             <div className='rank'>{myRank} 등 입니다!</div>
           </div>
         </ModalWrapper>

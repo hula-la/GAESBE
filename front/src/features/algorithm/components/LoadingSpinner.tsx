@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 
 const StyledSpinner = styled.img`
-  width: 40vw;
-  height: 80vh;
+  width: 30vw;
+  height: 60vh;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -13,7 +13,7 @@ const StyledSpinner = styled.img`
   /* border: 1px solid black; */
   border-radius: 20px;
   z-index: 1000;
-  color: black;
+  
 `;
 
 const StyledSpinnerDiv = styled.div`
@@ -27,9 +27,15 @@ const StyledSpinnerDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  
   .loadingText {
-    font-size: large;
+    margin: 4% 4.5%;
+    font-size: 2rem;
+    color: white;
+    z-index: 10001;
   }
+
 `;
 
 
@@ -41,6 +47,7 @@ function LoadingSpinner({loadingMsg}:any) {
       top: -${window.scrollY}px;
       // overflow-y: scroll;
       width: 100%;`;
+      
     return () => {
       const scrollY = document.body.style.top;
       document.body.style.cssText = "";

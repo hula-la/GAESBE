@@ -126,11 +126,11 @@
   box-shadow: inset 4px 4px 0px 0px #e59400;
 }
 
-.eightbit-btn--enable {
+.eightbit-btn--disable {
   background: #c2c2c2;
   box-shadow: inset -4px -4px 0px 0px #888888;
 }
-.eightbit-btn--enable:hover,
+.eightbit-btn--disable:hover,
 :focus {
   background: #c2c2c2;
   box-shadow: inset -4px -4px 0px 0px #888888;
