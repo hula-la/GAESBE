@@ -15,6 +15,10 @@ const NickNameContainer = styled.div`
   align-items: center;
   overflow: none;
   color: white;
+  div {
+    display: flex;
+    flex-direction: column;
+  }
   .maintitle {
     line-height: 3rem;
     max-width: 15em;
@@ -26,14 +30,12 @@ const NickNameContainer = styled.div`
     border-radius: 0.4rem;
   }
 
-  .showLater {
+  /* .showLater {
     display: flex;
-    /* display: none; */
     flex-direction: column;
     animation-name: showToRight;
     animation-duration: 3.2s;
     animation-iteration-count: infinite;
-    /* animation-delay: 1.6s; */
 
     @keyframes showToRight {
       0% {
@@ -47,7 +49,7 @@ const NickNameContainer = styled.div`
         transform: scaleY(1);
       }
     }
-  }
+  } */
 
   .none {
     display: none;
@@ -146,7 +148,7 @@ const SetNicknamePage = () => {
     <NickNameContainer>
       <h1 className="maintitle">{blogTitle1}</h1>
       <h1 className="maintitle">{blogTitle2}</h1>
-      <div ref={nickNameRef} className="showLater none">
+      <div ref={nickNameRef}>
         <input
           onChange={onChangeNickname}
           className="nickNameInput"

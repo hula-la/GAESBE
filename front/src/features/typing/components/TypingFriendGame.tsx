@@ -77,10 +77,13 @@ const PersonalCharacter = styled.div`
   }
 `;
 const CharacterSet = styled('div')<{ progress: string }>`
+  width: 100%;
+  height: 100%;
   padding-left: ${(props) => props.progress};
   // 부드럽게 움직이도록
   transition: all 0.4s;
   display: flex;
+  justify-content: center;
   flex-direction: column;
 `;
 const CharacterName = styled.div`
@@ -91,11 +94,12 @@ const CharacterName = styled.div`
   z-index: 5;
   position: absolute;
   div {
+    opacity: 0.9;
     background-color: #2e2e2e;
     color: white;
     padding: 7px;
     font-size: 10px;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
   }

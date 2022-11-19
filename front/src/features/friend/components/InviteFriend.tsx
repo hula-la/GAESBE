@@ -25,7 +25,7 @@ function InviteFriend() {
               (onlineFriend: FriendInterface, idx: Number) => {
                 return (
                   <>
-                   <Close onClick={closeModal} src="/img/close.png" alt="" />
+                    <Close onClick={closeModal} src="/img/close.png" alt="" />
                     <FriendListItem
                       key={onlineFriend.id}
                       type="online"

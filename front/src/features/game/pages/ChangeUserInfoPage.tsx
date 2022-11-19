@@ -54,6 +54,19 @@ const MyCharacterInfo = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    .nicknameblock {
+      display: flex;
+      flex-direction: column;
+      div {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .check {
+      font-size: 50%;
+    }
   }
 `;
 const SelectCharacter = styled.div`
@@ -195,15 +208,21 @@ const ChangeUserInfoPage = () => {
           )}
           {changeNickName && (
             <h1 className="h1">
-              <input onChange={onChangeNickname} value={nickname} />
-              {isDuplicate && <p>중복된 닉네임입니다.</p>}
-              {lengthOutOfRange && <p>닉네임은 2~6글자만 가능합니다</p>}
-              {/* <button onClick={onClickHandler}>닉네임 변경</button> */}
-              <img
-                onClick={onClickHandler}
-                src="/img/selectbutton/setnicknamebutton.png"
-                alt=""
-              />
+              <div className="nicknameblock">
+                <div>
+                  <input onChange={onChangeNickname} value={nickname} />
+                  {/* <button onClick={onClickHandler}>닉네임 변경</button> */}
+                  <img
+                    onClick={onClickHandler}
+                    src="/img/selectbutton/setnicknamebutton.png"
+                    alt=""
+                  />
+                </div>
+                <div className="check">
+                  {isDuplicate && <p>중복된 닉네임입니다.</p>}
+                  {lengthOutOfRange && <p>닉네임은 2~6글자만 가능합니다</p>}
+                </div>
+              </div>
             </h1>
           )}
           <img
