@@ -26,14 +26,14 @@ import java.util.Date;
 @ToString
 public class Ability {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @MapsId
+//    @MapsId
     //    @OneToOne(cascade = {CascadeType.PERSIST ,CascadeType.MERGE})
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @OneToOne(fetch = FetchType.LAZY)
 //    @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "userId")
     private User user;
 
     @Builder.Default
@@ -98,7 +98,6 @@ public class Ability {
                 .luckLv(this.luckLv)
                 .luckExp(this.luckExp)
                 .userId(this.user.getId())
-                .id(this.id)
                 .build();
     }
 
