@@ -340,7 +340,7 @@ const CSFriendPage = () => {
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
   const [problemCnt, setProblemCnt] = useState<number>(0);
-  const [isSolved, setIsSolved] = useState<Boolean | null>(null);
+  const [isSolved, setIsSolved] = useState<number | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
   const [myScore, setMyScore] = useState<any>(null);
@@ -753,7 +753,13 @@ const CSFriendPage = () => {
                   <div className="progress"> </div>
                 </div>
                 <div className="problemContent">
-                  <div className="question">{problem.question}</div>
+                  <div className="question">
+                    {problem.question
+                      .split('```')
+                      .map((k: String, v: number) => (
+                        <div>{k}</div>
+                      ))}
+                  </div>
                   <div>
                     {problem.example.split('|').map((k: String, v: number) => (
                       <div className="example">
@@ -847,7 +853,13 @@ const CSFriendPage = () => {
               )}
               <div className="problem">
                 <div className="problemContent">
-                  <div className="question">{problem.question}</div>
+                  <div className="question">
+                    {problem.question
+                      .split('```')
+                      .map((k: String, v: number) => (
+                        <div>{k}</div>
+                      ))}
+                  </div>
                   <div>
                     {problem.example.split('|').map((k: String, v: number) => (
                       <div
@@ -865,15 +877,15 @@ const CSFriendPage = () => {
               <div className="chart">
                 <CSMiddleChart chartPerNum={chartPerNum} />
               </div>
-              {solveOrder && solveOrder[userInfo.id] === -1 && (
+              {isSolved && isSolved === 0 && (
                 <div className="middleText">틀렸습니다ㅜ</div>
               )}
-              {solveOrder && solveOrder[userInfo.id] === 0 && (
+              {isSolved && isSolved === -1 && (
                 <div className="middleText">시간초과입니다ㅜ</div>
               )}
-              {solveOrder && solveOrder[userInfo.id] > 0 && (
+              {isSolved && isSolved > 0 && (
                 <div className="middleText">
-                  {solveOrder[userInfo.id]}등으로 정답을 맞추셨습니다!
+                  {isSolved}등으로 정답을 맞추셨습니다!
                 </div>
               )}
             </div>
