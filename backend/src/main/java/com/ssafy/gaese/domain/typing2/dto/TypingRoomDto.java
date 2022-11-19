@@ -17,6 +17,9 @@ import java.util.HashSet;
 @Builder
 @RedisHash(value = "TypingRoom", timeToLive = 3600)
 public class TypingRoomDto {
+    public enum RoomStatus {
+        WAIT, START;
+    }
 
     @Id
     private String code;
@@ -24,6 +27,8 @@ public class TypingRoomDto {
     private int realPlayerCount;
     private Long paragraphId;
     private Long masterId;
+
+    private RoomStatus roomStatus;
 
 
     private TypingRecord.LangType langType;

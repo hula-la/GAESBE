@@ -2,27 +2,23 @@ package com.ssafy.gaese.domain.typing2.dto;
 
 
 import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
+import com.ssafy.gaese.global.Dto.BaseSocketDto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class TypingSocketDto {
-    public enum Type {
-        ENTER, LEAVE
-    }
+@SuperBuilder
+public class TypingSocketDto extends BaseSocketDto {
 
     public enum RoomType {
         RANDOM, FRIEND
     }
 
-    private Type type;
-    private String sessionId;
-    private Long userId;
-    private String roomCode;
-    private RoomType roomType;
+
     private TypingRecord.LangType langType;
+    private RoomType roomType;
 }

@@ -68,7 +68,7 @@ public class AlgoRedisRepositoryCustom {
     public void enterRoom(AlgoSocketDto algoSocketDto){
         HashOperations<String,String ,String> hashOperations = stringRedisTemplate.opsForHash();
 
-        hashOperations.put(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId(),algoSocketDto.getUserId());
+        hashOperations.put(algoSocketDto.getRoomCode()+"-user",algoSocketDto.getSessionId(), String.valueOf(algoSocketDto.getUserId()));
         hashOperations.increment("algoRoom:"+algoSocketDto.getRoomCode(),"algoRoomDto.num",1);
 
         stringRedisTemplate.expire(algoSocketDto.getRoomCode()+"-user",1,TimeUnit.DAYS);

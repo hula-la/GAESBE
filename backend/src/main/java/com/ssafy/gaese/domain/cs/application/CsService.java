@@ -96,6 +96,9 @@ public class CsService {
         Long userId = csSubmitDto.getUserId();
         res.put("msg","submit");
 
+        // 개인에게 제출했다고 메시지 보냄
+        simpMessagingTemplate.convertAndSend("/cs/"+csSubmitDto.getUserId(),res);
+
         // 몇 번 선택했는지 기록
         HashMap<Integer, Integer> cntPerNum = roomDto.getCntPerNum();
         cntPerNum.put(csSubmitDto.getAnswer(),cntPerNum.get(csSubmitDto.getAnswer())+1);
@@ -125,18 +128,8 @@ public class CsService {
             roomDto.getIsSolvedByPlayer().put(csSubmitDto.getUserId(),0);
         }
 
-
-
-        // 개인에게 정답유무를 메시지로 보냄
-        simpMessagingTemplate.convertAndSend("/cs/"+csSubmitDto.getUserId(),res);
-
-        // 업데이트된 점수를 방 전원에게 전달
-//        res.clear();
-//        res.put("score",roomDto.getScore());
-//        System.out.println("score****"+roomDto.getScore().toString());
-//        simpMessagingTemplate.convertAndSend("/cs/room/"+roomDto.getCode(),res);
-
-        // 풀었다고 저장
+        System.out.println("문제 풀고 난 후 isSolved"+roomDto.getIsSolvedByPlayer().toString());
+        System.out.println("문제 풀고 난 후 roomDto"+roomDto.toString());
 
 
 
@@ -156,8 +149,9 @@ public class CsService {
     public CsRoomDto gameStart(CsRoomDto roomDto, List<CsProblem> randomProblem) throws InterruptedException {
         Map<String,Object> res = new HashMap<>();
 
-//        roomDto.setRoomStatus(CsRoomDto.RoomStatus.START);
-//        CsRoomDto saved = csRoomRedisRepository.save(roomDto);
+        // 시작됐다고 저장
+        roomDto.setRoomStatus(CsRoomDto.RoomStatus.START);
+        roomDto = csRoomRedisRepository.save(roomDto);
 
         // 게임 시작했다고 클라이언트에게 알리기
         res.put("msg", "start");
@@ -253,11 +247,8 @@ public class CsService {
 
 
             // 풀었는지 유무 초기화 하고 저장
-            int round = i;
             roomDto.getPlayers().values().forEach(v->{
                 // 사용자에게 풀었는지 유무와 정답 유무를 보냄
-                String recordFindKey = roomId+v;
-                CsRecordRedisDto csRecordRedisDto = csRecordRedisRepository.findById(recordFindKey).orElseThrow(() -> new RecordNotFoundException());
                 res.clear();
 
                 res.put("isSolved", isSolvedByPlayer1.get(v));

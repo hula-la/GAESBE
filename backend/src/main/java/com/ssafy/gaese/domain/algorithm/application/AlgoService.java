@@ -144,7 +144,7 @@ public class AlgoService {
 
     public boolean enterRoom(AlgoSocketDto algoSocketDto) {
 
-        String enterUser = algoSocketDto.getUserId();
+        String enterUser = String.valueOf(algoSocketDto.getUserId());
 
         userRepository.findById(Long.parseLong(enterUser)).orElseThrow(()->new UserNotFoundException());
 
@@ -156,12 +156,12 @@ public class AlgoService {
             algoRedisRepositoryCustom.enterRoom(algoSocketDto);
             //session 정보 저장
             socketInfo.setSocketInfo(algoSocketDto.getSessionId(),
-                    algoSocketDto.getUserId(),
+                    String.valueOf(algoSocketDto.getUserId()),
                     algoSocketDto.getRoomCode(),
                     "Algo",
                     algoSocketDto.getNickname());
             // 한개의 게임에만 접속할 수 있도록
-            socketInfo.setOnlinePlayer(Long.parseLong(algoSocketDto.getUserId()));
+            socketInfo.setOnlinePlayer(Long.parseLong(String.valueOf(algoSocketDto.getUserId())));
             return true;
         }
     }
@@ -190,7 +190,7 @@ public class AlgoService {
                     AlgoRecordDto algoRecordDto = AlgoRecordDto.builder()
                             .isSolve(true)
                             .roomCode(algoSocketDto.getRoomCode())
-                            .userId(Long.parseLong(algoSocketDto.getUserId()))
+                            .userId(algoSocketDto.getUserId())
                             .date(new Date())
                             .code(algoSocketDto.getRoomCode())
                             .isRetry(false)
@@ -200,7 +200,7 @@ public class AlgoService {
                             .build();
 
                     algoRepository.save(algoRecordDto.toEntity(user));
-                    Ability ability = abilityRepository.findByUser_Id(Long.parseLong(algoSocketDto.getUserId())).get();
+                    Ability ability = abilityRepository.findByUser_Id(algoSocketDto.getUserId()).get();
                     ability.addExp("algorithm", 1);
                     break;
                 }
