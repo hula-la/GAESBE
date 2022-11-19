@@ -10,7 +10,6 @@ const Test = styled.div`
   width: 100%;
   height: 100%;
   --duration: 5;
-
   .problemBox {
     width: 100%;
     height: 100%;
@@ -18,6 +17,14 @@ const Test = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    position: relative;
+  }
+  .problemCount {
+    color: #ffffff;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    font-size: 30px;
   }
   .progressContainer .progress {
     animation: roundtime calc(var(--duration) * 1s) linear forwards;
@@ -93,7 +100,8 @@ const Test = styled.div`
       font-size: larger;
       font-weight: bold;
     }
-    .problemNumber {}
+    .problemNumber {
+    }
     .example {
       margin: 0.5rem 0;
     }
@@ -196,13 +204,14 @@ const TestPage = () => {
   return (
     <Test>
       <div className="problemBox">
+        <div className="problemCount">1/10</div>
         <div className="problem">
           <div className="progressContainer">
             <div className="progress"> </div>
           </div>
           <div className="problemContent">
             <div className="question">
-              <span className='problemNumber'>1</span> {problem.question}
+              <span className="problemNumber">1</span> {problem.question}
             </div>
             <div>
               {problem.example.split('|').map((k: String, v: number) => (
@@ -266,7 +275,7 @@ const TestPage = () => {
           )}
         </div>
       </div>
-      {/* <div className="problemBox">
+      <div className="problemBox">
         <div className="problem">
           <div className="problemContent">
             <div className="question">{problem.question}</div>
@@ -297,7 +306,7 @@ const TestPage = () => {
             {solveOrder[5]}등으로 정답을 맞추셨습니다!
           </div>
         )}
-      </div> */}
+      </div>
     </Test>
   );
 };

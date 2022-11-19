@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import CSUser from '../components/CSUser';
 
@@ -68,15 +68,15 @@ const Container = styled.div`
         color: black;
       }
       div:nth-child(1) {
-        font-size: 1.5rem;
+        font-size: 2rem;
       }
 
       div:nth-child(2) {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
 
       div:nth-child(3) {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
     }
 
@@ -115,10 +115,27 @@ const Container = styled.div`
   }
 `;
 
+const ResultButton = styled.div`
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 10%;
+  left: 20%;
+`;
+
 const CSResultPage = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { ranking, rankByPlayer, myScore } = location.state;
   const { userInfo } = useSelector((state: any) => state.auth);
+
+  const handleHome = () => {
+    navigate('/game');
+  };
+  const handleTypingHome = () => {
+    navigate('/game/cs');
+  };
 
   return (
     <Container>
@@ -161,6 +178,18 @@ const CSResultPage = () => {
           <CSUser user={myScore}></CSUser>
         </div>
       </div>
+      <ResultButton>
+        <a href="#" className="eightbit-btn" onClick={handleHome}>
+          메인으로
+        </a>
+        <a
+          href="#"
+          className="eightbit-btn eightbit-btn--reset"
+          onClick={handleTypingHome}
+        >
+          다시하기
+        </a>
+      </ResultButton>
     </Container>
   );
 };

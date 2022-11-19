@@ -57,7 +57,7 @@ const FriendSide = styled.div`
     }
   }
   .sideMain {
-    height: 90%;
+    height: 80%;
     background-color: #6f43ff;
     box-sizing: border-box;
     border: 3px solid #000000;
@@ -70,9 +70,15 @@ const FriendSide = styled.div`
   .friendButtons {
     display: flex;
     justify-content: center;
+    align-items: center;
+    height: 10%;
+    background-color: #6f43ff;
+    box-sizing: border-box;
+    border: 3px solid #000000;
+    border-radius: 10px;
     margin-bottom: 1rem;
     .friendButton {
-      margin: 0 1rem;
+      color: #000000;
     }
   }
   .chatRoomWrapper {
@@ -308,26 +314,19 @@ function FriendMainPage() {
           <FriendSecondModal handleSecondModal={handleSecondModal} />
         )}
         {friends ? <FriendList /> : <div>친구창이 조용합니다...</div>}
-        <div className="friendButtons">
-          <div
-            className="friendButton eightbit-btn eightbit-btn--proceed"
-            onClick={handleModal}
-          >
-            친구신청
-          </div>
-          <div
-            className="friendButton eightbit-btn eightbit-btn--proceed"
-            onClick={handleSecondModal}
-          >
-            대기목록
-          </div>
-
-          {/* <button className="friendButton" onClick={handleModal}>
-            친구신청
-          </button>
-          <button className="friendButton" onClick={handleSecondModal}>
-            대기목록
-          </button> */}
+      </div>
+      <div className="friendButtons">
+        <div
+          className="friendButton eightbit-btn eightbit-btn--proceed"
+          onClick={handleModal}
+        >
+          친구신청
+        </div>
+        <div
+          className="friendButton eightbit-btn eightbit-btn--proceed"
+          onClick={handleSecondModal}
+        >
+          대기목록
         </div>
       </div>
       {isChatOpen && (

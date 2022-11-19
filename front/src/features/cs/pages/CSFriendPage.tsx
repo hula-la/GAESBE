@@ -125,11 +125,28 @@ const IngameBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
 
   --duration: 5;
 
+  .problemBox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    position: relative;
+  }
+  .problemCount {
+    color: #ffffff;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    font-size: 30px;
+  }
   .progressContainer .progress {
     animation: roundtime calc(var(--duration) * 1s) linear forwards;
     transform-origin: left center;
@@ -163,18 +180,10 @@ const IngameBlock = styled.div`
     border-radius: 4px;
     background: white;
   }
-
-  .problemBox {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 3rem;
-  }
   .problem {
     box-sizing: border-box;
     width: 60%;
+    max-height: 35%;
     background: #ffffff;
     border: 5px solid #000000;
     box-shadow: 5px 5px 0px 4px #000000, 4px 4px 0px 7px #ffffff;
@@ -190,6 +199,7 @@ const IngameBlock = styled.div`
     } */
     .problemContent {
       margin: 1rem;
+      position: relative;
       overflow-y: auto;
 
       &::-webkit-scrollbar {
@@ -207,15 +217,17 @@ const IngameBlock = styled.div`
         box-shadow: inset 0px 0px 5px white;
       }
     }
-    /* justify-content: space-between; */
     .question {
-      /* margin: 2rem 0; */
       font-size: larger;
       font-weight: bold;
-      /* margin-bottom: 2rem; */
+    }
+    .problemNumber {
     }
     .example {
       margin: 0.5rem 0;
+    }
+    .answer {
+      color: #0ac413;
     }
   }
   .selectbuttons {
@@ -246,10 +258,11 @@ const IngameBlock = styled.div`
     margin-right: 1rem;
     display: flex;
     width: 25%;
+    color: #ffffff;
 
     &.myRankWrapper {
       position: absolute;
-      right: 0;
+      right: -10%;
     }
     .medal {
       height: 70%;
@@ -280,33 +293,15 @@ const IngameBlock = styled.div`
     .playerNickName {
       display: flex;
       flex-direction: column;
-      /* margin-left: 1rem; */
     }
-  }
-  .middleWrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .problemBox2 {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 3rem;
-    }
-    .answer {
-      color: #0ac413;
-    }
-  }
-  .chart {
-    width: 50%;
-    margin-top: 5rem;
   }
   .middleText {
     color: #ffffff;
-    margin-top: 3rem;
+  }
+
+  .chart {
+    width: 60%;
+    border: 5px solid #000000;
   }
 `;
 
@@ -333,12 +328,14 @@ const CSFriendPage = () => {
   const [roomCode, setRoomCode] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
+  const [problemCnt, setProblemCnt] = useState<number>(0);
   const [isSolved, setIsSolved] = useState<Boolean | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
   const [myScore, setMyScore] = useState<any>(null);
   const [myRanking, setMyRanking] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
+  const [chartPerNum, setChartPerNum] = useState<any>(null);
   const [solveOrder, setSolveOrder] = useState<any>(null);
   const [answer, setAnswer] = useState<number | null>(null);
   const [isNext, setIsNext] = useState<Boolean>(false);
@@ -350,6 +347,7 @@ const CSFriendPage = () => {
   const { friendId } = useSelector((state: any) => state.friend);
 
   const answerButton = [1, 2, 3, 4];
+  const answerButtonOX = [1, 2];
 
   const { shareCode } = location.state;
 
@@ -498,6 +496,7 @@ const CSFriendPage = () => {
           } else if (data1.hasOwnProperty('currentProblem')) {
             setIsSolved(null);
             setProblem(data1.currentProblem);
+            setProblemCnt((prev) => prev + 1);
             setIsNext(false);
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
@@ -620,6 +619,13 @@ const CSFriendPage = () => {
     }
   }, [ranking]);
 
+  useEffect(() => {
+    if (cntPerNum) {
+      const tmp = Object.values(cntPerNum);
+      setChartPerNum(tmp);
+    }
+  }, [cntPerNum]);
+
   // useEffect(() => {
   //   const preventGoBack = () => {
   //     // change start
@@ -722,6 +728,9 @@ const CSFriendPage = () => {
           )}
           {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
+              {problemCnt && (
+                <div className="problemCount">{problemCnt}/10</div>
+              )}
               <div className="problem">
                 <div className="progressContainer">
                   <div className="progress"> </div>
@@ -738,16 +747,30 @@ const CSFriendPage = () => {
                 </div>
               </div>
               <div className="selectbuttons">
-                {answerButton.map((answer, idx) => {
-                  return (
-                    <img
-                      key={idx}
-                      className="selectbutton"
-                      onClick={(e) => handleAnswerSend(e, answer)}
-                      src={`/img/selectbutton/button${answer}.png`}
-                    />
-                  );
-                })}
+                {problem &&
+                  problem.type === 'MULTICHOICE' &&
+                  answerButton.map((answer, idx) => {
+                    return (
+                      <img
+                        key={idx}
+                        className="selectbutton"
+                        onClick={(e) => handleAnswerSend(e, answer)}
+                        src={`/img/selectbutton/button${answer}.png`}
+                      />
+                    );
+                  })}
+                {problem &&
+                  problem.type === 'OX' &&
+                  answerButtonOX.map((answer, idx) => {
+                    return (
+                      <img
+                        key={idx}
+                        className="selectbutton"
+                        onClick={(e) => handleAnswerSend(e, answer)}
+                        src={`/img/selectbutton/button${answer}.png`}
+                      />
+                    );
+                  })}
               </div>
               <div className="rankBlock">
                 {ranking &&
@@ -771,7 +794,7 @@ const CSFriendPage = () => {
                       </div>
                     );
                   })}
-                {myScore && (
+                {myScore && myRanking >= 4 && (
                   <div className="rankwrapper myRankWrapper">
                     <div className="myRank">
                       {myRanking + 1}
@@ -801,30 +824,29 @@ const CSFriendPage = () => {
             </div>
           )}
           {isSolved !== null && !isNext && (
-            <div className="middleWrapper">
-              <div className="problemBox2">
-                <div className="problem">
-                  <div className="problemContent">
-                    <div className="question">{problem.question}</div>
-                    <div>
-                      {problem.example
-                        .split('|')
-                        .map((k: String, v: number) => (
-                          <div
-                            className={
-                              'example' +
-                              (v + 1 === problem.answer ? ' answer' : '')
-                            }
-                          >
-                            {v + 1}. {k}
-                          </div>
-                        ))}
-                    </div>
+            <div className="problemBox">
+              {problemCnt && (
+                <div className="problemCount">{problemCnt}/10</div>
+              )}
+              <div className="problem">
+                <div className="problemContent">
+                  <div className="question">{problem.question}</div>
+                  <div>
+                    {problem.example.split('|').map((k: String, v: number) => (
+                      <div
+                        className={
+                          'example' +
+                          (v + 1 === problem.answer ? ' answer' : '')
+                        }
+                      >
+                        {v + 1}. {k}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
               <div className="chart">
-                <CSMiddleChart />
+                <CSMiddleChart chartPerNum={chartPerNum} />
               </div>
               {solveOrder && solveOrder[userInfo.id] === -1 && (
                 <div className="middleText">틀렸습니다ㅜ</div>
@@ -834,7 +856,7 @@ const CSFriendPage = () => {
               )}
               {solveOrder && solveOrder[userInfo.id] > 0 && (
                 <div className="middleText">
-                  {solveOrder[5]}등으로 정답을 맞추셨습니다!
+                  {solveOrder[userInfo.id]}등으로 정답을 맞추셨습니다!
                 </div>
               )}
             </div>
