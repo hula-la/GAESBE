@@ -42,7 +42,7 @@ public class CsRoomService {
 
     private final SocketInfo socketInfo;
 
-    private final int maxPlayer=6;
+    private final int maxPlayer=2;
     private final int numProblem=3;
 
     private final String waitRoomKey="WaitRoom";
