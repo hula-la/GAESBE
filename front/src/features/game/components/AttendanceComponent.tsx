@@ -32,6 +32,8 @@ const StyledModalDiv = styled.div`
 `;
 const AttendanceButton = styled.button`
   position: absolute;
+  left: 75%;
+  top: 5%;
 `;
 
 interface AttendanceInfoInterface {
