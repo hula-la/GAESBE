@@ -81,7 +81,18 @@ const FriendSide = styled.div`
     margin-bottom: 1rem;
     .friendButton {
       color: #000000;
+      position: relative;
     }
+  }
+  .isRequest {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #f70b0b;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    z-index: 10;
   }
   .chatRoomWrapper {
     position: absolute;
@@ -213,6 +224,7 @@ function FriendMainPage() {
   const { isChatOpen } = useSelector((state: any) => state.friend);
   const { chatFriend } = useSelector((state: any) => state.friend);
   const { chatList } = useSelector((state: any) => state.friend);
+  const { alarm } = useSelector((state: any) => state.friend);
 
   useEffect(() => {
     if (chatFriend && chatList.hasOwnProperty(chatFriend.id)) {
@@ -290,6 +302,44 @@ function FriendMainPage() {
     }
   };
 
+  useEffect(() => {
+    if (isInvite) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        text: '초대가 왔습니다',
+
+        showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+        confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+        cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+        confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+        cancelButtonText: '취소',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setIsInvite(false);
+          if (invitedGameInfo.inviteGameType === 'algo') {
+            if (!userInfo.bjId) {
+              Swal.fire({
+                icon: 'info',
+                text: '백준아이디를 연동해야지만 게임을 할 수 있습니다',
+              });
+              return;
+            }
+            const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode);
+            dispatch(algoActions.enterAlgoRoom(InGameInfo));
+            navigate('/game/algo/battle');
+            return;
+          }
+          navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
+            state: { shareCode: invitedGameInfo.inviteRoomCode },
+          });
+        } else {
+          setIsInvite(false);
+        }
+      });
+    }
+  }, [isInvite]);
+
   return (
     <FriendSide>
       {!isInvite && (
@@ -302,12 +352,12 @@ function FriendMainPage() {
           <div className="sideTitleContent">Friends</div>
         </div>
       )}
-      {isInvite && (
+      {/* {isInvite && (
         <div className="sideTitle">
           <div onClick={acceptInvite}>수락</div>
           <div onClick={rejectInvite}>거절</div>
         </div>
-      )}
+      )} */}
       <div className="sideMain">
         {modal === 'request' && (
           <FriendModal handleModal={closeModal} type="request" />
@@ -328,6 +378,7 @@ function FriendMainPage() {
           className="friendButton eightbit-btn eightbit-btn--proceed"
           onClick={handleSecondModal}
         >
+          {alarm && <div className="isRequest"></div>}
           대기목록
         </div>
       </div>

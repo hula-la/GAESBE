@@ -44,6 +44,8 @@ function FriendSocket() {
         var data = JSON.parse(res.body);
         if (data.hasOwnProperty('inviteGameType')) {
           dispatch(friendActions.invitedGame(data));
+        } else if (data.hasOwnProperty('errorMsg')) {
+          dispatch(friendActions.setErrorMsg(data.errorMsg));
         } else if (data.hasOwnProperty('msg')) {
           if (data.from === userInfo.id) {
             dispatch(
@@ -69,6 +71,8 @@ function FriendSocket() {
             text: `${data.need}의 조건을 가진 캐릭터를 획득했습니다.`,
           });
           dispatch(itemActions.fetchCharacterStart());
+        } else if (data.hasOwnProperty('alarm')) {
+          dispatch(friendActions.setAlarm(data.alarm));
         } else {
           dispatch(friendActions.setFriends(JSON.parse(res.body)));
         }

@@ -337,6 +337,7 @@ const CSFriendPage = () => {
   const [isMaster, setIsMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
+  const [enterMsg, setEnterMsg] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
   const [problemCnt, setProblemCnt] = useState<number>(0);
@@ -356,6 +357,7 @@ const CSFriendPage = () => {
   const { userInfo } = useSelector((state: any) => state.auth);
   const { modal } = useSelector((state: any) => state.friend);
   const { friendId } = useSelector((state: any) => state.friend);
+  const { errorMsg } = useSelector((state: any) => state.friend);
 
   const answerButton = [1, 2, 3, 4];
   const answerButtonOX = [1, 2];
@@ -504,9 +506,17 @@ const CSFriendPage = () => {
               setRankByPlayer(data1.rankByPlayer);
             } else if (data1.msg === 'ready') {
               setIsReady(true);
-            } else {
+            } else if (data1.msg === 'start') {
               setIsReady(false);
               setIsStart(true);
+            } else {
+              Swal.fire({
+                toast: true,
+                position: 'top',
+                timer: 1000,
+                showConfirmButton: false,
+                text: data1.msg,
+              });
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
             setIsSolved(null);
@@ -642,6 +652,22 @@ const CSFriendPage = () => {
       setChartPerNum(tmp);
     }
   }, [cntPerNum]);
+
+  useEffect(() => {
+    if (errorMsg) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        timer: 1000,
+        showConfirmButton: false,
+        text: errorMsg,
+      });
+      setTimeout(() => {
+        dispatch(friendActions.setErrorMsg(null));
+        navigate('/game');
+      }, 1000);
+    }
+  }, [errorMsg]);
 
   // useEffect(() => {
   //   const preventGoBack = () => {

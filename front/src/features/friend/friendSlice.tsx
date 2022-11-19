@@ -20,6 +20,8 @@ interface FriendStateInterface {
   checkedChatList: any;
   uncheckedChatList: any;
   sendContent: any;
+  errorMsg: string | null;
+  alarm: boolean;
 }
 
 const initialState: FriendStateInterface = {
@@ -40,6 +42,8 @@ const initialState: FriendStateInterface = {
   checkedChatList: null,
   uncheckedChatList: null,
   sendContent: null,
+  errorMsg: null,
+  alarm: false,
 };
 
 const friendSlice = createSlice({
@@ -157,6 +161,13 @@ const friendSlice = createSlice({
       state.uncheckedChatList[action.payload] = [];
     },
     postChatError(state, action) {},
+    // 에러메세지 저장
+    setErrorMsg(state, action) {
+      state.errorMsg = action.payload;
+    },
+    setAlarm(state, action) {
+      state.alarm = action.payload;
+    },
   },
 });
 
