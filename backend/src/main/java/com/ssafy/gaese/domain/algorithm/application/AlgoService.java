@@ -62,12 +62,6 @@ public class AlgoService {
 
     private final CharacterRepository characterRepository;
 
-    public void saveAlgoRecord(String roomCode){
-
-        System.out.println("user");
-        List<String> users = getUserIds(roomCode);
-
-    }
 
     public AlgoRecordDto createAlgoRecord(AlgoRecordReq algoRecordReq, Long userId){
         User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
@@ -84,7 +78,7 @@ public class AlgoService {
                     .date(date)
                     .code(algoRecordReq.getCode())
                     .isRetry(false)
-                    .problemId(Long.parseLong(algoRankDto.getProblemId()))
+                    .problemId(algoRankDto.getProblemId())
                     .ranking(algoRecordReq.getRanking())
                     .solveTime(algoRankDto.getMin()+"")
                     .lan(algoRecordReq.getLanId())
@@ -104,9 +98,10 @@ public class AlgoService {
                     .solveTime("-")
                     .build();
         }
+        algoRepository.save(algoRecordDto.toEntity(user));
         Ability ability = abilityRepository.findByUser_Id(userId).get();
         ability.addExp("algorithm", 1);
-        algoRepository.save(algoRecordDto.toEntity(user));
+
 
         charChecker(user.getId());
 
@@ -175,38 +170,41 @@ public class AlgoService {
     public void leaveRoom(AlgoSocketDto algoSocketDto,String userId){
         System.out.println(algoSocketDto.getSessionId() + "나간다");
         HashOperations<String ,String, String > hashOperations = redisTemplate.opsForHash();
-        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
+//        ZSetOperations<String, String> zSetOperations = redisTemplate.opsForZSet();
         User user = userRepository.findById(Long.parseLong(userId)).orElseThrow(()->new UserNotFoundException());
         // 시작했는지 (startTime 있는지) 확인
-        String startTime = hashOperations.get(algoSocketDto.getRoomCode(), "startTime");
-        if(startTime != null ){
-            System.out.println("시작함");
-            // redisdp 랭킹 있는지 확인 후
-//            AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
-            List<AlgoRankDto> ranks = algoSocketService.getCurrentRank(algoSocketDto.getRoomCode());
-            for(int i =0; i<ranks.size() ; i++){
-                AlgoRankDto rank = ranks.get(i);
-                if(rank.getUserId().equals(algoSocketDto.getUserId())){ // 저장되어있음
-                    AlgoRecordDto algoRecordDto = AlgoRecordDto.builder()
-                            .isSolve(true)
-                            .roomCode(algoSocketDto.getRoomCode())
-                            .userId(algoSocketDto.getUserId())
-                            .date(new Date())
-                            .code(algoSocketDto.getRoomCode())
-                            .isRetry(false)
-                            .problemId(Long.parseLong(rank.getProblemId()))
-                            .ranking(i+1)
-                            .solveTime(rank.getMin()+"")
-                            .build();
+//        String startTime = hashOperations.get(algoSocketDto.getRoomCode(), "startTime");
+//        if(startTime != null ){
+//            System.out.println("시작함");
+//            // redisdp 랭킹 있는지 확인 후
+////            AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());
+//            List<AlgoRankDto> ranks = algoSocketService.getCurrentRank(algoSocketDto.getRoomCode());
+//            for(int i =0; i<ranks.size() ; i++){
+//                AlgoRankDto rank = ranks.get(i);
+//                if(rank.getUserId().equals(algoSocketDto.getUserId())){ // 저장되어있음
+//                    AlgoRecordDto algoRecordDto = AlgoRecordDto.builder()
+//                            .isSolve(true)
+//                            .roomCode(algoSocketDto.getRoomCode())
+//                            .userId(algoSocketDto.getUserId())
+//                            .date(new Date())
+//                            .code(algoSocketDto.getRoomCode())
+//                            .isRetry(false)
+//                            .problemId(rank.getProblemId())
+//                            .ranking(i+1)
+//                            .solveTime(rank.getMin()+"")
+//                            .build();
+//
+//                    algoRepository.save(algoRecordDto.toEntity(user));
+//                    Ability ability = abilityRepository.findByUser_Id(algoSocketDto.getUserId()).get();
+//                    ability.addExp("algorithm", 1);
+//                    break;
+//                }
+//            }
+//
+//        }
+//
+//
 
-                    algoRepository.save(algoRecordDto.toEntity(user));
-                    Ability ability = abilityRepository.findByUser_Id(algoSocketDto.getUserId()).get();
-                    ability.addExp("algorithm", 1);
-                    break;
-                }
-            }
-
-        }
         System.out.println("떠날꺼임 > "+algoSocketDto.getUserId());
 
         AlgoRoomRedisDto algoRoomRedisDto = algoRedisRepository.findById(algoSocketDto.getRoomCode()).orElseThrow(()->new NoSuchElementException());

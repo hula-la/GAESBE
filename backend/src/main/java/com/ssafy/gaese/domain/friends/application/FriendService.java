@@ -70,9 +70,10 @@ public class FriendService {
                     .createdDate(new Date())
                     .build();
             friendRequestRepository.save(friendRequest);
+            //친구 신청이 왔다고  알람 보내는 부분
+            friendAlarm(targetUser.getId(),true);
         }
 
-        friendAlarm(targetUser.getId());
         return true;
     }
 
@@ -83,6 +84,14 @@ public class FriendService {
                 .findByTargetUser(user).stream()
                 .map(FriendRequest::toDto)
                 .collect(Collectors.toList());
+
+        if(friendRequestList.size()>0)
+        {
+            System.out.println("친구 신청 알람 보내기 전 리스트 사이즈 체크");
+            System.out.println(friendRequestList.size());
+            friendAlarm(userId, true);
+            
+        }
 
         return friendRequestList;
     }
@@ -114,17 +123,34 @@ public class FriendService {
     }
 
     public List<FriendRequestDto> delRequest(Long userId, Long reqId){
+
+
+
         friendRequestRepository.deleteById(reqId);
 
         return getRequestFriend(userId);
 
     }
 
-    public void friendAlarm(Long userId)
+
+    //해당 유저가 친구 신청이 남아 있으면 알람을 보냄
+//    public void friendRequestChecker(Long userId)
+//    {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(()->new UserNotFoundException());
+//
+//        if(friendRequestRepository.findByTargetUser(user)!=null)
+//        {
+//            friendAlarm(user.getId(), true);
+//        }
+//
+//    }
+//
+
+    //친구 신청시 친구에게 알람 보냄
+    public void friendAlarm(Long userId, boolean alarm)
     {
         HashMap<String, Object> res = new HashMap<>();
-
-        boolean alarm = true;
 
         res.put("alarm",alarm);
 

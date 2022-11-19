@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AlgoSolveReq {
-    int problemId;
+    Long problemId;
     String userBjId;
     int lanId;
 }
