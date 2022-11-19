@@ -82,6 +82,9 @@ const friendSlice = createSlice({
     inviteFriend(state, action) {
       state.friendId = action.payload;
     },
+    resetFriend(state) {
+      state.friendId = null;
+    },
     invitedGame(state, action) {
       state.invitedGameInfo = action.payload;
     },
