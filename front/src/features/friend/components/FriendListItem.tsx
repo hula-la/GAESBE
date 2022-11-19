@@ -157,6 +157,7 @@ const FriendListItemBlock = styled.div`
 function FriendListItem({ friend, type, category, chatCnt }: any) {
   const dispatch = useDispatch();
   const { uncheckedChatList } = useSelector((state: any) => state.friend);
+  const { userInfo } = useSelector((state: any) => state.auth);
   const [uncheckedMsgIds, setUncheckedMsgIds] = useState<any>(null);
 
   useEffect(() => {
@@ -185,6 +186,12 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
           const res = await deleteFriend(friend.id);
           if (res.status === 200) {
             dispatch(friendActions.setNeedReload(true));
+            dispatch(
+              friendActions.resetChatList({
+                friendId: friend.id,
+                myId: userInfo.id,
+              }),
+            );
           }
         } catch (error) {
           console.log(error);
@@ -195,6 +202,10 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
 
   const invite = () => {
     dispatch(friendActions.inviteFriend(friend.id));
+    Swal.fire({
+      icon: 'success',
+      text: '초대하였습니다!',
+    });
   };
 
   const openChat = () => {

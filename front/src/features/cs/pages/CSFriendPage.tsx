@@ -337,7 +337,6 @@ const CSFriendPage = () => {
   const [isMaster, setIsMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<Boolean>(false);
   const [roomCode, setRoomCode] = useState<string>('');
-  const [enterMsg, setEnterMsg] = useState<string>('');
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
   const [problemCnt, setProblemCnt] = useState<number>(0);
@@ -348,8 +347,6 @@ const CSFriendPage = () => {
   const [myRanking, setMyRanking] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [chartPerNum, setChartPerNum] = useState<any>(null);
-  const [solveOrder, setSolveOrder] = useState<any>(null);
-  const [answer, setAnswer] = useState<number | null>(null);
   const [isNext, setIsNext] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<any>(null);
   const [rankByPlayer, setRankByPlayer] = useState<any>(null);
@@ -490,15 +487,17 @@ const CSFriendPage = () => {
     }
   }, [userInfo]);
 
+  let client2: any;
+
   useEffect(() => {
     if (roomCode) {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
+      client2 = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
-      client2.connect({}, (frame) => {
-        client2.subscribe('/cs/room/' + roomCode, (res) => {
+      client2.connect({}, (frame: any) => {
+        client2.subscribe('/cs/room/' + roomCode, (res: any) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
@@ -526,8 +525,6 @@ const CSFriendPage = () => {
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
             setCntPerNum(data1.cntPerNum);
-            setSolveOrder(data1.solveOrder);
-            setAnswer(data1.answer);
           } else {
             if (!playerList) {
               for (let i = 0; i < data1.length; i++) {
@@ -563,12 +560,14 @@ const CSFriendPage = () => {
           }),
         );
       });
+      // return client2.disconnect(() => {});
     }
   }, [roomCode]);
 
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
+      // client2.disconnect(() => {});
     };
   }, []);
   // 로딩 & 끝 제어
@@ -729,12 +728,6 @@ const CSFriendPage = () => {
                   );
                 })}
             </div>
-
-            {/* <button className='inviteBtn' onClick={handleModal}>친구 초대</button> */}
-            {/* {players &&
-              players.map((player: any, idx: number) => {
-                return <li key={idx}>{player.nickname}</li>;
-              })} */}
           </div>
           <div className="startBtnContainer">
             <div className="friendNum">

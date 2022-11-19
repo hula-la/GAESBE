@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import Swal from 'sweetalert2';
+
 import styled from 'styled-components';
 import FriendModal from '../../friend/components/FriendModal';
 import { friendActions } from '../../friend/friendSlice';
@@ -176,22 +177,20 @@ const CSIngamePage = () => {
   const [players, setPlayers] = useState<any>(null);
   const [problem, setProblem] = useState<any>(null);
   const [problemCnt, setProblemCnt] = useState<number>(0);
-  const [isSolved, setIsSolved] = useState<Boolean | null>(null);
+  const [isSolved, setIsSolved] = useState<number | null>(null);
   const [isSubmit, setIsSubmit] = useState<Boolean>(false);
   const [ranking, setRanking] = useState<any>(null);
   const [myScore, setMyScore] = useState<any>(null);
   const [myRanking, setMyRanking] = useState<any>(null);
   const [cntPerNum, setCntPerNum] = useState<any>(null);
   const [chartPerNum, setChartPerNum] = useState<any>(null);
-  const [solveOrder, setSolveOrder] = useState<any>(null);
-  const [answer, setAnswer] = useState<number | null>(null);
   const [isNext, setIsNext] = useState<Boolean>(false);
   const [isEnd, setIsEnd] = useState<any>(null);
   const [rankByPlayer, setRankByPlayer] = useState<any>(null);
   const [countArr, setCountArr] = useState<any>(null);
   const { userInfo } = useSelector((state: any) => state.auth);
   const { modal } = useSelector((state: any) => state.friend);
-  const { friendId } = useSelector((state: any) => state.friend);
+  const { errorMsg } = useSelector((state: any) => state.friend);
 
   const answerButton = [1, 2, 3, 4];
   const answerButtonOX = [1, 2];
@@ -336,9 +335,17 @@ const CSIngamePage = () => {
               setRankByPlayer(data1.rankByPlayer);
             } else if (data1.msg === 'ready') {
               setIsReady(true);
-            } else {
+            } else if (data1.msg === 'start') {
               setIsReady(false);
               setIsStart(true);
+            } else {
+              Swal.fire({
+                toast: true,
+                position: 'top',
+                timer: 1000,
+                showConfirmButton: false,
+                text: data1.msg,
+              });
             }
           } else if (data1.hasOwnProperty('currentProblem')) {
             setIsSolved(null);
@@ -348,8 +355,6 @@ const CSIngamePage = () => {
           } else if (data1.hasOwnProperty('ranking')) {
             setRanking(data1.ranking);
             setCntPerNum(data1.cntPerNum);
-            setSolveOrder(data1.solveOrder);
-            setAnswer(data1.answer);
           } else {
             if (!playerList) {
               for (let i = 0; i < data1.length; i++) {
@@ -438,27 +443,6 @@ const CSIngamePage = () => {
     );
   };
 
-  const handleModal = () => {
-    dispatch(friendActions.handleModal('invite'));
-  };
-  const closeModal = () => {
-    dispatch(friendActions.handleModal(null));
-  };
-
-  useEffect(() => {
-    if (friendId) {
-      client.current.send(
-        '/api/friend/invite',
-        {},
-        JSON.stringify({
-          userId: friendId,
-          gameType: 'cs',
-          roomCode: roomCode,
-        }),
-      );
-    }
-  }, [friendId]);
-
   useEffect(() => {
     if (ranking) {
       const tmp = ranking.filter((rank: any) => {
@@ -477,15 +461,27 @@ const CSIngamePage = () => {
     }
   }, [cntPerNum]);
 
+  useEffect(() => {
+    if (errorMsg) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        timer: 1000,
+        showConfirmButton: false,
+        text: errorMsg,
+      });
+      setTimeout(() => {
+        dispatch(friendActions.setErrorMsg(null));
+        navigate('/game');
+      }, 1000);
+    }
+  }, [errorMsg]);
+
   return (
     <Container>
       {isLoading && <CSIsLoadingPage />}
       {!isLoading && !isStart && (
         <WaitingBlock>
-          {modal === 'invite' && (
-            <FriendModal handleModal={closeModal} type="invite" />
-          )}
-
           <img
             src="/img/gametitle/GameTitle6.png"
             className="gameTitle"
@@ -515,26 +511,7 @@ const CSIngamePage = () => {
                   );
                 })}
             </div>
-
-            {/* <button className='inviteBtn' onClick={handleModal}>친구 초대</button> */}
-            {/* {players &&
-              players.map((player: any, idx: number) => {
-                return <li key={idx}>{player.nickname}</li>;
-              })} */}
           </div>
-          {/* <div className="startBtnContainer">
-            <div className="friendNum">
-              {players.length}/10
-              <div className="inviteBtnBox">
-                <div className="inviteBtnToolTip">친구 초대</div>
-                <img
-                  src="/img/cs/inviteBtn2.png"
-                  className="inviteBtn"
-                  onClick={handleModal}
-                />
-              </div>
-            </div>
-          </div> */}
 
           {isReady && <p className="timeOut">{sec}초 후 게임이 시작됩니다!</p>}
         </WaitingBlock>
@@ -557,7 +534,13 @@ const CSIngamePage = () => {
                   <div className="progress"> </div>
                 </div>
                 <div className="problemContent">
-                  <div className="question">{problem.question}</div>
+                  <div className="question">
+                    {problem.question
+                      .split('```')
+                      .map((k: String, v: number) => (
+                        <div>{k}</div>
+                      ))}
+                  </div>
                   <div>
                     {problem.example.split('|').map((k: String, v: number) => (
                       <div className="example">
@@ -651,7 +634,13 @@ const CSIngamePage = () => {
               )}
               <div className="problem">
                 <div className="problemContent">
-                  <div className="question">{problem.question}</div>
+                  <div className="question">
+                    {problem.question
+                      .split('```')
+                      .map((k: String, v: number) => (
+                        <div>{k}</div>
+                      ))}
+                  </div>
                   <div>
                     {problem.example.split('|').map((k: String, v: number) => (
                       <div
@@ -669,15 +658,15 @@ const CSIngamePage = () => {
               <div className="chart">
                 <CSMiddleChart chartPerNum={chartPerNum} />
               </div>
-              {solveOrder && solveOrder[userInfo.id] === -1 && (
+              {isSolved && isSolved === 0 && (
                 <div className="middleText">틀렸습니다ㅜ</div>
               )}
-              {solveOrder && solveOrder[userInfo.id] === 0 && (
+              {isSolved && isSolved === -1 && (
                 <div className="middleText">시간초과입니다ㅜ</div>
               )}
-              {solveOrder && solveOrder[userInfo.id] > 0 && (
+              {isSolved && isSolved > 0 && (
                 <div className="middleText">
-                  {solveOrder[userInfo.id]}등으로 정답을 맞추셨습니다!
+                  {isSolved}등으로 정답을 맞추셨습니다!
                 </div>
               )}
             </div>
