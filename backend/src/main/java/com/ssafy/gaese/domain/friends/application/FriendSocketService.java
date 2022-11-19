@@ -134,6 +134,10 @@ public class FriendSocketService {
         // 친구 신청 목록에서 삭제
         friendRequestRepository.deleteByRequestUserAndTargetUser(friend,user);
 
+        if(friendRequestRepository.findByRequestUser(user).size()==0)
+            friendAlarm(userId,false);
+
+
 
         // 친구 추가 한 후에 온라인/오프라인 리스트 리프레쉬
         findFriendList(userId);
@@ -202,18 +206,17 @@ public class FriendSocketService {
 
         if(friendRequestRepository.findByTargetUser(user)!=null)
         {
-            friendAlarm(user.getId());
+            friendAlarm(user.getId(),true);
         }
 
     }
 
 
     //친구 신청시 친구에게 알람 보냄
-    public void friendAlarm(Long userId)
+    public void friendAlarm(Long userId,  boolean alarm)
     {
         HashMap<String, Object> res = new HashMap<>();
 
-        boolean alarm = true;
 
         res.put("alarm",alarm);
 
