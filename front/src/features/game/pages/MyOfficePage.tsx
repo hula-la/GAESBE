@@ -23,8 +23,8 @@ const Wrapper = styled.div`
 
   overflow: hidden;
 
-  .lockImg{
-    margin-top:20%;
+  .lockImg {
+    margin-top: 20%;
     height: 40%;
   }
 
@@ -36,7 +36,7 @@ const Wrapper = styled.div`
     flex-direction: row;
     color: #ffffff;
     width: 100%;
-    z-index:0;
+    z-index: 0;
     .ability {
       /* margin-right: 5rem; */
       width: 25%;
@@ -48,7 +48,6 @@ const Wrapper = styled.div`
       align-items: center;
       justify-content: space-between;
       padding: 0px 4%;
-
     }
     .gaze {
       width: 80%;
@@ -59,21 +58,20 @@ const Wrapper = styled.div`
 `;
 
 const LevelUpBtn = styled.button`
-      position: absolute;
-    right: 1rem;
-    top: 1rem;
-    padding: 0.6rem;
-    border-radius: 0.8rem;
-    font-size: 1.2rem;
-    background: #f27474;
-    z-index: 1000;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0.6rem;
+  border-radius: 0.8rem;
+  font-size: 1.2rem;
+  background: #f27474;
+  z-index: 1000;
 
-    :hover{
-      background: #e86464;
-      cursor: url('/img/cursor/hover_cursor.png'), auto;
-    }
-
-`
+  :hover {
+    background: #e86464;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
+  }
+`;
 
 const Office = styled.div`
   width: 100%;
@@ -138,7 +136,6 @@ const MyOfficePage = () => {
   const idxRef = useRef(0);
   const { userAbility } = useSelector((state: any) => state.auth);
   const { offices } = useSelector((state: any) => state.item);
-
   const officeComponents = [
     Level0,
     Level1,
@@ -169,9 +166,9 @@ const MyOfficePage = () => {
   useEffect(() => {
     if (offices && userAbility) {
       const nextoffice = offices.filter((office: any) => !office.own);
-      idxRef.current = offices.length - nextoffice.length-1;
+      idxRef.current = offices.length - nextoffice.length - 1;
       setOfficeIdx(idxRef.current);
-      console.log("idxRef.current" + idxRef.current);
+      console.log('idxRef.current' + idxRef.current);
 
       if (
         nextoffice.length >= 1 &&
@@ -218,16 +215,22 @@ const MyOfficePage = () => {
 
   const handleLevelUp = () => {
     dispatch(itemActions.requestBuyOfficeStart(nextLevel));
-    setIsLevelup(true)
+    setIsLevelup(true);
     setTimeout(() => {
-      setIsLevelup(false)
+      setIsLevelup(false);
     }, 2000);
   };
 
   return (
     <Wrapper>
-      {levelupable && <LevelUpBtn onClick={handleLevelUp}>{nextLevelName} 지원하기</LevelUpBtn>}
-      {isLevelup && <LevelupModal handleModal={handleModal} nextLevel={ officeIdx } /> }
+      {levelupable && (
+        <LevelUpBtn onClick={handleLevelUp}>
+          {nextLevelName} 지원하기
+        </LevelUpBtn>
+      )}
+      {isLevelup && (
+        <LevelupModal handleModal={handleModal} nextLevel={officeIdx} />
+      )}
       {offices && officeIdx > 0 && (
         <OfficeBtn
           className="prevBtn"
@@ -255,13 +258,16 @@ const MyOfficePage = () => {
                 {/* <div className="officeName">{v.name}</div> */}
 
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}
-                {!v.own && <img className='lockImg' src="/img/Intro/padlock.png" />}
+                {!v.own && (
+                  <img className="lockImg" src="/img/Intro/padlock.png" />
+                )}
               </Office>
             );
           })}
 
           {modalOpen && (
             <AttendanceComponent
+              officeIdx={officeIdx}
               needReload={needReload}
               handleReload={handleReload}
               attendance={attendance}

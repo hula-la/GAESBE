@@ -5,7 +5,7 @@ import AttendanceCalendar from './AttendanceCalendar';
 
 import styled from 'styled-components';
 
-const StyledModal = styled.div`
+const StyledModal = styled('div')<{ officeIdx: number }>`
   padding: 3vmin;
   width: 40vw;
   height: 70vh;
@@ -19,6 +19,7 @@ const StyledModal = styled.div`
   background-color: white;
   z-index: 1000;
   color: black;
+  margin-left: ${(props) => 100 * props.officeIdx}%;
 `;
 const StyledModalDiv = styled.div`
   top: 0%;
@@ -42,6 +43,7 @@ function AttendanceComponent({
   attendance,
   handleReload,
   needReload,
+  officeIdx,
 }: any) {
   const [attendanceInfo, setAttendanceInfo] = useState<
     AttendanceInfoInterface[]
@@ -83,9 +85,13 @@ function AttendanceComponent({
 
   return (
     <StyledModalDiv onClick={handleModal}>
-      <StyledModal onClick={(e) => e.stopPropagation()}>
+      <StyledModal onClick={(e) => e.stopPropagation()} officeIdx={officeIdx}>
         <h1>출석체크 페이지</h1>
-        <AttendanceButton onClick={attendance}>출석체크하기</AttendanceButton>
+        <AttendanceButton onClick={attendance}>
+          <a href="javascript:void(0)" className="eightbit-btn">
+            출석체크하기
+          </a>
+        </AttendanceButton>
         <AttendanceCalendar attendanceInfo={attendanceInfo} />
       </StyledModal>
     </StyledModalDiv>
