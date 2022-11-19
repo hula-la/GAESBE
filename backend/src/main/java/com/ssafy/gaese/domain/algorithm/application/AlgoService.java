@@ -84,7 +84,7 @@ public class AlgoService {
                     .date(date)
                     .code(algoRecordReq.getCode())
                     .isRetry(false)
-                    .problemId(Long.parseLong(algoRankDto.getProblemId()))
+                    .problemId(algoRankDto.getProblemId())
                     .ranking(algoRecordReq.getRanking())
                     .solveTime(algoRankDto.getMin()+"")
                     .lan(algoRecordReq.getLanId())
@@ -194,7 +194,7 @@ public class AlgoService {
                             .date(new Date())
                             .code(algoSocketDto.getRoomCode())
                             .isRetry(false)
-                            .problemId(Long.parseLong(rank.getProblemId()))
+                            .problemId(rank.getProblemId())
                             .ranking(i+1)
                             .solveTime(rank.getMin()+"")
                             .build();
