@@ -309,21 +309,19 @@ const PlayerCharacter = styled.div`
   position: absolute;
   height: 20%;
   display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   .playerNickName {
     text-align: center;
     height: 20%;
 
     border-radius: 0.8rem;
-      background: #00000070;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.3rem;
-
-
+    background: #00000070;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
   }
   img {
     height: 80%;
@@ -605,9 +603,11 @@ const CSFriendPage = () => {
   };
 
   const handleModal = () => {
+    dispatch(friendActions.openInvite());
     dispatch(friendActions.handleModal('invite'));
   };
   const closeModal = () => {
+    dispatch(friendActions.closeInvite());
     dispatch(friendActions.handleModal(null));
   };
 
