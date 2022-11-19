@@ -29,7 +29,9 @@ public class AbilityService {
 
         if (!abilityOpt.isPresent()){
             User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException());
-            ability=abilityRepository.save(new Ability(user));
+            ability=abilityRepository.save(Ability.builder()
+                    .user(user)
+                    .build());
         } else ability=abilityOpt.get();
 
         return ability.toDto();
