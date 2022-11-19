@@ -97,7 +97,7 @@ const GameTable = styled.div`
   }
 `;
 function RankingInfo({ type, rankersInfo }: any) {
-  console.log(type, 'aaaaaaaaaaaaaaaaaaaaaaaddddddd');
+  // console.log(type, 'aaaaaaaaaaaaaaaaaaaaaaaddddddd');
   let background = '';
   return (
     <GameType>
