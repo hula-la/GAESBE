@@ -31,5 +31,10 @@ public class FriendSocketController {
         System.out.println("/friend/invite 들어옴");
         friendGameService.inviteFriend(friendSocketDto);
     }
+    @MessageMapping("/friend/refresh")
+    public void refreshFriend(FriendInviteGameDto friendSocketDto) throws Exception{
+        System.out.println("/friend/refresh 들어옴");
+        friendSocketService.findFriendList(friendSocketDto.getUserId());
+    }
 
 }
