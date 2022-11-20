@@ -1,10 +1,14 @@
 import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
+import Swal from 'sweetalert2';
+
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import { friendActions } from '../../friend/friendSlice';
+
 interface CustomWebSocket extends WebSocket {
   _transport?: any;
 }
@@ -18,6 +22,7 @@ const Wrapper = styled.div`
   height: 100%;
   width: 100%;
 `;
+
 const TypingBg = styled.img`
   height: 100%;
   width: 100%;
@@ -28,8 +33,10 @@ const TrackLine = styled.div`
   height: 25%;
 `;
 const Track = styled.div`
-  height: 20vh;
-  margin-top: 23.5vh;
+  /* height: 20vh;
+  margin-top: 23.5vh; */
+  height: calc(20vh - 1rem);
+  margin-top: 21.5vh;
 `;
 const LoadingBlock = styled.div`
   display: flex;
@@ -59,7 +66,7 @@ const PersonalId = styled.div`
 `;
 const CharacterSet = styled('div')<{ progress: string }>`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   padding-left: ${(props) => props.progress};
   // 부드럽게 움직이도록
   transition: all 0.4s;
@@ -128,6 +135,17 @@ const Typing = styled.div`
   align-items: center;
 `;
 const TypingResult = styled.div`
+  /* width: 100%;
+  color: white;
+  margin-bottom: 3rem;
+  box-sizing: border-box;
+  min-height: 50vh;
+  max-height: 50vh;
+  position: relative;
+  display: inline-block;
+  *display: inline;
+  zoom: 1; */
+
   width: 100%;
   color: white;
   margin-bottom: 3rem;
@@ -138,6 +156,10 @@ const TypingResult = styled.div`
   display: inline-block;
   *display: inline;
   zoom: 1;
+  border: 1rem solid #232323;
+  box-sizing: border-box;
+  border-radius: 2rem;
+  overflow: hidden;
 `;
 const WaitingTypingGameBox = styled.div`
   width: 90%;
@@ -149,6 +171,7 @@ const WaitingTypingGameBox = styled.div`
   background-color: white;
   border-radius: 20px;
   font-family: 'Hack';
+  font-weight: bold;
 `;
 const TypingGameBox = styled.div`
   width: 90%;
@@ -159,6 +182,7 @@ const TypingGameBox = styled.div`
   border-radius: 20px;
   overflow: hidden;
   font-family: 'Hack';
+  font-weight: bold;
 `;
 const Wow = styled.div`
   display: inline;
@@ -179,6 +203,7 @@ const TypingGame = () => {
   let testtest: number;
   let testprogress: any;
   const location = useLocation();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { lang } = location.state;
   const [players, setPlayers] = useState<any>(null);
@@ -195,7 +220,7 @@ const TypingGame = () => {
   const initialTime = useRef<number>(3);
   const interval = useRef<any>(null);
   const [sec, setSec] = useState(3);
-
+  const { errorMsg } = useSelector((state: any) => state.friend);
   // const socket: CustomWebSocket = new SockJS(
   //   'https://k7e104.p.ssafy.io:8081/api/ws',
   // );
@@ -311,6 +336,14 @@ const TypingGame = () => {
               setResultNickName(testdata.winUserNickName);
               setResultProfile(testdata.winUserProfile);
               setIsEnd(true);
+            } else {
+              Swal.fire({
+                toast: true,
+                position: 'top',
+                timer: 1000,
+                showConfirmButton: false,
+                text: testdata.msg,
+              });
             }
           } else if (testdata.hasOwnProperty('paragraph')) {
             setPargraph(testdata.paragraph);
@@ -458,6 +491,22 @@ const TypingGame = () => {
     } else {
     }
   };
+  useEffect(() => {
+    if (errorMsg) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        timer: 1000,
+        showConfirmButton: false,
+        text: errorMsg,
+      });
+      setTimeout(() => {
+        dispatch(friendActions.setErrorMsg(null));
+        navigate('/game');
+      }, 1000);
+    }
+  }, [errorMsg]);
+
   return (
     <Wrapper>
       {isLoading && !players && (
