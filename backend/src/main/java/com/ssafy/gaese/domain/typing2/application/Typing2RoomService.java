@@ -11,6 +11,7 @@ import com.ssafy.gaese.domain.typing2.entity.TypingRecord;
 import com.ssafy.gaese.domain.typing2.repository.TypingParagraphRepository;
 import com.ssafy.gaese.domain.typing2.repository.TypingRoomRedisRepository;
 import com.ssafy.gaese.domain.user.dto.UserDto;
+import com.ssafy.gaese.domain.user.entity.User;
 import com.ssafy.gaese.domain.user.exception.UserNotFoundException;
 import com.ssafy.gaese.domain.user.repository.UserRepository;
 import com.ssafy.gaese.global.redis.SocketInfo;
@@ -50,6 +51,11 @@ public class Typing2RoomService {
         Map<String,Object> roomResByUser = new HashMap<>();
 
         // 방 입장
+        Long userId = typingSocketDto.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+
+
+        // 방 입장
         if(typingSocketDto.getType() == TypingSocketDto.Type.ENTER){
 
             //이미 방에 참여중인지 체크
@@ -82,6 +88,9 @@ public class Typing2RoomService {
             System.out.println(typingSocketDto.getSessionId());
             System.out.println(typingSocketDto.getUserId());
 
+            res.put("msg", user.getNickname() + " 님이 접속하셨습니다.");
+
+
 
             socketInfo.setSocketInfo(typingSocketDto.getSessionId(),
                     typingSocketDto.getUserId().toString(),
@@ -97,6 +106,8 @@ public class Typing2RoomService {
         else if(typingSocketDto.getType() == TypingSocketDto.Type.LEAVE){
             //서순 조심
             leaveRoom(typingSocketDto);
+            res.put("msg",user.getNickname()+" 님이 나가셨습니다.");
+
             return;
 
         }
@@ -134,9 +145,9 @@ public class Typing2RoomService {
 
         Map<String,Object> res = new HashMap<>();
         // 방에 사람이 꽉차서 시작한다고 함
-        res.clear();
-        res.put("msg", "ready");
-        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
+//        res.clear();
+//        res.put("msg", "게임이 시작되었습니다.");
+//        simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
 //        Thread.sleep(6*1000);
 
@@ -273,6 +284,8 @@ public class Typing2RoomService {
         TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(typingSocketDto));
 
         HashMap<String, Long> players = typingRoomDto.getPlayers();
+        //방 내부 유저 정보 삭제
+        players.remove(typingSocketDto.getSessionId());
 
         String waitRoomKey=null;
         if (typingSocketDto.getLangType()== TypingRecord.LangType.JAVA){
@@ -281,47 +294,56 @@ public class Typing2RoomService {
             waitRoomKey=PythonWaitRoomKey;
 
         }
-        //레디스에서 유저 정보 삭제
-        redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
-        typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
+//        typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
 
         //인원수 카운트
         typingRoomDto.setRealPlayerCount(typingRoomDto.getRealPlayerCount()-1);
 
+        System.out.println("방 나간 후 인원: "+typingRoomDto.getRealPlayerCount());
+
         // 0명이면 삭제
         if (typingRoomDto.getRealPlayerCount()==0) {
 
-            typingRoomRedisRepository.deleteById(typingSocketDto.getRoomCode());
+            // 0명이면 방폭파
+            redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
+            typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
             //사람이 0명이면 어차피 보내줘야할 사람도 없으니 여기서 null로 끝내는게 로직상 맞을거 같아요.
             return null;
         }
         //게임이 시작한 상태라면 정보를 지우지 말고 둿다가 나중에 기록할때 사용해야함
-        if(typingRoomDto.isStart())
+//        if(typingRoomDto.isStart())
+//        {
+//            System.out.println("typingRoomDto.isStart() 인 상태");
+//        }
+//        else {
+//        }
+
+        //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
+        if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
+                typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
         {
-            System.out.println("typingRoomDto.isStart() 인 상태");
-        }
-        else {
-            //방 내부 유저 정보 삭제
-            players.remove(typingSocketDto.getSessionId());
-            //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
-            if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
-                    typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
-            {
-                for( String strKey : players.keySet() ){
-                    typingRoomDto.setMasterId(players.get(strKey));
-                    break;
-                }
-
-
-                    Map<String,Object> res = new HashMap<>();
-                    res.put("isMaster", true);
-                    simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
-
-
+            for( String strKey : players.keySet() ){
+                typingRoomDto.setMasterId(players.get(strKey));
+                break;
             }
 
-            typingRoomDto.setPlayers(players);
+
+            Map<String,Object> res = new HashMap<>();
+            res.put("isMaster", true);
+            simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
+
+
+            User user = userRepository.findById(typingRoomDto.getMasterId()).orElseThrow(() -> new UserNotFoundException());
+
+            // 전체한테 알림
+            res.clear();
+            res.put("msg",user.getNickname()+" 님이 반장이 되었습니다.");
+            simpMessagingTemplate.convertAndSend("/typing2/room"+typingRoomDto.getCode(),res);
+
+
         }
+
+
         // 바뀐 방 정보로 저장
         TypingRoomDto saved = typingRoomRedisRepository.save(typingRoomDto);
 
