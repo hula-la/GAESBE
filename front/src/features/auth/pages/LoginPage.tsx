@@ -5,7 +5,8 @@ import SocialLogin from '../components/SocialLogin';
 const LoginBlock = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
   .bgImg {
     position: relative;
     height: 100vh;
@@ -53,6 +54,7 @@ const LoginBlock = styled.div`
     font-size: 5rem;
     color: #6f43ff;
     text-shadow: 4px 5px #ffffff;
+    font-weight: bold;
   }
   .buttons {
     /* margin-top: 5%; */

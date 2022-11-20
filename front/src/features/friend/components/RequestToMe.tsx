@@ -18,12 +18,16 @@ const Wrapper = styled.div`
   div {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
   }
   .img {
     position: absolute;
     right: 4%;
+    :hover {
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+      transform: scale(1.05);
+    }
   }
   .title {
     width: 80%;
@@ -38,6 +42,8 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
   }
 `;
 
@@ -63,47 +69,17 @@ function RequestToMe() {
   };
   return (
     <Wrapper>
+      <img
+        className="img"
+        onClick={handleSecondModal}
+        src="/img/close.png"
+        alt=""
+      />
       <div>
         <div className="title">친구 요청 목록</div>
-        <img
-          className="img"
-          onClick={handleSecondModal}
-          src="/img/close.png"
-          alt=""
-        />
       </div>
       {requestList.length > 0 ? (
         <>
-          {requestList.map((requestListItem: RequestList) => {
-            return (
-              <RequestToMeItem
-                key={requestListItem.friendReqId}
-                requestListItem={requestListItem}
-                fetchRequestToMe={fetchRequestToMe}
-              />
-            );
-          })}
-
-          {requestList.map((requestListItem: RequestList) => {
-            return (
-              <RequestToMeItem
-                key={requestListItem.friendReqId}
-                requestListItem={requestListItem}
-                fetchRequestToMe={fetchRequestToMe}
-              />
-            );
-          })}
-
-          {requestList.map((requestListItem: RequestList) => {
-            return (
-              <RequestToMeItem
-                key={requestListItem.friendReqId}
-                requestListItem={requestListItem}
-                fetchRequestToMe={fetchRequestToMe}
-              />
-            );
-          })}
-
           {requestList.map((requestListItem: RequestList) => {
             return (
               <RequestToMeItem

@@ -22,7 +22,7 @@ const Wrapper = styled.div`
   /* align-items: center; */
   .content {
     margin: auto;
-    height: 95%;
+    height: 83%;
     width: 79%;
     display: grid;
     grid-template-rows: 1fr 2fr;
@@ -49,7 +49,12 @@ const Wrapper = styled.div`
           padding: 4%;
           border: 3px solid #232323;
           background-color: #e9e9e9;
-        }
+          :hover{
+            color: #e9e9e9;
+            background-color: #7a7a7a;
+            cursor: url('/img/cursor/hover_cursor.png'), auto;
+          }
+        } 
       }
     }
   }

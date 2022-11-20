@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
+import CSModal from '../components/CSModal';
 const CsMain = styled.div`
   width: 100%;
   height: 100%;
@@ -11,13 +11,28 @@ const CsMain = styled.div`
   color: white;
 
   position: relative;
+  .arrowImg {
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .title {
     text-align: center;
     /* height: 25%; */
     width: 100%;
     padding: 10% 0;
     img {
-      width: 40%;
+      width: 50%;
+    }
+    .question {
+      width: 3%;
     }
   }
 `;
@@ -158,7 +173,7 @@ const SelectGameTypeBox = styled.div`
 
 const CSgamePage = () => {
   const navigate = useNavigate();
-
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   // 랜덤매칭 페이지로 이동
   const onClickRandom = () => {
     navigate('random');
@@ -168,18 +183,21 @@ const CSgamePage = () => {
   const onClickFriend = () => {
     navigate('friend', { state: { shareCode: null } });
   };
-
+  const openModal = () => {
+    setModalOpen(true);
+  };
   return (
     <CsMain>
       <img
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""
+        className="arrowImg"
       />
       <div className="title">
-        <img src="/img/gametitle/gametitle3.png" alt="title" />
+        <img src="/img/gametitle/GameTitle6.png" alt="title" />
       </div>
-
+      {modalOpen && <CSModal setModalOpen={setModalOpen} />}
       <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>
 
       <SelectGameType>

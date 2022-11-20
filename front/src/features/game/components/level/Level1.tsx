@@ -69,10 +69,10 @@ const Note = styled.img`
   width: 10%;
   position: absolute;
   bottom: 50%;
-  right: 15%;
-  transform: scaleX(-1);
+  right: 53%;
+  /* transform: scaleX(-1); */
   :hover {
-    transform: scaleY(1.2) scaleX(-1.2);
+    transform: scale(1.2);
     transition: 0.4s ease-in-out;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
@@ -91,7 +91,7 @@ const Calender = styled.img`
   :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    content: url("/img/roomGif/level0calender.gif");
+    /* content: url("/img/roomGif/level0calender.gif"); */
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;
@@ -103,8 +103,12 @@ const Level1 = ({ handleModal,officeIdx }: any)=> {
   const handleCoin = () => {
     navigate('/game/casino');
   };
-  const handleAlert = () => {
+  const handleMyPage = () => {
     navigate('/game/mypage');
+    // alert('마이페이지로');
+  };
+  const handleGameSelect = () => {
+    navigate('/game/select');
     // alert('마이페이지로');
   };
   return (
@@ -121,12 +125,12 @@ const Level1 = ({ handleModal,officeIdx }: any)=> {
         <MyRoom src="/img/MyOffice/level2.png" alt="lv1 room" />
 
         <MyComputer
-          onClick={handleAlert}
+          onClick={handleGameSelect}
           src="/img/MyOffice/level2computer.png"
           alt="내 컴퓨터"
         />
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-        <Note src="/img/MyOffice/note.png" />
+        <Note onClick={handleMyPage} src="/img/MyOffice/note.png" />
         <Calender onClick={handleModal} src="/img/MyOffice/level0calender.png" />
       </div>
     </Unity>

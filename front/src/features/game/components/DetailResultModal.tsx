@@ -15,7 +15,7 @@ const StyledModal = styled.div`
   /* background-color: gray; */
   /* border: 1px solid black; */
   border-radius: 20px;
-  background-color: white;
+  background-color: #F0568C;
   z-index: 1000;
   color: black;
 `;

@@ -17,16 +17,77 @@ interface CustomWebSocket extends WebSocket {
 }
 
 const Container = styled.div`
-  width: 100%;
-  height: 100%;
+  /* width: 82%; */
   background-color: #232323;
   color: #ffffff;
   font-family: 'NeoDunggeunmo';
   font-style: normal;
+  position: relative;
+  height: 100vh;
+
+  .timeOut {
+    position: absolute;
+    bottom: 1rem;
+  }
+
+  .startBtnContainer {
+    position: absolute;
+    bottom: 3rem;
+    right: 3rem;
+    width: 10rem;
+
+    transition: transform 0.3s;
+
+    .inviteBtn {
+      width: 100%;
+      :hover {
+        transform: scale(1.1);
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+
+    .inviteBtnBox {
+      padding-left: 1rem;
+      position: relative;
+      font-size: 1rem;
+
+      :hover .inviteBtnToolTip {
+        display: block;
+      }
+      .inviteBtnToolTip {
+        display: none;
+        position: absolute;
+        bottom: 110%;
+      }
+    }
+
+    .startBtn {
+      width: 100%;
+
+      :hover {
+        transform: scale(1.1);
+        transition: transform 0.3s;
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+  }
   .gameTitle {
     margin-top: 1rem;
     height: 10%;
-    width: 20%;
+    /* width: 20%; */
+    margin: 5% 0 2% 0;
+  }
+`;
+
+const LoadingBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .loadingText {
+    font-size: large;
   }
 `;
 
@@ -36,18 +97,35 @@ const WaitingBlock = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
+
+  .arrowImg {
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .waitingroom {
     width: 100%;
     height: 100%;
   }
-  .subtitle {
-    font-size: 30px;
+  .friendNum {
+    font-size: 2rem;
     font-weight: 400;
-    height: 10%;
+    margin-bottom: 2%;
+
+    display: flex;
+    align-items: center;
   }
   .waitingContent {
     display: flex;
-    width: 60%;
+    /* width: 100%; */
     height: 70%;
   }
   .imgBox {
@@ -63,11 +141,28 @@ const IngameBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
 
   --duration: 5;
 
+  .problemBox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    position: relative;
+  }
+  .problemCount {
+    color: #ffffff;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    font-size: 30px;
+  }
   .progressContainer .progress {
     animation: roundtime calc(var(--duration) * 1s) linear forwards;
     transform-origin: left center;
@@ -94,25 +189,17 @@ const IngameBlock = styled.div`
     /* transition: width 5s linear; */
   }
   .progressContainer {
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     height: 30px;
     border: 1px silver solid;
     border-radius: 4px;
     background: white;
   }
-
-  .problemBox {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
   .problem {
     box-sizing: border-box;
     width: 60%;
-    height: 45%;
+    max-height: 35%;
     background: #ffffff;
     border: 5px solid #000000;
     box-shadow: 5px 5px 0px 4px #000000, 4px 4px 0px 7px #ffffff;
@@ -120,45 +207,143 @@ const IngameBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: space-between; */
+    /* &:after{
+      content: "";
+      display: block;
+      height: 1rem;
+      width: 100%;
+    } */
+    .problemContent {
+      margin: 1rem;
+      position: relative;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #2f3542;
+        border-radius: 10px;
+        background-clip: padding-box;
+        border: 2px solid transparent;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: grey;
+        border-radius: 10px;
+        box-shadow: inset 0px 0px 5px white;
+      }
+    }
     .question {
-      margin-top: 2rem;
       font-size: larger;
       font-weight: bold;
+    }
+    .problemNumber {
+    }
+    .example {
+      margin: 0.5rem 0;
+    }
+    .answer {
+      color: #0ac413;
     }
   }
   .selectbuttons {
     display: flex;
     width: 60%;
     margin-top: 1rem;
-    justify-content: space-between;
+    justify-content: space-around;
   }
   .selectbutton {
     cursor: pointer;
+
+    transition: transform 0.3s;
+
+    :hover {
+      transform: scale(1.05);
+
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
   }
   .rankBlock {
     margin-top: 1rem;
     display: flex;
+    width: 80%;
+    height: 20%;
+    position: relative;
   }
   .rankwrapper {
     margin-right: 1rem;
-    .character {
-      width: 30%;
-      height: 30%;
+    display: flex;
+    width: 25%;
+    color: #ffffff;
+
+    &.myRankWrapper {
+      position: absolute;
+      right: -10%;
+    }
+    .medal {
+      height: 70%;
+    }
+
+    .myRank {
+      font-size: 2rem;
+      padding-right: 0 0.5rem;
+      span {
+        font-size: 1rem;
+      }
     }
   }
-  .character {
-    width: 70%;
-    height: 30%;
+  .characterBox {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .myCharacter {
+      right: 0;
+      position: absolute;
+    }
+
+    .character {
+      width: 100%;
+    }
+    .playerNickName {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .waitPerson {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .middleText {
+    color: #ffffff;
+  }
+
+  .chart {
+    width: 60%;
+    border: 5px solid #000000;
   }
 `;
 
 const PlayerCharacter = styled.div`
   position: absolute;
   height: 20%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   .playerNickName {
     text-align: center;
     height: 20%;
+
+    border-radius: 0.8rem;
+    background: #00000070;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
   }
   img {
     height: 80%;
@@ -254,6 +439,7 @@ const CSIngamePage = () => {
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
   // client.debug = () => {};
 
   // 게임 시작 전 자동 시작 타이머
@@ -298,6 +484,8 @@ const CSIngamePage = () => {
             setTimeout(() => {
               setIsNext(true);
             }, 57000);
+          } else if (data.hasOwnProperty('isLast')) {
+            setIsLast(data.isLast);
           }
         });
 
@@ -324,10 +512,10 @@ const CSIngamePage = () => {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
+      client2.current = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
-      client2.connect({}, (frame) => {
-        client2.subscribe('/cs/room/' + roomCode, (res) => {
+      client2.current.connect({}, (frame: any) => {
+        client2.current.subscribe('/cs/room/' + roomCode, (res: any) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
@@ -382,7 +570,7 @@ const CSIngamePage = () => {
             playerList = data1;
           }
         });
-        client2.send(
+        client2.current.send(
           '/api/cs/memberInfo',
           {},
           JSON.stringify({
@@ -396,6 +584,7 @@ const CSIngamePage = () => {
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
+      client2.current.disconnect(() => {});
     };
   }, []);
 
@@ -483,6 +672,12 @@ const CSIngamePage = () => {
       {!isLoading && !isStart && (
         <WaitingBlock>
           <img
+            onClick={() => navigate('/game/cs')}
+            src="/img/arrow/back-arrow.png"
+            alt=""
+            className="arrowImg"
+          />
+          <img
             src="/img/gametitle/GameTitle6.png"
             className="gameTitle"
             alt="gameTitle"
@@ -526,9 +721,7 @@ const CSIngamePage = () => {
           )}
           {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
-              {problemCnt && (
-                <div className="problemCount">{problemCnt}/10</div>
-              )}
+              {problemCnt && <div className="problemCount">{problemCnt}/2</div>}
               <div className="problem">
                 <div className="progressContainer">
                   <div className="progress"> </div>
@@ -622,16 +815,14 @@ const CSIngamePage = () => {
             </div>
           )}
           {isSubmit && (
-            <div>
+            <div className="waitPerson">
               <img src="/img/loadingspinner.gif" />
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
           {isSolved !== null && !isNext && (
             <div className="problemBox">
-              {problemCnt && (
-                <div className="problemCount">{problemCnt}/10</div>
-              )}
+              {problemCnt && <div className="problemCount">{problemCnt}/2</div>}
               <div className="problem">
                 <div className="problemContent">
                   <div className="question">
@@ -658,13 +849,11 @@ const CSIngamePage = () => {
               <div className="chart">
                 <CSMiddleChart chartPerNum={chartPerNum} />
               </div>
-              {isSolved && isSolved === 0 && (
-                <div className="middleText">틀렸습니다ㅜ</div>
-              )}
-              {isSolved && isSolved === -1 && (
+              {isSolved === 0 && <div className="middleText">틀렸습니다ㅜ</div>}
+              {isSolved === -1 && (
                 <div className="middleText">시간초과입니다ㅜ</div>
               )}
-              {isSolved && isSolved > 0 && (
+              {isSolved > 0 && (
                 <div className="middleText">
                   {isSolved}등으로 정답을 맞추셨습니다!
                 </div>

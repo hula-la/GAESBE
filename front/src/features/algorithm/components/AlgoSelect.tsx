@@ -105,7 +105,7 @@ function AlgoSelect({
             문제보기
           </button>
           <button
-            className="eightbit-btn eightbit-btn--reset"
+            className={passDisabled? "eightbit-btn eightbit-btn--disable":"eightbit-btn eightbit-btn--reset"}
             onClick={passProblem}
             disabled={passDisabled && 'disable'}
           >

@@ -49,7 +49,7 @@ const Container = styled.div`
   }
   .myRank {
     width: 80%;
-    height: 32%;
+    height: 25%;
     margin: auto;
     border: 5px solid #ff9f00;
     border-radius: 15px;
@@ -116,12 +116,14 @@ const Container = styled.div`
 `;
 
 const ResultButton = styled.div`
-  width: 40%;
+  margin: 3% auto;
+  width: 30%;
   display: flex;
-  flex-direction: row;
-  position: absolute;
+  justify-content: space-between;
+  /* align-content: center; */
+  /* position: absolute;
   top: 10%;
-  left: 20%;
+  left: 20%; */
 `;
 
 const CSResultPage = () => {
@@ -171,11 +173,10 @@ const CSResultPage = () => {
           <div className="rankInfo">
             <div>내 랭킹</div>
             <div>{rankByPlayer[userInfo.id]} 등</div>
-            <div>{myScore[3]} 점</div>
           </div>
         )}
         <div className="userInfo">
-          <CSUser user={myScore}></CSUser>
+          <CSUser user={myScore} my="my"></CSUser>
         </div>
       </div>
       <ResultButton>

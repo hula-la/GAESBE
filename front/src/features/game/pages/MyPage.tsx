@@ -52,7 +52,7 @@ const UserBotton = styled.div`
   justify-content: space-around;
 `;
 const MyRecord = styled.div`
-  /* margin-top: %; */
+  margin-top: 2%;
   width: 75%;
   display: flex;
   flex-direction: row;
@@ -76,7 +76,7 @@ const WhiteBox = styled.div`
 `;
 const Down = styled.div`
   /* border: 2px solid yellow; */
-  margin-top: 5%;
+  margin-top: 10%;
   margin-left: 7%;
   width: 88%;
   /* width: 70%; */
@@ -85,6 +85,11 @@ const Down = styled.div`
   flex-direction: row;
   justify-content: space-between;
   color: white;
+  div {
+    :hover {
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .gametypealgo {
     /* border: 2px solid orange; */
     width: 18%;
@@ -237,10 +242,10 @@ const MyPage = () => {
   const fetchMySsafyRecord = async () => {
     try {
       const res = await mySsafyRecordRequest();
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) {
         setSsafyRecords(res.data.content);
-        console.log(res.data.content, '싸피ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ');
+        // console.log(res.data.content, '싸피ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ');
       }
     } catch (error) {
       Swal.fire({ icon: 'error', text: '싸피게임 정보를 못가져왔습니다' });
@@ -263,7 +268,7 @@ const MyPage = () => {
   const handleDelete = () => {
     Swal.fire({
       title: '진짜?',
-      text: '정말 삭제할거ㅂ니까?',
+      text: '가지마유😥',
       icon: 'warning',
       showCancelButton: true,
       cancelButtonText: '아니오',
@@ -273,14 +278,14 @@ const MyPage = () => {
       confirmButtonText: '네!',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('컨펌함');
+        // console.log('컨펌함');
         dispatch(authActions.deleteUserInfoStart());
         navigate('/login');
-        console.log('지금 유저 인포', userInfo);
+        // console.log('지금 유저 인포', userInfo);
         // 유저 인포 널로 바꾸고
         // 엑세스 토큰 지우고
       } else {
-        Swal.fire({ icon: 'info', text: '삭제 안함' });
+        Swal.fire({ icon: 'info', text: '다행이에요😀' });
       }
     });
   };
@@ -420,10 +425,10 @@ const MyPage = () => {
             </div>
           </Down>
           <MyPower>
-            <div>
+            <div style={{ width: '100%' }}>
               {/* <h1>{userInfo.nickname}님의 최근 전적</h1> */}
               {gameType === 'algo' && (
-                <div>
+                <div style={{ width: '100%' }}>
                   {/* <h1>알고리즘</h1> */}
                   {detailModal === 'algo' && (
                     <DetailResultModal

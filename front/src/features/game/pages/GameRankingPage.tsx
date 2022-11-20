@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   color: white;
 `;
 const MainHeader = styled.div`
+  font-size: 1.5rem;
   width: 100%;
   height: 10%;
   display: flex;
@@ -123,7 +124,7 @@ function GameRankingPage() {
   const fetchAllGameRanking = async () => {
     try {
       const res = await allGameRankingRequest();
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) {
         setMyRank({
           myAlgoRank: res.data.myAlgoRank,

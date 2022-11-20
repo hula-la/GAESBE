@@ -28,7 +28,7 @@ const algoSlice = createSlice({
       state.isLoading = false;
     },
     setLoadingMsg(state, action: Action<string>) {
-      console.log('로딩메세지 변경', action.payload);
+      // console.log('로딩메세지 변경', action.payload);
       state.loadingMsg = action.payload;
     },
     setNeedReload(state, action: Action<boolean>) {

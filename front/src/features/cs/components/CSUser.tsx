@@ -9,22 +9,27 @@ const Wrapper = styled.div`
   }
 
   .profile {
-    height: 100px;
-    width: 80px;
+    height: 90px;
+    /* width: 80px; */
   }
   .nickname {
     font-size: 15px;
     width: fit-content;
     margin: 0 auto;
-    background-color: #000;
     padding: 10px;
-    border-radius: 1rem;
+    font-weight: bold;
+    padding: 6px;
+    color: #ffa500;
   }
   .score {
+    font-size: 13px;
+    margin: 6px 0 0 0;
+  }
+  .myScore {
+    color: #000000;
     font-size: 20px;
     margin: 6px 0 0 0;
   }
-
   .crown {
     margin: 0;
     img {
@@ -33,7 +38,7 @@ const Wrapper = styled.div`
   }
 `;
 
-function CSUser({ user, ranking }: any) {
+function CSUser({ user, ranking, my }: any) {
   if (ranking) {
     console.log('ranking', ranking[user[0]]);
   }
@@ -41,8 +46,6 @@ function CSUser({ user, ranking }: any) {
   return (
     <Wrapper>
       <div className="user-item" key={user[0]}>
-        <p className="nickname">{user[1]}</p>
-        <p className="score">{user[3]} 점</p>
         {ranking && ranking[user[0]] == 1 ? (
           <p className="crown">
             <img src="/img/crown.png"></img>
@@ -55,6 +58,8 @@ function CSUser({ user, ranking }: any) {
           alt="프로필이미지"
           className="profile"
         />
+        {!my && <p className="nickname">{user[1]}</p>}
+        <p className={my ? 'myScore' : 'score'}>{user[3]} 점</p>
       </div>
     </Wrapper>
   );

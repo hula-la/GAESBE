@@ -16,9 +16,43 @@ const Wrapper = styled.div`
   flex-direction: column;
   margin: 0 auto;
   text-align: center;
+
   .btn-top {
     text-align: left;
-    height: 15%;
+    height: 3%;
+    margin-bottom: 4%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .backBtn {
+      margin: auto 0;
+      height: 100%;
+    }
+
+    .inviteBtn {
+      width: 50%;
+      :hover {
+        transform: scale(1.1);
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+
+    .inviteBtnBox {
+      position: relative;
+      font-size: 1rem;
+      right: -80px;
+      top: 15px;
+
+      :hover .inviteBtnToolTip {
+        display: block;
+      }
+      .inviteBtnToolTip {
+        display: none;
+        position: absolute;
+        bottom: 110%;
+      }
+    }
   }
   .user {
     height: 60%;
@@ -42,49 +76,70 @@ const Wrapper = styled.div`
   }
 `;
 
-function AlgoBeforeStart({client, handleLeaveRoom, startGame, inGameUsers }: any) {
-  const dispatch = useDispatch()
+function AlgoBeforeStart({
+  client,
+  handleLeaveRoom,
+  startGame,
+  inGameUsers,
+}: any) {
+  const dispatch = useDispatch();
 
   const { InGameInfo, loadingMsg } = useSelector((state: any) => state.algo);
   const { userInfo } = useSelector((state: any) => state.auth);
-  const [modal, setModal] = useState<boolean>(false)
+  const { modal } = useSelector((state: any) => state.friend);
 
   const handleModal = () => {
-    setModal(!modal)
-  }
+    dispatch(friendActions.openInvite());
+    dispatch(friendActions.handleModal('invite'));
+  };
+  const closeModal = () => {
+    dispatch(friendActions.closeInvite());
+    dispatch(friendActions.handleModal(null));
+  };
 
   const { friendId } = useSelector((state: any) => state.friend);
   useEffect(() => {
-    console.log(InGameInfo)
+    console.log(InGameInfo);
     if (friendId) {
       client.current.send(
         '/api/friend/invite',
         {},
         JSON.stringify({
           userId: friendId,
+          fromUserNick: userInfo.nickname,
           gameType: 'algo',
-          roomCode: JSON.stringify(InGameInfo)
+          roomCode: JSON.stringify(InGameInfo),
         }),
       );
-    dispatch(friendActions.inviteFriend(null));
+      dispatch(friendActions.inviteFriend(null));
     }
   }, [friendId]);
   return (
     <Wrapper>
       <div className="btn-top">
-        <a onClick={handleLeaveRoom} className="eightbit-btn ">
+        <a
+          onClick={handleLeaveRoom}
+          className="backBtn eightbit-btn eightbit-btn--reset"
+        >
           나가기
         </a>
-        <a onClick={handleModal} className="eightbit-btn eightbit-btn--proceed">
-            친구초대
-        </a>
+        <div className="inviteBtnBox">
+          <div className="inviteBtnToolTip">친구 초대</div>
+          <img
+            src="/img/cs/inviteBtn2.png"
+            className="inviteBtn"
+            onClick={handleModal}
+          />
+        </div>
       </div>
       {loadingMsg === 'START' && (
-        <LoadingSpinner loadingMsg="곧 배틀이 시작됩니다" />
+        <>
+          <LoadingSpinner loadingMsg="곧 배틀이 시작됩니다" />
+          <p className="loadingText">곧 배틀이 시작됩니다</p>
+        </>
       )}
       <div className="user">
         <BeforeSolveUsers inGameUsers={inGameUsers} />
-        
       </div>
       <div className="btn-bottom">
         {InGameInfo.master == userInfo.id && (
@@ -92,11 +147,9 @@ function AlgoBeforeStart({client, handleLeaveRoom, startGame, inGameUsers }: any
             배틀 시작
           </a>
         )}
-        {modal && (
-          <FriendModal handleModal={handleModal} type="invite" />
-        )}
+        {modal && <FriendModal handleModal={closeModal} type="invite" />}
         {InGameInfo.master != userInfo.id && (
-          <a className="eightbit-btn eightbit-btn--enable">대기중</a>
+          <a className="eightbit-btn eightbit-btn--disable">대기중</a>
         )}
       </div>
     </Wrapper>

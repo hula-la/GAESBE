@@ -95,6 +95,20 @@ const WaitingBlock = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
+
+  .arrowImg {
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .waitingroom {
     width: 100%;
     height: 100%;
@@ -295,6 +309,12 @@ const IngameBlock = styled.div`
       flex-direction: column;
     }
   }
+  .waitPerson {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   .middleText {
     color: #ffffff;
   }
@@ -420,6 +440,7 @@ const CSFriendPage = () => {
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
   // client.debug = () => {};
 
   // 게임 시작 전 자동 시작 타이머
@@ -487,17 +508,15 @@ const CSFriendPage = () => {
     }
   }, [userInfo]);
 
-  let client2: any;
-
   useEffect(() => {
     if (roomCode) {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      client2 = Stomp.over(socket);
+      client2.current = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
-      client2.connect({}, (frame: any) => {
-        client2.subscribe('/cs/room/' + roomCode, (res: any) => {
+      client2.current.connect({}, (frame: any) => {
+        client2.current.subscribe('/cs/room/' + roomCode, (res: any) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
@@ -506,6 +525,7 @@ const CSFriendPage = () => {
             } else if (data1.msg === 'ready') {
               setIsReady(true);
             } else if (data1.msg === 'start') {
+              dispatch(friendActions.handleModal(null));
               setIsReady(false);
               setIsStart(true);
             } else {
@@ -552,7 +572,7 @@ const CSFriendPage = () => {
             playerList = data1;
           }
         });
-        client2.send(
+        client2.current.send(
           '/api/cs/memberInfo',
           {},
           JSON.stringify({
@@ -567,7 +587,7 @@ const CSFriendPage = () => {
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
-      // client2.disconnect(() => {});
+      client2.current.disconnect(() => {});
     };
   }, []);
   // 로딩 & 끝 제어
@@ -627,6 +647,7 @@ const CSFriendPage = () => {
         {},
         JSON.stringify({
           userId: friendId,
+          fromUserNick: userInfo.nickname,
           gameType: 'cs',
           roomCode: roomCode,
         }),
@@ -697,7 +718,12 @@ const CSFriendPage = () => {
           {modal === 'invite' && (
             <FriendModal handleModal={closeModal} type="invite" />
           )}
-
+          <img
+            onClick={() => navigate('/game/cs')}
+            src="/img/arrow/back-arrow.png"
+            alt=""
+            className="arrowImg"
+          />
           <img
             src="/img/gametitle/GameTitle6.png"
             className="gameTitle"
@@ -732,17 +758,19 @@ const CSFriendPage = () => {
           <div className="startBtnContainer">
             <div className="friendNum">
               {players.length}/10
-              <div className="inviteBtnBox">
-                <div className="inviteBtnToolTip">친구 초대</div>
-                <img
-                  src="/img/cs/inviteBtn2.png"
-                  className="inviteBtn"
-                  onClick={handleModal}
-                />
-              </div>
+              {!isReady && (
+                <div className="inviteBtnBox">
+                  <div className="inviteBtnToolTip">친구 초대</div>
+                  <img
+                    src="/img/cs/inviteBtn2.png"
+                    className="inviteBtn"
+                    onClick={handleModal}
+                  />
+                </div>
+              )}
             </div>
             <div>
-              {isMaster && (
+              {isMaster && !isReady && (
                 <img
                   className="startBtn"
                   src="/img/cs/startBtn.png"
@@ -765,9 +793,7 @@ const CSFriendPage = () => {
           )}
           {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
-              {problemCnt && (
-                <div className="problemCount">{problemCnt}/10</div>
-              )}
+              {problemCnt && <div className="problemCount">{problemCnt}/2</div>}
               <div className="problem">
                 <div className="progressContainer">
                   <div className="progress"> </div>
@@ -861,16 +887,14 @@ const CSFriendPage = () => {
             </div>
           )}
           {isSubmit && (
-            <div>
+            <div className="waitPerson">
               <img src="/img/loadingspinner.gif" />
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
           )}
           {isSolved !== null && !isNext && (
             <div className="problemBox">
-              {problemCnt && (
-                <div className="problemCount">{problemCnt}/10</div>
-              )}
+              {problemCnt && <div className="problemCount">{problemCnt}/2</div>}
               <div className="problem">
                 <div className="problemContent">
                   <div className="question">
@@ -897,13 +921,11 @@ const CSFriendPage = () => {
               <div className="chart">
                 <CSMiddleChart chartPerNum={chartPerNum} />
               </div>
-              {isSolved && isSolved === 0 && (
-                <div className="middleText">틀렸습니다ㅜ</div>
-              )}
-              {isSolved && isSolved === -1 && (
+              {isSolved === 0 && <div className="middleText">틀렸습니다ㅜ</div>}
+              {isSolved === -1 && (
                 <div className="middleText">시간초과입니다ㅜ</div>
               )}
-              {isSolved && isSolved > 0 && (
+              {isSolved > 0 && (
                 <div className="middleText">
                   {isSolved}등으로 정답을 맞추셨습니다!
                 </div>

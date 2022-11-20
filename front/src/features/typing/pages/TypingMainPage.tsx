@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../components/Common/retroBtn.css';
+import TypingModal from '../components/TypingModal';
 
 // import "src/components/retroBtn.css";
 
@@ -22,9 +23,18 @@ const TypingMain = styled.div`
   .img {
     position: absolute;
     /* width: 3%; */
+    z-index: 1000;
     top: 5%;
     left: 20%;
     transform: scaleX(-1);
+    /* padding: 1rem; */
+    /* left: 0;
+    top: 0; */
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
   }
   height: 100%;
   width: 100%;
@@ -34,12 +44,24 @@ const TypingMain = styled.div`
   text-align: center;
   color: white;
   .title {
+    position: relative;
+
     text-align: center;
     height: 25%;
     width: 100%;
     margin: 2rem 0;
     img {
       width: 60%;
+    }
+    .question {
+      width: 3%;
+      position: absolute;
+
+      transition: all 0.2s linear;
+      :hover {
+        transform: scale(1.1);
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
     }
   }
 `;
@@ -181,6 +203,7 @@ function TypingMainPage() {
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const navigate = useNavigate();
   const [shareCode, setShareCode] = useState<String>('');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const handleFriendGame = () => {
     setIsOpen((prev) => !prev);
   };
@@ -189,14 +212,17 @@ function TypingMainPage() {
   };
   const handleChoicePython = () => {
     setGameType('PYTHON');
-    console.log('파이썬 선택');
+    // console.log('파이썬 선택');
   };
   const handleChoiceJava = () => {
     setGameType('JAVA');
-    console.log('자바 선택');
+    // console.log('자바 선택');
   };
   const onClickCreateRoom = () => {
     navigate('friend', { state: { lang: gameType, shareCode: null } });
+  };
+  const openModal = () => {
+    setModalOpen(true);
   };
   return (
     <TypingMain>
@@ -208,8 +234,15 @@ function TypingMainPage() {
       />
       <div className="aniToDown">
         <div className="title">
-          <img src="/img/gametitle/gametitle2.png" alt="title" />
+          {/* <img src="/img/gametitle/gametitle2.png" alt="title" /> */}
+          <img src="/img/gametitle/GameTitle7.png" alt="" />
+          <img
+            onClick={openModal}
+            className="question"
+            src="/img/questionMark-gray.png"
+          ></img>
         </div>
+        {modalOpen && <TypingModal setModalOpen={setModalOpen} />}
         <h1>타이핑 연습을 하면서 언어와 친해지자</h1>
         <SelectLanguage>
           <SelectLanguageBox onClick={handleChoicePython}>
@@ -268,7 +301,7 @@ function TypingMainPage() {
             className="eightbit-btn eightbit-btn--proceed"
             onClick={onClickCreateRoom}
           >
-            친구 매칭
+            방만들기
           </a>
         </SelectTypeBox>
       </SelectGameType>

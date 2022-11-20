@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
+import Swal from 'sweetalert2';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import FriendModal from '../../friend/components/FriendModal';
@@ -18,7 +19,10 @@ interface CharStateType {
   sentence: number;
   type: number;
 }
-
+const Wrapper = styled.div`
+  height: 100%;
+  width: 100%;
+`;
 const TypingBg = styled.img`
   height: 100%;
   position: absolute;
@@ -37,7 +41,7 @@ const Track = styled.div`
 
 const LoadingBlock = styled.div`
   display: flex;
-  height: 100%;
+  height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -78,7 +82,7 @@ const PersonalCharacter = styled.div`
 `;
 const CharacterSet = styled('div')<{ progress: string }>`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   padding-left: ${(props) => props.progress};
   // 부드럽게 움직이도록
   transition: all 0.4s;
@@ -151,10 +155,12 @@ const TypingResult = styled.div`
 const WaitingTypingGameBox = styled.div`
   width: 91.5%;
   height: 17rem;
+  font-size: 1.5rem;
   display: flex;
   flex-direction: column;
   padding-top: 5%;
-  /* justify-content: center; */
+  position: relative;
+  justify-content: center;
   align-items: center;
   color: black;
   background-color: white;
@@ -166,44 +172,51 @@ const WaitingTypingGameBox = styled.div`
     align-items: center;
     position: absolute;
     bottom: 1rem;
-    right: 33rem;
+    right: calc(50vw - 35rem);
     width: 30rem;
 
     transition: transform 0.3s;
+  }
+  .friendNum {
+    /* font-size: 2rem; */
+    font-weight: bold;
 
-    .inviteBtn {
-      width: 100%;
-      :hover {
-        transform: scale(1.1);
+    display: flex;
+    align-items: center;
+  }
+  .inviteBtn {
+    width: 80%;
+    :hover {
+      transform: scale(1.1);
 
-        cursor: url('/img/cursor/hover_cursor.png'), auto;
-      }
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
+  }
 
-    .inviteBtnBox {
-      padding-left: 1rem;
-      position: relative;
-      font-size: 1rem;
+  .inviteBtnBox {
+    padding-left: 1rem;
+    position: relative;
+    font-size: 1rem;
 
-      :hover .inviteBtnToolTip {
-        display: block;
-      }
-      .inviteBtnToolTip {
-        display: none;
-        position: absolute;
-        bottom: 110%;
-      }
+    :hover .inviteBtnToolTip {
+      display: block;
     }
+    .inviteBtnToolTip {
+      display: none;
+      position: absolute;
+      bottom: 10%;
+      left: 30%;
+    }
+  }
 
-    .startBtn {
-      width: 50%;
-      height: 50%;
+  .startBtn {
+    width: 50%;
+    height: 50%;
 
-      :hover {
-        transform: scale(1.1);
-        transition: transform 0.3s;
-        cursor: url('/img/cursor/hover_cursor.png'), auto;
-      }
+    :hover {
+      transform: scale(1.1);
+      transition: transform 0.3s;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
   }
 `;
@@ -271,8 +284,10 @@ const TypingFriendGame = () => {
   const { friendId } = useSelector((state: any) => state.friend);
   const [master, setMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
+  const { errorMsg } = useSelector((state: any) => state.friend);
 
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
 
   useEffect(() => {
     if (isStart) {
@@ -292,7 +307,7 @@ const TypingFriendGame = () => {
 
   useEffect(() => {
     if (isEnd && resultId && resultNickName) {
-      console.log('끄읕');
+      // console.log('끄읕');
       navigate('/game/typing/result', {
         state: {
           resultId: resultId,
@@ -305,21 +320,6 @@ const TypingFriendGame = () => {
   useEffect(() => {
     return () => setIsLoading(true);
   }, []);
-  // 뒤로가기 막는 useEffect
-  // useEffect(() => {
-  //   const preventGoBack = () => {
-  //     // change start
-  //     window.history.pushState(null, '', window.location.href);
-  //     // change end
-  //     alert('게임중에는 나갈 수 없습니다');
-  //   };
-  //   window.history.pushState(null, '', window.location.href);
-  //   window.addEventListener('popstate', preventGoBack);
-  //   return () => window.removeEventListener('popstate', preventGoBack);
-  // }, []);
-  // // 뒤로가기 막는 useEffect
-  // // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  // usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
   useEffect(() => {
     if (userInfo) {
       const socket: CustomWebSocket = new SockJS(
@@ -327,7 +327,7 @@ const TypingFriendGame = () => {
       );
       client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
-        console.log('*****************121**************************');
+        // console.log('*****************121**************************');
         client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
@@ -374,6 +374,7 @@ const TypingFriendGame = () => {
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
+      client2.current.disconnect(() => {});
     };
   }, []);
 
@@ -382,29 +383,44 @@ const TypingFriendGame = () => {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
-      client2.connect({}, (frame) => {
-        console.log('*****************177**************************');
-        client2.subscribe('/typing2/room/' + roomCode, (res) => {
+      client2.current = Stomp.over(socket);
+      client2.current.connect({}, (frame: any) => {
+        // console.log('*****************177**************************');
+        client2.current.subscribe('/typing2/room/' + roomCode, (res: any) => {
           var testdata = JSON.parse(res.body);
+          // console.log(testdata, '이게테데지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ');
+          // 이거 지움
           if (testdata.hasOwnProperty('progressByPlayer')) {
             setTest(testdata.progressByPlayer[`${userInfo.id}`]);
             setTestProgress(testdata);
             testprogress = testdata.progressByPlayer;
             // testtest = testdata.progressByPlayer[`${userInfo.id}`];
-          } else if (testdata.hasOwnProperty('msg')) {
-            if (testdata.msg === 'start') {
-              // setIsReady(true);
-              setIsStart(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 4000);
-            } else if (testdata.msg === 'end') {
-              setResultId(testdata.winUserId);
-              setResultNickName(testdata.winUserNickName);
-              setResultProfile(testdata.winUserProfile);
-              setIsEnd(true);
+          } else if (testdata.hasOwnProperty('start')) {
+            console.log('시ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ');
+            if (testdata.start === true) {
+              console.log('어 시작이야');
             }
+            setIsStart(true);
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 4000);
+          } else if (testdata.hasOwnProperty('end')) {
+            console.log('끄ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ');
+            if (testdata.end === true) {
+              console.log('어 끝이야');
+            }
+            setResultId(testdata.winUserId);
+            setResultNickName(testdata.winUserNickName);
+            setResultProfile(testdata.winUserProfile);
+            setIsEnd(true);
+          } else if (testdata.hasOwnProperty('msg')) {
+            Swal.fire({
+              toast: true,
+              position: 'top',
+              timer: 1000,
+              showConfirmButton: false,
+              text: testdata.msg,
+            });
           } else if (testdata.hasOwnProperty('paragraph')) {
             setPargraph(testdata.paragraph);
           } else if (testdata.hasOwnProperty('roomDto')) {
@@ -471,7 +487,7 @@ const TypingFriendGame = () => {
       event.preventDefault();
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
-        console.log('****************보냄********************');
+        // console.log('****************보냄********************');
         xscroll();
         waitForConnection(client, function () {
           client.current.send(
@@ -528,7 +544,7 @@ const TypingFriendGame = () => {
 
       // 내가 친거랑 쳐야하는게 똑같다면
       if (example[sentence][index] === event.key) {
-        console.log('****************보냄********************');
+        // console.log('****************보냄********************');
         xscroll();
         waitForConnection(client, function () {
           client.current.send(
@@ -560,9 +576,11 @@ const TypingFriendGame = () => {
     }
   };
   const handleModal = () => {
+    dispatch(friendActions.openInvite());
     dispatch(friendActions.handleModal('invite'));
   };
   const closeModal = () => {
+    dispatch(friendActions.closeInvite());
     dispatch(friendActions.handleModal(null));
   };
   const onClickStart = () => {
@@ -586,15 +604,32 @@ const TypingFriendGame = () => {
         {},
         JSON.stringify({
           userId: friendId,
+          fromUserNick: userInfo.nickname,
           gameType: 'typing',
           roomCode: roomCode,
         }),
       );
+      dispatch(friendActions.resetFriend());
     }
   }, [friendId]);
   // const invite = () => {};
+  useEffect(() => {
+    if (errorMsg) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        timer: 1000,
+        showConfirmButton: false,
+        text: errorMsg,
+      });
+      setTimeout(() => {
+        dispatch(friendActions.setErrorMsg(null));
+        navigate('/game');
+      }, 1000);
+    }
+  }, [errorMsg]);
   return (
-    <div>
+    <Wrapper>
       {isLoading && !players && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
@@ -836,7 +871,7 @@ const TypingFriendGame = () => {
           </TypingGameBox>
         )}
       </Typing>
-    </div>
+    </Wrapper>
   );
 };
 
