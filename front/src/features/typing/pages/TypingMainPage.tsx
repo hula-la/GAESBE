@@ -23,9 +23,18 @@ const TypingMain = styled.div`
   .img {
     position: absolute;
     /* width: 3%; */
+    z-index: 1000;
     top: 5%;
     left: 20%;
     transform: scaleX(-1);
+    /* padding: 1rem; */
+    /* left: 0;
+    top: 0; */
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
   }
   height: 100%;
   width: 100%;
