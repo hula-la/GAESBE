@@ -14,6 +14,18 @@ import Swal from 'sweetalert2';
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
+  .arrowImg{
+    transform: scaleX(-1);
+    padding: 1rem;
+    /* position: absolute;
+    left: 0;
+    top: 0; */
+    transition: all 0.3s;
+    :hover{
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -26,9 +38,9 @@ const Content = styled.div`
   .title {
     text-align: center;
     height: 15%;
+    margin: 0;
     img {
-      width: 60%;
-      height: 100%;
+      width: 50%;
     }
   }
   .btn-top {
@@ -47,6 +59,7 @@ const Content = styled.div`
     a {
       margin: auto;
       justify-content: center;
+
     }
   }
   .room-wrapper {
@@ -125,7 +138,7 @@ function AlgoMainPage() {
 
   return (
     <Wrapper>
-      <img
+      <img className='arrowImg'
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""
@@ -141,7 +154,7 @@ function AlgoMainPage() {
           </a>
           <a
             onClick={handleConnectModal}
-            className="eightbit-btn eightbit-btn--proceed"
+            className="eightbit-btn eightbit-btn--reset"
           >
             백준연동
           </a>

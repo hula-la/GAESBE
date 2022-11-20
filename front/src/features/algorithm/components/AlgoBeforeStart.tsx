@@ -16,9 +16,45 @@ const Wrapper = styled.div`
   flex-direction: column;
   margin: 0 auto;
   text-align: center;
+  
+  
   .btn-top {
     text-align: left;
-    height: 15%;
+    height: 3%;
+    margin-bottom: 4%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .backBtn{
+      margin: auto 0;
+      height: 100%;
+    }
+
+    .inviteBtn {
+      width: 50%;
+      :hover {
+        transform: scale(1.1);
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
+
+    .inviteBtnBox {
+      position: relative;
+      font-size: 1rem;
+      right: -80px;
+      top:15px;
+
+      :hover .inviteBtnToolTip {
+        display: block;
+      }
+      .inviteBtnToolTip {
+        display: none;
+        position: absolute;
+        bottom: 110%;
+      }
+    }
+
   }
   .user {
     height: 60%;
@@ -72,12 +108,17 @@ function AlgoBeforeStart({client, handleLeaveRoom, startGame, inGameUsers }: any
   return (
     <Wrapper>
       <div className="btn-top">
-        <a onClick={handleLeaveRoom} className="eightbit-btn ">
+        <a onClick={handleLeaveRoom} className="backBtn eightbit-btn eightbit-btn--reset">
           나가기
         </a>
-        <a onClick={handleModal} className="eightbit-btn eightbit-btn--proceed">
-            친구초대
-        </a>
+        <div className="inviteBtnBox">
+                <div className="inviteBtnToolTip">친구 초대</div>
+                <img
+                  src="/img/cs/inviteBtn2.png"
+                  className="inviteBtn"
+                  onClick={handleModal}
+                />
+              </div>
       </div>
       {loadingMsg === 'START' && (<>
           <LoadingSpinner loadingMsg="곧 배틀이 시작됩니다" />
