@@ -332,6 +332,9 @@ const TypingGame = () => {
               setIsLoading(false);
             }, 4000);
           } else if (testdata.hasOwnProperty('end')) {
+            if (testdata.end === true) {
+              console.log('어 끝이야');
+            }
             setResultId(testdata.winUserId);
             setResultNickName(testdata.winUserNickName);
             setResultProfile(testdata.winUserProfile);

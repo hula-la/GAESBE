@@ -237,7 +237,7 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
       );
     }
   };
-
+  console.log(friend, '친구ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ');
   return (
     <FriendListItemBlock>
       <div
@@ -272,7 +272,26 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
               {type === 'offline' && <div className="offline" />}
             </div>
             <div className="nicknameBox">
-              <div className="level">LV1. 대기업</div>
+              {/* <div className="level">LV1. 대기업</div> */}
+              <div className="level">
+                {friend.officeLv === 1 ? (
+                  <div>Lv.{friend.officeLv} 응애취준생</div>
+                ) : friend.officeLv === 2 ? (
+                  <div>Lv.{friend.officeLv} 만렙취준생</div>
+                ) : friend.officeLv === 3 ? (
+                  <div>Lv.{friend.officeLv} 응애개발자</div>
+                ) : friend.officeLv === 4 ? (
+                  <div>Lv.{friend.officeLv} 척척학사개발자</div>
+                ) : friend.officeLv === 5 ? (
+                  <div>Lv.{friend.officeLv} 척척석사개발자</div>
+                ) : friend.officeLv === 6 ? (
+                  <div>Lv.{friend.officeLv} 척척박사개발자</div>
+                ) : friend.officeLv === 7 ? (
+                  <div>Lv.{friend.officeLv} 만렙개발자</div>
+                ) : (
+                  <div>Lv.{friend.officeLv} 킹갓삼성개발자</div>
+                )}
+              </div>
               <div className="nickname">{friend.nickname}</div>
             </div>
           </div>
