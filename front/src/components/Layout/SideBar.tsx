@@ -49,8 +49,8 @@ const Side = styled.div`
     justify-content: center;
     align-items: center;
     .logo {
-      width: 60%;
-      height: 90%;
+      width: 80%;
+      /* height: 90%; */
     }
   }
   .profileBox {
