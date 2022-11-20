@@ -136,7 +136,8 @@ public class FriendSocketService {
         // 친구 신청 목록에서 삭제
         friendRequestRepository.deleteByRequestUserAndTargetUser(friend,user);
 
-        int findByRequestCount = friendRequestRepository.findByRequestUser(user).size();
+        int findByRequestCount = friendRequestRepository.findByTargetUser(user).size();
+        System.out.println("친구 저장한 후 "+findByRequestCount);
         if(findByRequestCount==0)
             friendAlarm(userId,false);
         else

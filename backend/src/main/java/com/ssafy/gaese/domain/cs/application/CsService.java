@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -285,6 +286,7 @@ public class CsService {
 
     }
 
+    @Transactional
     public void gameEnd(CsRoomDto roomDto,List<CsProblem> randomProblem){
 
         Map<String,Object> res = new HashMap<>();
