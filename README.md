@@ -41,12 +41,18 @@
 ![image-20221006105153838](README.assets/typing1.png)
 ![image-20221006105153838](README.assets/typing2.png)
 
-- csFight
+- Algorithm Battle
+![image-20221006105153838](README.assets/algo1.png)
+![image-20221006105153838](README.assets/algo2.png)
+![image-20221006105153838](README.assets/algo3.png)
+
+- CS Fight
 ![image-20221006105153838](README.assets/cs1.png)
 ![image-20221006105153838](README.assets/cs2.png)
 
 - ssafyGame
 ![image-20221006105153838](README.assets/ssafy.png)
+
 - myPage
 ![image-20221006105153838](README.assets/mypage1.png)
 ![image-20221006105153838](README.assets/mypage2.png)
