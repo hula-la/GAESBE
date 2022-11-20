@@ -40,7 +40,7 @@ public class Typing2RoomService {
 
     private final SocketInfo socketInfo;
 
-    private final int maxPlayer=2;
+    private final int maxPlayer=4;
     private final String PythonWaitRoomKey="PythonTypingWaitRoom";
     private final String JavaWaitRoomKey="JavaTypingWaitRoom";
 
@@ -248,7 +248,7 @@ public class Typing2RoomService {
         HashMap<String, Long> players = typingRoomDto.getPlayers();
 
         // 방이 가득찼다면 예외 날림
-        if (players.size()>=maxPlayer) throw new ExceedMaxPlayerException();
+        if (players.size()>=maxPlayer) throw new ExceedMaxPlayerException(typingSocketDto);
 
         // 방이 가득 안찼으면 player에 추가하고 변경된 정보 저장
         players.put(typingSocketDto.getSessionId(),typingSocketDto.getUserId());
