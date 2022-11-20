@@ -97,8 +97,12 @@ const Level4 = ({ handleModal,officeIdx }: any) => {
   const handleCoin = () => {
     navigate('/game/casino');
   };
-  const handleAlert = () => {
+  const handleMyPage = () => {
     navigate('/game/mypage');
+    // alert('마이페이지로');
+  };
+  const handleGameSelect = () => {
+    navigate('/game/select');
     // alert('마이페이지로');
   };
   return (
@@ -115,12 +119,12 @@ const Level4 = ({ handleModal,officeIdx }: any) => {
         <MyRoom src="/img/MyOffice/level5.png" alt="lv2 room" />
 
         <MyComputer
-          onClick={handleAlert}
+          onClick={handleGameSelect}
           src="/img/MyOffice/level3computer.png"
           alt="내 컴퓨터"
         />
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-        <Note src="/img/MyOffice/note.png" />
+        <Note onClick={handleMyPage} src="/img/MyOffice/note.png" />
         <Calender onClick={handleModal} src="/img/MyOffice/level3calender.png" />
       </div>
     </Unity>

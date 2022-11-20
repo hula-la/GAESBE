@@ -87,10 +87,11 @@ const Calender = styled.img`
     transform: scaleX(-1);
   /* bottom: 24vh;
   right: 31vw; */
+  transition: all 0.4s ;
   :hover {
-    transform: scaleY(1.2) scaleX(-1.2);
+    transform: scaleX(-1.2) scaleY(1.2);
+    /* content: url("/img/roomGif/level0computer.gif"); */
     transition: 0.4s ease-in-out;
-    /* content: url("/img/roomGif/level0calender.gif"); */
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   `;
@@ -102,8 +103,12 @@ const Level3 = ({ handleModal,officeIdx }: any) => {
   const handleCoin = () => {
     navigate('/game/casino');
   };
-  const handleAlert = () => {
+  const handleMyPage = () => {
     navigate('/game/mypage');
+    // alert('마이페이지로');
+  };
+  const handleGameSelect = () => {
+    navigate('/game/select');
     // alert('마이페이지로');
   };
   return (
@@ -120,12 +125,12 @@ const Level3 = ({ handleModal,officeIdx }: any) => {
         <MyRoom src="/img/MyOffice/level4.png" alt="lv2 room" />
 
         <MyComputer
-          onClick={handleAlert}
+          onClick={handleGameSelect}
           src="/img/MyOffice/level3computer.png"
           alt="내 컴퓨터"
         />
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
-        <Note src="/img/MyOffice/note.png" />
+        <Note onClick={handleMyPage} src="/img/MyOffice/note.png" />
         {/* <Spider src="/img/roomGif/spider.gif" /> */}
         <Calender onClick={handleModal} src="/img/MyOffice/level3calender.png" />
       </div>
