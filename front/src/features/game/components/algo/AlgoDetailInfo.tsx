@@ -5,10 +5,21 @@ import { resultCodeRequest } from '../../../../api/algoApi';
 
 import Swal from 'sweetalert2';
 
+const Wrapper = styled.div`
+  .title{
+    border: 1px solid #000;
+
+  }
+  .item{
+    border: 1px solid #000;
+  }
+`
+
 const Close = styled.img`
   /* z-index: 5000; */
   position: absolute;
   right: 10%;
+  
 `;
 
 interface ResultCodeInterface {
@@ -29,6 +40,7 @@ function AlgoDetailInfo({ handleModal, algoDetailRoomCode }: Props) {
   };
   const { userInfo } = useSelector((state: any) => state.auth);
   const [resultCodes, setResultCodes] = useState<ResultCodeInterface[]>();
+  const [codeId, setCodeId] = useState(0);
   useEffect(() => {
     fetchResultCodeRequest();
   }, []);
@@ -51,14 +63,42 @@ function AlgoDetailInfo({ handleModal, algoDetailRoomCode }: Props) {
       });
     }
   };
+
+  const clickCode = (idx:any) => {
+    setCodeId(idx);
+  };
+
   return (
-    <>
+    <Wrapper>
       <Close onClick={handleModal} src="/img/close.png" alt="asdfasdf" />
-      <h1>알고리즘 배틀 코드 리뷰</h1>
+      <h1 className='title'>알고리즘 배틀 코드 리뷰</h1>
+      <div>
+      {resultCodes?.map((code: ResultCodeInterface, index) => {
+
+            if (code.userId === userInfo.id) {
+              return (
+                <div className='item' key={index} onClick={clickCode}>
+                  <p>나의 코드</p>
+                </div>
+              );
+            } else {
+              return (
+                <div className='item' key={index} onClick={clickCode}>
+                  <p>누군가의 코드</p>
+                </div>
+              );
+            }
+
+          })}
+
+      </div>
+      <div>
+        {resultCodes && resultCodes[codeId].userId}
+      </div>
       {resultCodes?.map((code: ResultCodeInterface, index) => {
         if (code.userId === userInfo.id) {
           return (
-            <div key={index}>
+            <div className='item' key={index}>
               <p>나의 코드</p>
               <p>제출 언어 : {language[code.lan]}</p>
               <p>{code.code}</p>
@@ -66,7 +106,7 @@ function AlgoDetailInfo({ handleModal, algoDetailRoomCode }: Props) {
           );
         } else {
           return (
-            <div key={index}>
+            <div className='item' key={index}>
               <p>누군가의 코드</p>
               <p>제출 언어 : {language[code.lan]}</p>
               <p>{code.code}</p>
@@ -74,7 +114,7 @@ function AlgoDetailInfo({ handleModal, algoDetailRoomCode }: Props) {
           );
         }
       })}
-    </>
+    </Wrapper>
   );
 }
 export default AlgoDetailInfo;

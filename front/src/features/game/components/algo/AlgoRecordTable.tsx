@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   }
   .problem-btn:hover{
     color : #e2b708;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
   .detail{
     background-color: #2e2e2e;
@@ -20,6 +21,7 @@ const Wrapper = styled.div`
   .detail:hover{
     background-color: #e2b708;
     color:#2e2e2e;
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
 `
 
