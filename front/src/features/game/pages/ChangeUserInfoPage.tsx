@@ -184,7 +184,7 @@ const ChangeUserInfoPage = () => {
   const handleMypage = () => {
     navigate('/game/mypage');
   };
-  console.log('123', profilechar);
+  // console.log('123', profilechar);
   return (
     <ChangeUserInfo>
       <MyCharacter>

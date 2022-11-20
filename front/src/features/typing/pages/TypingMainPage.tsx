@@ -189,11 +189,11 @@ function TypingMainPage() {
   };
   const handleChoicePython = () => {
     setGameType('PYTHON');
-    console.log('파이썬 선택');
+    // console.log('파이썬 선택');
   };
   const handleChoiceJava = () => {
     setGameType('JAVA');
-    console.log('자바 선택');
+    // console.log('자바 선택');
   };
   const onClickCreateRoom = () => {
     navigate('friend', { state: { lang: gameType, shareCode: null } });

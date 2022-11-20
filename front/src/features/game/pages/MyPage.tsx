@@ -237,10 +237,10 @@ const MyPage = () => {
   const fetchMySsafyRecord = async () => {
     try {
       const res = await mySsafyRecordRequest();
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) {
         setSsafyRecords(res.data.content);
-        console.log(res.data.content, '싸피ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ');
+        // console.log(res.data.content, '싸피ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ');
       }
     } catch (error) {
       Swal.fire({ icon: 'error', text: '싸피게임 정보를 못가져왔습니다' });
@@ -273,10 +273,10 @@ const MyPage = () => {
       confirmButtonText: '네!',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('컨펌함');
+        // console.log('컨펌함');
         dispatch(authActions.deleteUserInfoStart());
         navigate('/login');
-        console.log('지금 유저 인포', userInfo);
+        // console.log('지금 유저 인포', userInfo);
         // 유저 인포 널로 바꾸고
         // 엑세스 토큰 지우고
       } else {
@@ -420,10 +420,10 @@ const MyPage = () => {
             </div>
           </Down>
           <MyPower>
-          <div style={{'width':'100%'}}>
+            <div style={{ width: '100%' }}>
               {/* <h1>{userInfo.nickname}님의 최근 전적</h1> */}
               {gameType === 'algo' && (
-                <div style={{'width':'100%'}}>
+                <div style={{ width: '100%' }}>
                   {/* <h1>알고리즘</h1> */}
                   {detailModal === 'algo' && (
                     <DetailResultModal

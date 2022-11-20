@@ -11,24 +11,22 @@ const Wrapper = styled.div`
     height: 100vh;
     flex-direction: column;
   }
-  .goOffice2{
-      font-size: 2rem;
-      margin-top: 2rem;
-      /* color: #f27474; */
+  .goOffice2 {
+    font-size: 2rem;
+    margin-top: 2rem;
+    /* color: #f27474; */
 
-      background: #9d5af0;
-      padding: 0.5rem 1rem;
-      border-radius: 1.4rem;
-      color: white;
-      box-shadow: 1px 1px 1px 1px white;
+    background: #9d5af0;
+    padding: 0.5rem 1rem;
+    border-radius: 1.4rem;
+    color: white;
+    box-shadow: 1px 1px 1px 1px white;
 
-      
+    :hover {
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+      background: #8f46e8;
 
-      :hover {
-        cursor: url('/img/cursor/hover_cursor.png'), auto;
-        background: #8f46e8;
-
-        /* animation-name: scaleUp;
+      /* animation-name: scaleUp;
         animation-iteration-count: initial;
         animation-duration: 0.3s;
         z-index: 10;
@@ -43,8 +41,8 @@ const Wrapper = styled.div`
             transform: scale(1.1);
           }
         } */
-      }
     }
+  }
 
   .Intro {
     position: relative;
@@ -78,8 +76,6 @@ const Wrapper = styled.div`
         transition: transform 0.4yys;
 
         cursor: url('/img/cursor/hover_cursor.png'), auto;
-
-
       }
     }
     .characters {
@@ -93,8 +89,6 @@ const Wrapper = styled.div`
       display: flex;
       align-items: flex-end;
     }
-
-    
 
     .goOffice {
       position: absolute;
@@ -206,10 +200,9 @@ const Wrapper = styled.div`
     padding: 1rem;
 
     :hover {
-      transform: scale(1.3) ;
-        animation-iteration-count: initial;
-        z-index: 10;
-
+      transform: scale(1.3);
+      animation-iteration-count: initial;
+      z-index: 10;
 
       cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
@@ -496,7 +489,7 @@ const IntroPage = () => {
   };
 
   const contentIn = () => {
-    console.log(percent);
+    // console.log(percent);
     if (percent < -0.1) {
       txt01ref.current?.classList.remove('active');
       officeImgRef.current?.classList.remove('active');
@@ -687,9 +680,7 @@ const IntroPage = () => {
             </div>
           </div>
           <div className="lastTitle">
-            <div>
-            지금부터 즐겨보세요!
-            </div>
+            <div>지금부터 즐겨보세요!</div>
             <div className="goOffice2" onClick={goLogin}>
               Go to Office
             </div>
