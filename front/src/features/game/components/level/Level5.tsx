@@ -130,7 +130,7 @@ const Level5 = ({ handleModal,officeIdx }: any) => {
         <Coin onClick={handleCoin} src="/img/coin/coin.png" />
         <Note onClick={handleMyPage} src="/img/MyOffice/note.png" />
         {/* <Spider src="/img/roomGif/spider.gif" /> */}
-        <Calender onClick={handleModal} src="/img/MyOffice/level3Calender.png" />
+        <Calender onClick={handleModal} src="/img/MyOffice/level3calender.png" />
       </div>
     </Unity>
   );
