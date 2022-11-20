@@ -190,7 +190,7 @@ const CSgamePage = () => {
         className="arrowImg"
       />
       <div className="title">
-        <img src="/img/gametitle/gameTitle6.png" alt="title" />
+        <img src="/img/gametitle/GameTitle6.png" alt="title" />
       </div>
 
       <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>
