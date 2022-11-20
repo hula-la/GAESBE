@@ -254,6 +254,7 @@ const CSIngamePage = () => {
   const characterCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
   // client.debug = () => {};
 
   // 게임 시작 전 자동 시작 타이머
@@ -326,10 +327,10 @@ const CSIngamePage = () => {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
+      client2.current = Stomp.over(socket);
       // 룸코드를 받으면 그 방에 대한 구독을 함
-      client2.connect({}, (frame) => {
-        client2.subscribe('/cs/room/' + roomCode, (res) => {
+      client2.current.connect({}, (frame: any) => {
+        client2.current.subscribe('/cs/room/' + roomCode, (res: any) => {
           var data1 = JSON.parse(res.body);
           if (data1.hasOwnProperty('msg')) {
             if (data1.msg === 'end') {
@@ -384,7 +385,7 @@ const CSIngamePage = () => {
             playerList = data1;
           }
         });
-        client2.send(
+        client2.current.send(
           '/api/cs/memberInfo',
           {},
           JSON.stringify({
@@ -398,6 +399,7 @@ const CSIngamePage = () => {
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
+      client2.current.disconnect(() => {});
     };
   }, []);
 
