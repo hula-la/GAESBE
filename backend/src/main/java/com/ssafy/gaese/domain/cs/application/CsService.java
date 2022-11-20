@@ -58,7 +58,7 @@ public class CsService {
 
     private final int penaltyScore=60;
 
-    private final int numProblem=3;
+    private final int numProblem=2;
 
     public Page<CsRecordDto> findCsRecord(Long userId, Pageable pageable){
         Page<CsRecord> CsRecords = csRecordRepository
