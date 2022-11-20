@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
+import CSModal from '../components/CSModal';
 const CsMain = styled.div`
   width: 100%;
   height: 100%;
@@ -30,6 +30,9 @@ const CsMain = styled.div`
     padding: 10% 0;
     img {
       width: 50%;
+    }
+    .question {
+      width: 3%;
     }
   }
 `;
@@ -170,7 +173,7 @@ const SelectGameTypeBox = styled.div`
 
 const CSgamePage = () => {
   const navigate = useNavigate();
-
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   // 랜덤매칭 페이지로 이동
   const onClickRandom = () => {
     navigate('random');
@@ -180,7 +183,9 @@ const CSgamePage = () => {
   const onClickFriend = () => {
     navigate('friend', { state: { shareCode: null } });
   };
-
+  const openModal = () => {
+    setModalOpen(true);
+  };
   return (
     <CsMain>
       <img
@@ -191,8 +196,13 @@ const CSgamePage = () => {
       />
       <div className="title">
         <img src="/img/gametitle/gameTitle6.png" alt="title" />
+        <img
+          onClick={openModal}
+          className="question"
+          src="/img/questionMark-gray.png"
+        ></img>
       </div>
-
+      {modalOpen && <CSModal setModalOpen={setModalOpen} />}
       <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>
 
       <SelectGameType>

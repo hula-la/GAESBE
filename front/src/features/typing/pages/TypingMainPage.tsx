@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../components/Common/retroBtn.css';
+import TypingModal from '../components/TypingModal';
 
 // import "src/components/retroBtn.css";
 
@@ -40,6 +41,9 @@ const TypingMain = styled.div`
     margin: 2rem 0;
     img {
       width: 60%;
+    }
+    .question {
+      width: 3%;
     }
   }
 `;
@@ -181,6 +185,7 @@ function TypingMainPage() {
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const navigate = useNavigate();
   const [shareCode, setShareCode] = useState<String>('');
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const handleFriendGame = () => {
     setIsOpen((prev) => !prev);
   };
@@ -198,6 +203,9 @@ function TypingMainPage() {
   const onClickCreateRoom = () => {
     navigate('friend', { state: { lang: gameType, shareCode: null } });
   };
+  const openModal = () => {
+    setModalOpen(true);
+  };
   return (
     <TypingMain>
       <img
@@ -210,7 +218,13 @@ function TypingMainPage() {
         <div className="title">
           {/* <img src="/img/gametitle/gametitle2.png" alt="title" /> */}
           <img src="/img/gametitle/GameTitle7.png" alt="" />
+          <img
+            onClick={openModal}
+            className="question"
+            src="/img/questionMark-gray.png"
+          ></img>
         </div>
+        {modalOpen && <TypingModal setModalOpen={setModalOpen} />}
         <h1>타이핑 연습을 하면서 언어와 친해지자</h1>
         <SelectLanguage>
           <SelectLanguageBox onClick={handleChoicePython}>

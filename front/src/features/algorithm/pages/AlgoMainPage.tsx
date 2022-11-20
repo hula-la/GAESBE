@@ -8,20 +8,21 @@ import { AlgoRoomInterface } from '../../../models/algo';
 
 import AlgoRoom from '../components/AlgoRoom';
 import AlgoModal from '../components/AlgoModal';
+import AlgoExplanationMoal from '../components/AlgoExplanationModal';
 import styled from 'styled-components';
 import '../../../components/Common/retroBtn.css';
 import Swal from 'sweetalert2';
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
-  .arrowImg{
+  .arrowImg {
     transform: scaleX(-1);
     padding: 1rem;
     /* position: absolute;
     left: 0;
     top: 0; */
     transition: all 0.3s;
-    :hover{
+    :hover {
       transform: scaleX(-1.2) scaleY(1.2);
       cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
@@ -42,6 +43,9 @@ const Content = styled.div`
     img {
       width: 50%;
     }
+    .question {
+      width: 3%;
+    }
   }
   .btn-top {
     height: 7%;
@@ -59,7 +63,6 @@ const Content = styled.div`
     a {
       margin: auto;
       justify-content: center;
-
     }
   }
   .room-wrapper {
@@ -103,7 +106,7 @@ function AlgoMainPage() {
     wait: AlgoRoomInterface[];
   }>({ start: [], wait: [] });
   const [bjConnectModal, setBjConnectModal] = useState<boolean>(false);
-
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
   const handleConnectModal = () => {
     setBjConnectModal(!bjConnectModal);
   };
@@ -135,10 +138,13 @@ function AlgoMainPage() {
   const handleReload = () => {
     fetchRooms();
   };
-
+  const openModal = () => {
+    setModalOpen(true);
+  };
   return (
     <Wrapper>
-      <img className='arrowImg'
+      <img
+        className="arrowImg"
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""
@@ -147,7 +153,13 @@ function AlgoMainPage() {
         {bjConnectModal && <AlgoModal handleModal={handleConnectModal} />}
         <h1 className="title">
           <img src={`/img/gametitle/gametitle4.png`}></img>
+          <img
+            onClick={openModal}
+            className="question"
+            src="/img/questionMark-gray.png"
+          ></img>
         </h1>
+        {modalOpen && <AlgoExplanationMoal setModalOpen={setModalOpen} />}
         <div className="btn-top">
           <a onClick={handleReload} className="eightbit-btn">
             새로고침
