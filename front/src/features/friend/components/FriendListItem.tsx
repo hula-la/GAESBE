@@ -24,7 +24,7 @@ const FriendListItemBlock = styled.div`
     }
   }
   .invite {
-    padding-top: 2rem;
+    /* padding-top: 1rem; */
   }
   .friendBox {
     position: relative;

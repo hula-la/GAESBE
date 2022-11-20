@@ -595,6 +595,7 @@ const TypingFriendGame = () => {
         {},
         JSON.stringify({
           userId: friendId,
+          fromUserNick: userInfo.nickname,
           gameType: 'typing',
           roomCode: roomCode,
         }),
