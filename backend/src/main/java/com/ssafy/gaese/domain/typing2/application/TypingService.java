@@ -85,7 +85,8 @@ public class TypingService {
         System.out.println(roomDto);
 
         // 게임 시작했다고 클라이언트에게 알리기
-        res.put("msg", "start");
+        res.put("msg", "게임이 시작되었습니다.");
+        res.put("start", true);
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
 
@@ -138,7 +139,8 @@ public class TypingService {
         User winUser = userRepository.findById(winUserId).get();
 
         // 끝났다는 메시지
-        res.put("msg", "end");
+        res.put("msg", "게임이 종료되었습니다.");
+        res.put("end", true);
         res.put("winUserId", winUser.getId());
         res.put("winUserNickName", winUser.getNickname());
         res.put("winUserProfile", winUser.getProfileChar());

@@ -18,6 +18,7 @@ public class FriendGameService {
         HashMap<String, String> res = new HashMap<>();
         res.put("inviteGameType",friendInviteGameDto.getGameType());
         res.put("inviteRoomCode",friendInviteGameDto.getRoomCode());
+        res.put("fromUserNick",friendInviteGameDto.getFromUserNick());
         simpMessagingTemplate.convertAndSend("/friend/"+friendInviteGameDto.getUserId(),res);
     }
 }

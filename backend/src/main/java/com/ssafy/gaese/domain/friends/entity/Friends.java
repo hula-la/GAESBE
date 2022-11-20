@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Builder
@@ -24,11 +26,11 @@ public class Friends {
     @Column
     private Date createdDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "firstUserId", referencedColumnName = "id")
     User firstUser;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "secondUserId", referencedColumnName = "id")
     User secondUser;
 

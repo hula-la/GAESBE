@@ -42,7 +42,7 @@ public class CsRoomService {
 
     private final SocketInfo socketInfo;
 
-    private final int maxPlayer=6;
+    private final int maxPlayer=2;
     private final int numProblem=3;
 
     private final String waitRoomKey="WaitRoom";
@@ -96,6 +96,8 @@ public class CsRoomService {
         else if(csSocketDto.getType() == CsSocketDto.Type.LEAVE){
             leaveRoom(csSocketDto);
             res.put("msg",user.getNickname()+" 님이 나가셨습니다.");
+            simpMessagingTemplate.convertAndSend("/cs/room/"+csSocketDto.getRoomCode(),res);
+
             return;
         }
         // 방 전원에게 유저 출입 메시지전달

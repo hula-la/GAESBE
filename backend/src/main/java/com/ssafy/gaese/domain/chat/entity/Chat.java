@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @Builder
@@ -22,11 +24,11 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "fromUserId")
     private User fromUser;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "toUserId")
     private User toUser;
 

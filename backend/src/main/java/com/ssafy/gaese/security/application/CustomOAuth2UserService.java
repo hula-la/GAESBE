@@ -97,23 +97,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         userCharacterRepository.save(UserCharacter.builder()
                 .characters(characters)
-                .user(user)
+                .user(save)
                 .build());
 
         userOfficeRepository.save(UserOffice.builder()
                 .office(office)
-                .user(user)
-                .build());
-        userOfficeRepository.save(UserOffice.builder()
-                .office(office)
-                .user(user)
+                .user(save)
                 .build());
 
-        Ability ability = new Ability(user);
+
         System.out.println("회원가입 중");
-        System.out.println(ability.toString());
         abilityRepository.save(Ability.builder()
-                .user(user)
+                        .user(save)
                 .build());
 
 

@@ -26,7 +26,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Table(name = "User",
         indexes = {
                 @Index(name = "idx_maxWinStreak", columnList = "maxWinStreak")
@@ -57,10 +56,7 @@ public class User {
     private String refreshToken;
 
     @OneToOne(mappedBy = "user"
-            , cascade = {
-            CascadeType.PERSIST
-            ,CascadeType.MERGE
-            , CascadeType.REMOVE // 사용자 삭제시 FCM Key 함께 삭제
+            , cascade = {CascadeType.REMOVE // 사용자 삭제시 FCM Key 함께 삭제
     }
     )
     private Ability ability;
@@ -137,6 +133,7 @@ public class User {
                 .id(this.id)
                 .profileChar(this.profileChar)
                 .bjId(this.bjId)
+                .officeLv(this.officeLv)
                 .build();
     }
 
@@ -145,6 +142,7 @@ public class User {
                 .nickname(this.nickname)
                 .id(this.id)
                 .profileChar(this.profileChar)
+                .officeLv(this.officeLv)
                 .build();
     }
     public AlgoUserDto toAlgoDto(){
