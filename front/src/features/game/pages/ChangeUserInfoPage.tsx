@@ -22,6 +22,9 @@ const BackArrow = styled.img`
   top: 5%;
   left: 20%;
   transform: scaleX(-1);
+  :hover {
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
+  }
 `;
 const Back = styled.img`
   position: absolute;
@@ -29,6 +32,9 @@ const Back = styled.img`
   top: 5%;
   left: 23%;
   /* transform: scaleX(-1); */
+  :hover {
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
+  }
 `;
 const MyCharacter = styled.div`
   /* border: 2px solid blue; */
@@ -54,6 +60,12 @@ const MyCharacterInfo = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    img {
+      :hover {
+        transform: scale(1.2);
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
+    }
     .nicknameblock {
       display: flex;
       flex-direction: column;
@@ -62,6 +74,9 @@ const MyCharacterInfo = styled.div`
         flex-direction: row;
         justify-content: center;
         align-items: center;
+        input {
+          font-size: 1.1rem;
+        }
       }
     }
     .check {
@@ -116,6 +131,9 @@ const CharacterList = styled.div`
 `;
 const UnLockedCharacter = styled.img`
   width: 50%;
+  :hover {
+    cursor: url('/img/cursor/hover_cursor.png'), auto;
+  }
 `;
 const LockedCharacter = styled.img`
   width: 100%;
