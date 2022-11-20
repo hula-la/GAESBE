@@ -140,6 +140,7 @@ public class TypingService {
 
         // 끝났다는 메시지
         res.put("msg", "게임이 종료되었습니다.");
+        res.put("end", true);
         res.put("winUserId", winUser.getId());
         res.put("winUserNickName", winUser.getNickname());
         res.put("winUserProfile", winUser.getProfileChar());
