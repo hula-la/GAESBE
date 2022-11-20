@@ -14,16 +14,26 @@ const Wrapper = styled.div`
   .goOffice2{
       font-size: 2rem;
       margin-top: 2rem;
-      color: #f27474;
+      /* color: #f27474; */
+
+      background: #9d5af0;
+      padding: 0.5rem 1rem;
+      border-radius: 1.4rem;
+      color: white;
+      box-shadow: 1px 1px 1px 1px white;
+
+      
 
       :hover {
-        animation-name: scaleUp;
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+        background: #8f46e8;
+
+        /* animation-name: scaleUp;
         animation-iteration-count: initial;
         animation-duration: 0.3s;
         z-index: 10;
         transform: scale(1.1);
 
-        cursor: url('/img/cursor/hover_cursor.png'), auto;
 
         @keyframes scaleUp {
           0% {
@@ -32,7 +42,7 @@ const Wrapper = styled.div`
           100% {
             transform: scale(1.1);
           }
-        }
+        } */
       }
     }
 
@@ -170,12 +180,14 @@ const Wrapper = styled.div`
     align-items: center;
   }
   .introText {
-    color: #c4c4c4;
     font-size: 1.6rem;
     font-weight: 700;
 
     text-shadow: 2px 2px 2px #000000;
     text-align: center;
+
+    color: #e2e2e2;
+    margin-bottom: 0.7rem;
   }
 
   .pointerDown {
@@ -191,9 +203,13 @@ const Wrapper = styled.div`
     animation-play-state: running;
     animation-timing-function: linear;
     z-index: 10;
+    padding: 1rem;
 
     :hover {
-      transform: scale(1.1);
+      transform: scale(1.3) ;
+        animation-iteration-count: initial;
+        z-index: 10;
+
 
       cursor: url('/img/cursor/hover_cursor.png'), auto;
     }

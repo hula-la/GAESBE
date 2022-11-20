@@ -8,11 +8,12 @@
   text-decoration: none;
   color: black;
   box-shadow: inset -4px -4px 0px 0px #4aa52e;
-}
+} 
 .eightbit-btn:hover,
 .eightbit-btn:focus {
   background: #76c442;
   box-shadow: inset -6px -6px 0px 0px #4aa52e;
+  cursor: url('/public/img/cursor/hover_cursor.png'), auto;
 }
 .eightbit-btn:active {
   box-shadow: inset 4px 4px 0px 0px #4aa52e;
@@ -45,6 +46,7 @@
 .eightbit-btn--reset:focus {
   background: #ce372b;
   box-shadow: inset -6px -6px 0px 0px #8c2022;
+  cursor: url('/public/img/cursor/hover_cursor.png'), auto;
 }
 .eightbit-btn--reset:active {
   box-shadow: inset 4px 4px 0px 0px #8c2022;
@@ -57,6 +59,7 @@
 .eightbit-btn--proceed:focus {
   background: #f2c409;
   box-shadow: inset -6px -6px 0px 0px #e59400;
+  cursor: url('/public/img/cursor/hover_cursor.png'), auto;
 }
 .eightbit-btn--proceed:active {
   box-shadow: inset 4px 4px 0px 0px #e59400;
@@ -77,6 +80,7 @@
 .eightbit-btn:focus {
   background: #76c442;
   box-shadow: inset -6px -6px 0px 0px #4aa52e;
+  cursor: url('/public/img/cursor/hover_cursor.png'), auto;
 }
 .eightbit-btn:active {
   box-shadow: inset 4px 4px 0px 0px #4aa52e;
@@ -109,6 +113,7 @@
 .eightbit-btn--reset:focus {
   background: #ce372b;
   box-shadow: inset -6px -6px 0px 0px #8c2022;
+  cursor: url('/public/img/cursor/hover_cursor.png'), auto;
 }
 .eightbit-btn--reset:active {
   box-shadow: inset 4px 4px 0px 0px #8c2022;
@@ -134,6 +139,7 @@
 :focus {
   background: #c2c2c2;
   box-shadow: inset -4px -4px 0px 0px #888888;
+  cursor: url('/public/img/cursor/hover_cursor.png'), auto;
 }
 
 /*

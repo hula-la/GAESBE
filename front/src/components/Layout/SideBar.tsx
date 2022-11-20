@@ -230,14 +230,8 @@ const SideBar = () => {
             <div className="nickname">{userInfo.nickname}</div>
             <div className="userLv">
               <div className="userAbilityLv">
-                Lv.
-                {userAbility &&
-                  Math.min(
-                    userAbility.algorithmLv,
-                    userAbility.csLv,
-                    userAbility.luckLv,
-                    userAbility.typingLv,
-                  )}
+                Lv. 
+                {userInfo.officeLv} 
               </div>
               <div className="userRoomLv">
                 {officelist && officelist[officelist.length - 1].name}
