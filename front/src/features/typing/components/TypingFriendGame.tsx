@@ -379,7 +379,8 @@ const TypingFriendGame = () => {
         console.log('*****************177**************************');
         client2.current.subscribe('/typing2/room/' + roomCode, (res: any) => {
           var testdata = JSON.parse(res.body);
-          console.log(testdata, '이게테데지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ');
+          // console.log(testdata, '이게테데지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ');
+          // 이거 지움
           if (testdata.hasOwnProperty('progressByPlayer')) {
             setTest(testdata.progressByPlayer[`${userInfo.id}`]);
             setTestProgress(testdata);
