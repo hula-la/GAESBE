@@ -49,7 +49,7 @@ const Container = styled.div`
   }
   .myRank {
     width: 80%;
-    height: 32%;
+    height: 25%;
     margin: auto;
     border: 5px solid #ff9f00;
     border-radius: 15px;
@@ -116,13 +116,14 @@ const Container = styled.div`
 `;
 
 const ResultButton = styled.div`
-  width: 20%;
+  margin: 3% auto;
+  width: 30%;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
-  position: absolute;
+  /* align-content: center; */
+  /* position: absolute;
   top: 10%;
-  left: 20%;
+  left: 20%; */
 `;
 
 const CSResultPage = () => {

@@ -28,7 +28,7 @@ const Select = styled.div`
     text-align: center;
     width: 100%;
     height: 100%;
-    
+    border-radius: 10px 10px 0 0;
     :hover{
       color: #000;
       background-color:#FFC02D;
@@ -38,7 +38,7 @@ const Select = styled.div`
   .selected{
       color: #000;
       background-color:#FFC02D;
-      border-radius: 10px 10px 0 0;
+
     }
   
 `
@@ -56,7 +56,7 @@ const Close = styled.img`
   position: absolute;
   top: 5%;
   right:5%;
-  
+  cursor: url('/img/cursor/hover_cursor.png'), auto;
 `;
 
 interface ResultCodeInterface {
