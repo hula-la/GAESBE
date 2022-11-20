@@ -70,6 +70,7 @@ const Content = styled.div`
     flex-direction: row;
     text-align: center;
     height: 66%;
+    
   }
   .room {
     width: 50%;
@@ -77,6 +78,7 @@ const Content = styled.div`
     outline-width: 5px;
     outline-color: black;
     margin-right: 2%;
+    background-color: #2e2e2e;
   }
   .left {
     h2 {
@@ -93,6 +95,7 @@ const Content = styled.div`
     height: 83%;
     overflow-y: auto;
     border-top: 5px solid black;
+    
   }
 `;
 

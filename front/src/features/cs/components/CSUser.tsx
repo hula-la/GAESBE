@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   }
 
   .profile {
-    height: 100px;
+    height: 90px;
     /* width: 80px; */
   }
   .nickname {
