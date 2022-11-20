@@ -208,4 +208,4 @@ $ git checkout -t origin/dev/back
 ***
 ## Manual
 ***
-### exec/포팅 메뉴얼.pdf 참고
+### exec/포팅 메뉴얼/포팅 메뉴얼.pdf 참고
