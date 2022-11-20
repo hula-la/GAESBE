@@ -525,6 +525,7 @@ const CSFriendPage = () => {
             } else if (data1.msg === 'ready') {
               setIsReady(true);
             } else if (data1.msg === 'start') {
+              dispatch(friendActions.handleModal(null));
               setIsReady(false);
               setIsStart(true);
             } else {

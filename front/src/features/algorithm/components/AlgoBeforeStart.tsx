@@ -86,10 +86,15 @@ function AlgoBeforeStart({
 
   const { InGameInfo, loadingMsg } = useSelector((state: any) => state.algo);
   const { userInfo } = useSelector((state: any) => state.auth);
-  const [modal, setModal] = useState<boolean>(false);
+  const { modal } = useSelector((state: any) => state.friend);
 
   const handleModal = () => {
-    setModal(!modal);
+    dispatch(friendActions.openInvite());
+    dispatch(friendActions.handleModal('invite'));
+  };
+  const closeModal = () => {
+    dispatch(friendActions.closeInvite());
+    dispatch(friendActions.handleModal(null));
   };
 
   const { friendId } = useSelector((state: any) => state.friend);
@@ -142,7 +147,7 @@ function AlgoBeforeStart({
             배틀 시작
           </a>
         )}
-        {modal && <FriendModal handleModal={handleModal} type="invite" />}
+        {modal && <FriendModal handleModal={closeModal} type="invite" />}
         {InGameInfo.master != userInfo.id && (
           <a className="eightbit-btn eightbit-btn--disable">대기중</a>
         )}
