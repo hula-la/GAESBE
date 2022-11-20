@@ -284,6 +284,8 @@ public class Typing2RoomService {
         TypingRoomDto typingRoomDto = typingRoomRedisRepository.findById(typingSocketDto.getRoomCode()).orElseThrow(()->new RoomNotFoundException(typingSocketDto));
 
         HashMap<String, Long> players = typingRoomDto.getPlayers();
+        //방 내부 유저 정보 삭제
+        players.remove(typingSocketDto.getSessionId());
 
         String waitRoomKey=null;
         if (typingSocketDto.getLangType()== TypingRecord.LangType.JAVA){
@@ -292,16 +294,18 @@ public class Typing2RoomService {
             waitRoomKey=PythonWaitRoomKey;
 
         }
-        //레디스에서 유저 정보 삭제
-        redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
 //        typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
 
         //인원수 카운트
         typingRoomDto.setRealPlayerCount(typingRoomDto.getRealPlayerCount()-1);
 
+        System.out.println("방 나간 후 인원: "+typingRoomDto.getRealPlayerCount());
+
         // 0명이면 삭제
         if (typingRoomDto.getRealPlayerCount()==0) {
 
+            // 0명이면 방폭파
+            redisUtil.removeSetData(waitRoomKey,typingRoomDto.getCode());
             typingRoomRedisRepository.deleteById(typingRoomDto.getCode());
             //사람이 0명이면 어차피 보내줘야할 사람도 없으니 여기서 null로 끝내는게 로직상 맞을거 같아요.
             return null;
@@ -313,8 +317,7 @@ public class Typing2RoomService {
 //        }
 //        else {
 //        }
-        //방 내부 유저 정보 삭제
-        players.remove(typingSocketDto.getSessionId());
+
         //나간유저가 방장이고 친선방이라면 방장 재설정 해줘야함
         if(typingRoomDto.getMasterId()==typingSocketDto.getUserId() &&
                 typingRoomDto.getRoomType()== TypingSocketDto.RoomType.FRIEND)
@@ -329,10 +332,19 @@ public class Typing2RoomService {
             res.put("isMaster", true);
             simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
 
+            Map<String,Object> res = new HashMap<>();
+            res.put("isMaster", true);
+            simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
+
+            User user = userRepository.findById(typingRoomDto.getMasterId()).orElseThrow(() -> new UserNotFoundException());
+
+            // 전체한테 알림
+            res.clear();
+            res.put("msg",user.getNickname()+" 님이 반장이 되었습니다.");
+            simpMessagingTemplate.convertAndSend("/typing2/room"+typingRoomDto.getCode(),res);
+
 
         }
-
-        typingRoomDto.setPlayers(players);
 
 
         // 바뀐 방 정보로 저장
