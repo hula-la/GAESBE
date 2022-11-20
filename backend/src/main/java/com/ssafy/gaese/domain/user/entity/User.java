@@ -133,6 +133,7 @@ public class User {
                 .id(this.id)
                 .profileChar(this.profileChar)
                 .bjId(this.bjId)
+                .officeLv(this.officeLv)
                 .build();
     }
 

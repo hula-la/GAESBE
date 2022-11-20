@@ -13,4 +13,5 @@ public class UserDto {
     private String nickname;
     private int profileChar;
     private String bjId;
+    private int officeLv;
 }
