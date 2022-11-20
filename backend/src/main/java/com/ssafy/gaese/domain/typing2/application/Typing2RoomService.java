@@ -107,6 +107,7 @@ public class Typing2RoomService {
             //서순 조심
             leaveRoom(typingSocketDto);
             res.put("msg",user.getNickname()+" 님이 나가셨습니다.");
+            simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
             return;
 
