@@ -26,9 +26,10 @@
 ###  <br>
 
 ## 주요 기능
-- MyPage
-![image-20221006105153838](README.assets/mypage.png)
-![image-20221006105153838](README.assets/mypage2.png)
+- Office
+![image-20221006105153838](README.assets/office1.png)
+![image-20221006105153838](README.assets/office2.png)
+![image-20221006105153838](README.assets/office3.png)
 - Friend
 ![image-20221006105153838](README.assets/friend.png)
 - Chatting
@@ -38,12 +39,22 @@
 ![image-20221006105153838](README.assets/typing1.png)
 ![image-20221006105153838](README.assets/typing2.png)
 
+- csFight
+![image-20221006105153838](README.assets/cs1.png)
+![image-20221006105153838](README.assets/cs2.png)
+
+- ssafyGame
+![image-20221006105153838](README.assets/ssafy.png)
+- myPage
+![image-20221006105153838](README.assets/mypage1.png)
+![image-20221006105153838](README.assets/mypage2.png)
 ## 개발 환경
 
 ###  Backend
 
 - SpringBoot 2.7.5
 - Java 11
+- Gradle 7.5.1
 - Type: Gradle
 - Packiging: jar
 - IntelliJ IDEA : 22.2.1
@@ -53,9 +64,10 @@
 - Lombok
 - SWAGGER 2.9.2
 - Spark-core : 3.3.0
-- Redis
+- Redis 7.0.5
+- FireBase 9.1.0
+- Selenium 4.5.3
 - FastAPI
-- FireBase
 
 ###  Frontend
 
@@ -75,12 +87,12 @@
 - Amazon EC2 - Ubuntu 20.04
 - Nginx - 1.18.0
 - Docker - 20.10.21
-- Jenkins
+- Jenkins - 2.361.2
 
 ### IDE
 
-- vscode
-- IntelliJ
+- vscode 1.70.1
+- IntelliJ 2021.3.2
 
 ## 협업 툴
 - Gitlab
