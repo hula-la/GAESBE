@@ -164,6 +164,7 @@ const FriendListItemBlock = styled.div`
     :hover {
       background-color: #fcb615;
       color: white;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
   }
 `;
