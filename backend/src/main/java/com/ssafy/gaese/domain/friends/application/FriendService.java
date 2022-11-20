@@ -123,13 +123,25 @@ public class FriendService {
     }
 
     public List<FriendRequestDto> delRequest(Long userId, Long reqId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundException());
 
 
 
         friendRequestRepository.deleteById(reqId);
+        
+
+        int findByRequestCount = friendRequestRepository.findByTargetUser(user).size();
+        System.out.println("친구 저장한 후 "+findByRequestCount);
+        if(findByRequestCount==0)
+            friendAlarm(userId,false);
+        else
+            friendAlarm(userId,true);
+
+        System.out.println("친구 거절 후 남은 수 목록 체크");
+        System.out.println(findByRequestCount);
 
         return getRequestFriend(userId);
-
     }
 
 
