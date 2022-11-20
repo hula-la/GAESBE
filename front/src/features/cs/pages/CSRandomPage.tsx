@@ -298,6 +298,8 @@ const CSIngamePage = () => {
             setTimeout(() => {
               setIsNext(true);
             }, 57000);
+          } else if (data.hasOwnProperty('isLast')) {
+            setIsLast(data.isLast);
           }
         });
 
