@@ -11,6 +11,18 @@ const CsMain = styled.div`
   color: white;
 
   position: relative;
+  .arrowImg {
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .title {
     text-align: center;
     /* height: 25%; */
@@ -175,6 +187,7 @@ const CSgamePage = () => {
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""
+        className="arrowImg"
       />
       <div className="title">
         <img src="/img/gametitle/gametitle6.png" alt="title" />

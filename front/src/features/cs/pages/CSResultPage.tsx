@@ -171,11 +171,10 @@ const CSResultPage = () => {
           <div className="rankInfo">
             <div>내 랭킹</div>
             <div>{rankByPlayer[userInfo.id]} 등</div>
-            <div>{myScore[3]} 점</div>
           </div>
         )}
         <div className="userInfo">
-          <CSUser user={myScore}></CSUser>
+          <CSUser user={myScore} my="my"></CSUser>
         </div>
       </div>
       <ResultButton>
