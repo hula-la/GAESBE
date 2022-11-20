@@ -208,7 +208,8 @@ function TypingMainPage() {
       />
       <div className="aniToDown">
         <div className="title">
-          <img src="/img/gametitle/gametitle2.png" alt="title" />
+          {/* <img src="/img/gametitle/gametitle2.png" alt="title" /> */}
+          <img src="/img/gametitle/GameTitle7.png" alt="" />
         </div>
         <h1>타이핑 연습을 하면서 언어와 친해지자</h1>
         <SelectLanguage>
@@ -268,7 +269,7 @@ function TypingMainPage() {
             className="eightbit-btn eightbit-btn--proceed"
             onClick={onClickCreateRoom}
           >
-            친구 매칭
+            방만들기
           </a>
         </SelectTypeBox>
       </SelectGameType>

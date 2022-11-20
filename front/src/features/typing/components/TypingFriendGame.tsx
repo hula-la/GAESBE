@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import './style.css';
+import Swal from 'sweetalert2';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import FriendModal from '../../friend/components/FriendModal';
@@ -18,7 +19,10 @@ interface CharStateType {
   sentence: number;
   type: number;
 }
-
+const Wrapper = styled.div`
+  height: 100%;
+  width: 100%;
+`;
 const TypingBg = styled.img`
   height: 100%;
   position: absolute;
@@ -37,7 +41,7 @@ const Track = styled.div`
 
 const LoadingBlock = styled.div`
   display: flex;
-  height: 100%;
+  height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -78,7 +82,7 @@ const PersonalCharacter = styled.div`
 `;
 const CharacterSet = styled('div')<{ progress: string }>`
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   padding-left: ${(props) => props.progress};
   // 부드럽게 움직이도록
   transition: all 0.4s;
@@ -172,7 +176,7 @@ const WaitingTypingGameBox = styled.div`
     transition: transform 0.3s;
 
     .inviteBtn {
-      width: 100%;
+      width: 80%;
       :hover {
         transform: scale(1.1);
 
@@ -192,6 +196,7 @@ const WaitingTypingGameBox = styled.div`
         display: none;
         position: absolute;
         bottom: 110%;
+        left: 30%;
       }
     }
 
@@ -271,6 +276,7 @@ const TypingFriendGame = () => {
   const { friendId } = useSelector((state: any) => state.friend);
   const [master, setMaster] = useState<Boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
+  const { errorMsg } = useSelector((state: any) => state.friend);
 
   const client = useRef<any>(null);
 
@@ -404,6 +410,7 @@ const TypingFriendGame = () => {
               setResultNickName(testdata.winUserNickName);
               setResultProfile(testdata.winUserProfile);
               setIsEnd(true);
+            } else if (testdata.msg === 'ready') {
             }
           } else if (testdata.hasOwnProperty('paragraph')) {
             setPargraph(testdata.paragraph);
@@ -560,9 +567,11 @@ const TypingFriendGame = () => {
     }
   };
   const handleModal = () => {
+    dispatch(friendActions.openInvite());
     dispatch(friendActions.handleModal('invite'));
   };
   const closeModal = () => {
+    dispatch(friendActions.closeInvite());
     dispatch(friendActions.handleModal(null));
   };
   const onClickStart = () => {
@@ -593,8 +602,23 @@ const TypingFriendGame = () => {
     }
   }, [friendId]);
   // const invite = () => {};
+  useEffect(() => {
+    if (errorMsg) {
+      Swal.fire({
+        toast: true,
+        position: 'top',
+        timer: 1000,
+        showConfirmButton: false,
+        text: errorMsg,
+      });
+      setTimeout(() => {
+        dispatch(friendActions.setErrorMsg(null));
+        navigate('/game');
+      }, 1000);
+    }
+  }, [errorMsg]);
   return (
-    <div>
+    <Wrapper>
       {isLoading && !players && (
         <LoadingBlock>
           <img src="/img/loadingspinner.gif" />
@@ -836,7 +860,7 @@ const TypingFriendGame = () => {
           </TypingGameBox>
         )}
       </Typing>
-    </div>
+    </Wrapper>
   );
 };
 
