@@ -16,12 +16,15 @@ const FriendListItemBlock = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top : 2rem;
+
     padding-bottom: 0.2rem;
-    
+
     :hover .speechBubbleWrapper {
       display: block;
     }
+  }
+  .invite {
+    padding-top: 2rem;
   }
   .friendBox {
     position: relative;
@@ -34,7 +37,6 @@ const FriendListItemBlock = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
-    
 
     .linetb {
       border-bottom: 1px solid black;
@@ -154,14 +156,14 @@ const FriendListItemBlock = styled.div`
       height: 60%;
     }
   }
-  .inviteBtn{
+  .inviteBtn {
     padding: 2% 4%;
-    border :  none;
+    border: none;
     background-color: none;
     border-radius: 15px;
-    :hover{
+    :hover {
       background-color: #fcb615;
-      color:white;
+      color: white;
     }
   }
 `;
@@ -237,7 +239,11 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
 
   return (
     <FriendListItemBlock>
-      <div className="friendBoxWrapper">
+      <div
+        className={
+          'friendBoxWrapper' + (category === 'invite' ? ' invite' : '')
+        }
+      >
         <div className="friendBox">
           {category === 'noInvite' && (
             <div className="speechBubbleWrapper">
@@ -272,7 +278,9 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
           {category === 'noInvite' && chatCnt !== 0 && <div>{chatCnt}</div>}
           {category === 'noInvite' && chatCnt === 0 && <div></div>}
           {category === 'invite' && !friend.playGame && (
-            <button className="inviteBtn" onClick={invite}>초대하기</button>
+            <button className="inviteBtn" onClick={invite}>
+              초대하기
+            </button>
           )}
           {category === 'invite' && friend.playGame && <div>게임중</div>}
         </div>

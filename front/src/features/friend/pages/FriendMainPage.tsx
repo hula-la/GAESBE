@@ -81,6 +81,20 @@ const FriendSide = styled.div`
     flex-direction: column;
     justify-content: space-between;
     overflow-y: auto;
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #2f3542;
+      border-radius: 10px;
+      background-clip: padding-box;
+      border: 2px solid transparent;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: grey;
+      border-radius: 10px;
+      box-shadow: inset 0px 0px 5px white;
+    }
   }
   .friendButtons {
     display: flex;
@@ -270,30 +284,6 @@ function FriendMainPage() {
 
   const closeModal = () => {
     dispatch(friendActions.handleModal(null));
-  };
-
-  const acceptInvite = () => {
-    setIsInvite(false);
-    if (invitedGameInfo.inviteGameType === 'algo') {
-      if (!userInfo.bjId) {
-        Swal.fire({
-          icon: 'info',
-          text: '백준아이디를 연동해야지만 게임을 할 수 있습니다',
-        });
-        return;
-      }
-      const InGameInfo = JSON.parse(invitedGameInfo.inviteRoomCode);
-      dispatch(algoActions.enterAlgoRoom(InGameInfo));
-      navigate('/game/algo/battle');
-      return;
-    }
-    navigate(`/game/${invitedGameInfo.inviteGameType}/friend`, {
-      state: { shareCode: invitedGameInfo.inviteRoomCode },
-    });
-  };
-
-  const rejectInvite = () => {
-    setIsInvite(false);
   };
 
   const onClickClose = () => {
