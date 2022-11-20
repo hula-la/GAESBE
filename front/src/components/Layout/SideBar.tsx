@@ -52,6 +52,9 @@ const Side = styled.div`
       width: 80%;
       /* height: 90%; */
     }
+    :hover{
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
   }
   .profileBox {
     position: relative;
@@ -67,7 +70,7 @@ const Side = styled.div`
       position: absolute;
       bottom: -5px;
       right: 0;
-      height: 150%;
+      height: 130%;
     }
     .profileInfo {
       margin-left: 1rem;
@@ -210,7 +213,7 @@ const SideBar = () => {
 
   return (
     <Side>
-      <div className="logoBox">
+      <div className="logoBox" onClick={() => handleOnClick('/')}>
         <img src="/img/Logo.png" alt="Logo" className="logo" />
       </div>
       {userInfo && (
