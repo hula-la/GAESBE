@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { resultCodeRequest } from '../../../../api/algoApi';
@@ -6,19 +6,56 @@ import { resultCodeRequest } from '../../../../api/algoApi';
 import Swal from 'sweetalert2';
 
 const Wrapper = styled.div`
+  border: 5px solid #000;
+  border-radius: 10px;
+  height: 100%;
+  background-color: #c4c4c4;
+`
+const Content = styled.div`
+  height: 90%;
   .title{
-    border: 1px solid #000;
+    height: 5%;
+    text-align: center;
+  }
+`
+const Select = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 10%;
+  border-bottom: 1px solid #fff;
+  .select-item{
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    
+    :hover{
+      color: #000;
+      background-color:#FFC02D;
+    }
 
   }
-  .item{
-    border: 1px solid #000;
-  }
+  .selected{
+      color: #000;
+      background-color:#FFC02D;
+      border-radius: 10px 10px 0 0;
+    }
+  
+`
+
+const SelectedCode = styled.div`
+  height: 84%;
+  overflow-y: auto;
+  padding : 10px;
+  background-color: #FFC02D;
+  border-radius: 0 0 6px 6px;
 `
 
 const Close = styled.img`
   /* z-index: 5000; */
   position: absolute;
-  right: 10%;
+  top: 5%;
+  right:5%;
   
 `;
 
@@ -63,57 +100,62 @@ function AlgoDetailInfo({ handleModal, algoDetailRoomCode }: Props) {
       });
     }
   };
-
-  const clickCode = (idx:any) => {
-    setCodeId(idx);
+  const clickCode = (event: React.MouseEvent<HTMLElement>) => {
+    const idx = event.currentTarget.getAttribute('id');
+    setCodeId(parseInt(idx!));
   };
 
   return (
     <Wrapper>
       <Close onClick={handleModal} src="/img/close.png" alt="asdfasdf" />
-      <h1 className='title'>알고리즘 배틀 코드 리뷰</h1>
-      <div>
-      {resultCodes?.map((code: ResultCodeInterface, index) => {
+      <Content>
+        <h1 className='title'>알고리즘 배틀 코드 리뷰</h1>
+        <Select>
+        {resultCodes?.map((code: ResultCodeInterface, index) => {
+              if (code.userId === userInfo.id) {
+                return (
+                  <div className={codeId == index? 'select-item selected': 'select-item'}  id={index.toString()} key={index} onClick={clickCode}>
+                    <p>나의 코드</p>
+                  </div>
+                );
+              } else {
+                return (
+                  <div className={codeId == index? 'select-item selected': 'select-item'}  id={index.toString()}  key={index} onClick={clickCode}>
+                    <p>누군가의 코드</p>
+                  </div>
+                );
+              }
 
-            if (code.userId === userInfo.id) {
-              return (
-                <div className='item' key={index} onClick={clickCode}>
-                  <p>나의 코드</p>
-                </div>
-              );
-            } else {
-              return (
-                <div className='item' key={index} onClick={clickCode}>
-                  <p>누군가의 코드</p>
-                </div>
-              );
-            }
+            })}
 
-          })}
-
-      </div>
-      <div>
-        {resultCodes && resultCodes[codeId].userId}
-      </div>
-      {resultCodes?.map((code: ResultCodeInterface, index) => {
-        if (code.userId === userInfo.id) {
-          return (
-            <div className='item' key={index}>
-              <p>나의 코드</p>
-              <p>제출 언어 : {language[code.lan]}</p>
-              <p>{code.code}</p>
-            </div>
-          );
-        } else {
-          return (
-            <div className='item' key={index}>
-              <p>누군가의 코드</p>
-              <p>제출 언어 : {language[code.lan]}</p>
-              <p>{code.code}</p>
-            </div>
-          );
+        </Select>
+        <SelectedCode>
+            {resultCodes && resultCodes[codeId].code}
+        </SelectedCode>
+        {/* <SelectedCode>
+        {resultCodes?.map((code: ResultCodeInterface, index) => {
+          
+          if (code.userId === userInfo.id) {
+            return (
+              <div className='item' key={index}>
+                <p>나의 코드</p>
+                <p>제출 언어 : {language[code.lan]}</p>
+                <p>{code.code}</p>
+              </div>
+            );
+          } else {
+            return (
+              <div className='item' key={index}>
+                <p>누군가의 코드</p>
+                <p>제출 언어 : {language[code.lan]}</p>
+                <p>{code.code}</p>
+              </div>
+            );
+          }
+        })
         }
-      })}
+        </SelectedCode> */}
+      </Content>
     </Wrapper>
   );
 }

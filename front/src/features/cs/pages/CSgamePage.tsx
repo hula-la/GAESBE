@@ -195,7 +195,7 @@ const CSgamePage = () => {
         className="arrowImg"
       />
       <div className="title">
-        <img src="/img/gametitle/gameTitle6.png" alt="title" />
+        <img src="/img/gametitle/GameTitle6.png" alt="title" />
         <img
           onClick={openModal}
           className="question"
