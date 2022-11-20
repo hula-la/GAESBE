@@ -311,7 +311,7 @@ function FriendMainPage() {
       Swal.fire({
         toast: true,
         position: 'top',
-        text: '초대가 왔습니다',
+        text: `${invitedGameInfo.fromUserNick}님께서 ${invitedGameInfo.inviteGameType} 게임에 초대하였습니다`,
 
         showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
         confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정

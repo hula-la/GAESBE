@@ -626,6 +626,7 @@ const CSFriendPage = () => {
         {},
         JSON.stringify({
           userId: friendId,
+          fromUserNick: userInfo.nickname,
           gameType: 'cs',
           roomCode: roomCode,
         }),
