@@ -9,6 +9,6 @@ export const enterTypingRoom = async (body: {
   isCreat?: boolean;
 }) => {
   const res = await client.post('typing/enter', body);
-  console.log('이거 콘솔?', res);
+  // console.log('이거 콘솔?', res);
   return res;
 };

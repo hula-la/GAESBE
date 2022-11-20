@@ -212,7 +212,7 @@ const SideBar = () => {
     }
   }, [offices]);
   let officelist = officeList && officeList.filter((ele: any) => ele.own);
-  console.log(userInfo);
+  // console.log(userInfo);
   // console.log(userAbility, '여기요');
   // console.log(userAbility.algorithmLv);
   // console.log(userAbility.csLv);
@@ -230,8 +230,8 @@ const SideBar = () => {
             <div className="nickname">{userInfo.nickname}</div>
             <div className="userLv">
               <div className="userAbilityLv">
-                Lv. 
-                {userInfo.officeLv} 
+                Lv.
+                {userInfo.officeLv}
               </div>
               <div className="userRoomLv">
                 {officelist && officelist[officelist.length - 1].name}

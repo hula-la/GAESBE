@@ -225,12 +225,13 @@ const TypingGame = () => {
   //   'https://k7e104.p.ssafy.io:8081/api/ws',
   // );
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
   // useEffect(() => {
   // }, []);
   // const client2 = Stomp.over(socket);
   useEffect(() => {
     if (isEnd && resultId && resultNickName) {
-      console.log('끄읕');
+      // console.log('끄읕');
       navigate('/game/typing/result', {
         state: {
           resultId: resultId,
@@ -256,7 +257,7 @@ const TypingGame = () => {
       );
       client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
-        console.log('*****************121**************************');
+        // console.log('*****************121**************************');
         client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
@@ -315,36 +316,37 @@ const TypingGame = () => {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
-      client2.connect({}, (frame) => {
-        console.log('*****************177**************************');
-        client2.subscribe('/typing2/room/' + roomCode, (res) => {
+      client2.current = Stomp.over(socket);
+      client2.current.connect({}, (frame: any) => {
+        // console.log('*****************177**************************');
+        client2.current.subscribe('/typing2/room/' + roomCode, (res: any) => {
           var testdata = JSON.parse(res.body);
           if (testdata.hasOwnProperty('progressByPlayer')) {
             setTest(testdata.progressByPlayer[`${userInfo.id}`]);
             setTestProgress(testdata);
             testprogress = testdata.progressByPlayer;
             testtest = testdata.progressByPlayer[`${userInfo.id}`];
-          } else if (testdata.hasOwnProperty('msg')) {
-            if (testdata.msg === 'start') {
-              setIsReady(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 4000);
-            } else if (testdata.msg === 'end') {
-              setResultId(testdata.winUserId);
-              setResultNickName(testdata.winUserNickName);
-              setResultProfile(testdata.winUserProfile);
-              setIsEnd(true);
-            } else {
-              Swal.fire({
-                toast: true,
-                position: 'top',
-                timer: 1000,
-                showConfirmButton: false,
-                text: testdata.msg,
-              });
+          } else if (testdata.hasOwnProperty('start')) {
+            setIsReady(true);
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 4000);
+          } else if (testdata.hasOwnProperty('end')) {
+            if (testdata.end === true) {
+              console.log('어 끝이야');
             }
+            setResultId(testdata.winUserId);
+            setResultNickName(testdata.winUserNickName);
+            setResultProfile(testdata.winUserProfile);
+            setIsEnd(true);
+          } else if (testdata.hasOwnProperty('msg')) {
+            Swal.fire({
+              toast: true,
+              position: 'top',
+              timer: 1000,
+              showConfirmButton: false,
+              text: testdata.msg,
+            });
           } else if (testdata.hasOwnProperty('paragraph')) {
             setPargraph(testdata.paragraph);
           } else if (testdata.hasOwnProperty('roomDto')) {
@@ -404,7 +406,7 @@ const TypingGame = () => {
       event.preventDefault();
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
-        console.log('****************보냄********************');
+        // console.log('****************보냄********************');
         xscroll();
         client.current.send(
           '/api/typing2/submit',
@@ -461,7 +463,7 @@ const TypingGame = () => {
 
       // 내가 친거랑 쳐야하는게 똑같다면
       if (example[sentence][index] === event.key) {
-        console.log('****************보냄********************');
+        // console.log('****************보냄********************');
         xscroll();
         client.current.send(
           '/api/typing2/submit',
