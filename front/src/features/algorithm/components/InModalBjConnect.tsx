@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   .img {
-    padding-left: 30rem;
+    left: 30rem;
     position: absolute;
   }
   .modal-title {

@@ -225,6 +225,7 @@ const TypingGame = () => {
   //   'https://k7e104.p.ssafy.io:8081/api/ws',
   // );
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
   // useEffect(() => {
   // }, []);
   // const client2 = Stomp.over(socket);
@@ -315,10 +316,10 @@ const TypingGame = () => {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
-      client2.connect({}, (frame) => {
+      client2.current = Stomp.over(socket);
+      client2.current.connect({}, (frame: any) => {
         console.log('*****************177**************************');
-        client2.subscribe('/typing2/room/' + roomCode, (res) => {
+        client2.current.subscribe('/typing2/room/' + roomCode, (res: any) => {
           var testdata = JSON.parse(res.body);
           if (testdata.hasOwnProperty('progressByPlayer')) {
             setTest(testdata.progressByPlayer[`${userInfo.id}`]);

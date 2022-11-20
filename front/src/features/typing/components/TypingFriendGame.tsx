@@ -279,6 +279,7 @@ const TypingFriendGame = () => {
   const { errorMsg } = useSelector((state: any) => state.friend);
 
   const client = useRef<any>(null);
+  const client2 = useRef<any>(null);
 
   useEffect(() => {
     if (isStart) {
@@ -311,21 +312,6 @@ const TypingFriendGame = () => {
   useEffect(() => {
     return () => setIsLoading(true);
   }, []);
-  // 뒤로가기 막는 useEffect
-  // useEffect(() => {
-  //   const preventGoBack = () => {
-  //     // change start
-  //     window.history.pushState(null, '', window.location.href);
-  //     // change end
-  //     alert('게임중에는 나갈 수 없습니다');
-  //   };
-  //   window.history.pushState(null, '', window.location.href);
-  //   window.addEventListener('popstate', preventGoBack);
-  //   return () => window.removeEventListener('popstate', preventGoBack);
-  // }, []);
-  // // 뒤로가기 막는 useEffect
-  // // 새로고침, 창닫기, 사이드바 클릭 등으로 페이지 벗어날때 confirm 띄우기
-  // usePrompt('게임중에 나가면 등수가 기록되지 않습니다', true);
   useEffect(() => {
     if (userInfo) {
       const socket: CustomWebSocket = new SockJS(
@@ -388,30 +374,36 @@ const TypingFriendGame = () => {
       const socket: CustomWebSocket = new SockJS(
         'https://k7e104.p.ssafy.io:8081/api/ws',
       );
-      const client2 = Stomp.over(socket);
-      client2.connect({}, (frame) => {
+      client2.current = Stomp.over(socket);
+      client2.current.connect({}, (frame: any) => {
         console.log('*****************177**************************');
-        client2.subscribe('/typing2/room/' + roomCode, (res) => {
+        client2.current.subscribe('/typing2/room/' + roomCode, (res: any) => {
           var testdata = JSON.parse(res.body);
+          console.log(testdata, '이게테데지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ');
           if (testdata.hasOwnProperty('progressByPlayer')) {
             setTest(testdata.progressByPlayer[`${userInfo.id}`]);
             setTestProgress(testdata);
             testprogress = testdata.progressByPlayer;
             // testtest = testdata.progressByPlayer[`${userInfo.id}`];
+          } else if (testdata.hasOwnProperty('start')) {
+            setIsStart(true);
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 4000);
+          } else if (testdata.hasOwnProperty('end')) {
+            setResultId(testdata.winUserId);
+            setResultNickName(testdata.winUserNickName);
+            setResultProfile(testdata.winUserProfile);
+            setIsEnd(true);
           } else if (testdata.hasOwnProperty('msg')) {
-            if (testdata.msg === 'start') {
-              // setIsReady(true);
-              setIsStart(true);
-              setTimeout(() => {
-                setIsLoading(false);
-              }, 4000);
-            } else if (testdata.msg === 'end') {
-              setResultId(testdata.winUserId);
-              setResultNickName(testdata.winUserNickName);
-              setResultProfile(testdata.winUserProfile);
-              setIsEnd(true);
-            } else if (testdata.msg === 'ready') {
-            }
+            console.log(testdata.msg, 'zzzzzzzzzzzzzzzz');
+            Swal.fire({
+              toast: true,
+              position: 'top',
+              timer: 1000,
+              showConfirmButton: false,
+              text: testdata.msg,
+            });
           } else if (testdata.hasOwnProperty('paragraph')) {
             setPargraph(testdata.paragraph);
           } else if (testdata.hasOwnProperty('roomDto')) {
