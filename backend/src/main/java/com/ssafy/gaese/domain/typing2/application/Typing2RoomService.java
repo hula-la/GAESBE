@@ -332,6 +332,9 @@ public class Typing2RoomService {
             res.put("isMaster", true);
             simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
 
+            Map<String,Object> res = new HashMap<>();
+            res.put("isMaster", true);
+            simpMessagingTemplate.convertAndSend("/typing2/"+typingRoomDto.getMasterId(),res);
 
             User user = userRepository.findById(typingRoomDto.getMasterId()).orElseThrow(() -> new UserNotFoundException());
 
