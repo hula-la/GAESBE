@@ -138,9 +138,6 @@ const Side = styled.div`
       height: 13%;
       width: 100%;
       position: relative;
-      /* position: absolute; */
-      /* margin-bottom: 1.5rem; */
-      /* margin-left: 2.5rem; */
 
       .folderIcon {
         position: absolute;
@@ -194,7 +191,6 @@ const Side = styled.div`
 const SideBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { userAbility } = useSelector((state: any) => state.auth);
   const { userInfo } = useSelector((state: any) => state.auth);
   const { offices } = useSelector((state: any) => state.item);
   const [officeList, setOfficeList] = useState<any>(null);
@@ -211,13 +207,6 @@ const SideBar = () => {
       setOfficeList(offices);
     }
   }, [offices]);
-  let officelist = officeList && officeList.filter((ele: any) => ele.own);
-  // console.log(userInfo);
-  // console.log(userAbility, '여기요');
-  // console.log(userAbility.algorithmLv);
-  // console.log(userAbility.csLv);
-  // console.log(userAbility.luckLv);
-  // console.log(userAbility.typingLv);
 
   return (
     <Side>
@@ -229,13 +218,23 @@ const SideBar = () => {
           <div className="profileInfo">
             <div className="nickname">{userInfo.nickname}</div>
             <div className="userLv">
-              <div className="userAbilityLv">
-                Lv.
-                {userInfo.officeLv}
-              </div>
-              <div className="userRoomLv">
-                {officelist && officelist[officelist.length - 1].name}
-              </div>
+              {userInfo.officeLv === 1 ? (
+                <div>Lv.{userInfo.officeLv} 응애취준생</div>
+              ) : userInfo.officeLv === 2 ? (
+                <div>Lv.{userInfo.officeLv} 만렙취준생</div>
+              ) : userInfo.officeLv === 3 ? (
+                <div>Lv.{userInfo.officeLv} 응애개발자</div>
+              ) : userInfo.officeLv === 4 ? (
+                <div>Lv.{userInfo.officeLv} 척척학사개발자</div>
+              ) : userInfo.officeLv === 5 ? (
+                <div>Lv.{userInfo.officeLv} 척척석사개발자</div>
+              ) : userInfo.officeLv === 6 ? (
+                <div>Lv.{userInfo.officeLv} 척척박사개발자</div>
+              ) : userInfo.officeLv === 7 ? (
+                <div>Lv.{userInfo.officeLv} 만렙개발자</div>
+              ) : (
+                <div>Lv.{userInfo.officeLv} 킹갓삼성개발자</div>
+              )}
             </div>
             {/* <div>Lv1. 반지하</div> */}
           </div>

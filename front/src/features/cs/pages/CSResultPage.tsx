@@ -116,9 +116,10 @@ const Container = styled.div`
 `;
 
 const ResultButton = styled.div`
-  width: 40%;
+  width: 20%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   position: absolute;
   top: 10%;
   left: 20%;
