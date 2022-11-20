@@ -69,6 +69,7 @@ const GameBlock = styled.div`
   }
   .img {
     width: 40%;
+    padding-bottom: 10%;
   }
   /* border: 2px solid white; */
 `;
@@ -104,9 +105,9 @@ function GameSelectPage() {
           </Down>
         </SmallBlock>
         <GameButton>
-          <img src="/img/gamebutton3.png" alt="" />
-          <img src="/img/gamebutton1.png" alt="" />
-          <img src="/img/gamebutton4.png" alt="" />
+          <img src="/img/gameButton3.png" alt="" />
+          <img src="/img/gameButton1.png" alt="" />
+          <img src="/img/gameButton4.png" alt="" />
         </GameButton>
       </LargeBlock>
     </Wrapper>

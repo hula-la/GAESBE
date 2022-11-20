@@ -155,10 +155,12 @@ const TypingResult = styled.div`
 const WaitingTypingGameBox = styled.div`
   width: 91.5%;
   height: 17rem;
+  font-size: 1.5rem;
   display: flex;
   flex-direction: column;
   padding-top: 5%;
-  /* justify-content: center; */
+  position: relative;
+  justify-content: center;
   align-items: center;
   color: black;
   background-color: white;
@@ -170,45 +172,51 @@ const WaitingTypingGameBox = styled.div`
     align-items: center;
     position: absolute;
     bottom: 1rem;
-    right: 33rem;
+    right: calc(50vw - 35rem);
     width: 30rem;
 
     transition: transform 0.3s;
+  }
+  .friendNum {
+    /* font-size: 2rem; */
+    font-weight: bold;
 
-    .inviteBtn {
-      width: 80%;
-      :hover {
-        transform: scale(1.1);
+    display: flex;
+    align-items: center;
+  }
+  .inviteBtn {
+    width: 80%;
+    :hover {
+      transform: scale(1.1);
 
-        cursor: url('/img/cursor/hover_cursor.png'), auto;
-      }
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
+  }
 
-    .inviteBtnBox {
-      padding-left: 1rem;
-      position: relative;
-      font-size: 1rem;
+  .inviteBtnBox {
+    padding-left: 1rem;
+    position: relative;
+    font-size: 1rem;
 
-      :hover .inviteBtnToolTip {
-        display: block;
-      }
-      .inviteBtnToolTip {
-        display: none;
-        position: absolute;
-        bottom: 110%;
-        left: 30%;
-      }
+    :hover .inviteBtnToolTip {
+      display: block;
     }
+    .inviteBtnToolTip {
+      display: none;
+      position: absolute;
+      bottom: 10%;
+      left: 30%;
+    }
+  }
 
-    .startBtn {
-      width: 50%;
-      height: 50%;
+  .startBtn {
+    width: 50%;
+    height: 50%;
 
-      :hover {
-        transform: scale(1.1);
-        transition: transform 0.3s;
-        cursor: url('/img/cursor/hover_cursor.png'), auto;
-      }
+    :hover {
+      transform: scale(1.1);
+      transition: transform 0.3s;
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
     }
   }
 `;
@@ -366,6 +374,7 @@ const TypingFriendGame = () => {
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
+      client2.current.disconnect(() => {});
     };
   }, []);
 
