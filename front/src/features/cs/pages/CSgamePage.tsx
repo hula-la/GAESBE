@@ -17,7 +17,7 @@ const CsMain = styled.div`
     width: 100%;
     padding: 10% 0;
     img {
-      width: 40%;
+      width: 50%;
     }
   }
 `;
@@ -177,7 +177,7 @@ const CSgamePage = () => {
         alt=""
       />
       <div className="title">
-        <img src="/img/gametitle/gametitle3.png" alt="title" />
+        <img src="/img/gametitle/gametitle6.png" alt="title" />
       </div>
 
       <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>

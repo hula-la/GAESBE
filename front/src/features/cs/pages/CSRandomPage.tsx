@@ -26,7 +26,7 @@ const Container = styled.div`
   .gameTitle {
     margin-top: 1rem;
     height: 10%;
-    width: 20%;
+    width: 40%;
   }
 `;
 
