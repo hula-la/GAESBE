@@ -590,6 +590,7 @@ const TypingFriendGame = () => {
           roomCode: roomCode,
         }),
       );
+      dispatch(friendActions.resetFriend());
     }
   }, [friendId]);
   // const invite = () => {};

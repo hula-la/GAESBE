@@ -14,6 +14,7 @@ import Level6 from '../components/level/Level6';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import LevelupModal from '../components/LevelupModal';
+import { authActions } from '../../auth/authSlice';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -220,6 +221,12 @@ const MyOfficePage = () => {
       setIsLevelup(false);
     }, 2000);
   };
+
+  useEffect(() => {
+    dispatch(authActions.fetchUserInfoStart());
+    dispatch(authActions.fetchAbilityStart());
+    dispatch(itemActions.fetchCharacterStart());
+  }, []);
 
   return (
     <Wrapper>

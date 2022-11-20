@@ -31,12 +31,12 @@ import CSResultPageTest from './features/cs/pages/CSResultPageTest';
 
 const App = () => {
   const dispatch = useDispatch();
+  const { userInfo } = useSelector((state: any) => state.auth);
   useEffect(() => {
     dispatch(authActions.fetchUserInfoStart());
     dispatch(authActions.fetchAbilityStart());
     dispatch(itemActions.fetchCharacterStart());
   }, []);
-  const { userInfo } = useSelector((state: any) => state.auth);
 
   return (
     <>
