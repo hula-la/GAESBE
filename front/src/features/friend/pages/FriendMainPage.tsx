@@ -308,6 +308,7 @@ function FriendMainPage() {
 
   useEffect(() => {
     if (isInvite) {
+      setIsInvite(false);
       Swal.fire({
         toast: true,
         position: 'top',
