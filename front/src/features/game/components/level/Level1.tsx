@@ -69,10 +69,10 @@ const Note = styled.img`
   width: 10%;
   position: absolute;
   bottom: 50%;
-  right: 15%;
-  transform: scaleX(-1);
+  right: 53%;
+  /* transform: scaleX(-1); */
   :hover {
-    transform: scaleY(1.2) scaleX(-1.2);
+    transform: scale(1.2);
     transition: 0.4s ease-in-out;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
   }
