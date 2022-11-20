@@ -793,7 +793,7 @@ const CSFriendPage = () => {
           )}
           {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
-              {problemCnt && <div className="problemCount">{problemCnt}/3</div>}
+              {problemCnt && <div className="problemCount">{problemCnt}/2</div>}
               <div className="problem">
                 <div className="progressContainer">
                   <div className="progress"> </div>
@@ -894,7 +894,7 @@ const CSFriendPage = () => {
           )}
           {isSolved !== null && !isNext && (
             <div className="problemBox">
-              {problemCnt && <div className="problemCount">{problemCnt}/3</div>}
+              {problemCnt && <div className="problemCount">{problemCnt}/2</div>}
               <div className="problem">
                 <div className="problemContent">
                   <div className="question">
