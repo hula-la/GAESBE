@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   margin-bottom: 1rem;
+  
+
   .social {
     padding: 0.6em 1em;
     border-radius: 0.25em;
@@ -18,12 +20,20 @@ const Wrapper = styled.div`
     box-shadow: var(--shadow-1);
     color: #ffffff;
     margin: 0 auto;
-    cursor: pointer;
+    /* cursor: pointer; */
+    transition: all 0.3s;
+    
+    :hover{
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+      transform: scale(1.05);
+    }
   }
   .sociallogo {
     height: 2.5rem;
     width: auto;
   }
+
+  
 `;
 
 interface socialProps {

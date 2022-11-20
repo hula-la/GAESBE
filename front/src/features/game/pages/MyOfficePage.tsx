@@ -81,6 +81,12 @@ const Office = styled.div`
 
   text-align: center;
 
+  .unlockNeed{
+    color: white;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+
   .officeName {
     z-index: 5;
     position: absolute;
@@ -266,7 +272,12 @@ const MyOfficePage = () => {
 
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}
                 {!v.own && (
+                  <>
                   <img className="lockImg" src="/img/Intro/padlock.png" />
+                  <div className="unlockNeed" >
+                      잠금해제 조건: 모든 역량 Lv.{v.minLv}
+                  </div>
+                  </>
                 )}
               </Office>
             );

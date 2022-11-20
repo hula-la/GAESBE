@@ -15,10 +15,18 @@ const NickNameContainer = styled.div`
   align-items: center;
   overflow: none;
   color: white;
-  div {
+  .contents {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .charImg{
+      width: 8rem;
+      margin-top: 1rem;
+    }
   }
+
   .maintitle {
     line-height: 3rem;
     max-width: 15em;
@@ -30,12 +38,14 @@ const NickNameContainer = styled.div`
     border-radius: 0.4rem;
   }
 
-  /* .showLater {
+  .showLater {
     display: flex;
     flex-direction: column;
     animation-name: showToRight;
     animation-duration: 3.2s;
-    animation-iteration-count: infinite;
+    text-align: center;
+    align-items: center;
+    /* animation-iteration-count: infinite; */
 
     @keyframes showToRight {
       0% {
@@ -49,7 +59,11 @@ const NickNameContainer = styled.div`
         transform: scaleY(1);
       }
     }
-  } */
+
+    .nickNameAlert{
+      height: 1rem;
+    }
+  }
 
   .none {
     display: none;
@@ -66,7 +80,7 @@ const SetNicknamePage = () => {
   const [count, setCount] = useState(0);
 
   const nickNameRef = useRef<any>(null);
-  const completionWord1 = `개츠비에 오신것을 환영합니다
+  const completionWord1 = `개츠비에 오신것을 환영합니다.
   캐릭터 닉네임을 설정해주세요.`;
   const completionWord2 = '';
 
@@ -85,7 +99,7 @@ const SetNicknamePage = () => {
 
         return result;
       });
-    }, 100);
+    }, 80);
 
     if (count >= completionWord1.length) {
       clearInterval(typingInterval);
@@ -148,26 +162,33 @@ const SetNicknamePage = () => {
     <NickNameContainer>
       <h1 className="maintitle">{blogTitle1}</h1>
       <h1 className="maintitle">{blogTitle2}</h1>
-      <div ref={nickNameRef}>
-        <input
-          onChange={onChangeNickname}
-          className="nickNameInput"
-          placeholder="닉네임을 입력해주세요"
-        />
-        {isDuplicate && <p>중복된 닉네임입니다.</p>}
-        {lengthOutOfRange && <p>닉네임은 2~6글자만 가능합니다</p>}
-        <img
-          className="img"
-          src={`${process.env.REACT_APP_S3_URL}/profile/0_normal.gif`}
-          alt="캐릭터 없음"
-        />
-        <a
-          href="javascript:void(0)"
-          className="eightbit-btn"
-          onClick={onClickHandler}
-        >
-          시작하기
-        </a>
+      <div className="contents" ref={nickNameRef}>
+        <div className="showLater">
+          <input
+            onChange={onChangeNickname}
+            className="nickNameInput"
+            placeholder="닉네임을 입력해주세요"
+          />
+          <p className="nickNameAlert">
+            {isDuplicate && "중복된 닉네임입니다."}
+          {lengthOutOfRange && "닉네임은 2~6글자만 가능합니다"}
+          </p>
+          
+          
+
+          <img
+            className="charImg"
+            src={`${process.env.REACT_APP_S3_URL}/profile/0_normal.gif`}
+            alt="캐릭터 없음"
+          />
+          <a
+            href="javascript:void(0)"
+            className="eightbit-btn"
+            onClick={onClickHandler}
+          >
+            시작하기
+          </a>
+        </div>
       </div>
       {/* <button onClick={onClickHandler}>시작 하기</button> */}
     </NickNameContainer>
