@@ -142,6 +142,7 @@ public class User {
                 .nickname(this.nickname)
                 .id(this.id)
                 .profileChar(this.profileChar)
+                .officeLv(this.officeLv)
                 .build();
     }
     public AlgoUserDto toAlgoDto(){

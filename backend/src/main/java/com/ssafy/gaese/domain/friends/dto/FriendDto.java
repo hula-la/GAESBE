@@ -12,4 +12,5 @@ public class FriendDto {
     private String nickname;
     private int profileChar;
     private boolean isPlayGame;
+    private int officeLv;
 }
