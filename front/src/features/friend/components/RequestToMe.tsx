@@ -43,6 +43,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     padding: 1rem 0;
+    margin-top: 2rem;
   }
 `;
 
@@ -68,14 +69,14 @@ function RequestToMe() {
   };
   return (
     <Wrapper>
+      <img
+        className="img"
+        onClick={handleSecondModal}
+        src="/img/close.png"
+        alt=""
+      />
       <div>
         <div className="title">친구 요청 목록</div>
-        <img
-          className="img"
-          onClick={handleSecondModal}
-          src="/img/close.png"
-          alt=""
-        />
       </div>
       {requestList.length > 0 ? (
         <>

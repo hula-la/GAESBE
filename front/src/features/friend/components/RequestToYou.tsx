@@ -22,6 +22,10 @@ const Wrapper = styled.div`
     top: 10%;
     right: 10%;
     position: absolute;
+    :hover {
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+      transform: scale(1.05);
+    }
   }
   .content {
     margin: auto 10%;
