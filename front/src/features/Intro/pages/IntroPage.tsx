@@ -7,6 +7,28 @@ const Wrapper = styled.div`
   background-color: #232323;
   font-family: 'NeoDunggeunmo';
 
+  height:100vh;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+        width: 14px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #8460f8;
+        border-radius: 10px;
+        background-clip: padding-box;
+        border: 2px solid transparent;
+      }
+      &::-webkit-scrollbar-track {
+        background-color: #eae4ff;
+        border-radius: 10px;
+        /* box-shadow: inset 0px 0px 5px white; */
+      }
+
+
+
+  
+
   .lastTitle {
     height: 100vh;
     flex-direction: column;
@@ -570,125 +592,126 @@ const IntroPage = () => {
 
   return (
     <Wrapper>
-      <div className="Intro" ref={IntroImgRef}>
-        <img src="/img/Intro/introBg.gif" alt="Intro" className="introImg" />
-        <img
-          src="/img/Intro/introFloor.png"
-          alt="Intro"
-          className="introFloor"
-        />
-        <img
-          src="/img/Intro/introOffice.png"
-          onClick={goLogin}
-          alt="Intro"
-          className="introOffice"
-        />
+        <div className="Intro" ref={IntroImgRef}>
+          <img src="/img/Intro/introBg.gif" alt="Intro" className="introImg" />
+          <img
+            src="/img/Intro/introFloor.png"
+            alt="Intro"
+            className="introFloor"
+          />
+          <img
+            src="/img/Intro/introOffice.png"
+            onClick={goLogin}
+            alt="Intro"
+            className="introOffice"
+          />
 
-        <div className="characters">
-          <img
-            style={{ height: '100%' }}
-            src={`${process.env.REACT_APP_S3_URL}/profile/${characterIdx[0]}_walk.gif`}
-          />
-          <img
-            style={{ height: '100%' }}
-            src={`${process.env.REACT_APP_S3_URL}/profile/${characterIdx[1]}_walk.gif`}
-          />
-          <img
-            style={{ height: '100%' }}
-            src={`${process.env.REACT_APP_S3_URL}/profile/${characterIdx[2]}_walk.gif`}
-          />
-        </div>
-
-        <div className="goOffice" onClick={goLogin}>
-          <div>Go to Office</div>
-          <img className="arrowRight" src="/img/Intro/arrow_right.png" />
-        </div>
-
-        <div className="introWrapper">
-          <img
-            src="/img/Intro/IntroTitle.png"
-            alt="IntroTitle"
-            className="introTitle"
-          />
-          <div className="introContent">To Be a Developer</div>
-          <div className="introTextWrapper">
-            <div className="introText">개발자가 되기 위한 역량,</div>
-            <div className="introText">
-              개츠비에서 친구와 함께 재밌게 키워봐요!
-            </div>
+          <div className="characters">
+            <img
+              style={{ height: '100%' }}
+              src={`${process.env.REACT_APP_S3_URL}/profile/${characterIdx[0]}_walk.gif`}
+            />
+            <img
+              style={{ height: '100%' }}
+              src={`${process.env.REACT_APP_S3_URL}/profile/${characterIdx[1]}_walk.gif`}
+            />
+            <img
+              style={{ height: '100%' }}
+              src={`${process.env.REACT_APP_S3_URL}/profile/${characterIdx[2]}_walk.gif`}
+            />
           </div>
-        </div>
-        <img
-          onClick={onClickArrow}
-          className="pointerDown"
-          src="/img/Pointer_Down.png"
-        />
-      </div>
 
-      <div ref={fixMotionRef} className="fix_motion">
-        <article className="fix_wrap inner">
-          <div className="fix_wrap2">
-            <div className="textBox">
-              <div className="textBoxPage" ref={txt01ref}>
-                <p className="title">알고리즘 배틀</p>
-                <p className="content">알고리즘 함께 풀고</p>
-              </div>
-              <div className="textBoxPage">
-                <div ref={txt02ref} className="infoTxt txt02">
-                  <p className="title">CS 배틀</p>
-                  <p className="content">퀴즈풀며 CS를 배우며</p>
-                </div>
-              </div>
-              <div className="textBoxPage">
-                <div ref={txt03ref} className="infoTxt txt03">
-                  <p className="title">타이핑 배틀</p>
-                  <p className="content">타이핑하며 언어와 친해지자!</p>
-                </div>
-              </div>
-              <div className="textBoxPage">
-                <div ref={txt04ref} className="infoTxt txt04">
-                  <p className="content">
-                    역량을 강화할수록 <br />
-                    추가되는 내 오피스
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div ref={imgBoxRef} className="imgBox">
-              <div ref={officeImgRef} className="imgOffice">
-                <img className="computerImg" src="/img/Intro/computer.png" />
-                {/* <img src="/img/Intro/computer.png" /> */}
-                <img
-                  ref={csCapRef}
-                  className="gameCap"
-                  src="/img/Intro/gamePageCapture/cs.png"
-                />
-                <img
-                  ref={typingCapRef}
-                  className="gameCap"
-                  src="/img/Intro/gamePageCapture/typing.png"
-                />
-                <img
-                  ref={algorithmCapRef}
-                  className="gameCap"
-                  src="/img/Intro/gamePageCapture/algorithm.png"
-                />
-              </div>
-              <div ref={officeImg4Ref} className="imgOffice officeRoom">
-                <img className="computerImg" src="/img/Intro/IntroRoom.png" />
+          <div className="goOffice" onClick={goLogin}>
+            <div>Go to Office</div>
+            <img className="arrowRight" src="/img/Intro/arrow_right.png" />
+          </div>
+
+          <div className="introWrapper">
+            <img
+              src="/img/Intro/IntroTitle.png"
+              alt="IntroTitle"
+              className="introTitle"
+            />
+            <div className="introContent">To Be a Developer</div>
+            <div className="introTextWrapper">
+              <div className="introText">개발자가 되기 위한 역량,</div>
+              <div className="introText">
+                개츠비에서 친구와 함께 재밌게 키워봐요!
               </div>
             </div>
           </div>
-          <div className="lastTitle">
-            <div>지금부터 즐겨보세요!</div>
-            <div className="goOffice2" onClick={goLogin}>
-              Go to Office
+          <img
+            onClick={onClickArrow}
+            className="pointerDown"
+            src="/img/Pointer_Down.png"
+          />
+        </div>
+
+        <div ref={fixMotionRef} className="fix_motion">
+          <article className="fix_wrap inner">
+            <div className="fix_wrap2">
+              <div className="textBox">
+                <div className="textBoxPage" ref={txt01ref}>
+                  <p className="title">알고리즘 배틀</p>
+                  <p className="content">알고리즘 함께 풀고</p>
+                </div>
+                <div className="textBoxPage">
+                  <div ref={txt02ref} className="infoTxt txt02">
+                    <p className="title">CS 배틀</p>
+                    <p className="content">퀴즈풀며 CS를 배우며</p>
+                  </div>
+                </div>
+                <div className="textBoxPage">
+                  <div ref={txt03ref} className="infoTxt txt03">
+                    <p className="title">타이핑 배틀</p>
+                    <p className="content">타이핑하며 언어와 친해지자!</p>
+                  </div>
+                </div>
+                <div className="textBoxPage">
+                  <div ref={txt04ref} className="infoTxt txt04">
+                    <p className="content">
+                      역량을 강화할수록 <br />
+                      추가되는 내 오피스
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div ref={imgBoxRef} className="imgBox">
+                <div ref={officeImgRef} className="imgOffice">
+                  <img className="computerImg" src="/img/Intro/computer.png" />
+                  {/* <img src="/img/Intro/computer.png" /> */}
+                  <img
+                    ref={csCapRef}
+                    className="gameCap"
+                    src="/img/Intro/gamePageCapture/cs.png"
+                  />
+                  <img
+                    ref={typingCapRef}
+                    className="gameCap"
+                    src="/img/Intro/gamePageCapture/typing.png"
+                  />
+                  <img
+                    ref={algorithmCapRef}
+                    className="gameCap"
+                    src="/img/Intro/gamePageCapture/algorithm.png"
+                  />
+                </div>
+                <div ref={officeImg4Ref} className="imgOffice officeRoom">
+                  <img className="computerImg" src="/img/Intro/IntroRoom.png" />
+                </div>
+              </div>
             </div>
-          </div>
-        </article>
-      </div>
-      {/* <div className="introBox"></div> */}
-      {/* <div className="introBox"></div> */}
+            <div className="lastTitle">
+              <div>지금부터 즐겨보세요!</div>
+              <div className="goOffice2" onClick={goLogin}>
+                Go to Office
+              </div>
+            </div>
+          </article>
+        </div>
+        {/* <div className="introBox"></div> */}
+        {/* <div className="introBox"></div> */}
+
     </Wrapper>
   );
 };

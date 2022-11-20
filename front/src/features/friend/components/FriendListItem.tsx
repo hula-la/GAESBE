@@ -237,7 +237,7 @@ function FriendListItem({ friend, type, category, chatCnt }: any) {
       );
     }
   };
-  console.log(friend, '친구ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ');
+  // console.log(friend, '친구ㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜㅜ');
   return (
     <FriendListItemBlock>
       <div

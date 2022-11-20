@@ -123,6 +123,8 @@ const FriendSide = styled.div`
     z-index: 10;
   }
   .chatRoomWrapper {
+    z-index: 100;
+
     position: absolute;
     bottom: 2rem;
     right: 2rem;
@@ -141,12 +143,21 @@ const FriendSide = styled.div`
       position: absolute;
       right: 0.8rem;
       top: 0.5rem;
+
+      transition: transform 0.3s;
+
+      :hover {
+        transform: scale(1.05);
+
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
     }
     .chatContent {
       overflow-y: auto;
       display: flex;
       flex-direction: column-reverse;
-      height: 92%;
+      height: 90%;
+      
       ::-webkit-scrollbar {
         width: 10px;
       }
@@ -168,6 +179,7 @@ const FriendSide = styled.div`
         flex-direction: column-reverse;
         margin-right: 0.5rem;
         max-width: 70%;
+        padding-top: 1rem;
 
         .date {
           font-size: smaller;
@@ -181,18 +193,23 @@ const FriendSide = styled.div`
         border-radius: 10px;
         word-break: break-all;
       }
+      .youBox{
+        padding-top: 1rem;
+      }
       .you {
         max-width: 70%;
         margin-top: 0.3rem;
         margin-bottom: 0.3rem;
         margin-left: 0.5rem;
         display: flex;
+        align-items: flex-start;
       }
       .youProfile {
-        height: 2rem;
+        /* height: 2rem; */
         width: 2rem;
       }
       .youBlock {
+        
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -210,7 +227,7 @@ const FriendSide = styled.div`
       }
       .youDate {
         font-size: smaller;
-        margin-left: 2.5rem;
+        margin-left: 3rem;
       }
     }
 
@@ -219,15 +236,16 @@ const FriendSide = styled.div`
       height: 9%;
       display: flex;
       flex-direction: row;
+      justify-content: space-around;
       .chatInput {
-        width: 82%;
+        width: 70%;
         height: 100%;
         box-sizing: border-box;
         border: 3px solid #000000;
         border-radius: 10px;
       }
       .chatButton {
-        width: 22%;
+        width: 17%;
         height: 100%;
         box-sizing: border-box;
         border: 3px solid #000000;
@@ -405,7 +423,7 @@ function FriendMainPage() {
                       <div className="me">{chat.msg}</div>
                     </div>
                   ) : (
-                    <div key={idx}>
+                    <div className="youBox" key={idx}>
                       <div className="you">
                         <img
                           className="youProfile"

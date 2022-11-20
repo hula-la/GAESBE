@@ -41,56 +41,8 @@ const MyCharacter = styled.img`
 	100% {margin-bottom: 0px;}
 }
 `;
-const MyComputer = styled.img`
-      width: 17%;
-    position: absolute;
-    bottom: 45%;
-    left: 28%;
-  :hover {
-    transform: scale(1.2);
-    content: url("/img/roomGif/level0computer.gif");
-    transition: 0.4s ease-in-out;
-    cursor: url('/img/cursor/hover_cursor.png'), auto;
-  }
-  `;
-const Coin = styled.img`
-  width: 4%;
-  height: 3%;
-  position: absolute;
-  bottom: 56%;
-  left: 50%;
-  animation: motion 1.4s linear 0s infinite ; margin-top: 0;
-  
-  @keyframes motion {
-	0% {margin-bottom: 0px;}
-	50% {margin-bottom: 1%;}
-	100% {margin-bottom: 0px;}
-}
 
-  :hover {
-    transform: scale(1.2);
-    transition: 0.4s ease-in-out;
-    cursor: url('/img/cursor/hover_cursor.png'), auto;
-  }
-  `;
-const Note = styled.img`
-  width: 9%;
-  position: absolute;
-  bottom: 38%;
-  right: 61%;
-  :hover {
-    transform: scale(1.2);
-    transition: 0.4s ease-in-out;
-    cursor: url('/img/cursor/hover_cursor.png'), auto;
-  }
-  `;
-const Spider = styled.img`
-  width: 13%;
-  left: 44%;
-  position: absolute;
-  top: 4%;
-  
-  `;
+
 const Samsung = styled.img`
       width: 24%;
     position: absolute;
@@ -99,12 +51,11 @@ const Samsung = styled.img`
     margin-bottom: 3%;
   /* bottom: 24vh;
   right: 31vw; */
-  :hover {
+  /* :hover {
     transform: scale(1.2);
     transition: 0.4s ease-in-out;
-    content: url("/img/roomGif/level0calender.gif");
     cursor: url('/img/cursor/hover_cursor.png'), auto;
-  }
+  } */
   `;
 const Level6 = ({ handleModal,officeIdx }: any) => {
   const navigate = useNavigate();
@@ -128,7 +79,7 @@ const Level6 = ({ handleModal,officeIdx }: any) => {
             />}
         
 
-        <Samsung onClick={handleModal} src="/img/MyOffice/samsung.png" />
+        <Samsung  src="/img/MyOffice/samsung.png" />
       </div>
     </Unity>
   );
