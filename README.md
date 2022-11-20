@@ -6,8 +6,9 @@
 
 **BE: 권민용, 김수진, 이연의**
 ###  <br>
-
+***
 ## 소개
+***
 
 ### 지루한 CS공부 NO!
 
@@ -24,11 +25,13 @@
 #### 개츠비에선 회원들 끼리 재미있게 공부하기 위한 함께 '씨에스 파이트', 백준과 연동한 '알고리즘 배틀' 그리고 언어와 친숙 해지기 위한 '타이핑 레이스'와 잠시 쉬어가기 위한 '싸피 게임'을 제공 합니다.
 
 ###  <br>
-
+***
 ## 주요 기능
-- MyPage
-![image-20221006105153838](README.assets/mypage.png)
-![image-20221006105153838](README.assets/mypage2.png)
+***
+- Office
+![image-20221006105153838](README.assets/office1.png)
+![image-20221006105153838](README.assets/office2.png)
+![image-20221006105153838](README.assets/office3.png)
 - Friend
 ![image-20221006105153838](README.assets/friend.png)
 - Chatting
@@ -38,12 +41,29 @@
 ![image-20221006105153838](README.assets/typing1.png)
 ![image-20221006105153838](README.assets/typing2.png)
 
-## 개발 환경
+- Algorithm Battle
+![image-20221006105153838](README.assets/algo1.png)
+![image-20221006105153838](README.assets/algo2.png)
+![image-20221006105153838](README.assets/algo3.png)
 
+- CS Fight
+![image-20221006105153838](README.assets/cs1.png)
+![image-20221006105153838](README.assets/cs2.png)
+
+- ssafyGame
+![image-20221006105153838](README.assets/ssafy.png)
+
+- myPage
+![image-20221006105153838](README.assets/mypage1.png)
+![image-20221006105153838](README.assets/mypage2.png)
+---
+## 개발 환경
+---
 ###  Backend
 
 - SpringBoot 2.7.5
 - Java 11
+- Gradle 7.5.1
 - Type: Gradle
 - Packiging: jar
 - IntelliJ IDEA : 22.2.1
@@ -53,9 +73,10 @@
 - Lombok
 - SWAGGER 2.9.2
 - Spark-core : 3.3.0
-- Redis
+- Redis 7.0.5
+- FireBase 9.1.0
+- Selenium 4.5.3
 - FastAPI
-- FireBase
 
 ###  Frontend
 
@@ -75,28 +96,28 @@
 - Amazon EC2 - Ubuntu 20.04
 - Nginx - 1.18.0
 - Docker - 20.10.21
-- Jenkins
+- Jenkins - 2.361.2
 
 ### IDE
 
-- vscode
-- IntelliJ
+- vscode 1.70.1
+- IntelliJ 2021.3.2
 
 ## 협업 툴
 - Gitlab
 - Jira
-- Notion
+- [Notion](https://www.notion.so/PJT-E104-01d0d4394ab0412396877c8d60e15b8a)
 - Figma
 - Swagger
 - Webex
 - Google Sheet
 
-## [Notion](https://www.notion.so/PJT-E104-01d0d4394ab0412396877c8d60e15b8a)
+ 
 
 
-
+---
 ## 컨벤션
-
+---
 ### - Git 컨벤션
 
 ------
@@ -174,11 +195,17 @@ $ git branch -r
 # 원격저장소의 branch 가져오기
 $ git checkout -t origin/dev/back
 ```
-
+---
 ## 서비스 아키텍처
-
+---
 ![image-20221006105153838](README.assets/ServiceArchitecture.png)
 
+---
 ## ERD
-
+---
 ![image-20221006112103414](README.assets/erd.png)
+
+***
+## Manual
+***
+### exec/포팅 메뉴얼.pdf 참고
