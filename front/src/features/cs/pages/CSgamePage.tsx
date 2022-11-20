@@ -196,11 +196,6 @@ const CSgamePage = () => {
       />
       <div className="title">
         <img src="/img/gametitle/GameTitle6.png" alt="title" />
-        <img
-          onClick={openModal}
-          className="question"
-          src="/img/questionMark-gray.png"
-        ></img>
       </div>
       {modalOpen && <CSModal setModalOpen={setModalOpen} />}
       <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>

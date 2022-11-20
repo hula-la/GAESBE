@@ -362,6 +362,7 @@ const TypingGame = () => {
   useEffect(() => {
     return () => {
       client.current.disconnect(() => {});
+      client2.current.disconnect(() => {});
     };
   }, []);
 

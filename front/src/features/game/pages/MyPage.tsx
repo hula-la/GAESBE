@@ -52,7 +52,7 @@ const UserBotton = styled.div`
   justify-content: space-around;
 `;
 const MyRecord = styled.div`
-  /* margin-top: %; */
+  margin-top: 2%;
   width: 75%;
   display: flex;
   flex-direction: row;
@@ -76,7 +76,7 @@ const WhiteBox = styled.div`
 `;
 const Down = styled.div`
   /* border: 2px solid yellow; */
-  margin-top: 5%;
+  margin-top: 10%;
   margin-left: 7%;
   width: 88%;
   /* width: 70%; */
@@ -85,6 +85,11 @@ const Down = styled.div`
   flex-direction: row;
   justify-content: space-between;
   color: white;
+  div {
+    :hover {
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .gametypealgo {
     /* border: 2px solid orange; */
     width: 18%;
