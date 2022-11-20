@@ -97,6 +97,20 @@ const WaitingBlock = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
+
+  .arrowImg {
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .waitingroom {
     width: 100%;
     height: 100%;
@@ -296,6 +310,12 @@ const IngameBlock = styled.div`
       display: flex;
       flex-direction: column;
     }
+  }
+  .waitPerson {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .middleText {
     color: #ffffff;
@@ -652,6 +672,12 @@ const CSIngamePage = () => {
       {!isLoading && !isStart && (
         <WaitingBlock>
           <img
+            onClick={() => navigate('/game/cs')}
+            src="/img/arrow/back-arrow.png"
+            alt=""
+            className="arrowImg"
+          />
+          <img
             src="/img/gametitle/GameTitle6.png"
             className="gameTitle"
             alt="gameTitle"
@@ -789,7 +815,7 @@ const CSIngamePage = () => {
             </div>
           )}
           {isSubmit && (
-            <div>
+            <div className="waitPerson">
               <img src="/img/loadingspinner.gif" />
               <p className="loadingText">다른 사람들이 푸는것을 기다려주세요</p>
             </div>
