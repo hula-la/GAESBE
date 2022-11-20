@@ -86,6 +86,7 @@ public class TypingService {
 
         // 게임 시작했다고 클라이언트에게 알리기
         res.put("msg", "게임이 시작되었습니다.");
+        res.put("start", true);
         simpMessagingTemplate.convertAndSend("/typing2/room/"+roomDto.getCode(),res);
 
 
