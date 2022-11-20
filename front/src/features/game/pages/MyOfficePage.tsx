@@ -81,7 +81,7 @@ const Office = styled.div`
 
   text-align: center;
 
-  .unlockNeed{
+  .unlockNeed {
     color: white;
     font-size: 1rem;
     margin-top: 1rem;
@@ -175,7 +175,7 @@ const MyOfficePage = () => {
       const nextoffice = offices.filter((office: any) => !office.own);
       idxRef.current = offices.length - nextoffice.length - 1;
       setOfficeIdx(idxRef.current);
-      console.log('idxRef.current' + idxRef.current);
+      // console.log('idxRef.current' + idxRef.current);
 
       if (
         nextoffice.length >= 1 &&
@@ -187,7 +187,7 @@ const MyOfficePage = () => {
             userAbility.luckLv,
           )
       ) {
-        console.log('nextoffice', nextoffice);
+        // console.log('nextoffice', nextoffice);
         setLevelupable(true);
         setNextLevel(nextoffice[0].officeId);
         setNextLevelName(nextoffice[0].name);
@@ -273,10 +273,10 @@ const MyOfficePage = () => {
                 {v.own && <Component officeIdx={v} handleModal={handleModal} />}
                 {!v.own && (
                   <>
-                  <img className="lockImg" src="/img/Intro/padlock.png" />
-                  <div className="unlockNeed" >
+                    <img className="lockImg" src="/img/Intro/padlock.png" />
+                    <div className="unlockNeed">
                       잠금해제 조건: 모든 역량 Lv.{v.minLv}
-                  </div>
+                    </div>
                   </>
                 )}
               </Office>

@@ -299,7 +299,7 @@ const TypingFriendGame = () => {
 
   useEffect(() => {
     if (isEnd && resultId && resultNickName) {
-      console.log('끄읕');
+      // console.log('끄읕');
       navigate('/game/typing/result', {
         state: {
           resultId: resultId,
@@ -319,7 +319,7 @@ const TypingFriendGame = () => {
       );
       client.current = Stomp.over(socket);
       client.current.connect({}, (frame: any) => {
-        console.log('*****************121**************************');
+        // console.log('*****************121**************************');
         client.current.subscribe(`/typing2/${userInfo.id}`, (res: any) => {
           var data = JSON.parse(res.body);
           if (data.hasOwnProperty('room')) {
@@ -376,7 +376,7 @@ const TypingFriendGame = () => {
       );
       client2.current = Stomp.over(socket);
       client2.current.connect({}, (frame: any) => {
-        console.log('*****************177**************************');
+        // console.log('*****************177**************************');
         client2.current.subscribe('/typing2/room/' + roomCode, (res: any) => {
           var testdata = JSON.parse(res.body);
           // console.log(testdata, '이게테데지 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ');
@@ -397,7 +397,6 @@ const TypingFriendGame = () => {
             setResultProfile(testdata.winUserProfile);
             setIsEnd(true);
           } else if (testdata.hasOwnProperty('msg')) {
-            console.log(testdata.msg, 'zzzzzzzzzzzzzzzz');
             Swal.fire({
               toast: true,
               position: 'top',
@@ -471,7 +470,7 @@ const TypingFriendGame = () => {
       event.preventDefault();
     } else if (event.key === ' ') {
       if (example[sentence][index] === 'ˇ') {
-        console.log('****************보냄********************');
+        // console.log('****************보냄********************');
         xscroll();
         waitForConnection(client, function () {
           client.current.send(
@@ -528,7 +527,7 @@ const TypingFriendGame = () => {
 
       // 내가 친거랑 쳐야하는게 똑같다면
       if (example[sentence][index] === event.key) {
-        console.log('****************보냄********************');
+        // console.log('****************보냄********************');
         xscroll();
         waitForConnection(client, function () {
           client.current.send(

@@ -13,12 +13,12 @@ export const createUserInfoApi = async (userInfo: any) => {
 export const checkNicknameApi = async (nickname: string) => {
   const res = await client.get(`user/modify/check/${nickname}`);
 
-  console.log(res);
+  // console.log(res);
   return res;
 };
 
 export const deleteUserInfoApi = async () => {
-  console.log('실행되나요?');
+  // console.log('실행되나요?');
   const res = await client.delete('user');
   localStorage.removeItem('accessToken');
   return res;

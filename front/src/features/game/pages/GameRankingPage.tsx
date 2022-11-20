@@ -123,7 +123,7 @@ function GameRankingPage() {
   const fetchAllGameRanking = async () => {
     try {
       const res = await allGameRankingRequest();
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) {
         setMyRank({
           myAlgoRank: res.data.myAlgoRank,
