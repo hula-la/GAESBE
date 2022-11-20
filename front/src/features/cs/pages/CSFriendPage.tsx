@@ -742,7 +742,7 @@ const CSFriendPage = () => {
               </div>
             </div>
             <div>
-              {isMaster && (
+              {isMaster && !isReady && (
                 <img
                   className="startBtn"
                   src="/img/cs/startBtn.png"
@@ -765,9 +765,7 @@ const CSFriendPage = () => {
           )}
           {problem && !isSubmit && isSolved === null && (
             <div className="problemBox">
-              {problemCnt && (
-                <div className="problemCount">{problemCnt}/10</div>
-              )}
+              {problemCnt && <div className="problemCount">{problemCnt}/3</div>}
               <div className="problem">
                 <div className="progressContainer">
                   <div className="progress"> </div>
@@ -897,13 +895,11 @@ const CSFriendPage = () => {
               <div className="chart">
                 <CSMiddleChart chartPerNum={chartPerNum} />
               </div>
-              {isSolved && isSolved === 0 && (
-                <div className="middleText">틀렸습니다ㅜ</div>
-              )}
-              {isSolved && isSolved === -1 && (
+              {isSolved === 0 && <div className="middleText">틀렸습니다ㅜ</div>}
+              {isSolved === -1 && (
                 <div className="middleText">시간초과입니다ㅜ</div>
               )}
-              {isSolved && isSolved > 0 && (
+              {isSolved > 0 && (
                 <div className="middleText">
                   {isSolved}등으로 정답을 맞추셨습니다!
                 </div>

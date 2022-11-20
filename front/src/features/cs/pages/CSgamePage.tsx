@@ -11,6 +11,18 @@ const CsMain = styled.div`
   color: white;
 
   position: relative;
+  .arrowImg {
+    transform: scaleX(-1);
+    padding: 1rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    :hover {
+      transform: scaleX(-1.2) scaleY(1.2);
+      cursor: url('/img/cursor/hover_cursor.png'), auto;
+    }
+  }
   .title {
     text-align: center;
     /* height: 25%; */
@@ -175,9 +187,10 @@ const CSgamePage = () => {
         onClick={() => navigate('/game/select')}
         src="/img/arrow/back-arrow.png"
         alt=""
+        className="arrowImg"
       />
       <div className="title">
-        <img src="/img/gametitle/gametitle3.png" alt="title" />
+        <img src="/img/gametitle/gametitle6.png" alt="title" />
       </div>
 
       <h1 className="content">CS를 신속 정확하게 풀어 1등을 쟁취하라!</h1>

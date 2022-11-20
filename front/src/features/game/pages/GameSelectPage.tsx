@@ -66,7 +66,6 @@ const GameBlock = styled.div`
     background-repeat: no-repeat;
     background-size: 100%;
     cursor: url('/img/cursor/hover_cursor.png'), auto;
-
   }
   .img {
     width: 40%;
@@ -95,7 +94,7 @@ function GameSelectPage() {
           </Up>
           <Down>
             <GameBlock onClick={() => navigate('/game/casino')}>
-              <h2>싸피게임</h2>
+              <h2>싸피 게임</h2>
               <img className="img" src={`/img/coin/head.png`} alt="asdfasd" />
             </GameBlock>
             <GameBlock onClick={() => navigate('/game/cs')}>

@@ -405,6 +405,7 @@ function FriendMainPage() {
             />
             <div className="chatContent">
               {showChatList &&
+                Object.keys(showChatList).length !== 0 &&
                 userInfo &&
                 showChatList.map((chat: any, idx: number) =>
                   chat.from === userInfo.id ? (
