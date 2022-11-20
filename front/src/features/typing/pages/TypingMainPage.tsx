@@ -35,6 +35,8 @@ const TypingMain = styled.div`
   text-align: center;
   color: white;
   .title {
+    position: relative;
+
     text-align: center;
     height: 25%;
     width: 100%;
@@ -44,6 +46,13 @@ const TypingMain = styled.div`
     }
     .question {
       width: 3%;
+      position: absolute;
+
+      transition: all 0.2s linear;
+      :hover {
+        transform: scale(1.1);
+        cursor: url('/img/cursor/hover_cursor.png'), auto;
+      }
     }
   }
 `;
