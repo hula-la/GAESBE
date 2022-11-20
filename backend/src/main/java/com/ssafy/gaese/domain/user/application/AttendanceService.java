@@ -102,11 +102,11 @@ public class AttendanceService {
         {
             userCharacterSet(user,charId,characters);
         }
-         charId=5;
-        if(AttendanceCount>4 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
-        {
-            userCharacterSet(user,charId,characters);
-        }
+//         charId=5;
+//        if(AttendanceCount>4 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
+//        {
+//            userCharacterSet(user,charId,characters);
+//        }
         charId=6;
         if(AttendanceCount>5 && !userCharacterRepository.findByUserAndCharacters(user,characters.get(charId)).isPresent())
         {
