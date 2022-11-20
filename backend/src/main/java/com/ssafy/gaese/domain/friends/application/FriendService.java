@@ -129,7 +129,7 @@ public class FriendService {
 
 
         friendRequestRepository.deleteById(reqId);
-        
+
 
         int findByRequestCount = friendRequestRepository.findByTargetUser(user).size();
         System.out.println("친구 저장한 후 "+findByRequestCount);
