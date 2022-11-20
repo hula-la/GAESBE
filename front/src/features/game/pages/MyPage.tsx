@@ -268,7 +268,7 @@ const MyPage = () => {
   const handleDelete = () => {
     Swal.fire({
       title: '진짜?',
-      text: '정말 삭제할거ㅂ니까?',
+      text: '가지마유😥',
       icon: 'warning',
       showCancelButton: true,
       cancelButtonText: '아니오',
@@ -285,7 +285,7 @@ const MyPage = () => {
         // 유저 인포 널로 바꾸고
         // 엑세스 토큰 지우고
       } else {
-        Swal.fire({ icon: 'info', text: '삭제 안함' });
+        Swal.fire({ icon: 'info', text: '다행이에요😀' });
       }
     });
   };
