@@ -31,7 +31,7 @@
 - Office
 ![image-20221006105153838](README.assets/office1.png)
 ![image-20221006105153838](README.assets/office2.png)
-![image-20221006105153838](README.assets/office3.PNG)
+![image-20221006105153838](README.assets/office33.png)
 - Friend
 ![image-20221006105153838](README.assets/friend.png)
 - Chatting
@@ -42,20 +42,20 @@
 ![image-20221006105153838](README.assets/typing2.png)
 
 - Algorithm Battle
-![image-20221006105153838](README.assets/algo1.PNG)
-![image-20221006105153838](README.assets/algo2.PNG)
-![image-20221006105153838](README.assets/algo3.PNG)
+![image-20221006105153838](README.assets/algo11.png)
+![image-20221006105153838](README.assets/algo22.png)
+![image-20221006105153838](README.assets/algo33.png)
 
 - CS Fight
-![image-20221006105153838](README.assets/cs1.png)
-![image-20221006105153838](README.assets/cs2.png)
+![image-20221006105153838](README.assets/cs11.png)
+![image-20221006105153838](README.assets/cs22.png)
 
 - ssafyGame
 ![image-20221006105153838](README.assets/ssafy.png)
 
 - myPage
-![image-20221006105153838](README.assets/mypage1.PNG)
-![image-20221006105153838](README.assets/mypage2.png)
+![image-20221006105153838](README.assets/mypage11.png)
+![image-20221006105153838](README.assets/mypage22.png)
 ---
 ## 개발 환경
 ---
