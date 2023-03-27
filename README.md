@@ -26,6 +26,24 @@
 
 ###  <br>
 ***
+## 구현 기능
+1. CS 퀴즈 기능 구현
+
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/b76de16e-56db-4060-bbcd-344150f03f81/cs%EA%B2%8C%EC%9E%84.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230327%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230327T152251Z&X-Amz-Expires=86400&X-Amz-Signature=914538e0381616cf27cbfa50d32c4d3364a26184d2f909b87c62c82e39cbf470&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22cs%25EA%25B2%258C%25EC%259E%2584.gif%22&x-id=GetObject)
+
+2. 코드 타이핑 멀티플레이어 게임 제작
+
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/fc6e58a8-bcb4-457e-8910-4b0b009e151c/%ED%83%80%EC%9D%B4%ED%95%91.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230327%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230327T152348Z&X-Amz-Expires=86400&X-Amz-Signature=88cb7b916d93222e1578081032b603b7ca28f09cbcbfea33eec63a5b1c5d3268&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25ED%2583%2580%25EC%259D%25B4%25ED%2595%2591.gif%22&x-id=GetObject)
+
+3. 친구 기능
+
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3f12980f-3a7b-4b46-b500-eb1a4c1aeaa3/%EC%B9%9C%EA%B5%AC%EC%B1%84%ED%8C%85.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230327%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230327T152558Z&X-Amz-Expires=86400&X-Amz-Signature=03858ef06b65878fb8fe99e6e5a6a371a2cb6a7d69ab8b75c26292434d8c1ddb&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25EC%25B9%259C%25EA%25B5%25AC%2526%25EC%25B1%2584%25ED%258C%2585.gif%22&x-id=GetObject)
+
+4. 게임 기록, 회원별 아이템, 회원 정보, 출석체크, 친구 기능 등의 Rest API 구현
+
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/dbd56d32-0f96-4af4-8203-6a2cd551dbe9/%EC%98%A4%ED%94%BC%EC%8A%A4_%ED%95%B4%EA%B8%88.gif?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230327%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230327T152408Z&X-Amz-Expires=86400&X-Amz-Signature=7bdb1825bd49787d4f31f6279bb2840d605ecec99fac36cf4bcbdfb9b855b8af&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22%25EC%2598%25A4%25ED%2594%25BC%25EC%258A%25A4%2520%25ED%2595%25B4%25EA%25B8%2588.gif%22&x-id=GetObject)
+
+***
 ## 주요 기능
 ***
 - Office
@@ -112,100 +130,3 @@
 - Webex
 - Google Sheet
 
- 
-
-
----
-## 컨벤션
----
-### - Git 컨벤션
-
-------
-
-```################
-# [Position] Type: message 의 형식으로 제목을 아래 공백줄에 작성
-# 제목은 50자 이내 / 변경사항이 "무엇"인지 명확히 작성 / 끝에 마침표 금지    
-#- Example
-#    - Type 첫 글자는 대문자
-#    - `Type:(공백)message` 공백 주의하여 작성
-#    - message는 50자 내로 작성하고, 끝에 . (마침표) 사용 ❌
-#    - `[FE: S07P12E104-12] Feat: 로그인 기능 구현`
-# 바로 아래 공백은 지우지 마세요 (제목과 본문의 분리를 위함)
-
-################
-# 본문(구체적인 내용)을 아랫줄에 작성
-# 여러 줄의 메시지를 작성할 땐 "-"로 구분 (한 줄은 72자 이내)
-- 회원 정보 확인
-- 토큰 발급 및 저장
-
-################
-# 꼬릿말(footer)을 아랫줄에 작성 (현재 커밋과 관련된 이슈 번호 추가 등)
-# Jira Smart commit 사용 시 Jira 이슈 또한 종료할 수 있음.
-# 예) Close #7
-
-################
-### Code 관련
-# Add : 코드나 문자 추가
-# Test : 테스트 코드 삽입
-# Update : Fix와 달리 원래 정상적으로 동작한 기능의 보완 개념
-# Fix : 버그 수정
-# Remove : 코드 삭제
-# Refactor : 결과의 변경 없이 코드 구조 재조정
-#               Ex) createStore의 함수를 작은 함수로 분리
-# Move : 코드나 파일의 이동
-# Style : 서식, 세미콜론 누락
-# Correct : 문법 오류, 타입 및 변수 이름 변경 등 수정 사항에 사용
-
-### 기능 관련
-# Feat : 새로운 기능 추가
-# Improve : 호환성, 테스트 커버리지(테스트 케이스가 얼마나 충족 한지), 접근성 향상
-# Chore : 기타 작업, 빌드 작업, 패키지 관리자 구성 등 업데이트, Production Code 변경 없음
-# Test : git 관련 테스트 혹은 코드 관련 테스트 진행
-
-### 파일, 폴더 관련
-# Docs : 문서 변경 (문서 추가, 이름 변경 등)
-# Move : 코드나 파일의 이동
-# Rename : 이름 변경
-# Create : 파일이나 폴더 추가
-################
-
-```
-
-
-### - 브랜치 구조
-```
-|-- master
-		|-- release
-		    |-- dev/front
-		        |-- feat-FE/feature1
-		        |-- feat-FE/feature2
-		
-		    |-- dev/back
-		        |-- feat-BE/feature1
-		        |-- feat-BE/feature2
-
-                
-                
-# 원격 저장소 갱신
-$ git remote update
-
-# 원격저장소의 브랜치 목록 확인
-$ git branch -r
-
-# 원격저장소의 branch 가져오기
-$ git checkout -t origin/dev/back
-```
----
-## 서비스 아키텍처
----
-![image-20221006105153838](README.assets/ServiceArchitecture.png)
-
----
-## ERD
----
-![image-20221006112103414](README.assets/erd.png)
-
-***
-## Manual
-***
-### exec/포팅 메뉴얼/포팅 메뉴얼.pdf 참고
